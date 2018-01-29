@@ -1,0 +1,24 @@
+#main-wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#sidebar-width-300 {
+  flex: 0 0 300px;
+}
+
+#sidebar-menu {
+  width: 300px;
+  border-right: 1px solid #2d2e2f;
+}
+
+#main-content {
+  position: relative;
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+}
