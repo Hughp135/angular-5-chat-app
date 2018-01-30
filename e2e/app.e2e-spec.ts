@@ -7,8 +7,8 @@ describe('chat-angular-electron App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display login message', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    expect(page.getElementText('h2')).toEqual('Please log in or create an account.');
   });
 });
