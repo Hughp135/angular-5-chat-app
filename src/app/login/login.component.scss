@@ -1,0 +1,26 @@
+#wrapper {
+  width: 100%;
+  height: 100vh;
+  background: grey;
+}
+
+.segment {
+  top: 25vh;
+  height: 30vh;
+  min-height: 280px;
+  min-width: 472px;
+  padding: 20px 30px;
+}
+
+form {
+  margin-top: 30px;
+  input {
+    &.ng-invalid.ng-dirty.ng-touched {
+      border: 2px solid #cd5858;
+    }
+  }
+}
+
+.buttons-container {
+  margin-top: 20px;
+}

@@ -1,3 +1,36 @@
-<p>
-  login works!
-</p>
+<div id="wrapper">
+
+  <div class="ui raised text container segment">
+    <h2>Please log in or create an account.</h2>
+
+    <form [formGroup]="loginForm"
+      class="ui form"
+      (ngSubmit)="logIn()">
+      <div class="field">
+        <label>E-mail address</label>
+        <input formControlName="email"
+          type="email"
+          name="email"
+          placeholder="Username">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input formControlName="password"
+          type="password"
+          name="password"
+          placeholder="Password">
+      </div>
+      <div class="buttons-container">
+        <button class="left floated ui primary button"
+          type="submit">
+          Login
+        </button>
+        <button class="right floated ui button">
+          Create new account
+        </button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
