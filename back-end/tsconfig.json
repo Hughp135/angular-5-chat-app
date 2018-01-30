@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+      "alwaysStrict": true,
+      "target": "es2017",
+      "module": "commonjs",
+      "outDir": "dist",
+      "rootDir": "src",
+      "baseUrl": "../",
+      "sourceMap": true,
+      "noUnusedLocals": false,
+      "lib": [
+          "es2017"
+      ],
+      "types": [ "node", "mocha", "chai" ]
+  },
+  "include": [
+      "src/**/*.ts"
+  ],
+  "exclude": [
+      "**/*.spec.ts"
+  ]
+}
