@@ -12,7 +12,7 @@
     "test:app:dev": "ng test --browsers",
     "test:server:dev": "mocha --watch-extensions ts -r ts-node/register \"back-end/src/**/*.spec.ts\"",
     "test:app": "ng test --code-coverage --watch=false",
-    "test:server": "./node_modules/.bin/nyc --report-dir coverage mocha --exit -r ts-node/register back-end/src/**/*.spec.ts",
+    "test:server": "./node_modules/.bin/nyc --report-dir coverage mocha --exit -r ts-node/register \"back-end/src/**/*.spec.ts\"",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "ng lint && tslint -p back-end",
     "e2e": "ng e2e",
