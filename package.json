@@ -10,6 +10,7 @@
     "build": "ng build --prod",
     "test": "ng test --watch=false && npm run test:server",
     "test:app:dev": "ng test --browsers",
+    "test:server:dev": "mocha --watch-extensions ts -r ts-node/register back-end/src/**/*.spec.ts",
     "test:server": "./node_modules/.bin/nyc mocha --exit -r ts-node/register back-end/src/**/*.spec.ts",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "ng lint",
