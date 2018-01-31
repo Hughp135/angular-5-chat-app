@@ -8,7 +8,7 @@
     "start:server:dev": "nodemon --watch back-end -e ts --exec \"npm run compile:server\"",
     "compile:server": "tsc -p back-end/tsconfig.json && node --inspect back-end/dist/index.js",
     "build": "ng build --prod",
-    "test": "npm run test:app && npm run test:server",
+    "test": "npm run test:server && npm run test:app",
     "test:app:dev": "ng test --browsers",
     "test:server:dev": "mocha --watch-extensions ts -r ts-node/register back-end/src/**/*.spec.ts",
     "test:app": "ng test --code-coverage --watch=false",
