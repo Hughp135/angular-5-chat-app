@@ -10,11 +10,11 @@
     "build": "ng build --prod",
     "test": "npm run test:server && npm run test:app",
     "test:app:dev": "ng test --browsers",
-    "test:server:dev": "mocha --watch-extensions ts -r ts-node/register back-end/src/**/*.spec.ts",
+    "test:server:dev": "mocha --watch-extensions ts -r ts-node/register \"back-end/src/**/*.spec.ts\"",
     "test:app": "ng test --code-coverage --watch=false",
     "test:server": "./node_modules/.bin/nyc --report-dir coverage mocha --exit -r ts-node/register back-end/src/**/*.spec.ts",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "lint": "ng lint",
+    "lint": "ng lint && tslint -p back-end",
     "e2e": "ng e2e",
     "electron": "ng build && electron .",
     "electron-aot": "ng build --prod && electron ."
@@ -62,6 +62,7 @@
     "mongoose": "^5.0.2",
     "rxjs": "^5.5.6",
     "uninstall": "0.0.0",
+    "winston": "^2.4.0",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {

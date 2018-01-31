@@ -7,9 +7,9 @@ const UserSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', UserSchema);
-
 UserSchema.pre('save', async function (next) {
   if (!this.isNew) {
+    // Only hash password for newly created users
     return next();
   }
   const user = this;
@@ -21,10 +21,6 @@ UserSchema.pre('save', async function (next) {
     return next(error);
   }
 
-  // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) {
-    return next();
-  }
   try {
     user.password = await hashPassword(user.password);
     next();

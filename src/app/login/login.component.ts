@@ -23,6 +23,5 @@ export class LoginComponent {
   }
 
   logIn() {
-    console.log(this.loginForm.value);
   }
 }
