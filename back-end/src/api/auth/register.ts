@@ -14,9 +14,19 @@ export default async function (req, res) {
     });
     return;
   }
-  await User.create({
-    username: req.body.username,
-    password: req.body.password,
-  });
+  try {
+    await User.create({
+      username: req.body.username,
+      password: req.body.password,
+    });
+  } catch (e) {
+    if (e.code === 11000 || e.message === 'duplicate username') {
+      res.status(400).json({
+        error: 'Username is already taken.',
+      });
+      return;
+    }
+  }
+
   res.status(204).end();
 }
