@@ -7,6 +7,7 @@ import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
 import { app } from '../../api-server';
+import { verifyJWT } from './jwt';
 
 import User from '../../models/user';
 
@@ -17,6 +18,7 @@ chai.use(sinonChai);
 
 describe('api/auth/login', () => {
   const sandbox = sinon.sandbox.create();
+  let userId = null;
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -25,10 +27,11 @@ describe('api/auth/login', () => {
     mongoose.connection.close();
   });
   beforeEach(async () => {
-    await User.create({
+    const user = await User.create({
       username: 'test',
       password: '123456',
     });
+    userId = user._id;
   });
   afterEach(async () => {
     await User.remove({});
@@ -96,7 +99,7 @@ describe('api/auth/login', () => {
     expect(userFind).to.have.been.calledOnce;
     expect(bcryptCompare).to.have.been.calledOnce;
   });
-  it('succeeds with correct credentials', async () => {
+  it('with correct credentials returns a valid token', async () => {
     const bcryptCompare = sandbox.spy(bcrypt, 'compare');
     await supertest(app.listen(null))
       .post('/api/login')
@@ -104,7 +107,13 @@ describe('api/auth/login', () => {
         username: 'test',
         password: '123456',
       })
-      .expect(204);
+      .expect(200)
+      .then(async res => {
+        expect(res.body.token).to.be.a('string').that.is.not.empty;
+        const decoded: any = await verifyJWT(res.body.token);
+        expect(decoded.username).to.equal('test');
+        expect(decoded.user_id).to.equal(userId.toString());
+      });
     expect(bcryptCompare).to.have.been.calledOnce;
   });
 });
