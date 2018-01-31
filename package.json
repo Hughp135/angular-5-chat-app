@@ -8,9 +8,11 @@
     "start:server:dev": "nodemon --watch back-end -e ts --exec \"npm run compile:server\"",
     "compile:server": "tsc -p back-end/tsconfig.json && node --inspect back-end/dist/index.js",
     "build": "ng build --prod",
-    "test": "ng test --watch=false && npm run test:server",
+    "test": "npm run test:server && npm run test:app",
     "test:app:dev": "ng test --browsers",
-    "test:server": "./node_modules/.bin/nyc mocha --exit -r ts-node/register back-end/src/**/*.spec.ts",
+    "test:server:dev": "mocha --watch-extensions ts -r ts-node/register back-end/src/**/*.spec.ts",
+    "test:app": "ng test --code-coverage --watch=false",
+    "test:server": "./node_modules/.bin/nyc --report-dir coverage mocha --exit -r ts-node/register back-end/src/**/*.spec.ts",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -19,16 +21,23 @@
   },
   "main": "main.js",
   "private": true,
-  "config": {
-    "blanket": {
-      "pattern": "back-end/src"
-    }
-  },
   "nyc": {
-    "reporter": [
-      "lcov"
+    "include": [
+      "back-end/src/**/*.ts",
+      "src/app/**/*.ts"
     ],
-    "all": true
+    "exclude": [
+      "**/*.spec.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "text",
+      "json"
+    ],
+    "sourceMap": true,
+    "instrument": true
   },
   "dependencies": {
     "@angular/cdk": "^5.1.0",
@@ -80,7 +89,7 @@
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~2.0.0",
     "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage-istanbul-reporter": "^1.2.1",
+    "karma-coverage-istanbul-reporter": "^1.4.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "mocha": "^4.0.1",

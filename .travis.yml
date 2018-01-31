@@ -9,4 +9,4 @@ services:
 script:
   - npm run lint
   - npm test
-after_success: 'npm run coveralls'
+after_success: npm run coverage
