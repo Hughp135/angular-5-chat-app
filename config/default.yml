@@ -1,2 +1,4 @@
 api:
   port: 7202
+
+JWT_SECRET: oijsdfogij02349sdpok
