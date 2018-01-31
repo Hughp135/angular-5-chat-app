@@ -27,12 +27,17 @@
   },
   "nyc": {
     "include": [
-      "back-end/dist/**/*.js"
+      "back-end/src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
     ],
     "reporter": [
+      "text-summary",
       "lcov"
     ],
-    "all": true
+    "sourceMap": true,
+    "instrument": true
   },
   "dependencies": {
     "@angular/cdk": "^5.1.0",
