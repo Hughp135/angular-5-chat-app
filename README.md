@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Hughp135/angular-5-chat-app.svg?branch=master)](https://travis-ci.org/Hughp135/angular-5-chat-app)
+[![Build Status](https://travis-ci.org/Hughp135/angular-5-chat-app.svg?branch=master)](https://travis-ci.org/Hughp135/angular-5-chat-app) [![Coverage Status](https://coveralls.io/repos/github/Hughp135/angular-5-chat-app/badge.svg?branch=master)](https://coveralls.io/github/Hughp135/angular-5-chat-app?branch=master)
 
 ## Starting the project
 
