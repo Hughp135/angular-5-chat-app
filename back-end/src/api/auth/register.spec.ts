@@ -10,26 +10,27 @@ import { app } from '../../api-server';
 
 import User from '../../models/user';
 
+// tslint:disable:no-unused-expression
+
 const expect = chai.expect;
 chai.use(sinonChai);
 
-const server = app.listen(8000);
-const sandbox = sinon.sandbox.create();
-// tslint:disable:no-unused-expression
 describe('api/auth/register', () => {
+  console.log('register creating server');
+  const sandbox = sinon.sandbox.create();
+
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
   });
   after(async () => {
     mongoose.connection.close();
-    server.close();
   });
   afterEach(async () => {
     await User.remove({});
     sandbox.restore();
   });
   it('returns 400 with invalid data', async () => {
-    return supertest(server)
+    return supertest(app.listen(null))
       .post('/api/register')
       .send({})
       .expect(400, {
@@ -37,7 +38,7 @@ describe('api/auth/register', () => {
       });
   });
   it('username should be at least 3 characters', async () => {
-    return supertest(server)
+    return supertest(app.listen(null))
       .post('/api/register')
       .send({
         username: '12',
@@ -48,7 +49,7 @@ describe('api/auth/register', () => {
       });
   });
   it('password should be at least 6 characters', async () => {
-    return supertest(server)
+    return supertest(app.listen(null))
       .post('/api/register')
       .send({
     username: '123',
@@ -60,7 +61,7 @@ describe('api/auth/register', () => {
   });
   it('should create user on success', async () => {
     const hashFunc = sandbox.spy(bcrypt, 'hash');
-    const result = await supertest(server)
+    const result = await supertest(app.listen(null))
       .post('/api/register')
       .send({
         username: '123',
@@ -83,7 +84,7 @@ describe('api/auth/register', () => {
       username: 'someUsername',
       password: '123456'
     });
-    const result = await supertest(server)
+    const result = await supertest(app.listen(null))
       .post('/api/register')
       .send({
         username: 'someUsername',

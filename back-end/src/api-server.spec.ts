@@ -8,14 +8,12 @@ import { app } from './api-server';
 const expect = chai.expect;
 chai.use(sinonChai);
 
-const server = app.listen(5027);
-
 describe('Server Starts', () => {
   after(() => {
-    server.close();
+    console.log('closing server');
   });
   it('starts server', async () => {
-    await supertest(server);
+    await supertest(app.listen(null));
     expect(true).to.equal(true);
   });
 });
