@@ -1,4 +1,4 @@
-import User from '../../models/user';
+import User from '../../models/user.model';
 import * as bcrypt from 'bcrypt';
 import * as Joi from 'joi';
 import { createJWT } from './jwt';

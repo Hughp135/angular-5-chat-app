@@ -5,7 +5,7 @@ import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
-import User from './user';
+import User from './user.model';
 
 const expect = chai.expect;
 chai.use(sinonChai);

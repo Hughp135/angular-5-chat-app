@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { app } from '../../api-server';
 import { verifyJWT } from './jwt';
 
-import User from '../../models/user';
+import User from '../../models/user.model';
 
 
 const expect = chai.expect;
