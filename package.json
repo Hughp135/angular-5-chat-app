@@ -20,14 +20,13 @@
   },
   "main": "main.js",
   "private": true,
-  "config": {
-    "blanket": {
-      "pattern": "back-end/src"
-    }
-  },
   "nyc": {
     "include": [
-      "back-end/src/**/*.ts"
+      "back-end/src/**/*.ts",
+      "src/app/**/*.ts"
+    ],
+    "exclude": [
+      "back-end/src/**/*.spec.ts"
     ],
     "extension": [
       ".ts"
