@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 
 import { app } from '../../api-server';
 
-import User from '../../models/user';
+import User from '../../models/user.model';
 
 // tslint:disable:no-unused-expression
 

@@ -1,6 +1,7 @@
-import User from '../../models/user';
+import User from '../../models/user.model';
 import * as bcrypt from 'bcrypt';
 import * as Joi from 'joi';
+import { createJWT } from './jwt';
 
 const schema = Joi.object().keys({
   username: Joi.string().required(),
@@ -34,5 +35,12 @@ export default async function (req, res) {
     });
     return;
   }
-  res.status(204).end();
+
+  // Successful login
+  const token = createJWT({
+    username: user.username,
+    user_id: user._id,
+  }, '1m');
+
+  res.json({ token });
 }

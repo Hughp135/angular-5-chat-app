@@ -9,9 +9,6 @@ const expect = chai.expect;
 chai.use(sinonChai);
 
 describe('Server Starts', () => {
-  after(() => {
-    console.log('closing server');
-  });
   it('starts server', async () => {
     await supertest(app.listen(null));
     expect(true).to.equal(true);
