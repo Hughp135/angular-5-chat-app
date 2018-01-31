@@ -10,7 +10,8 @@
     "build": "ng build --prod",
     "test": "ng test --watch=false && npm run test:server",
     "test:app:dev": "ng test --browsers",
-    "test:server": "mocha --exit --watch-extensions ts -r ts-node/register back-end/src/**/*.spec.ts",
+    "test:server": "./node_modules/.bin/nyc mocha --exit -r ts-node/register back-end/src/**/*.spec.ts",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "electron": "ng build && electron .",
@@ -18,6 +19,17 @@
   },
   "main": "main.js",
   "private": true,
+  "config": {
+    "blanket": {
+      "pattern": "back-end/src"
+    }
+  },
+  "nyc": {
+    "reporter": [
+      "lcov"
+    ],
+    "all": true
+  },
   "dependencies": {
     "@angular/cdk": "^5.1.0",
     "@angular/common": "^5.2.0",
@@ -62,6 +74,7 @@
     "@types/supertest": "^2.0.4",
     "chai": "^4.1.2",
     "codelyzer": "^4.0.1",
+    "coveralls": "^3.0.0",
     "electron": "^1.7.11",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -72,6 +85,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "mocha": "^4.0.1",
     "ng2-semantic-ui": "^0.9.6",
+    "nyc": "^11.4.1",
     "protractor": "~5.1.2",
     "semantic-ui-less": "^2.2.14",
     "sinon": "^4.1.3",
