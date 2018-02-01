@@ -5,7 +5,7 @@
     <h2 style="float: left">Create a new account.</h2>
     <form [formGroup]="registerForm"
       class="ui form"
-      (ngSubmit)="logIn()">
+      (ngSubmit)="submitForm()">
       <div class="field">
         <label>Choose a Username</label>
         <input formControlName="username"

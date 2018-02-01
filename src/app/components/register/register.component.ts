@@ -21,10 +21,13 @@ export class RegisterComponent {
     }, passwordsMatch);
   }
 
+  submitForm() {
+    // todo
+  }
+
 }
 
 function passwordsMatch(g: FormGroup) {
-  console.log(g);
   return g.controls['password'].value === g.controls['password-confirm'].value
     ? null : { 'mismatch': true };
 }
