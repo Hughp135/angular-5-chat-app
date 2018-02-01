@@ -15,19 +15,19 @@ export class RegisterComponent {
 
   createForm() {
     this.registerForm = new FormGroup({
-      'username': new FormControl('', [Validators.required, Validators.minLength(3)]),
-      'password': new FormControl('', [Validators.required, Validators.minLength(3)]),
-      'password-confirm': new FormControl('', [Validators.required, Validators.minLength(3)]),
-    }, passwordsMatch);
+      username: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      password_confirm: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    }, this.passwordsMatch);
   }
 
   submitForm() {
     // todo
   }
 
-}
+  passwordsMatch(g: FormGroup) {
+    return g.controls['password'].value === g.controls['password_confirm'].value
+      ? null : { 'mismatch': true };
+  }
 
-function passwordsMatch(g: FormGroup) {
-  return g.controls['password'].value === g.controls['password-confirm'].value
-    ? null : { 'mismatch': true };
 }

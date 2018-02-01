@@ -27,7 +27,9 @@
       "src/app/**/*.ts"
     ],
     "exclude": [
-      "**/*.spec.ts"
+      "**/*.spec.ts",
+      "src/app/polyfills.ts",
+      "src/app/test.ts"
     ],
     "extension": [
       ".ts"
