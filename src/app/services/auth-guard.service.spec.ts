@@ -1,11 +1,8 @@
-import { TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
-import { Location } from '@angular/common';
+import { TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
 
 import { AuthGuardService } from './auth-guard.service';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router/src/router_state';
 
 describe('AuthGuardService', () => {
 

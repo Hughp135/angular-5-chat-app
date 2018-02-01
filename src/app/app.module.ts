@@ -21,6 +21,7 @@ import { RegisterComponent } from './components/register/register.component';
     RegisterComponent,
   ],
   imports: [
+    SuiModule,
     BrowserModule,
     ReactiveFormsModule,
     RouterModule.forRoot(

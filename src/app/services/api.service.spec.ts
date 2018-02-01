@@ -1,4 +1,4 @@
-import { TestBed, inject, getTestBed } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { ApiService } from './api.service';
