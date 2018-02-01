@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { DebugElement } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { RegisterComponent } from './register.component';
