@@ -1,20 +1,31 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ApiService } from '../../services/api.service';
 
 import { RegisterComponent } from './register.component';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
+  let apiServiceMock: {
+    get: jasmine.Spy,
+    post: jasmine.Spy,
+  };
 
   beforeEach(async(() => {
+    apiServiceMock = {
+      get: jasmine.createSpy('get'),
+      post: jasmine.createSpy('post'),
+    };
     TestBed.configureTestingModule({
       declarations: [RegisterComponent],
       imports: [ReactiveFormsModule],
-      providers: [ApiService]
+      providers: [
+        { provide: ApiService, useValue: apiServiceMock },
+      ]
     })
       .compileComponents();
   }));
@@ -22,9 +33,17 @@ describe('RegisterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
+
+    // set up GET responses for API calls
+    apiServiceMock.post.and.callFake((url: string, data) => {
+      if (data.username === 'coolname' && url === 'register') {
+        return Observable.of({ success: true });
+      } else {
+        throw new Error('Invalid API Route');
+      }
+    });
+
     fixture.detectChanges();
-    injector = getTestBed();
-    service = injector.get(ApiService);
   });
 
   it('should create component', () => {
@@ -78,5 +97,19 @@ describe('RegisterComponent', () => {
     });
     expect(component.registerForm.valid).toEqual(false);
     expect(component.registerForm.errors).toEqual({ mismatch: true });
+  });
+  it('submitting form should POST to /register', () => {
+    const formData = {
+      username: 'coolname',
+      password: '123456',
+      password_confirm: '123456'
+    };
+
+    component.registerForm.patchValue(formData);
+    component.submitForm();
+    expect(apiServiceMock.post).toHaveBeenCalledWith(
+      'register',
+      formData
+    );
   });
 });

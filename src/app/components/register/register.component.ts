@@ -23,12 +23,13 @@ export class RegisterComponent {
   }
 
   submitForm() {
-    this.apiService.post('login', this.registerForm.value).subscribe((data) => {
-      console.log(data);
-    }, (e) => {
-
-    });
-    console.log(this.registerForm.value);
+    this.apiService
+      .post('register', this.registerForm.value)
+      .subscribe((data) => {
+        console.log(data);
+      }, (e) => {
+        console.log('error', e);
+      });
   }
 
   passwordsMatch(g: FormGroup) {
