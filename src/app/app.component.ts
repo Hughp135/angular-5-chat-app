@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { MainComponent } from './main/main.component';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
 export class AppComponent {
   public loggedIn = false;
 
-  constructor(private titleService: Title) {
+  constructor(private titleService: Title, private router: Router) {
     this.titleService.setTitle('Angular 5 Chat App');
   }
 }

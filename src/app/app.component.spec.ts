@@ -1,18 +1,21 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { MainComponent } from './main/main.component';
-import { LoginComponent } from './login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import appRoutes from './routes';
+import { APP_BASE_HREF } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [
+        { provide: APP_BASE_HREF, useValue: '/' }
+      ],
       declarations: [
         AppComponent,
-        MainComponent,
-        LoginComponent
       ],
-      imports: [ReactiveFormsModule],
+      imports: [
+        RouterTestingModule,
+      ],
     }).compileComponents();
   }));
   it('should create the app', async(() => {

@@ -1,6 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
 import { MainComponent } from './main.component';
-import { LoginComponent } from '../login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 describe('AppComponent', () => {
@@ -8,7 +7,6 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         MainComponent,
-        LoginComponent
       ],
       imports: [ReactiveFormsModule],
     }).compileComponents();
