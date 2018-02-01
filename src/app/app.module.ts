@@ -10,6 +10,7 @@ import { MainComponent } from './components/main/main.component';
 import { LoginComponent } from './components/login/login.component';
 import { SettingsService } from './services/settings.service';
 import { AuthGuardService } from './services/auth-guard.service';
+import { RegisterComponent } from './components/register/register.component';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { AuthGuardService } from './services/auth-guard.service';
     AppComponent,
     MainComponent,
     LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

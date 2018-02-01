@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { SettingsService } from '../../services/settings.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,7 +9,7 @@ export class LoginComponent {
 
   public loginForm: FormGroup;
 
-  constructor(public settingsService: SettingsService, private fb: FormBuilder) {
+  constructor(private fb: FormBuilder) {
     this.createForm();
   }
 

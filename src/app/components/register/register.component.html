@@ -1,35 +1,39 @@
 <div id="background-wrapper">
 
-  <div id="centered-segment" class="ui raised text container segment">
-    <h2 style="float: left">Please log in to continue.</h2>
-
-    <button class="right floated ui tiny button"
-      [routerLink]="['/register']">
-      Create Account
-    </button>
-    <form [formGroup]="loginForm"
+  <div id="centered-segment"
+    class="ui raised text container segment">
+    <h2 style="float: left">Create a new account.</h2>
+    <form [formGroup]="registerForm"
       class="ui form"
       (ngSubmit)="logIn()">
       <div class="field">
-        <label>Username</label>
+        <label>Choose a Username</label>
         <input formControlName="username"
           type="text"
           name="username"
           placeholder="Username">
       </div>
       <div class="field">
-        <label>Password</label>
+        <label>Choose a Password</label>
         <input autocomplete="off"
           formControlName="password"
           type="password"
           name="password"
           placeholder="Password">
       </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input autocomplete="off"
+          formControlName="password-confirm"
+          type="password"
+          name="password-confirm"
+          placeholder="Re-enter password">
+      </div>
       <div class="buttons-container">
         <button class="left floated ui tiny primary button"
           type="submit"
-          [disabled]="!loginForm.valid">
-          Login
+          [disabled]="!registerForm.valid">
+          Register
         </button>
         <a style="float: right">Forgot your Password?</a>
       </div>
