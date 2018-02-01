@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-register',
@@ -9,7 +10,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class RegisterComponent {
   public registerForm: FormGroup;
 
-  constructor() {
+  constructor(private apiService: ApiService) {
     this.createForm();
   }
 
@@ -22,7 +23,12 @@ export class RegisterComponent {
   }
 
   submitForm() {
-    // todo
+    this.apiService.post('login', this.registerForm.value).subscribe((data) => {
+      console.log(data);
+    }, (e) => {
+
+    });
+    console.log(this.registerForm.value);
   }
 
   passwordsMatch(g: FormGroup) {

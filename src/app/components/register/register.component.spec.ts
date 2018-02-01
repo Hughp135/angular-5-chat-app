@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ApiService } from '../../services/api.service';
 
 import { RegisterComponent } from './register.component';
 
@@ -12,6 +14,7 @@ describe('RegisterComponent', () => {
     TestBed.configureTestingModule({
       declarations: [RegisterComponent],
       imports: [ReactiveFormsModule],
+      providers: [ApiService]
     })
       .compileComponents();
   }));
@@ -20,6 +23,8 @@ describe('RegisterComponent', () => {
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    injector = getTestBed();
+    service = injector.get(ApiService);
   });
 
   it('should create component', () => {

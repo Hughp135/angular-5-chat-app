@@ -14,7 +14,11 @@
           placeholder="Username">
       </div>
       <div class="field">
-        <label>Choose a Password</label>
+        <label>Choose a Password
+          <span class="errorText" *ngIf="registerForm.controls.password.invalid && registerForm.controls.password.touched">
+            (Must be at least 6 characters long)
+          </span>
+        </label>
         <input autocomplete="off"
           formControlName="password"
           type="password"

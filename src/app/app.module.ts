@@ -12,7 +12,6 @@ import { SettingsService } from './services/settings.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { RegisterComponent } from './components/register/register.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,11 +24,13 @@ import { RegisterComponent } from './components/register/register.component';
     BrowserModule,
     ReactiveFormsModule,
     RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true }
+      appRoutes
     )
   ],
-  providers: [SettingsService, AuthGuardService],
+  providers: [
+    SettingsService,
+    AuthGuardService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -9,6 +9,7 @@ export interface HttpOptions {
 
 @Injectable()
 export class ApiService {
+  public BASE_URL = '/api/';
   constructor(private http: HttpClient) { }
 
   /**
@@ -18,7 +19,7 @@ export class ApiService {
    * @returns {Observable<object>}
    */
   get(url: string, options: HttpOptions = {}): Observable<object> {
-    return this.http.get(url, {
+    return this.http.get(`${this.BASE_URL}${url}`, {
       headers: new HttpHeaders(options.headers),
       params: new HttpParams({ fromObject: options.search }),
     });
@@ -32,7 +33,7 @@ export class ApiService {
    * @returns {Observable<object>}
    */
   post(url: string, data: any, options: HttpOptions = {}): Observable<object> {
-    return this.http.post(url, data, {
+    return this.http.post(`${this.BASE_URL}${url}`, data, {
       headers: new HttpHeaders(options.headers),
     });
   }
