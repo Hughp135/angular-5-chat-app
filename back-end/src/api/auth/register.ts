@@ -25,7 +25,7 @@ export default async function (req, res) {
         error: 'Username is already taken.',
       });
     } else {
-      winston.log('error', e);
+      winston.log('error', 'Creating user failed', e);
       return res.status(500).json({
         error: 'Sorry, a server error occured. Please try again later',
       });
