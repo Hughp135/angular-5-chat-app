@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import 'rxjs/add/operator/finally';
 
 @Component({
   selector: 'app-register',
@@ -9,6 +10,8 @@ import { ApiService } from '../../services/api.service';
 })
 export class RegisterComponent {
   public registerForm: FormGroup;
+  public submitting = false;
+  public error: string = null;
 
   constructor(private apiService: ApiService) {
     this.createForm();
@@ -23,12 +26,18 @@ export class RegisterComponent {
   }
 
   submitForm() {
+    this.submitting = true;
     this.apiService
       .post('register', this.registerForm.value)
+      .finally(() => {
+        this.submitting = false;
+      })
       .subscribe((data) => {
-        console.log(data);
-      }, (e) => {
-        console.log('error', e);
+        this.error = null;
+      }, e => {
+        this.error = (e.error && e.error.error)
+          ? e.error.error
+          : 'Sorry, a server error occured. Please try again.';
       });
   }
 

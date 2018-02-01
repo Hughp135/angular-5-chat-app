@@ -26,7 +26,7 @@ describe('ApiService', () => {
     expect(service).toBeTruthy();
   });
   it('get request succeeds', () => {
-    const response = { succes: true };
+    const response = { success: true };
     service.get('hi', { headers: { 'Authorization': 'someValue' } }).subscribe(result => {
       expect(result).toEqual(response);
     });
@@ -37,7 +37,7 @@ describe('ApiService', () => {
     called.flush(response, { status: 200, statusText: 'Success' });
   });
   it('GET 400 triggers error callback', () => {
-    const response = { succes: true };
+    const response = { success: true };
     service.get('hi').subscribe(result => {
       throw new Error('Expected error event to be called, instead got result ' + result);
     }, (e) => {
@@ -50,7 +50,7 @@ describe('ApiService', () => {
     req.flush(response, { status: 401, statusText: 'Unauthorized' });
   });
   it('post request succeeds', () => {
-    const response = { succes: true };
+    const response = { success: true };
     service.post('bye', { test: 1 }, { headers: { 'HeaderName': 'aValue' } }).subscribe(result => {
       expect(result).toEqual(response);
     });

@@ -2,9 +2,16 @@
 
   <div id="centered-segment"
     class="ui raised text container segment">
-    <h2 style="float: left">Create a new account.</h2>
+    <h2>Create a new account.</h2>
+    <div *ngIf="error"
+      class="ui error message">
+      <div class="header">Error</div>
+      <p>{{ error }}</p>
+    </div>
     <form [formGroup]="registerForm"
       class="ui form"
+      [class.error]="error"
+      [class.loading]="submitting"
       (ngSubmit)="submitForm()">
       <div class="field">
         <label>Choose a Username</label>
@@ -15,7 +22,8 @@
       </div>
       <div class="field">
         <label>Choose a Password
-          <span class="errorText" *ngIf="registerForm.controls.password.invalid && registerForm.controls.password.touched">
+          <span class="errorText"
+            *ngIf="registerForm.controls['password'].invalid && registerForm.controls['password'].touched">
             (Must be at least 6 characters long)
           </span>
         </label>
