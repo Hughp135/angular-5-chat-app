@@ -16,7 +16,6 @@ const expect = chai.expect;
 chai.use(sinonChai);
 
 describe('api/auth/register', () => {
-  console.log('register creating server');
   const sandbox = sinon.sandbox.create();
 
   before(async () => {
@@ -59,7 +58,51 @@ describe('api/auth/register', () => {
         error: '"password" length must be at least 6 characters long',
       });
   });
-  it('should create user on success', async () => {
+  it('username must be unique', async () => {
+    const spy = sandbox.spy(bcrypt, 'hash');
+    await User.create({
+      username: 'someUsername',
+      password: '123456'
+    });
+    const result = await supertest(app.listen(null))
+      .post('/api/register')
+      .send({
+        username: 'someUsername',
+        password: 'irrelevant',
+      })
+      .expect(400, {
+        error: 'Username is already taken.',
+      });
+    expect(spy).to.have.been.calledOnce;
+  });
+  it('returns 500 if unable to create user', async () => {
+    sandbox.stub(User, 'create')
+      .throws(new Error());
+    const result = await supertest(app.listen(null))
+      .post('/api/register')
+      .send({
+        username: 'someUsername',
+        password: 'irrelevant',
+      })
+      .expect(500, {
+        error: 'Sorry, a server error occured. Please try again later',
+      });
+  });
+  it('should create user', async () => {
+    const result = await supertest(app.listen(null))
+      .post('/api/register')
+      .send({
+        username: '123',
+        password: '123456',
+      })
+      .expect(204);
+
+    const user: any = await User.findOne().lean();
+    expect(user).to.exist;
+    expect(user.username).to.equal('123');
+    expect(user.password).not.to.be.empty; // password should be hashed
+  });
+  it('password should be hashed', async () => {
     const hashFunc = sandbox.spy(bcrypt, 'hash');
     const result = await supertest(app.listen(null))
       .post('/api/register')
@@ -77,22 +120,5 @@ describe('api/auth/register', () => {
     bcrypt.compare('123456', user.password, function (err, res) {
       expect(res).to.equal(true);
     });
-  });
-  it('username must be unique', async () => {
-    const spy = sandbox.spy(bcrypt, 'hash');
-    await User.create({
-      username: 'someUsername',
-      password: '123456'
-    });
-    const result = await supertest(app.listen(null))
-      .post('/api/register')
-      .send({
-        username: 'someUsername',
-        password: 'irrelevant',
-      })
-      .expect(400, {
-        error: 'Username is already taken.',
-      });
-    expect(spy).to.have.been.calledOnce;
   });
 });

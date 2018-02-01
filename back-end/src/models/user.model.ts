@@ -13,31 +13,21 @@ UserSchema.pre('save', async function (next) {
     return next();
   }
   const user = this;
-  const userExists = await this.constructor.findOne({
+  const existingUser = await this.constructor.findOne({
     username: user.username
   }).lean();
-  if (userExists) {
+
+  if (existingUser) {
     const error = new Error('duplicate username');
     return next(error);
   }
 
-  try {
-    user.password = await hashPassword(user.password);
-    next();
-  } catch (e) {
-    next(e);
-  }
+  user.password = await hashPassword(user.password);
+  next();
 });
 
-function hashPassword(password: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    bcrypt.hash(password, 10, (err, hash) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(hash);
-    });
-  });
+async function hashPassword(password: string): Promise<string> {
+  return await bcrypt.hash(password, 10);
 }
 
 export default User;

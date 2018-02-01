@@ -1,5 +1,6 @@
 import * as Joi from 'joi';
 import User from '../../models/user.model';
+import * as winston from 'winston';
 
 const schema = Joi.object().keys({
   username: Joi.string().min(3).max(30).required(),
@@ -9,10 +10,9 @@ const schema = Joi.object().keys({
 export default async function (req, res) {
   const result = Joi.validate(req.body, schema);
   if (result.error) {
-    res.status(400).json({
+    return res.status(400).json({
       error: result.error.details[0].message,
     });
-    return;
   }
   try {
     await User.create({
@@ -20,11 +20,15 @@ export default async function (req, res) {
       password: req.body.password,
     });
   } catch (e) {
-    if (e.code === 11000 || e.message === 'duplicate username') {
-      res.status(400).json({
+    if (e.message === 'duplicate username') {
+      return res.status(400).json({
         error: 'Username is already taken.',
       });
-      return;
+    } else {
+      winston.log('error', e);
+      return res.status(500).json({
+        error: 'Sorry, a server error occured. Please try again later',
+      });
     }
   }
 
