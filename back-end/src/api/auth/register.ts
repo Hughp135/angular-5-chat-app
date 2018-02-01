@@ -17,7 +17,6 @@ const schema = Joi.object().keys({
 export default async function (req, res) {
   const result = Joi.validate(req.body, schema);
   if (result.error) {
-    console.log('Returning error');
     return res.status(400).json({ error: result.error.details[0].message });
   }
   try {
@@ -26,7 +25,6 @@ export default async function (req, res) {
       password: req.body.password,
     });
   } catch (e) {
-    console.log('error', e);
     if (e.message === 'duplicate username') {
       return res.status(400).json({ error: 'Username is already taken.' });
     } else {
