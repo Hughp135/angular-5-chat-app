@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MainComponent } from './main/main.component';
 import { Title } from '@angular/platform-browser';
 
 @Component({

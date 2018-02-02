@@ -23,7 +23,7 @@ module.exports = function (config) {
     angularCli: {
       environment: 'dev'
     },
-    reporters: ['coverage-istanbul'],
+    reporters: ['dots', 'coverage-istanbul', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

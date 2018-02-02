@@ -1,0 +1,49 @@
+<div id="background-wrapper">
+
+  <div id="centered-segment"
+    class="ui raised text container segment">
+    <div class="header">
+      <h2 style="float: left">Please log in to continue.</h2>
+      <button class="right floated ui tiny button"
+        [routerLink]="['/register']">
+        Create Account
+      </button>
+    </div>
+    <div *ngIf="error"
+      class="ui error message">
+      <div class="header">Error</div>
+      <p>{{ error }}</p>
+    </div>
+    <form [formGroup]="loginForm"
+      class="ui form"
+      [class.error]="error"
+      [class.loading]="submitting"
+      (ngSubmit)="submitForm()">
+      <div class="field">
+        <label>Username</label>
+        <input formControlName="username"
+          type="text"
+          name="username"
+          placeholder="Username">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input autocomplete="off"
+          formControlName="password"
+          type="password"
+          name="password"
+          placeholder="Password">
+      </div>
+      <div class="buttons-container">
+        <button class="left floated ui tiny primary button"
+          type="submit"
+          [disabled]="!loginForm.valid">
+          Login
+        </button>
+        <a style="float: right">Forgot your Password?</a>
+      </div>
+    </form>
+
+  </div>
+
+</div>

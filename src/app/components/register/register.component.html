@@ -1,0 +1,60 @@
+<div id="background-wrapper">
+
+  <div id="centered-segment"
+    class="ui raised text container segment">
+    
+    <h2>
+      <i class="large arrow circle left icon" [routerLink]="['/login']"></i>
+      Create a new account.</h2>
+    
+    <div *ngIf="error"
+      class="ui error message">
+      <div class="header">Error</div>
+      <p>{{ error }}</p>
+    </div>
+    <form [formGroup]="registerForm"
+      class="ui form"
+      [class.error]="error"
+      [class.loading]="submitting"
+      (ngSubmit)="submitForm()">
+      <div class="field">
+        <label>Choose a Username</label>
+        <input formControlName="username"
+          type="text"
+          name="username"
+          placeholder="Username">
+      </div>
+      <div class="field">
+        <label>Choose a Password
+          <span class="errorText"
+            *ngIf="registerForm.controls['password'].invalid && registerForm.controls['password'].touched">
+            (Must be at least 6 characters long)
+          </span>
+        </label>
+        <input autocomplete="off"
+          formControlName="password"
+          type="password"
+          name="password"
+          placeholder="Password">
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input autocomplete="off"
+          formControlName="password_confirm"
+          type="password"
+          name="password_confirm"
+          placeholder="Re-enter password">
+      </div>
+      <div class="buttons-container">
+        <button class="left floated ui tiny primary button"
+          type="submit"
+          [disabled]="!registerForm.valid">
+          Register
+        </button>
+        <a style="float: right">Forgot your Password?</a>
+      </div>
+    </form>
+
+  </div>
+
+</div>

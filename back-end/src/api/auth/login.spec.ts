@@ -3,8 +3,10 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as supertest from 'supertest';
+import * as setCookie from 'set-cookie-parser';
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import * as cookieParser from 'cookie-parser';
 
 import { app } from '../../api-server';
 import { verifyJWT } from './jwt';
@@ -107,10 +109,14 @@ describe('api/auth/login', () => {
         username: 'test',
         password: '123456',
       })
-      .expect(200)
+      .expect(204)
       .then(async res => {
-        expect(res.body.token).to.be.a('string').that.is.not.empty;
-        const decoded: any = await verifyJWT(res.body.token);
+        const cookies = setCookie.parse(res);
+        const jwtCookie = cookies.find((item) => item.name === 'jwt_token');
+        expect(jwtCookie).to.exist;
+        expect(jwtCookie.value).to.be.a('string').that.is.not.empty;
+        expect(jwtCookie.maxAge).to.equal(900);
+        const decoded: any = await verifyJWT(jwtCookie.value);
         expect(decoded.username).to.equal('test');
         expect(decoded.user_id).to.equal(userId.toString());
       });

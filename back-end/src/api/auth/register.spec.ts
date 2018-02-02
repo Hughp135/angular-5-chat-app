@@ -42,37 +42,35 @@ describe('api/auth/register', () => {
       .send({
         username: '12',
         password: '123456',
+        password_confirm: '123456',
       })
-      .expect(400, {
-        error: '"username" length must be at least 3 characters long',
-      });
+      .expect(400, { error: '"username" length must be at least 3 characters long' });
   });
   it('password should be at least 6 characters', async () => {
     return supertest(app.listen(null))
       .post('/api/register')
       .send({
-    username: '123',
+        username: '123',
         password: '12345',
+        password_confirm: '12345',
       })
-      .expect(400, {
-        error: '"password" length must be at least 6 characters long',
-      });
+      .expect(400, { error: '"password" length must be at least 6 characters long' });
   });
   it('username must be unique', async () => {
     const spy = sandbox.spy(bcrypt, 'hash');
     await User.create({
       username: 'someUsername',
-      password: '123456'
+      password: '123456',
+      password_confirm: '123456',
     });
     const result = await supertest(app.listen(null))
       .post('/api/register')
       .send({
         username: 'someUsername',
         password: 'irrelevant',
+        password_confirm: 'irrelevant',
       })
-      .expect(400, {
-        error: 'Username is already taken.',
-      });
+      .expect(400, { error: 'Username is already taken.' });
     expect(spy).to.have.been.calledOnce;
   });
   it('returns 500 if unable to create user', async () => {
@@ -83,6 +81,7 @@ describe('api/auth/register', () => {
       .send({
         username: 'someUsername',
         password: 'irrelevant',
+        password_confirm: 'irrelevant',
       })
       .expect(500, {
         error: 'Sorry, a server error occured. Please try again later',
@@ -94,8 +93,9 @@ describe('api/auth/register', () => {
       .send({
         username: '123',
         password: '123456',
+        password_confirm: '123456',
       })
-      .expect(204);
+      .expect(200, { success: true });
 
     const user: any = await User.findOne().lean();
     expect(user).to.exist;
@@ -109,8 +109,9 @@ describe('api/auth/register', () => {
       .send({
         username: '123',
         password: '123456',
+        password_confirm: '123456',
       })
-      .expect(204);
+      .expect(200, { success: true });
     expect(hashFunc).to.have.been.calledOnce;
 
     const user: any = await User.findOne().lean();
