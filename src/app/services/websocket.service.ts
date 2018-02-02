@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import * as io from 'socket.io-client';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class WebsocketService {
@@ -8,29 +8,24 @@ export class WebsocketService {
   public socket: SocketIOClient.Socket;
   public connected = false;
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   public connect() {
-    if (!this.socket) {
-      /* istanbul ignore else  */
-      if ((window as any).MockSocketIo) {
-        // Necessary for testing purposes
-        this.socket = (window as any).MockSocketIo.connect('http://localhost:6145');
-      } else {
-        this.socket = io.connect(this.url);
-      }
-      // this.observable = this.create();
-      this.addSocketListeners();
-      // return this.observable;
+    /* istanbul ignore else  */
+    if ((window as any).MockSocketIo) {
+      // Necessary for testing purposes
+      this.socket = (window as any).MockSocketIo.connect('http://localhost:6145');
     } else {
-      throw new Error('Socket already exists');
+      this.socket = io.connect(this.url);
     }
+    this.addSocketListeners();
   }
 
   private addSocketListeners() {
     this.socket.on('connect', (data: Object) => {
       this.connected = true;
+      this.router.navigate(['/']);
     });
     this.socket.on('disconnect', (reason: string) => {
       // SOCKET CONNECTION LOST

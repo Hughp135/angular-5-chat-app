@@ -5,6 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { LoginComponent } from './login.component';
 import { ApiService } from '../../services/api.service';
+import { WebsocketService } from '../../services/websocket.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -19,6 +20,7 @@ describe('LoginComponent', () => {
       imports: [ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule],
       providers: [
         ApiService,
+        { provide: WebsocketService, useValue: { connect: () => null } },
       ],
     })
       .compileComponents();
@@ -57,7 +59,7 @@ describe('LoginComponent', () => {
     called.flush(null, { status: 204, statusText: 'No Content' });
     expect(component.submitting).toEqual(false);
   });
-  it('failed login', () => {
+  it('failed login with 401 & error.error', () => {
     const formData = {
       username: 'coolname',
       password: '12345',
@@ -71,6 +73,21 @@ describe('LoginComponent', () => {
     called.flush(mockResponse, { status: 401, statusText: 'Unauthorized' });
     expect(component.submitting).toEqual(false);
     expect(component.error).toEqual('Failed');
+  });
+  it('failed login with 500 error', () => {
+    const formData = {
+      username: 'coolname',
+      password: '12345',
+    };
+    const mockResponse = {};
+    component.loginForm.patchValue(formData);
+    component.submitForm();
+    expect(component.submitting).toEqual(true);
+    const called = httpMock.expectOne(`${service.BASE_URL}login`);
+    expect(called.request.method).toBe('POST');
+    called.flush(mockResponse, { status: 500, statusText: 'Server Error' });
+    expect(component.submitting).toEqual(false);
+    expect(component.error).toEqual('Sorry, a server error occured. Please try again.');
   });
   it('failed login followed by successful login', () => {
     const formData = {

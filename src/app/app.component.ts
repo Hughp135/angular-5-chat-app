@@ -8,9 +8,8 @@ import { WebsocketService } from './services/websocket.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  public loggedIn = false;
-
-  constructor(private titleService: Title, private wsService: WebsocketService) {
+  constructor(private titleService: Title,
+    private wsService: WebsocketService) {
     this.titleService.setTitle('Angular 5 Chat App');
     this.wsService.connect();
   }
