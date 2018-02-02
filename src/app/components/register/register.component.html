@@ -2,7 +2,11 @@
 
   <div id="centered-segment"
     class="ui raised text container segment">
-    <h2>Create a new account.</h2>
+    
+    <h2>
+      <i class="large arrow circle left icon" [routerLink]="['/login']"></i>
+      Create a new account.</h2>
+    
     <div *ngIf="error"
       class="ui error message">
       <div class="header">Error</div>

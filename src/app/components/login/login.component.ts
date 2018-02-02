@@ -28,14 +28,20 @@ export class LoginComponent {
     this.error = null;
     this.apiService
       .post('login', this.loginForm.value)
-      .finally(() => {
-        this.submitting = false;
-      })
-      .subscribe((data) => {
-      }, e => {
-        this.error = (e.error && e.error.error)
-          ? e.error.error
-          : 'Sorry, a server error occured. Please try again.';
-      });
+      .finally(() => this.onRequestComplete())
+      .subscribe((data: any) => {
+        // Try connecting with cookie
+      }, e => this.onRequestComplete(e));
+  }
+
+  onRequestComplete(e?) {
+    this.submitting = false;
+
+    if (e) {
+      this.error = (e.error && e.error.error)
+      ? e.error.error
+      : 'Sorry, a server error occured. Please try again.';
+      return;
+    }
   }
 }

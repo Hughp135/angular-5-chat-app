@@ -49,13 +49,12 @@ describe('LoginComponent', () => {
       username: 'coolname',
       password: '123456'
     };
-    const mockResponse = { token: '12345asdasd' };
     component.loginForm.patchValue(formData);
     component.submitForm();
     expect(component.submitting).toEqual(true);
     const called = httpMock.expectOne(`${service.BASE_URL}login`);
     expect(called.request.method).toBe('POST');
-    called.flush(mockResponse);
+    called.flush(null, { status: 204, statusText: 'No Content' });
     expect(component.submitting).toEqual(false);
   });
   it('failed login', () => {

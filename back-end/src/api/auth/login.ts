@@ -42,5 +42,10 @@ export default async function (req, res) {
     user_id: user._id,
   }, '1m');
 
-  res.json({ token });
+  res
+  .status(204)
+  .cookie('jwt_token', token, { maxAge: 900000, httpOnly: true })
+  .end();
+
+  // res.json({ token });
 }

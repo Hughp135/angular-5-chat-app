@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ApiService } from '../../services/api.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { RegisterComponent } from './register.component';
 import { Observable } from 'rxjs/Observable';
@@ -24,7 +25,7 @@ describe('RegisterComponent', () => {
     };
     TestBed.configureTestingModule({
       declarations: [RegisterComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, RouterTestingModule],
       providers: [
         { provide: ApiService, useValue: apiServiceMock },
       ]
