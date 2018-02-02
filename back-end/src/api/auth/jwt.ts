@@ -8,6 +8,7 @@ export function verifyJWT(token) {
   return new Promise((resolve, reject) => {
     jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
       if (err || !decodedToken) {
+        /* istanbul ignore next */
         winston.log('info', 'Invalid token error', err.message || err);
         return reject(err);
       }

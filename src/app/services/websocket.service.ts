@@ -1,37 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import * as io from 'socket.io-client';
 
 @Injectable()
 export class WebsocketService {
-  private url = 'http://localhost:7202';
-  private observable: Observable<any>;
-  private socket: SocketIOClient.Socket;
+  public url = 'http://localhost:7202';
+  public socket: SocketIOClient.Socket;
+  public connected = false;
 
-  constructor() { }
+  constructor() {
+  }
 
-  public connect(): Observable<Object> {
+  public connect() {
     if (!this.socket) {
-      this.socket = io(this.url);
-      this.observable = this.create();
-      return this.observable;
+      /* istanbul ignore else  */
+      if ((window as any).MockSocketIo) {
+        // Necessary for testing purposes
+        this.socket = (window as any).MockSocketIo.connect('http://localhost:6145');
+      } else {
+        this.socket = io.connect(this.url);
+      }
+      // this.observable = this.create();
+      this.addSocketListeners();
+      // return this.observable;
     } else {
       throw new Error('Socket already exists');
     }
   }
 
-  private create(): Observable<Object> {
-    // Watch the socket for changes
-    const observable = new Observable(observer => {
-      this.socket.on('connect', (data: Object) => {
-      });
-      return () => {
-        // MANUAL LOGOUT OR ERROR
-        this.socket.disconnect();
-        this.socket = undefined;
-      };
+  private addSocketListeners() {
+    this.socket.on('connect', (data: Object) => {
+      this.connected = true;
     });
-    return observable;
+    this.socket.on('disconnect', (reason: string) => {
+      // SOCKET CONNECTION LOST
+      this.connected = false;
+    });
   }
 }

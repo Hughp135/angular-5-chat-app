@@ -3,7 +3,7 @@ import * as cookie from 'cookie';
 
 export { logInAuth };
 
-function logInAuth(io) {
+function logInAuth(io?) {
   return async (socket, next) => {
     const cookieString = socket.handshake.headers.cookie;
     const cookies = cookie.parse(cookieString || '');

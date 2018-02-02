@@ -102,6 +102,7 @@
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "mocha": "^4.0.1",
+    "mock-socket": "^7.1.0",
     "ng2-semantic-ui": "^0.9.6",
     "nyc": "^11.4.1",
     "protractor": "~5.1.2",
