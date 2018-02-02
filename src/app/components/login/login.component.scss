@@ -1,8 +1,10 @@
-
 #centered-segment {
   top: 25vh;
-  height: 30vh;
   min-height: 300px;
-  min-width: 472px;
+  min-width: 370px;
   padding: 20px 30px;
+}
+
+.header {
+  overflow: hidden;
 }

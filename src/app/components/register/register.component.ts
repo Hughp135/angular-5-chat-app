@@ -27,13 +27,13 @@ export class RegisterComponent {
 
   submitForm() {
     this.submitting = true;
+    this.error = null;
     this.apiService
       .post('register', this.registerForm.value)
       .finally(() => {
         this.submitting = false;
       })
       .subscribe((data) => {
-        this.error = null;
       }, e => {
         this.error = (e.error && e.error.error)
           ? e.error.error

@@ -1,15 +1,24 @@
 <div id="background-wrapper">
 
-  <div id="centered-segment" class="ui raised text container segment">
-    <h2 style="float: left">Please log in to continue.</h2>
-
-    <button class="right floated ui tiny button"
-      [routerLink]="['/register']">
-      Create Account
-    </button>
+  <div id="centered-segment"
+    class="ui raised text container segment">
+    <div class="header">
+      <h2 style="float: left">Please log in to continue.</h2>
+      <button class="right floated ui tiny button"
+        [routerLink]="['/register']">
+        Create Account
+      </button>
+    </div>
+    <div *ngIf="error"
+      class="ui error message">
+      <div class="header">Error</div>
+      <p>{{ error }}</p>
+    </div>
     <form [formGroup]="loginForm"
       class="ui form"
-      (ngSubmit)="logIn()">
+      [class.error]="error"
+      [class.loading]="submitting"
+      (ngSubmit)="submitForm()">
       <div class="field">
         <label>Username</label>
         <input formControlName="username"
