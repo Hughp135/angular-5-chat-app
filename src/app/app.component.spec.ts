@@ -2,12 +2,14 @@ import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { APP_BASE_HREF } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
+import { WebsocketService } from './services/websocket.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: APP_BASE_HREF, useValue: '/' }
+        { provide: APP_BASE_HREF, useValue: '/' },
+        { provide: WebsocketService, useValue: { connect: () => null } },
       ],
       declarations: [
         AppComponent,
