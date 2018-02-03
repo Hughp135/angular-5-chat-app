@@ -6,7 +6,6 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
-const User = mongoose.model('User', UserSchema);
 UserSchema.pre('save', async function (next) {
   if (!this.isNew) {
     // Only hash password for newly created users
@@ -29,5 +28,7 @@ UserSchema.pre('save', async function (next) {
 async function hashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 10);
 }
+
+const User = mongoose.model('User', UserSchema);
 
 export default User;

@@ -21,3 +21,6 @@ Run `npm test` to execute the unit tests (front & back-end)
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+
+## Project To-Do list
+Trello board at [https://trello.com/b/b5DeyaVi/chat-app](https://trello.com/b/b5DeyaVi/chat-app)

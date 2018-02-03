@@ -26,7 +26,7 @@ describe('api/auth/login', () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
   });
   after(async () => {
-    mongoose.connection.close();
+    await mongoose.connection.close();
   });
   beforeEach(async () => {
     const user = await User.create({
