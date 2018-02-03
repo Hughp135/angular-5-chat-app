@@ -11,7 +11,7 @@
 
 #sidebar-menu {
   width: 300px;
-  border-right: 1px solid #2d2e2f;
+  border-right: 1px solid #c9c9c9;
 }
 
 #main-content {
@@ -21,4 +21,10 @@
   flex-direction: column;
   height: 100vh;
   padding: 20px;
+  &.inverted {
+    background: #2d2e2f;
+  }
+  .ui.container {
+    padding: 20px;
+  }
 }
