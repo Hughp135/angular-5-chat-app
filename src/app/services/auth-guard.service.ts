@@ -5,14 +5,17 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
+import { WebsocketService } from './websocket.service';
 
 @Injectable()
 export class AuthGuardService implements CanActivate  {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private wsService: WebsocketService) { }
 
   canActivate(route?: ActivatedRouteSnapshot, state?: RouterStateSnapshot): boolean {
-    this.router.navigate(['/login']);
-    return false;
+    if (!this.wsService.connected) {
+      this.router.navigate(['/login']);
+    }
+    return this.wsService.connected;
   }
 }

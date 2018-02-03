@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,9 @@ export class LoginComponent {
   public loginForm: FormGroup;
   public error: string = null;
 
-  constructor(private fb: FormBuilder, private apiService: ApiService) {
+  constructor(private fb: FormBuilder,
+    private apiService: ApiService,
+    private wsService: WebsocketService) {
     this.createForm();
   }
 
@@ -30,7 +33,7 @@ export class LoginComponent {
       .post('login', this.loginForm.value)
       .finally(() => this.onRequestComplete())
       .subscribe((data: any) => {
-        // Try connecting with cookie
+        this.wsService.connect();
       }, e => this.onRequestComplete(e));
   }
 
@@ -39,8 +42,8 @@ export class LoginComponent {
 
     if (e) {
       this.error = (e.error && e.error.error)
-      ? e.error.error
-      : 'Sorry, a server error occured. Please try again.';
+        ? e.error.error
+        : 'Sorry, a server error occured. Please try again.';
       return;
     }
   }

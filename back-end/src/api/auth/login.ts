@@ -44,8 +44,7 @@ export default async function (req, res) {
 
   res
   .status(204)
-  .cookie('jwt_token', token, { maxAge: 900000, httpOnly: true })
+  .cookie('jwt_token', token, { maxAge: 60 * 1000, httpOnly: true })
   .end();
 
-  // res.json({ token });
 }

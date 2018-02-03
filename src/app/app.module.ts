@@ -13,6 +13,7 @@ import { SettingsService } from './services/settings.service';
 import { ApiService } from './services/api.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { RegisterComponent } from './components/register/register.component';
+import { WebsocketService } from './services/websocket.service';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { RegisterComponent } from './components/register/register.component';
     SettingsService,
     AuthGuardService,
     ApiService,
+    WebsocketService
   ],
   bootstrap: [AppComponent]
 })
