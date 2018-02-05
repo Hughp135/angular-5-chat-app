@@ -6,6 +6,7 @@ const channelSchema = new mongoose.Schema({
 });
 
 channelSchema.pre('save', async function (next) {
+  /* istanbul ignore next */
   if (!this.isNew) {
     // Only check newly created channels
     return next();

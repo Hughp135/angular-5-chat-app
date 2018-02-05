@@ -8,6 +8,8 @@ const schema = Joi.object().keys({
   password: Joi.string().required(),
 });
 
+const TOKEN_EXPIRY_MINS = 5;
+
 export default async function (req, res) {
   const validation = Joi.validate(req.body, schema);
   if (validation.error) {
@@ -40,11 +42,11 @@ export default async function (req, res) {
   const token = createJWT({
     username: user.username,
     user_id: user._id,
-  }, '1m');
+  }, `${TOKEN_EXPIRY_MINS}m`);
 
   res
-  .status(204)
-  .cookie('jwt_token', token, { maxAge: 60 * 1000, httpOnly: true })
-  .end();
+    .status(204)
+    .cookie('jwt_token', token, { maxAge: TOKEN_EXPIRY_MINS * 60 * 1000, httpOnly: true })
+    .end();
 
 }

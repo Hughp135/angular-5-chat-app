@@ -5,10 +5,14 @@ import * as sinonChai from 'sinon-chai';
 import * as supertest from 'supertest';
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import * as winston from 'winston';
 
 import { app } from '../../api-server';
 
 import User from '../../models/user.model';
+
+// Disable winston logging during test sin ce it's annoying.
+winston.configure({ transports: [] });
 
 // tslint:disable:no-unused-expression
 
