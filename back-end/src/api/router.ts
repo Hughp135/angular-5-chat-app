@@ -3,6 +3,7 @@ import login from './auth/login';
 import register from './auth/register';
 import authMiddleware from './auth/router-middleware';
 import { createServer } from './server/post';
+import { getServers } from './server/get';
 
 const router = Router();
 
@@ -12,6 +13,6 @@ router.post('/register', register);
 
 // Authenticated routes
 router.post('/server', authMiddleware, createServer);
-router.get('/test', authMiddleware);
+router.get('/server', authMiddleware, getServers);
 
 export default router;

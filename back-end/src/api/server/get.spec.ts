@@ -15,7 +15,7 @@ import User from '../../models/user.model';
 const expect = chai.expect;
 chai.use(sinonChai);
 
-describe('api/server/post', () => {
+describe('api/server/get', () => {
   let token;
   let invalidToken;
   let user;
@@ -43,68 +43,46 @@ describe('api/server/post', () => {
   });
   it('returns 401 if not logged in', async () => {
     return supertest(app.listen(null))
-      .post('/api/server')
-      .send({})
+      .get('/api/server')
       .expect(401, {
         error: 'You must be logged in.',
       });
   });
   it('returns 401 if user does not exist', async () => {
     return supertest(app.listen(null))
-      .post('/api/server')
+      .get('/api/server')
       .set('Cookie', `jwt_token=${invalidToken}`)
-      .send({})
       .expect(401, {
         error: 'User not found.',
       });
   });
-  it('returns 400 with invalid data', async () => {
+  it('returns empty server list if user has no servers', async () => {
     return supertest(app.listen(null))
-      .post('/api/server')
+      .get('/api/server')
       .set('Cookie', `jwt_token=${token}`)
-      .send({})
-      .expect(400, {
-        error: '"name" is required',
+      .expect(200, {
+        servers: [],
       });
   });
-  it('creates a server', async () => {
-    await supertest(app.listen(null))
-      .post('/api/server')
+  it('returns servers that user has joined', async () => {
+    const server = await Server.create({
+      name: 'namehere',
+      owner_id: user._id
+    });
+    const server2 = await Server.create({
+      name: 'namehere2',
+      owner_id: user._id
+    });
+    user.joinedServers = [ server._id, server2._id ];
+    await user.save();
+    return supertest(app.listen(null))
+      .get('/api/server')
       .set('Cookie', `jwt_token=${token}`)
-      .send({
-        name: 'Automated Test Server'
-      })
       .expect(200, {
-        success: true,
+        servers: [
+          JSON.parse(JSON.stringify(server)),
+          JSON.parse(JSON.stringify(server2)),
+        ],
       });
-    const server = await Server.findOne().lean();
-    expect(server).to.exist;
-    expect(server.name).to.equal('Automated Test Server');
-    expect(server.owner_id.toString()).to.equal(user._id.toString());
-    const usr = await User.findOne({ '_id': user._id }).lean();
-    expect(usr.joinedServers).to.have.lengthOf(1);
-    expect(usr.joinedServers[0].toString()).to.equal(server._id.toString());
-  });
-  it('will not allow user to have more than 1 server', async () => {
-    await supertest(app.listen(null))
-      .post('/api/server')
-      .set('Cookie', `jwt_token=${token}`)
-      .send({
-        name: 'Automated Test Server'
-      })
-      .expect(200, {
-        success: true,
-      });
-    await supertest(app.listen(null))
-      .post('/api/server')
-      .set('Cookie', `jwt_token=${token}`)
-      .send({
-        name: 'Automated Test Server'
-      })
-      .expect(400, {
-        error: 'You already own a server. Please delete or edit your existing server.',
-      });
-    const usr = await User.findOne({ '_id': user._id }).lean();
-    expect(usr.joinedServers).to.have.lengthOf(1);
   });
 });

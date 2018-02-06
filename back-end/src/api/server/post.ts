@@ -1,6 +1,5 @@
 import Server from '../../models/server.model';
 import User from '../../models/user.model';
-import * as mongoose from 'mongoose';
 import * as Joi from 'joi';
 
 const schema = Joi.object().keys({
@@ -8,9 +7,7 @@ const schema = Joi.object().keys({
 });
 
 export async function createServer(req, res) {
-  const userId = req.claim.user_id;
-
-  const user = await User.findOne({ '_id': userId }).lean();
+  const user = await User.findOne({ '_id': req.claim.user_id });
   if (!user) {
     return res.status(401).json({
       error: 'User not found.'
@@ -23,7 +20,7 @@ export async function createServer(req, res) {
   }
 
   const existingServer = await Server.findOne({
-    owner_id: userId
+    owner_id: user._id,
   }).lean();
 
   if (existingServer) {
@@ -32,10 +29,13 @@ export async function createServer(req, res) {
     });
   }
 
-  await Server.create({
+  const server = await Server.create({
     name: req.body.name,
-    owner_id: new mongoose.Types.ObjectId(userId),
+    owner_id: user._id,
   });
+
+  (user as any).joinedServers.push(server._id);
+  await user.save();
 
   res.status(200).json({ success: true });
 }
