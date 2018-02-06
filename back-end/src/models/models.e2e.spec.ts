@@ -45,21 +45,6 @@ describe('models e2e', () => {
     expect(savedServer.owner_id.toString()).to.equal(user._id.toString());
     expect(savedChannel.server_id.toString()).to.equal(server._id.toString());
   });
-  it('will not allow user to have more than 1 server', async () => {
-    const server = await Server.create({
-      name: 'serverName',
-      owner_id: '123456781234567812345678',
-    });
-    try {
-      const server2 = await Server.create({
-        name: 'serverName2',
-        owner_id: '123456781234567812345678',
-      });
-      throw new Error('2nd Server saved to user when it shouldn\'t have');
-    } catch (e) {
-      expect(e.message).to.equal('Owner already has a server');
-    }
-  });
   it('will not allow 2 channels with same name in server', async () => {
     const channel = await Channel.create({
       name: 'channel1',

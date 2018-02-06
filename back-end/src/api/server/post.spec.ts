@@ -1,0 +1,103 @@
+import * as chai from 'chai';
+import * as mocha from 'mocha';
+import * as sinon from 'sinon';
+import * as sinonChai from 'sinon-chai';
+import * as supertest from 'supertest';
+import * as mongoose from 'mongoose';
+
+import { app } from '../../api-server';
+import { createJWT } from '../auth/jwt';
+import Server from '../../models/server.model';
+import User from '../../models/user.model';
+
+// tslint:disable:no-unused-expression
+
+const expect = chai.expect;
+chai.use(sinonChai);
+
+describe('api/server/post', () => {
+  let token;
+  let invalidToken;
+  let user;
+
+  before(async () => {
+    await mongoose.connect('mongodb://localhost/myapp-test');
+    user = await User.create({ username: 'test-user', password: '123456' });
+    token = createJWT({
+      username: 'test-user',
+      user_id: user._id,
+    }, `5s`);
+    invalidToken = createJWT({
+      username: 'test-user',
+      user_id: '123456781234567812345678',
+    }, `5s`);
+  });
+  after(async () => {
+    await User.remove({});
+    mongoose.connection.close();
+  });
+  afterEach(async () => {
+    await Server.remove({});
+  });
+  it('returns 401 if not logged in', async () => {
+    return supertest(app.listen(null))
+      .post('/api/server')
+      .send({})
+      .expect(401, {
+        error: 'You must be logged in.',
+      });
+  });
+  it('returns 401 if user does not exist', async () => {
+    return supertest(app.listen(null))
+      .post('/api/server')
+      .set('Cookie', `jwt_token=${invalidToken}`)
+      .send({})
+      .expect(401, {
+        error: 'User not found.',
+      });
+  });
+  it('returns 400 with invalid data', async () => {
+    return supertest(app.listen(null))
+      .post('/api/server')
+      .set('Cookie', `jwt_token=${token}`)
+      .send({})
+      .expect(400, {
+        error: '"name" is required',
+      });
+  });
+  it('creates a server', async () => {
+    await supertest(app.listen(null))
+      .post('/api/server')
+      .set('Cookie', `jwt_token=${token}`)
+      .send({
+        name: 'Automated Test Server'
+      })
+      .expect(200, {
+        success: true,
+      });
+    const server = await Server.findOne().lean();
+    expect(server).to.exist;
+    expect(server.name).to.equal('Automated Test Server');
+    expect(server.owner_id.toString()).to.equal(user._id.toString());
+  });
+  it('will not allow user to have more than 1 server', async () => {
+    await supertest(app.listen(null))
+      .post('/api/server')
+      .set('Cookie', `jwt_token=${token}`)
+      .send({
+        name: 'Automated Test Server'
+      })
+      .expect(200, {
+        success: true,
+      });
+    await supertest(app.listen(null))
+      .post('/api/server')
+      .set('Cookie', `jwt_token=${token}`)
+      .send({
+        name: 'Automated Test Server'
+      })
+      .expect(400, {
+        error: 'You already own a server. Please delete or edit your existing server.',
+      });
+  });
+});
