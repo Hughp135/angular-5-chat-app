@@ -20,8 +20,4 @@ describe('MainComponent', () => {
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
-  it('should initiate invertedTheme property', async(() => {
-    const fixture = TestBed.createComponent(MainComponent);
-    const app = fixture.debugElement.componentInstance;
-  }));
 });

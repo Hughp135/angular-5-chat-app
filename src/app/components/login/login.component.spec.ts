@@ -7,6 +7,8 @@ import { LoginComponent } from './login.component';
 import { ApiService } from '../../services/api.service';
 import { WebsocketService } from '../../services/websocket.service';
 
+// tslint:disable:no-unused-expression
+
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
