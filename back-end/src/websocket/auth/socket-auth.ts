@@ -13,7 +13,7 @@ function logInAuth(io?) {
       return next(new Error('No token provided'));
     }
     try {
-      await verifyJWT(cookies.jwt_token);
+      socket.claim = await verifyJWT(cookies.jwt_token);
       return next();
     } catch (e) {
       log('info', 'Invalid token');

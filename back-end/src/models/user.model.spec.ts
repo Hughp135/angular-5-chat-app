@@ -15,9 +15,10 @@ describe('models/user', () => {
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
+    await User.remove({});
   });
   after(async () => {
-    mongoose.connection.close();
+    await mongoose.connection.close();
   });
   afterEach(async () => {
     await User.remove({});
