@@ -1,6 +1,12 @@
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
+export interface IUserModel extends mongoose.Document {
+  username: string;
+  password: string;
+  joinedServers: [mongoose.Types.ObjectId];
+}
+
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
@@ -30,6 +36,7 @@ async function hashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 10);
 }
 
-const User = mongoose.model('User', UserSchema);
+const User: mongoose.Model<IUserModel>
+  = mongoose.model<IUserModel>('User', UserSchema);
 
 export default User;
