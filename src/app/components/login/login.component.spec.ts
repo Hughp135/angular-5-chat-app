@@ -44,7 +44,7 @@ describe('LoginComponent', () => {
   });
   it('initial state', () => {
     expect(component.submitting).toEqual(false);
-    expect(component.error).toEqual(null);
+    expect(component.error).toBeNull;
   });
   it('successful login', () => {
     const formData = {

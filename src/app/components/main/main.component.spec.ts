@@ -1,17 +1,21 @@
 import { TestBed, async } from '@angular/core/testing';
 import { MainComponent } from './main.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { SettingsService } from '../../services/settings.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('AppComponent', () => {
+describe('MainComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         MainComponent,
       ],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, FormsModule],
+      providers: [SettingsService],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
   }));
-  it('should create the app', async(() => {
+  it('should create the component', async(() => {
     const fixture = TestBed.createComponent(MainComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
@@ -19,6 +23,5 @@ describe('AppComponent', () => {
   it('should initiate invertedTheme property', async(() => {
     const fixture = TestBed.createComponent(MainComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.invertedTheme).toEqual(false);
   }));
 });

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -14,6 +14,7 @@ import { ApiService } from './services/api.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { RegisterComponent } from './components/register/register.component';
 import { WebsocketService } from './services/websocket.service';
+import { ServerListComponent } from './components/server-list/server-list.component';
 
 @NgModule({
   declarations: [
@@ -21,11 +22,13 @@ import { WebsocketService } from './services/websocket.service';
     MainComponent,
     LoginComponent,
     RegisterComponent,
+    ServerListComponent,
   ],
   imports: [
     SuiModule,
     BrowserModule,
     ReactiveFormsModule,
+    FormsModule,
     RouterModule.forRoot(
       appRoutes
     ),

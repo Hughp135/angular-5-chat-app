@@ -11,7 +11,7 @@ import { WebsocketService } from '../../services/websocket.service';
 export class LoginComponent {
   public submitting = false;
   public loginForm: FormGroup;
-  public error: string = null;
+  public error: string;
 
   constructor(private fb: FormBuilder,
     private apiService: ApiService,
