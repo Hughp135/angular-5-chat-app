@@ -11,9 +11,6 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "types": [
-      "socket.io-client"
-    ],
     "lib": [
       "es2017",
       "dom"

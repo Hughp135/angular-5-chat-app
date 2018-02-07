@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { AuthGuardService } from './auth-guard.service';
 import { WebsocketService } from './websocket.service';
+import { AppStateService } from './app-state.service';
 
 describe('AuthGuardService', () => {
   beforeEach(() => {
@@ -12,6 +13,7 @@ describe('AuthGuardService', () => {
       providers: [
         AuthGuardService,
         WebsocketService,
+        AppStateService,
       ],
     });
   });

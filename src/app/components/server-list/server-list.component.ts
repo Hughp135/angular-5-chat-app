@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { SettingsService } from '../../services/settings.service';
+import { WebsocketService } from '../../services/websocket.service';
+import ChatServer from '../../../../shared-interfaces/server.interface';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-server-list',
@@ -14,18 +17,21 @@ export class ServerListComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private settingsService: SettingsService) {
+    public settingsService: SettingsService,
+    private wsService: WebsocketService,
+    private appState: AppStateService,
+  ) {
     this.loading = true;
     this.error = null;
     this.apiService
       .get('server')
-      .finally(() => this.onRequestComplete())
+      .finally(() => this.onGetServersComplete())
       .subscribe((data: any) => {
         this.serverList = data.servers;
-      }, e => this.onRequestComplete(e));
+      }, e => this.onGetServersComplete(e));
   }
 
-  onRequestComplete(e?) {
+  onGetServersComplete(e?) {
     this.loading = false;
 
     if (e) {
@@ -34,8 +40,10 @@ export class ServerListComponent implements OnInit {
     }
   }
 
-  get invertedTheme() {
-    return this.settingsService.invertedTheme;
+  joinServer(server: ChatServer) {
+    this.appState.currentServer = server;
+    this.wsService.socket.emit('join-server', server.id);
+    console.log('Current server', server);
   }
 
   ngOnInit() {

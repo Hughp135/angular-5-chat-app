@@ -15,6 +15,8 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { RegisterComponent } from './components/register/register.component';
 import { WebsocketService } from './services/websocket.service';
 import { ServerListComponent } from './components/server-list/server-list.component';
+import { ChannelsListComponent } from './components/channels/channels-list/channels-list.component';
+import { AppStateService } from './services/app-state.service';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { ServerListComponent } from './components/server-list/server-list.compon
     LoginComponent,
     RegisterComponent,
     ServerListComponent,
+    ChannelsListComponent,
   ],
   imports: [
     SuiModule,
@@ -39,6 +42,7 @@ import { ServerListComponent } from './components/server-list/server-list.compon
     AuthGuardService,
     ApiService,
     WebsocketService,
+    AppStateService,
   ],
   bootstrap: [AppComponent]
 })

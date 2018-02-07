@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Router } from '@angular/router';
+import { AppStateService } from './app-state.service';
 
 @Injectable()
 export class WebsocketService {
@@ -8,7 +9,10 @@ export class WebsocketService {
   public socket: SocketIOClient.Socket;
   public connected = false;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private appState: AppStateService,
+  ) {
   }
 
   public connect() {

@@ -3,6 +3,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
 import { Router } from '@angular/router';
+import { AppStateService } from './app-state.service';
 
 // tslint:disable:no-unused-expression
 
@@ -11,7 +12,7 @@ describe('WebsocketService', () => {
   let service: WebsocketService;
   let mockServer: Server;
   (window as any).MockSocketIo = SocketIO;
-  const router  = {
+  const router = {
     navigate: jasmine.createSpy()
   };
 
@@ -19,15 +20,14 @@ describe('WebsocketService', () => {
     TestBed.configureTestingModule({
       providers: [
         WebsocketService,
-        { provide: Router, useValue: router }
+        { provide: Router, useValue: router },
+        AppStateService,
       ],
     });
     injector = getTestBed();
     service = injector.get(WebsocketService);
     mockServer = new Server('http://localhost:6145');
-
-    // mockServer.on('connection', server => {
-    //   mockServer.emit('message', 'Hi');
+    // mockServer.on('connection', (val) => {
     // });
   });
   afterEach(() => {
