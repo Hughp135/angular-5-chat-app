@@ -21,9 +21,6 @@ describe('WebsocketService', () => {
         WebsocketService,
         { provide: Router, useValue: router }
       ],
-      imports: [
-        // RouterTestingModule.withRoutes(appRoutes),
-      ]
     });
     injector = getTestBed();
     service = injector.get(WebsocketService);

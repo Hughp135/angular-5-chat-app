@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-import { appRoutes } from './routes';
+import { appRoutes } from './app-routes';
 import { AppComponent } from './app.component';
 import { SuiModule } from 'ng2-semantic-ui';
 import { MainComponent } from './components/main/main.component';
@@ -38,7 +38,7 @@ import { ServerListComponent } from './components/server-list/server-list.compon
     SettingsService,
     AuthGuardService,
     ApiService,
-    WebsocketService
+    WebsocketService,
   ],
   bootstrap: [AppComponent]
 })

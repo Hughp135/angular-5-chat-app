@@ -4,22 +4,24 @@
       class="ui visible left vertical sidebar menu"
       [class.inverted]="this.settingsService.invertedTheme">
       <div class="item">
-        Hi there
+        <h4 class="ui header"
+          [class.inverted]="this.settingsService.invertedTheme"
+          align="right">
+          Inverted Theme &nbsp;&nbsp;
+          <sui-checkbox [(ngModel)]="this.settingsService.invertedTheme"
+            class="toggle"
+            style="float:right">
+          </sui-checkbox>
+        </h4>
+      </div>
+      <div class="item">
+        <app-server-list></app-server-list>
       </div>
     </div>
   </div>
 
   <div id="main-content"
     [class.inverted]="this.settingsService.invertedTheme">
-    <h4 class="ui header"
-      [class.inverted]="this.settingsService.invertedTheme"
-      align="right">
-      Inverted Theme &nbsp;&nbsp;
-      <sui-checkbox [(ngModel)]="this.settingsService.invertedTheme"
-        class="toggle"
-        style="float:right">
-      </sui-checkbox>
-    </h4>
-    <app-server-list></app-server-list>
+
   </div>
 </div>
