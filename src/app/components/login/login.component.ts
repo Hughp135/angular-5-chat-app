@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { WebsocketService } from '../../services/websocket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder,
     private apiService: ApiService,
-    private wsService: WebsocketService) {
+    private wsService: WebsocketService,
+    private router: Router) {
     this.createForm();
   }
 
@@ -31,9 +33,17 @@ export class LoginComponent {
     this.error = null;
     this.apiService
       .post('login', this.loginForm.value)
-      .finally(() => this.onRequestComplete())
-      .subscribe((data: any) => {
-        this.wsService.connect();
+      .subscribe(async (data: any) => {
+        const connected = await this.wsService.connect().toPromise();
+        const error = !connected && {
+          error: {
+            error: 'Unable to establish a connection.',
+          },
+        };
+        this.onRequestComplete(error);
+        if (connected) {
+          this.router.navigate(['/']);
+        }
       }, e => this.onRequestComplete(e));
   }
 

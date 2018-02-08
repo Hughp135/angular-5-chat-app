@@ -24,19 +24,19 @@ describe('AuthGuardService', () => {
   it('should deny access to / and redirect to /login if not connected',
     inject(
       [AuthGuardService, Router],
-      (service: AuthGuardService, router) => {
+      async (service: AuthGuardService, router) => {
         spyOn(router, 'navigate');
-        expect(service.canActivate()).toBeFalsy();
+        expect(await service.canActivate()).toBeFalsy();
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
       })
   );
   it('should allow access to / if connected',
     inject(
       [AuthGuardService, Router, WebsocketService],
-      (service: AuthGuardService, router, wsService) => {
+      async (service: AuthGuardService, router, wsService) => {
         wsService.connected = true;
         spyOn(router, 'navigate');
-        expect(service.canActivate()).toEqual(true);
+        expect(await service.canActivate()).toEqual(true);
         expect(router.navigate).not.toHaveBeenCalled();
       })
   );

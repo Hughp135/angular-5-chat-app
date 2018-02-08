@@ -15,6 +15,13 @@ describe('LoginComponent', () => {
   let injector: TestBed;
   let service: ApiService;
   let httpMock: HttpTestingController;
+  const fakeWebsocket = {
+    connect: () => ({
+      toPromise: () => {
+        return Promise.resolve(true);
+      }
+    })
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -22,7 +29,7 @@ describe('LoginComponent', () => {
       imports: [ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule],
       providers: [
         ApiService,
-        { provide: WebsocketService, useValue: { connect: () => null } },
+        { provide: WebsocketService, useValue: fakeWebsocket },
       ],
     })
       .compileComponents();
@@ -48,7 +55,7 @@ describe('LoginComponent', () => {
     expect(component.submitting).toEqual(false);
     expect(component.error).toBeNull;
   });
-  it('successful login', () => {
+  it('successful login', async () => {
     const formData = {
       username: 'coolname',
       password: '123456'
@@ -58,10 +65,10 @@ describe('LoginComponent', () => {
     expect(component.submitting).toEqual(true);
     const called = httpMock.expectOne(`${service.BASE_URL}login`);
     expect(called.request.method).toBe('POST');
-    called.flush(null, { status: 204, statusText: 'No Content' });
+    await called.flush(null, { status: 204, statusText: 'No Content' });
     expect(component.submitting).toEqual(false);
   });
-  it('failed login with 401 & error.error', () => {
+  it('failed login with 401 & error.error', async () => {
     const formData = {
       username: 'coolname',
       password: '12345',
@@ -72,7 +79,7 @@ describe('LoginComponent', () => {
     expect(component.submitting).toEqual(true);
     const called = httpMock.expectOne(`${service.BASE_URL}login`);
     expect(called.request.method).toBe('POST');
-    called.flush(mockResponse, { status: 401, statusText: 'Unauthorized' });
+    await called.flush(mockResponse, { status: 401, statusText: 'Unauthorized' });
     expect(component.submitting).toEqual(false);
     expect(component.error).toEqual('Failed');
   });
@@ -91,7 +98,7 @@ describe('LoginComponent', () => {
     expect(component.submitting).toEqual(false);
     expect(component.error).toEqual('Sorry, a server error occured. Please try again.');
   });
-  it('failed login followed by successful login', () => {
+  it('failed login followed by successful login', async () => {
     const formData = {
       username: 'coolname',
       password: '12345',
@@ -102,7 +109,7 @@ describe('LoginComponent', () => {
     expect(component.submitting).toEqual(true);
     const called = httpMock.expectOne(`${service.BASE_URL}login`);
     expect(called.request.method).toBe('POST');
-    called.flush(mockResponse, { status: 401, statusText: 'Unauthorized' });
+    await called.flush(mockResponse, { status: 401, statusText: 'Unauthorized' });
     expect(component.submitting).toEqual(false);
     expect(component.error).toEqual('Failed');
 
@@ -111,7 +118,7 @@ describe('LoginComponent', () => {
     expect(component.submitting).toEqual(true);
     expect(component.error).toBeNull();
     const secondcall = httpMock.expectOne(`${service.BASE_URL}login`);
-    secondcall.flush({ token : '12345' });
+    await secondcall.flush({ token : '12345' });
     expect(component.submitting).toEqual(false);
     expect(component.error).toBeNull();
   });

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
-import { Router } from '@angular/router';
-import { AppStateService } from './app-state.service';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
 
 @Injectable()
 export class WebsocketService {
@@ -10,12 +9,16 @@ export class WebsocketService {
   public connected = false;
 
   constructor(
-    private router: Router,
-    private appState: AppStateService,
   ) {
   }
 
   public connect() {
+    const subj = new AsyncSubject<boolean>();
+    if (this.socket && this.socket.connected) {
+      subj.next(true);
+      subj.complete();
+      return subj;
+    }
     /* istanbul ignore else  */
     if ((window as any).MockSocketIo) {
       // Necessary for testing purposes
@@ -23,17 +26,27 @@ export class WebsocketService {
     } else {
       this.socket = io.connect(this.url);
     }
-    this.addSocketListeners();
+    this.addSocketListeners(subj);
+    return subj;
   }
 
-  private addSocketListeners() {
+  private addSocketListeners(subj: AsyncSubject<boolean>) {
     this.socket.on('connect', (data: Object) => {
       this.connected = true;
-      this.router.navigate(['/']);
+      subj.next(true);
+      subj.complete();
     });
     this.socket.on('disconnect', (reason: string) => {
       // SOCKET CONNECTION LOST
+      subj.next(false);
+      subj.complete();
       this.connected = false;
+    });
+    this.socket.on('error', (data: Object) => {
+      if (data === 'No token provided') {
+        subj.next(false);
+        subj.complete();
+      }
     });
   }
 }

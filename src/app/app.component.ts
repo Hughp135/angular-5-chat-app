@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { WebsocketService } from './services/websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +7,7 @@ import { WebsocketService } from './services/websocket.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private titleService: Title,
-    private wsService: WebsocketService) {
+  constructor(private titleService: Title) {
     this.titleService.setTitle('Angular 5 Chat App');
-    this.wsService.connect();
   }
 }
