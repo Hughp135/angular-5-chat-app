@@ -41,7 +41,6 @@ export class LoginComponent {
 
   async connectToSocket() {
     const connected = await this.wsService.connect().toPromise();
-    console.log('connected', connected);
     if (connected) {
       this.router.navigate(['/']);
     }

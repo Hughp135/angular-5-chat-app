@@ -5,7 +5,7 @@ import { AsyncSubject } from 'rxjs/AsyncSubject';
 @Injectable()
 export class WebsocketService {
   public url = 'http://localhost:7202';
-  public socket: SocketIOClient.Socket;
+  public socket: any;
   public connected = false;
 
   constructor(
