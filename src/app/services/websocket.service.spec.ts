@@ -2,7 +2,6 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
-import { Router } from '@angular/router';
 
 // tslint:disable:no-unused-expression
 
@@ -11,27 +10,16 @@ describe('WebsocketService', () => {
   let service: WebsocketService;
   let mockServer: Server;
   (window as any).MockSocketIo = SocketIO;
-  const router  = {
-    navigate: jasmine.createSpy()
-  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         WebsocketService,
-        { provide: Router, useValue: router }
       ],
-      imports: [
-        // RouterTestingModule.withRoutes(appRoutes),
-      ]
     });
     injector = getTestBed();
     service = injector.get(WebsocketService);
     mockServer = new Server('http://localhost:6145');
-
-    // mockServer.on('connection', server => {
-    //   mockServer.emit('message', 'Hi');
-    // });
   });
   afterEach(() => {
     mockServer.close();
@@ -42,26 +30,45 @@ describe('WebsocketService', () => {
     expect(service.connected).toEqual(false);
     expect(service.socket).toBeUndefined;
   });
-  it('connects to websocket and redirects to /', (done) => {
-    service.connect();
-    expect(service.socket).toBeDefined();
-    setTimeout(() => {
-      expect(service.connected).toEqual(true);
-      expect(router.navigate).toHaveBeenCalledWith(['/']);
-      done();
-    }, 20);
+  it('Websocket connection fails with no token error callback', async () => {
+    spyOn((window as any).MockSocketIo, 'connect').and.callFake(() => {
+      return {
+        on: (type, callback) => {
+          if (type === 'error') {
+            callback('No token provided');
+          }
+        }
+      };
+    });
+    const connected = await service.connect().toPromise();
+    expect(connected).toEqual(false);
+    expect(service.connected).toEqual(false);
   });
-  it('connect and then disconnect from websocket', (done) => {
-    service.connect();
+  it('doesn\'t connect if already connected', async () => {
+    spyOn((window as any).MockSocketIo, 'connect');
+    service.connected = true;
+    service.socket = { connected: true };
+    const connectionResult = await service.connect().toPromise();
+    expect((window as any).MockSocketIo.connect).not.toHaveBeenCalled();
+    expect(connectionResult).toEqual(true);
     expect(service.socket).toBeDefined();
+    expect(service.connected).toEqual(true);
+  });
+  it('connects to websocket', async () => {
+    const connected = await service.connect().toPromise();
+    expect(connected).toEqual(true);
+    expect(service.socket).toBeDefined();
+    expect(service.connected).toEqual(true);
+  });
+  it('connect and then disconnect from websocket', async (done) => {
+    const connected = await service.connect().toPromise();
+    expect(connected).toEqual(true);
+    expect(service.socket).toBeDefined();
+    expect(service.connected).toEqual(true);
+    mockServer.close();
     setTimeout(() => {
-      expect(service.connected).toEqual(true);
-      expect(router.navigate).toHaveBeenCalledWith(['/']);
-      mockServer.close();
-      setTimeout(() => {
-        expect(service.connected).toEqual(false);
-        done();
-      }, 20);
+      expect(service.connected).toEqual(false);
+      done();
     }, 20);
   });
 });

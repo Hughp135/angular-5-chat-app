@@ -12,6 +12,9 @@
 #sidebar-menu {
   width: 300px;
   border-right: 1px solid #c9c9c9;
+  &.inverted {
+    border-right: 1px solid #2f2f2f;
+  }
 }
 
 #main-content {

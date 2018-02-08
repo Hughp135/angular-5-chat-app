@@ -8,14 +8,21 @@ import {
 import { WebsocketService } from './websocket.service';
 
 @Injectable()
-export class AuthGuardService implements CanActivate  {
+export class AuthGuardService implements CanActivate {
 
   constructor(private router: Router, private wsService: WebsocketService) { }
 
-  canActivate(route?: ActivatedRouteSnapshot, state?: RouterStateSnapshot): boolean {
-    if (!this.wsService.connected) {
-      this.router.navigate(['/login']);
+  async canActivate(route?: ActivatedRouteSnapshot, state?: RouterStateSnapshot): Promise<boolean> {
+    if (this.wsService.connected) {
+      return true;
+    } else {
+      const connected = await this.wsService.connect().toPromise();
+      if (connected) {
+        return true;
+      } else {
+        this.router.navigate(['/login']);
+        return false;
+      }
     }
-    return this.wsService.connected;
   }
 }

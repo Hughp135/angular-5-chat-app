@@ -2,18 +2,26 @@
   <div id="sidebar-width-300">
     <div id="sidebar-menu"
       class="ui visible left vertical sidebar menu"
-      [class.inverted]="invertedTheme">
+      [class.inverted]="this.settingsService.invertedTheme">
       <div class="item">
-        Hi there
+        <h4 class="ui header"
+          [class.inverted]="this.settingsService.invertedTheme"
+          align="right">
+          Inverted Theme &nbsp;&nbsp;
+          <sui-checkbox [(ngModel)]="this.settingsService.invertedTheme"
+            class="toggle"
+            style="float:right">
+          </sui-checkbox>
+        </h4>
+      </div>
+      <div class="item">
+        <app-server-list></app-server-list>
       </div>
     </div>
   </div>
 
   <div id="main-content"
-    [class.inverted]="invertedTheme">
-    <div class="ui segment"
-      [class.inverted]="invertedTheme">
-      <h1>App here</h1>
-    </div>
+    [class.inverted]="this.settingsService.invertedTheme">
+
   </div>
 </div>

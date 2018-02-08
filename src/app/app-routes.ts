@@ -8,4 +8,5 @@ export const appRoutes: Routes = [
   { path: '', component: MainComponent, canActivate: [AuthGuardService] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'server', component: MainComponent, canActivate: [AuthGuardService] },
 ];
