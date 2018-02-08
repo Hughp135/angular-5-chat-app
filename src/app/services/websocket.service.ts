@@ -44,6 +44,7 @@ export class WebsocketService {
     });
     this.socket.on('error', (data: Object) => {
       console.warn('Websocket Error', data);
+      /* istanbul ignore next  */
       if (data === 'No token provided') {
         subj.next(false);
         subj.complete();

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-main',
@@ -7,6 +8,9 @@ import { SettingsService } from '../../services/settings.service';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
-  constructor(public settingsService: SettingsService) {
+  constructor(
+    public settingsService: SettingsService,
+    public appState: AppStateService,
+  ) {
   }
 }

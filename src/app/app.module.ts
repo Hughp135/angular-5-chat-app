@@ -17,6 +17,7 @@ import { WebsocketService } from './services/websocket.service';
 import { ServerListComponent } from './components/server-list/server-list.component';
 import { ChannelsListComponent } from './components/channels/channels-list/channels-list.component';
 import { AppStateService } from './services/app-state.service';
+import { CurrentServerComponent } from './components/server/current-server/current-server.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { AppStateService } from './services/app-state.service';
     RegisterComponent,
     ServerListComponent,
     ChannelsListComponent,
+    CurrentServerComponent,
   ],
   imports: [
     SuiModule,
