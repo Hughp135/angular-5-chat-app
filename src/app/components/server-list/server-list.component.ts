@@ -42,7 +42,7 @@ export class ServerListComponent implements OnInit {
 
   joinServer(server: ChatServer) {
     this.appState.currentServer = server;
-    this.wsService.socket.emit('join-server', server.id);
+    this.wsService.socket.emit('join-server', server._id);
   }
 
   ngOnInit() {

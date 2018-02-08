@@ -69,11 +69,11 @@ describe('ServerListComponent', () => {
   it('joins server', () => {
     const server: ChatServer = {
       name: 'test-server',
-      id: '12345',
+      _id: '12345',
       owner_id: 'asd123',
     };
     component.joinServer(server);
     expect(appState.currentServer).toEqual(server);
-    expect(fakeWebSocketService.socket.emit).toHaveBeenCalledWith('join-server', server.id);
+    expect(fakeWebSocketService.socket.emit).toHaveBeenCalledWith('join-server', server._id);
   });
 });

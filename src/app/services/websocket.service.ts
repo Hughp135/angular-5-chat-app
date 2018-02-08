@@ -43,6 +43,7 @@ export class WebsocketService {
       this.connected = false;
     });
     this.socket.on('error', (data: Object) => {
+      console.warn('Websocket Error', data);
       if (data === 'No token provided') {
         subj.next(false);
         subj.complete();
