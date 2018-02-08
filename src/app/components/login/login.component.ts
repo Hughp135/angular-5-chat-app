@@ -34,17 +34,22 @@ export class LoginComponent {
     this.apiService
       .post('login', this.loginForm.value)
       .subscribe(async (data: any) => {
-        const connected = await this.wsService.connect().toPromise();
-        const error = !connected && {
-          error: {
-            error: 'Unable to establish a connection.',
-          },
-        };
+        const error = await this.connectToSocket();
         this.onRequestComplete(error);
-        if (connected) {
-          this.router.navigate(['/']);
-        }
       }, e => this.onRequestComplete(e));
+  }
+
+  async connectToSocket() {
+    const connected = await this.wsService.connect().toPromise();
+    console.log('connected', connected);
+    if (connected) {
+      this.router.navigate(['/']);
+    }
+    return !connected && {
+      error: {
+        error: 'Unable to establish a connection.',
+      },
+    };
   }
 
   onRequestComplete(e?) {

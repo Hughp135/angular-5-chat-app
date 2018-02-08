@@ -44,6 +44,13 @@ describe('WebsocketService', () => {
     expect(connected).toEqual(false);
     expect(service.connected).toEqual(false);
   });
+  it('doesn\'t connect if already connected', async () => {
+    service.socket = { connected: true };
+    const connected = await service.connect().toPromise();
+    expect(connected).toEqual(true);
+    expect(service.socket).toBeDefined();
+    expect(service.connected).toEqual(true);
+  });
   it('connects to websocket', async () => {
     const connected = await service.connect().toPromise();
     expect(connected).toEqual(true);
