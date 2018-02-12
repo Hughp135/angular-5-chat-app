@@ -47,6 +47,7 @@ describe('websocket routes: channel', () => {
   afterEach(async () => {
     await Server.remove({});
     await Channel.remove({});
+    result.resetHistory();
   });
   it('channel/create', (done) => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
@@ -64,6 +65,17 @@ describe('websocket routes: channel', () => {
             server_id: serverId,
           })],
         }));
+      done();
+    }
+  });
+  it('emits error on fail', (done) => {
+    const { io, socket } = createFakeSocketEvent('create-channel', {
+      name: 'channel-name',
+    }, onComplete);
+    createChannel(io);
+    function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error', 'Failed to create channel.');
       done();
     }
   });
