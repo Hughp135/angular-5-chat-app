@@ -108,6 +108,7 @@
     "protractor": "~5.1.2",
     "semantic-ui-less": "^2.2.14",
     "set-cookie-parser": "^2.0.0",
+    "shared-interfaces": "file:shared-interfaces",
     "sinon": "^4.1.3",
     "sinon-chai": "^2.14.0",
     "supertest": "^3.0.0",

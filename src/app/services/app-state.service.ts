@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import ChatServer from '../../../shared-interfaces/server.interface';
-import { ChannelList, Channel } from '../../../shared-interfaces/channel.interface';
+import ChatServer from 'shared-interfaces/server.interface';
+import { ChannelList, Channel } from 'shared-interfaces/channel.interface';
 
 export default interface Server extends ChatServer {
   channelList?: Array<Channel>;

@@ -1,6 +1,6 @@
 import Server from '../../models/server.model';
 import Channel from '../../models/channel.model';
-import { Channel as IChannel } from '../../../../shared-interfaces/channel.interface';
+import { Channel as IChannel } from 'shared-interfaces/channel.interface';
 
 export function createChannel(io: any) {
   io.on('connection', socket => {

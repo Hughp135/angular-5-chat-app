@@ -1,7 +1,7 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 
 import { AppStateService } from './app-state.service';
-import { ChannelList } from '../../../shared-interfaces/channel.interface';
+import { ChannelList } from 'shared-interfaces/channel.interface';
 
 const channelList: ChannelList = {
   server_id: '123',

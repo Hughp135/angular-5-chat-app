@@ -52,7 +52,9 @@ describe('websocket routes: channel', () => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
       name: 'channel-name',
       server_id: serverId,
-    }, () => {
+    }, onComplete);
+    createChannel(io);
+    function onComplete() {
       expect(result).to.have.been
         .calledWith('channel-list',
         sinon.match({
@@ -63,7 +65,6 @@ describe('websocket routes: channel', () => {
           })],
         }));
       done();
-    });
-    createChannel(io);
+    }
   });
 });
