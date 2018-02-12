@@ -11,10 +11,9 @@ export class AppStateService {
 
   constructor() { }
 
-  updateChannelsList(channels: ChannelList) {
-    if (this.currentServer._id === channels.server_id) {
-      this.currentServer.channelList = channels.channels;
-      console.log('list', this.currentServer.channelList);
+  updateChannelsList(data: ChannelList) {
+    if (this.currentServer._id === data.server_id) {
+      this.currentServer.channelList = data.channels;
     }
   }
 }
