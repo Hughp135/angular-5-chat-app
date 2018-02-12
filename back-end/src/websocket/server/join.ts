@@ -1,9 +1,10 @@
 import Server, { IServerModel } from '../../models/server.model';
 import ChannelModel from '../../models/channel.model';
 
-export async function joinServerHandler(io: any) {
+export async function joinServer(io: any) {
   io.on('connection', async socket => {
     socket.on('join-server', async serverId => {
+      console.log('joining server', serverId);
       const server: IServerModel = <IServerModel> await Server.findById(serverId).lean();
       if (!server) {
         return;

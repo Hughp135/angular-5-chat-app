@@ -3,7 +3,7 @@ import { ApiService } from '../../services/api.service';
 import { SettingsService } from '../../services/settings.service';
 import { WebsocketService } from '../../services/websocket.service';
 import ChatServer from '../../../../shared-interfaces/server.interface';
-import { AppStateService } from '../../services/app-state.service';
+import Server, { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-server-list',

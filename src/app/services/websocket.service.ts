@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
+import { AppStateService } from './app-state.service';
+import { Channel, ChannelList } from '../../../shared-interfaces/channel.interface';
 
 @Injectable()
 export class WebsocketService {
@@ -9,6 +11,7 @@ export class WebsocketService {
   public connected = false;
 
   constructor(
+    private appState: AppStateService,
   ) {
   }
 
@@ -49,6 +52,10 @@ export class WebsocketService {
         subj.next(false);
         subj.complete();
       }
+    });
+    this.socket.on('channel-list', (channels: ChannelList) => {
+      console.log('got channel list', channels);
+      this.appState.updateChannelsList(channels);
     });
   }
 }
