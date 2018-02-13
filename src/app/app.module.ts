@@ -18,6 +18,8 @@ import { ServerListComponent } from './components/server-list/server-list.compon
 import { ChannelsListComponent } from './components/channels/channels-list/channels-list.component';
 import { AppStateService } from './services/app-state.service';
 import { CurrentServerComponent } from './components/server/current-server/current-server.component';
+import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
+import { ErrorService } from './services/error.service';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { CurrentServerComponent } from './components/server/current-server/curre
     ServerListComponent,
     ChannelsListComponent,
     CurrentServerComponent,
+    ErrorNotificationComponent,
   ],
   imports: [
     SuiModule,
@@ -45,6 +48,7 @@ import { CurrentServerComponent } from './components/server/current-server/curre
     ApiService,
     WebsocketService,
     AppStateService,
+    ErrorService,
   ],
   bootstrap: [AppComponent]
 })
