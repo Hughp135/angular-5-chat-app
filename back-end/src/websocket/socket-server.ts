@@ -15,3 +15,5 @@ export async function startWs(server) {
   createChannel(io);
   return io;
 }
+
+setTimeout(() => {}, 50); // Socket IO fix hack

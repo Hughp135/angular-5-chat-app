@@ -8,7 +8,7 @@ import { ErrorService, ErrorNotification } from '../../services/error.service';
   styleUrls: ['./error-notification.component.scss']
 })
 export class ErrorNotificationComponent {
-  private transitionController = new TransitionController();
+  public transitionController = new TransitionController();
   public errorNotification: ErrorNotification;
   public transitionDuration = 1;
 
@@ -16,7 +16,6 @@ export class ErrorNotificationComponent {
     errorService.errorMessage.subscribe((notification: ErrorNotification) => {
       this.errorNotification = { ...notification }; // clone
       this.doAnimate(TransitionDirection.In);
-      console.log('created id', notification.id);
       setTimeout(() => {
         this.hide(notification);
       }, notification.duration);
@@ -26,7 +25,6 @@ export class ErrorNotificationComponent {
 
   public async hide(notification: ErrorNotification) {
     // Check if message shown is one we want to be hidden
-    console.log(this.errorNotification.id, notification.id);
     if (this.errorNotification && notification.id === this.errorNotification.id) {
       this.doAnimate(TransitionDirection.Out, () => {
         this.errorNotification = undefined;

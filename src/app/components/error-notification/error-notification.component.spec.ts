@@ -32,7 +32,6 @@ describe('ErrorNotificationComponent', () => {
       });
     component.transitionDuration = 1;
     fixture.detectChanges();
-    console.log('end beforeEach');
   });
 
   afterEach(fakeAsync(() => {
@@ -53,7 +52,6 @@ describe('ErrorNotificationComponent', () => {
     // After first message hides
     expect(component.errorNotification).toBeUndefined();
     expect(component.doAnimate).toHaveBeenCalledTimes(2);
-    console.log('1st test finished');
   }));
   it('doesn\'t hide if error id doesn\'t match', fakeAsync(() => {
     expect(component.transitionDuration).toEqual(1);
@@ -68,7 +66,7 @@ describe('ErrorNotificationComponent', () => {
     expect(component.doAnimate).toHaveBeenCalledTimes(1);
     // After first message hides
   }));
-  fit('errorMessage stays until after transition callback', fakeAsync(() => {
+  it('errorMessage stays until after transition callback', fakeAsync(() => {
     component.doAnimate = jasmine.createSpy()
       .and.callFake((direction, cb) => {
         if (cb) {
