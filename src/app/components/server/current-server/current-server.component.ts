@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebsocketService } from '../../../services/websocket.service';
 import { AppStateService } from '../../../services/app-state.service';
-import { Channel } from 'shared-interfaces/channel.interface';
+import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 
 @Component({
   selector: 'app-current-server',
@@ -20,7 +20,7 @@ export class CurrentServerComponent implements OnInit {
   }
 
   createChannel() {
-    const channel: Channel = {
+    const channel: CreateChannelRequest = {
       server_id: this.appState.currentServer._id,
       name: this.newChannelName,
     };

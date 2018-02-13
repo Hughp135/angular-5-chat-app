@@ -5,8 +5,8 @@ import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
 
 import User from './user.model';
-import Server from '../models/server.model';
-import Channel from '../models/channel.model';
+import Server, { IServerModel } from '../models/server.model';
+import Channel, { IChannelModel } from '../models/channel.model';
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -40,8 +40,8 @@ describe('models e2e', () => {
       name: 'channel1',
       server_id: server._id.toString(),
     });
-    const savedServer: any = await Server.findById(server._id).lean();
-    const savedChannel: any = await Channel.findById(channel._id).lean();
+    const savedServer = await Server.findById(server._id);
+    const savedChannel = await Channel.findById(channel._id);
     expect(savedServer.owner_id.toString()).to.equal(user._id.toString());
     expect(savedChannel.server_id.toString()).to.equal(server._id.toString());
   });

@@ -4,6 +4,7 @@ export interface CreateChannelRequest {
 }
 
 export interface Channel {
+  _id: string;
   name: string;
   server_id: string;
 }

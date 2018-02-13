@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Channel } from 'shared-interfaces/channel.interface';
+import { AppStateService } from '../../../services/app-state.service';
+import { WebsocketService } from '../../../services/websocket.service';
 
 @Component({
   selector: 'app-channels-list',
@@ -6,10 +9,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./channels-list.component.scss']
 })
 export class ChannelsListComponent implements OnInit {
-
-  constructor() { }
+  constructor(
+    public appState: AppStateService,
+    private wsService: WebsocketService,
+  ) {
+  }
 
   ngOnInit() {
   }
 
+  joinChannel(channel: Channel) {
+    this.wsService.socket.emit('join-channel', channel._id);
+  }
 }

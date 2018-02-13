@@ -3,6 +3,7 @@ import { logInAuth } from './auth/socket-auth';
 import { log } from 'winston';
 import { joinServer } from './server/join';
 import { createChannel } from './channel/create';
+import { joinChannel } from './channel/join';
 
 export async function startWs(server) {
   const io = socketIo(server);
@@ -13,7 +14,9 @@ export async function startWs(server) {
   // Add event handlers
   joinServer(io);
   createChannel(io);
+  joinChannel(io);
   return io;
 }
 
-setTimeout(() => {}, 50); // Socket IO fix hack
+setInterval(() => {
+}, 50); // Socket IO fix hack

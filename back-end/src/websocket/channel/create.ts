@@ -1,11 +1,11 @@
 import Server from '../../models/server.model';
 import Channel from '../../models/channel.model';
-import { Channel as IChannel } from 'shared-interfaces/channel.interface';
+import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 import { log } from 'winston';
 
 export function createChannel(io: any) {
   io.on('connection', socket => {
-    socket.on('create-channel', async (data: IChannel) => {
+    socket.on('create-channel', async (data: CreateChannelRequest) => {
       try {
         const server = await Server.findById(data.server_id);
         if (server.owner_id.toString() !== socket.claim.user_id) {
