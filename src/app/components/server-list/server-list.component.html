@@ -1,13 +1,15 @@
 <h3 class="ui header"
   [class.inverted]="settingsService.invertedTheme">
-  Your joined servers
+  Your Servers
 </h3>
 
 <div class="ui segment"
   [class.loading]="loading"
   [class.inverted]="settingsService.invertedTheme">
   {{ error }}
-  <h4 *ngFor="let server of serverList" (click)="joinServer(server)">
+  <h4 class="ui blue header"
+    *ngFor="let server of serverList"
+    (click)="joinServer(server)">
     {{ server.name }}
   </h4>
 </div>

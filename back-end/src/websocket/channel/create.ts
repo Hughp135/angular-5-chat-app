@@ -8,6 +8,9 @@ export function createChannel(io: any) {
     socket.on('create-channel', async (data: IChannel) => {
       try {
         const server = await Server.findById(data.server_id);
+        if (server.owner_id.toString() !== socket.claim.user_id) {
+          throw new Error('Attempting to create a channel on a server you do not own');
+        }
         await Channel.create({
           server_id: server._id,
           name: data.name
@@ -20,7 +23,7 @@ export function createChannel(io: any) {
           channels: channels,
         });
       } catch (e) {
-        log('Error creating server', e.message);
+        log('Error creating server:', e.message);
         socket.emit('soft-error', 'Failed to create channel.');
       }
     });

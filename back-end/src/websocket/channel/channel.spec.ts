@@ -12,8 +12,11 @@ chai.use(sinonChai);
 
 const result = sinon.spy();
 
-function createFakeSocketEvent(eventName: string, data: any, complete: any) {
+function createFakeSocketEvent(eventName: string, data: any, user_id: string, complete: any) {
   const socket = {
+    claim: {
+      user_id,
+    },
     on: async (event: string, callback: any) => {
       await callback(data);
       complete();
@@ -29,7 +32,7 @@ function createFakeSocketEvent(eventName: string, data: any, complete: any) {
   return { io, socket };
 }
 
-describe('websocket routes: channel', () => {
+describe('websocket channel/create', () => {
   let serverId;
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -49,11 +52,11 @@ describe('websocket routes: channel', () => {
     await Channel.remove({});
     result.resetHistory();
   });
-  it('channel/create', (done) => {
+  it('channel/create success', (done) => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
       name: 'channel-name',
       server_id: serverId,
-    }, onComplete);
+    }, '123456781234567812345678', onComplete);
     createChannel(io);
     function onComplete() {
       expect(result).to.have.been
@@ -68,10 +71,22 @@ describe('websocket routes: channel', () => {
       done();
     }
   });
-  it('emits error on fail', (done) => {
+  it('channel/create fails if no server_id given', (done) => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
       name: 'channel-name',
-    }, onComplete);
+    }, '123456781234567812345678', onComplete);
+    createChannel(io);
+    function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error', 'Failed to create channel.');
+      done();
+    }
+  });
+  it('channel/create fails if server,owner_id does not match socket.claim.user_id', (done) => {
+    const { io, socket } = createFakeSocketEvent('create-channel', {
+      name: 'channel-name',
+      server_id: serverId,
+    }, '999956781234567812345678', onComplete);
     createChannel(io);
     function onComplete() {
       expect(result).to.have.been
