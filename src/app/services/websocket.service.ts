@@ -3,6 +3,7 @@ import * as io from 'socket.io-client';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { AppStateService } from './app-state.service';
 import { addEventHandlers } from './websocket/websocket-events';
+import { ErrorService, ErrorNotification } from './error.service';
 
 @Injectable()
 export class WebsocketService {
@@ -12,6 +13,7 @@ export class WebsocketService {
 
   constructor(
     private appState: AppStateService,
+    private errorService: ErrorService,
   ) {
   }
 
@@ -52,6 +54,10 @@ export class WebsocketService {
         subj.next(false);
         subj.complete();
       }
+    });
+    this.socket.on('soft-error', (message: string) => {
+      this.errorService.errorMessage
+        .next(new ErrorNotification(message, 1000));
     });
     addEventHandlers(this.socket, this.appState);
   }

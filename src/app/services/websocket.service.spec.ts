@@ -3,6 +3,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
 import { AppStateService } from './app-state.service';
+import { ErrorService } from './error.service';
 
 // tslint:disable:no-unused-expression
 
@@ -16,7 +17,8 @@ describe('WebsocketService', () => {
     TestBed.configureTestingModule({
       providers: [
         WebsocketService,
-        AppStateService
+        AppStateService,
+        ErrorService,
       ],
     });
     injector = getTestBed();

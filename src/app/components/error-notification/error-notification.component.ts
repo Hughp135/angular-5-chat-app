@@ -9,30 +9,35 @@ import { ErrorService, ErrorNotification } from '../../services/error.service';
 })
 export class ErrorNotificationComponent {
   private transitionController = new TransitionController();
-  public errorMessage: string;
-  public transitionDuration = 500;
+  public errorNotification: ErrorNotification;
+  public transitionDuration = 1;
 
   constructor(errorService: ErrorService) {
-    errorService.errorMessage.subscribe((msg: ErrorNotification) => {
-      this.errorMessage = msg.message;
-      this.fade(TransitionDirection.In);
+    errorService.errorMessage.subscribe((notification: ErrorNotification) => {
+      this.errorNotification = notification;
+      this.doAnimate(TransitionDirection.In);
       setTimeout(() => {
-        this.hide(msg.message);
-      }, msg.duration);
+        console.log('set timer');
+        this.hide(notification);
+      }, notification.duration);
     });
 
   }
 
-  public hide(msg: string) {
+  public async hide(notification: ErrorNotification) {
     // Check if message shown is one we want to be hidden
-    if (msg === this.errorMessage) {
-      this.fade(TransitionDirection.Out, () => {
-        this.errorMessage = undefined;
+    if (this.errorNotification && notification.id === this.errorNotification.id) {
+      console.log('Starting hide transition');
+      this.doAnimate(TransitionDirection.Out, () => {
+        this.errorNotification = undefined;
+        console.log('Transition CB called');
       });
+    } else {
+      console.log('Not hiding');
     }
   }
 
-  public fade(direction: TransitionDirection, cb?) {
+  public doAnimate(direction: TransitionDirection, cb?: () => void) {
     const transitionDuration = this.transitionDuration;
     this.transitionController.animate(
       new Transition('fade up', transitionDuration, direction, cb)

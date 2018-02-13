@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/throw';
+import { ErrorService } from '../../services/error.service';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -28,6 +29,7 @@ describe('RegisterComponent', () => {
       imports: [ReactiveFormsModule, RouterTestingModule],
       providers: [
         { provide: ApiService, useValue: apiServiceMock },
+        ErrorService,
       ]
     })
       .compileComponents();
@@ -91,7 +93,7 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.valid).toEqual(false);
     expect(component.registerForm.errors).toEqual({ mismatch: true });
   });
-  it('submitting form POST to /register success', fakeAsync(() => {
+  it('POSTS to /register and succeeds', fakeAsync(() => {
     const formData = {
       username: 'coolname',
       password: '123456',

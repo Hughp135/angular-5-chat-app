@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
-export interface ErrorNotification {
+
+export class ErrorNotification {
   duration: number;
   message: string;
+  id: string;
+
+  constructor(message: string, duration: number) {
+    this.duration = duration;
+    this.message = message;
+    this.id = Date.now().toString();
+  }
 }
 
 @Injectable()
