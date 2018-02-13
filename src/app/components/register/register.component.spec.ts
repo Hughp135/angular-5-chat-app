@@ -115,7 +115,7 @@ describe('RegisterComponent', () => {
       formData
     );
     // After fake API response
-    tick(5);
+    tick(15);
     expect(component.submitting).toEqual(false);
   }));
   it('submitting form POST to /register fail', fakeAsync(() => {

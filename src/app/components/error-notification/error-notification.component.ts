@@ -14,10 +14,10 @@ export class ErrorNotificationComponent {
 
   constructor(errorService: ErrorService) {
     errorService.errorMessage.subscribe((notification: ErrorNotification) => {
-      this.errorNotification = notification;
+      this.errorNotification = { ...notification }; // clone
       this.doAnimate(TransitionDirection.In);
+      console.log('created id', notification.id);
       setTimeout(() => {
-        console.log('set timer');
         this.hide(notification);
       }, notification.duration);
     });
@@ -26,14 +26,11 @@ export class ErrorNotificationComponent {
 
   public async hide(notification: ErrorNotification) {
     // Check if message shown is one we want to be hidden
+    console.log(this.errorNotification.id, notification.id);
     if (this.errorNotification && notification.id === this.errorNotification.id) {
-      console.log('Starting hide transition');
       this.doAnimate(TransitionDirection.Out, () => {
         this.errorNotification = undefined;
-        console.log('Transition CB called');
       });
-    } else {
-      console.log('Not hiding');
     }
   }
 

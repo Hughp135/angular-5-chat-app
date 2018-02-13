@@ -57,7 +57,7 @@ export class WebsocketService {
     });
     this.socket.on('soft-error', (message: string) => {
       this.errorService.errorMessage
-        .next(new ErrorNotification(message, 1000));
+        .next(new ErrorNotification(message, 5000));
     });
     addEventHandlers(this.socket, this.appState);
   }

@@ -24,13 +24,18 @@ describe('ErrorNotificationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ErrorNotificationComponent);
     component = fixture.componentInstance;
+    component.doAnimate = jasmine.createSpy()
+      .and.callFake((direction, cb) => {
+        if (cb) {
+          cb();
+        }
+      });
     component.transitionDuration = 1;
     fixture.detectChanges();
     console.log('end beforeEach');
   });
 
   afterEach(fakeAsync(() => {
-    tick(100);
   }));
 
   it('initial state', () => {
@@ -47,38 +52,40 @@ describe('ErrorNotificationComponent', () => {
     tick(20);
     // After first message hides
     expect(component.errorNotification).toBeUndefined();
+    expect(component.doAnimate).toHaveBeenCalledTimes(2);
     console.log('1st test finished');
   }));
-  it('doesn\'t hide 2nd error msg if it appears before 1st is hidden', fakeAsync(() => {
-    console.log('2nd test started');
-    component.transitionDuration = 50;
+  it('doesn\'t hide if error id doesn\'t match', fakeAsync(() => {
+    expect(component.transitionDuration).toEqual(1);
     errorService.errorMessage
-      .next(new ErrorNotification('first message', 100));
-    expect(component.errorNotification.message).toEqual('first message');
+      .next(new ErrorNotification('first message', 10));
     tick(2);
-    errorService.errorMessage
-      .next(new ErrorNotification('second message', 200));
-    expect(component.errorNotification.message).toEqual('second message');
+    expect(component.doAnimate).toHaveBeenCalledTimes(1);
+    expect(component.errorNotification.message).toEqual('first message');
+    component.errorNotification.id = '123';
     fixture.detectChanges();
-    tick(150);
+    tick(20);
+    expect(component.doAnimate).toHaveBeenCalledTimes(1);
     // After first message hides
-    console.log('Making assertion');
-    expect(component.errorNotification.message).toEqual('second message');
-    // After second message hides
-    tick(150);
-    expect(component.errorNotification).toBeUndefined();
   }));
-  it('errorMessage stays until after transition callback', fakeAsync(() => {
-    component.transitionDuration = 20;
+  fit('errorMessage stays until after transition callback', fakeAsync(() => {
+    component.doAnimate = jasmine.createSpy()
+      .and.callFake((direction, cb) => {
+        if (cb) {
+          setTimeout(cb, 20);
+        }
+      });
+    component.transitionDuration = 500;
     errorService.errorMessage
       .next(new ErrorNotification('first message', 10));
     expect(component.errorNotification.message).toEqual('first message');
-    fixture.detectChanges();
+    expect(component.doAnimate).toHaveBeenCalledTimes(1);
     tick(20);
-    // After errorMessage duration ends, still in Transition period
+    // After error duration ends, but still transitioning.
     expect(component.errorNotification.message).toEqual('first message');
     // After transition ends
-    tick(20);
+    tick(30);
     expect(component.errorNotification).toBeUndefined();
+    expect(component.doAnimate).toHaveBeenCalledTimes(2);
   }));
 });
