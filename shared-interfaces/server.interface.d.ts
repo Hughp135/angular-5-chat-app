@@ -1,5 +1,5 @@
 export default interface ChatServer {
   name: string;
-  id: string;
+  _id: string;
   owner_id: string;
 }

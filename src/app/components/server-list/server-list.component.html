@@ -7,7 +7,7 @@
   [class.loading]="loading"
   [class.inverted]="settingsService.invertedTheme">
   {{ error }}
-  <h4 *ngFor="let server of serverList" (click)="joinServer(server._id)">
+  <h4 *ngFor="let server of serverList" (click)="joinServer(server)">
     {{ server.name }}
   </h4>
 </div>

@@ -6,7 +6,7 @@ import { ApiService } from '../../services/api.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppStateService } from '../../services/app-state.service';
 import { WebsocketService } from '../../services/websocket.service';
-import ChatServer from '../../../../shared-interfaces/server.interface';
+import ChatServer from 'shared-interfaces/server.interface';
 
 describe('ServerListComponent', () => {
   let component: ServerListComponent;
@@ -69,11 +69,13 @@ describe('ServerListComponent', () => {
   it('joins server', () => {
     const server: ChatServer = {
       name: 'test-server',
-      id: '12345',
+      _id: '12345',
       owner_id: 'asd123',
     };
     component.joinServer(server);
-    expect(appState.currentServer).toEqual(server);
-    expect(fakeWebSocketService.socket.emit).toHaveBeenCalledWith('join-server', server.id);
+    expect(appState.currentServer)
+      .toEqual(server);
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('join-server', server._id);
   });
 });

@@ -24,6 +24,6 @@ channelSchema.pre('save', async function (next) {
   next();
 });
 
-const ChannelModel = mongoose.model('Channel', channelSchema);
+const Channel = mongoose.model('Channel', channelSchema);
 
-export default ChannelModel;
+export default Channel;

@@ -7,6 +7,8 @@ import { LoginComponent } from './login.component';
 import { ApiService } from '../../services/api.service';
 import { WebsocketService } from '../../services/websocket.service';
 import { Router } from '@angular/router';
+import { AppStateService } from '../../services/app-state.service';
+import { ErrorService } from '../../services/error.service';
 
 // tslint:disable:no-unused-expression
 
@@ -30,6 +32,8 @@ describe('LoginComponent', () => {
       providers: [
         ApiService,
         WebsocketService,
+        AppStateService,
+        ErrorService,
       ],
     })
       .compileComponents();

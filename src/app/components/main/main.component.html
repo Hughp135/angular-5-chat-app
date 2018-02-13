@@ -17,6 +17,9 @@
       <div class="item">
         <app-server-list></app-server-list>
       </div>
+      <div class="item" *ngIf="appState.currentServer">
+        <app-current-server></app-current-server>
+      </div>
     </div>
   </div>
 

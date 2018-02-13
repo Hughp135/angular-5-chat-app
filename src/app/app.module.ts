@@ -17,6 +17,9 @@ import { WebsocketService } from './services/websocket.service';
 import { ServerListComponent } from './components/server-list/server-list.component';
 import { ChannelsListComponent } from './components/channels/channels-list/channels-list.component';
 import { AppStateService } from './services/app-state.service';
+import { CurrentServerComponent } from './components/server/current-server/current-server.component';
+import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
+import { ErrorService } from './services/error.service';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,8 @@ import { AppStateService } from './services/app-state.service';
     RegisterComponent,
     ServerListComponent,
     ChannelsListComponent,
+    CurrentServerComponent,
+    ErrorNotificationComponent,
   ],
   imports: [
     SuiModule,
@@ -43,6 +48,7 @@ import { AppStateService } from './services/app-state.service';
     ApiService,
     WebsocketService,
     AppStateService,
+    ErrorService,
   ],
   bootstrap: [AppComponent]
 })

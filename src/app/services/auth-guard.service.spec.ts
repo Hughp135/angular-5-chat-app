@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthGuardService } from './auth-guard.service';
 import { WebsocketService } from './websocket.service';
 import { AppStateService } from './app-state.service';
+import { ErrorService } from './error.service';
 
 describe('AuthGuardService', () => {
   beforeEach(() => {
@@ -14,6 +15,7 @@ describe('AuthGuardService', () => {
         AuthGuardService,
         WebsocketService,
         AppStateService,
+        ErrorService,
       ],
     });
   });
@@ -21,13 +23,32 @@ describe('AuthGuardService', () => {
   it('should be created', inject([AuthGuardService], (service: AuthGuardService) => {
     expect(service).toBeTruthy();
   }));
-  it('should deny access to / and redirect to /login if not connected',
+  it('should attempt to connect and redirect to /login',
     inject(
-      [AuthGuardService, Router],
-      async (service: AuthGuardService, router) => {
+      [AuthGuardService, Router, WebsocketService],
+      async (service: AuthGuardService, router: Router, wsService: WebsocketService) => {
         spyOn(router, 'navigate');
+        spyOn(wsService, 'connect').and.callFake(() => ({
+          toPromise: () => {
+            return Promise.resolve(false);
+          }
+        }));
         expect(await service.canActivate()).toBeFalsy();
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
+      })
+  );
+  it('should connect and proceed to route',
+    inject(
+      [AuthGuardService, Router, WebsocketService],
+      async (service: AuthGuardService, router: Router, wsService: WebsocketService) => {
+        spyOn(router, 'navigate');
+        spyOn(wsService, 'connect').and.callFake(() => ({
+          toPromise: () => {
+            return Promise.resolve(true);
+          }
+        }));
+        expect(await service.canActivate()).toEqual(true);
+        expect(router.navigate).not.toHaveBeenCalled();
       })
   );
   it('should allow access to / if connected',

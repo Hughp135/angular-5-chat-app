@@ -1,0 +1,6 @@
+<sui-message class="inverted error"
+  [suiTransition]="transitionController"
+  *ngIf="errorNotification">
+  <i class="warning circle icon"></i>
+  {{ errorNotification.message }}
+</sui-message>

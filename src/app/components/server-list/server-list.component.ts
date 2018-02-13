@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { SettingsService } from '../../services/settings.service';
 import { WebsocketService } from '../../services/websocket.service';
-import ChatServer from '../../../../shared-interfaces/server.interface';
+import ChatServer from 'shared-interfaces/server.interface';
 import { AppStateService } from '../../services/app-state.service';
 
 @Component({
@@ -42,7 +42,7 @@ export class ServerListComponent implements OnInit {
 
   joinServer(server: ChatServer) {
     this.appState.currentServer = server;
-    this.wsService.socket.emit('join-server', server.id);
+    this.wsService.socket.emit('join-server', server._id);
   }
 
   ngOnInit() {

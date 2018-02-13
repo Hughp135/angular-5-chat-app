@@ -16,3 +16,15 @@ input.ng-invalid.ng-dirty.ng-touched {
   overflow: hidden;
   margin-top: 20px;
 }
+
+.ui.message.error {
+  text-align: center;
+  box-shadow: 0 0 0 1px grey !important;
+  background-color: #750d0d !important;
+  border-radius: 0;
+  padding: 10px 15px;
+}
+
+.ui.message .close.icon {
+  top: 0.7em !important;
+}
