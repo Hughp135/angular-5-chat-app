@@ -8,6 +8,7 @@ export default interface Server extends ChatServer {
 @Injectable()
 export class AppStateService {
   public currentServer: Server;
+  public currentChatChannel: Channel;
 
   constructor() { }
 
