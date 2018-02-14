@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebsocketService } from '../../../services/websocket.service';
 import { AppStateService } from '../../../services/app-state.service';
-import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 
 @Component({
   selector: 'app-current-server',
@@ -9,7 +8,6 @@ import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
   styleUrls: ['./current-server.component.scss']
 })
 export class CurrentServerComponent implements OnInit {
-  public newChannelName: string;
 
   constructor(
     private wsService: WebsocketService,
@@ -19,11 +17,4 @@ export class CurrentServerComponent implements OnInit {
   ngOnInit() {
   }
 
-  createChannel() {
-    const channel: CreateChannelRequest = {
-      server_id: this.appState.currentServer._id,
-      name: this.newChannelName,
-    };
-    this.wsService.socket.emit('create-channel', channel);
-  }
 }

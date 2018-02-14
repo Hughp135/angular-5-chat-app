@@ -7,6 +7,7 @@ const channelList: ChannelList = {
   server_id: '123',
   channels: [
     {
+      _id: 'asd123asd',
       name: 'channel1',
       server_id: '123',
     },

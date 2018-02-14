@@ -1,4 +1,4 @@
-<div class="menu">
+<div class="menu" *ngIf="appState.currentServer">
   <div class=""
     *ngIf="!appState.currentServer.channelList">
     <div class="ui active centered inline loader"></div>

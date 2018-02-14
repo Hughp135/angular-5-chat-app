@@ -15,4 +15,8 @@ export class ChatChannelComponent implements OnInit {
   ngOnInit() {
   }
 
+  get currentChannel(): Channel {
+    return this.appState.currentChatChannel;
+  }
+
 }
