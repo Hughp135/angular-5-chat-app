@@ -6,31 +6,12 @@ import * as mongoose from 'mongoose';
 import { createChannel } from './create';
 import Channel from '../../models/channel.model';
 import Server from '../../models/server.model';
+import createFakeSocketEvent from '../test_helpers/fake-socket';
 
 const expect = chai.expect;
 chai.use(sinonChai);
 
 const result = sinon.spy();
-
-function createFakeSocketEvent(eventName: string, data: any, user_id: string, complete: any) {
-  const socket = {
-    claim: {
-      user_id,
-    },
-    on: async (event: string, callback: any) => {
-      await callback(data);
-      complete();
-    },
-    emit: result,
-  };
-
-  const io = {
-    on: (event: string, callback: any) => {
-      callback(socket);
-    },
-  };
-  return { io, socket };
-}
 
 describe('websocket channel/create', () => {
   let serverId;
@@ -56,7 +37,7 @@ describe('websocket channel/create', () => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
       name: 'channel-name',
       server_id: serverId,
-    }, '123456781234567812345678', onComplete);
+    }, { user_id: '123456781234567812345678' }, onComplete, result);
     createChannel(io);
     function onComplete() {
       expect(result).to.have.been
@@ -74,7 +55,7 @@ describe('websocket channel/create', () => {
   it('channel/create fails if no server_id given', (done) => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
       name: 'channel-name',
-    }, '123456781234567812345678', onComplete);
+    }, { user_id: '123456781234567812345678' }, onComplete, result);
     createChannel(io);
     function onComplete() {
       expect(result).to.have.been
@@ -86,7 +67,7 @@ describe('websocket channel/create', () => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
       name: 'channel-name',
       server_id: serverId,
-    }, '999956781234567812345678', onComplete);
+    }, { user_id: '999996781234567812345678' }, onComplete, result);
     createChannel(io);
     function onComplete() {
       expect(result).to.have.been

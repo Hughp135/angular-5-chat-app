@@ -3,9 +3,8 @@
   Your Servers
 </h3>
 
-<div class="ui segment"
-  [class.loading]="loading"
-  [class.inverted]="settingsService.invertedTheme">
+<div class=""
+  [class.loading]="loading">
   {{ error }}
   <h4 class="ui blue header"
     *ngFor="let server of serverList"
