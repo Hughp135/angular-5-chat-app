@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 export default function createFakeSocketEvent(
   eventName: string,
   data: any,
@@ -9,7 +10,11 @@ export default function createFakeSocketEvent(
     claim,
     on: async (event: string, callback: any) => {
       await callback(data);
-      complete();
+      try {
+        await complete();
+      } catch (e) {
+        console.error(e);
+      }
     },
     emit: result,
   };

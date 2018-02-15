@@ -4,7 +4,6 @@ import { CurrentServerComponent } from './current-server.component';
 import { AppStateService } from '../../../services/app-state.service';
 import { FormsModule } from '@angular/forms';
 import { WebsocketService } from '../../../services/websocket.service';
-import { ChannelsListComponent } from '../../channels/channels-list.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CurrentServerComponent', () => {

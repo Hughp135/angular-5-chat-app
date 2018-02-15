@@ -1,6 +1,7 @@
 export interface SendMessageRequest {
   message: string;
   channel_id: string;
+  server_id: string;
 }
 
 export interface ChatMessage {
