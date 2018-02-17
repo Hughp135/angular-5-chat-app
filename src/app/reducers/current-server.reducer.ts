@@ -1,9 +1,9 @@
-import Server from '../services/app-state.service';
+import ChatServer from 'shared-interfaces/server.interface';
 
 export const JOIN_SERVER = 'SET_CURRENT_SERVER';
 export const SET_CHANNEL_LIST = 'SET_CHANNEL_LIST';
 
-export function currentServerReducer(state: Server, action) {
+export function currentServerReducer(state: ChatServer, action) {
   switch (action.type) {
     case JOIN_SERVER:
       return {

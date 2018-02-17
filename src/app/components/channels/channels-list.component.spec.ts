@@ -8,6 +8,7 @@ import { WebsocketService } from '../../services/websocket.service';
 import { ErrorService } from '../../services/error.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+import { JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 
 
 describe('ChannelsListComponent', () => {
@@ -46,6 +47,7 @@ describe('ChannelsListComponent', () => {
       type: JOIN_SERVER,
       payload: currentServer,
     });
+    spyOn(store, 'dispatch').and.callThrough();
   }));
 
   beforeEach(() => {
@@ -75,5 +77,9 @@ describe('ChannelsListComponent', () => {
     component.joinChannel(chan);
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('join-channel', chan._id);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: JOIN_CHANNEL,
+      payload: chan,
+    });
   });
 });

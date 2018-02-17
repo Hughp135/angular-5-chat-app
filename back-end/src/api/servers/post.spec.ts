@@ -77,11 +77,11 @@ describe('api/servers/post', () => {
       .expect(200, {
         success: true,
       });
-    const server = await Server.findOne().lean();
+    const server: any = await Server.findOne().lean();
     expect(server).to.exist;
     expect(server.name).to.equal('Automated Test Server');
     expect(server.owner_id.toString()).to.equal(user._id.toString());
-    const usr = await User.findOne({ '_id': user._id }).lean();
+    const usr: any = await User.findOne({ '_id': user._id }).lean();
     expect(usr.joinedServers).to.have.lengthOf(1);
     expect(usr.joinedServers[0].toString()).to.equal(server._id.toString());
   });
@@ -104,7 +104,7 @@ describe('api/servers/post', () => {
       .expect(400, {
         error: 'You already own a server. Please delete or edit your existing server.',
       });
-    const usr = await User.findOne({ '_id': user._id }).lean();
+    const usr: any = await User.findOne({ '_id': user._id }).lean();
     expect(usr.joinedServers).to.have.lengthOf(1);
   });
 });

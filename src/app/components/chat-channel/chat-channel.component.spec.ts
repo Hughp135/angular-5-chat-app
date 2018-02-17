@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
-
 import { ChatChannelComponent } from './chat-channel.component';
 import { FormsModule } from '@angular/forms';
 import { AppStateService } from '../../services/app-state.service';
 import { WebsocketService } from '../../services/websocket.service';
+import ChatServer from 'shared-interfaces/server.interface';
+import { ChatChannel } from 'shared-interfaces/channel.interface';
 
 describe('ChatChannelComponent', () => {
   let component: ChatChannelComponent;
@@ -11,32 +12,38 @@ describe('ChatChannelComponent', () => {
   let injector: TestBed;
   let appState: AppStateService;
   const emit = jasmine.createSpy();
-  let channel, server;
+
+  const channel: ChatChannel = {
+    name: 'name',
+    _id: '123',
+    server_id: '345',
+  };
+  const server: ChatServer = {
+    name: 'serv',
+    _id: '345',
+    owner_id: 'abc',
+  };
+
+  const fakeAppState = {
+    currentChannel: channel,
+    currentServer: server,
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ChatChannelComponent],
-      imports: [FormsModule],
+      imports: [
+        FormsModule,
+      ],
       providers: [
-        AppStateService,
+        { provide: AppStateService, useValue: fakeAppState },
         { provide: WebsocketService, useValue: { socket: { emit } } },
       ],
     })
       .compileComponents();
     injector = getTestBed();
     appState = injector.get(AppStateService);
-    channel = {
-      name: 'name',
-      _id: '123',
-      server_id: '345',
-    };
-    server = {
-      name: 'serv',
-      _id: '345',
-      owner_id: 'abc',
-    };
-    appState.currentChatChannel = channel;
-    appState.currentServer = server;
+
   }));
 
   beforeEach(() => {
@@ -45,10 +52,8 @@ describe('ChatChannelComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('initial state', () => {
     expect(component).toBeTruthy();
-  });
-  it('should get current channel', () => {
     expect(component.currentChannel).toEqual(channel);
   });
   it('send message emits message', () => {

@@ -5,7 +5,7 @@ export interface CreateChannelRequest {
   server_id: string;
 }
 
-export interface Channel {
+export interface ChatChannel {
   _id: string;
   name: string;
   server_id: string;
@@ -14,5 +14,5 @@ export interface Channel {
 
 export interface ChannelList {
   server_id: string;
-  channels: Array<Channel>;
+  channels: Array<ChatChannel>;
 }

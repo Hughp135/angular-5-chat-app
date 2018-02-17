@@ -1,14 +1,14 @@
 <div id="chat-wrapper">
   <div id="header">
     <h3 class="ui header">
-      # {{ currentChannel && currentChannel.name }}
+      # {{ currentChannel.name }}
     </h3>
   </div>
 
   <div class="ui middle aligned divided relaxed list"
     id="message-container">
     <div class="item"
-      *ngFor="let msg of appState.currentChatChannel.messages">
+      *ngFor="let msg of currentChannel.messages">
       <img class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
       <div class="content">

@@ -18,7 +18,6 @@ import { WebsocketService } from './services/websocket.service';
 import { ServerListComponent } from './components/server-list/server-list.component';
 import { ChannelsListComponent } from './components/channels/channels-list.component';
 import { AppStateService } from './services/app-state.service';
-import { CurrentServerComponent } from './components/server/current-server/current-server.component';
 import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
 import { ErrorService } from './services/error.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
@@ -32,7 +31,6 @@ import { reducers } from './reducers/reducers';
     RegisterComponent,
     ServerListComponent,
     ChannelsListComponent,
-    CurrentServerComponent,
     ErrorNotificationComponent,
     ChatChannelComponent,
   ],

@@ -1,30 +1,25 @@
 import { Injectable } from '@angular/core';
 import ChatServer from 'shared-interfaces/server.interface';
-import { ChannelList, Channel } from 'shared-interfaces/channel.interface';
-import { ChatMessage } from 'shared-interfaces/message.interface';
+import { Store } from '@ngrx/store';
+import { AppState } from '../reducers/app.states';
+import { Observable } from 'rxjs/Observable';
+import { ChatChannel } from 'shared-interfaces/channel.interface';
 
-export default interface Server extends ChatServer {
-  channelList?: Array<Channel>;
-}
 @Injectable()
 export class AppStateService {
-  public currentServer: Server;
-  public currentChatChannel: Channel;
+  public currentServer: ChatServer;
+  public currentChannel: ChatChannel;
 
-  constructor() { }
-
-  updateChannelsList(data: ChannelList) {
-    if (this.currentServer._id === data.server_id) {
-      this.currentServer.channelList = data.channels;
-    }
+  constructor(private store: Store<AppState>) {
+    const serverObservable = this.store.select(state => state.currentServer);
+    serverObservable.subscribe(serv => {
+      this.currentServer = serv;
+    }, null, () => {
+    });
+    const channelObservable = this.store.select(state => state.currentChatChannel);
+    channelObservable.subscribe(chan => {
+      this.currentChannel = chan;
+    });
   }
 
-  addMessage(message: ChatMessage) {
-    if (message.channel_id === this.currentChatChannel._id) {
-      if (!this.currentChatChannel.messages) {
-        this.currentChatChannel.messages = [];
-      }
-      this.currentChatChannel.messages.unshift(message);
-    }
-  }
 }

@@ -12,6 +12,7 @@ export const handlers: { [key: string]: (socket, appState) => void } = {
 
 function chatMessage(socket, store) {
   socket.on('chat-message', (message: ChatMessage) => {
+    console.log('New chat message', message);
     store.dispatch({
       type: 'TODO',
       payload: 'todo',
