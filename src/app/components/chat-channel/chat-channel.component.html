@@ -1,23 +1,34 @@
-<h4>
-  # {{ currentChannel && currentChannel.name }}
-</h4>
-<hr>
+<div id="chat-wrapper">
+  <div id="header">
+    <h3 class="ui header">
+      # {{ currentChannel && currentChannel.name }}
+    </h3>
+  </div>
 
-<div class="ui middle aligned divided relaxed list">
-  <div class="item">
-    <img class="ui avatar image"
-      src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
-    <div class="content">
-      <a class="header">Daniel Louise</a>
-      <p>Here is a message.</p>
+  <div class="ui middle aligned divided relaxed list"
+    id="message-container">
+    <div class="item"
+      *ngFor="let msg of appState.currentChatChannel.messages">
+      <img class="ui avatar image"
+        src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
+      <div class="content">
+        <a class="header">{{ msg.username }}</a>
+        <p>{{ msg.message }}</p>
+      </div>
     </div>
   </div>
-  <div class="item">
-    <img class="ui avatar image"
-      src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
-    <div class="content">
-      <a class="header">Daniel Louise</a>
-      <p>Here is another message.</p>
-    </div>
+
+  <div id="chat-input">
+    <form (submit)="sendMessage(chatMessage)"
+      class="ui form">
+      <div class="ui fluid input">
+        <input type="text"
+          placeholder="Chat..."
+          name="chatMessage"
+          [(ngModel)]="chatMessage">
+      </div>
+
+    </form>
+
   </div>
 </div>

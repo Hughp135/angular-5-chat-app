@@ -4,6 +4,7 @@ import { log } from 'winston';
 import { joinServer } from './server/join';
 import { createChannel } from './channel/create';
 import { joinChannel } from './channel/join';
+import { sendMessage } from './message/send';
 
 export async function startWs(server) {
   const io = socketIo(server);
@@ -15,6 +16,8 @@ export async function startWs(server) {
   joinServer(io);
   createChannel(io);
   joinChannel(io);
+  sendMessage(io);
+
   return io;
 }
 

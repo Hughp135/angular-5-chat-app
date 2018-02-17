@@ -1,6 +1,5 @@
 <div id="main-wrapper">
-
-  <!-- SIDEBAR -->
+  <!-- LEFT SIDEBAR -->
   <div id="sidebar-width-300">
 
     <div id="sidebar-menu"
@@ -29,16 +28,21 @@
 
     </div>
   </div>
-  <!-- /SIDEBAR -->
+  <!-- /LEFT SIDEBAR -->
 
   <!-- MAIN CONTENT SECTION -->
   <div id="main-content"
     class="ui segment"
     [class.inverted]="this.settingsService.invertedTheme">
-
     <app-chat-channel *ngIf="appState.currentChatChannel"></app-chat-channel>
 
   </div>
   <!-- /MAIN CONTENT SECTION -->
+
+  <!-- RIGHT SIDEBAR -->
+  <!-- <div id="sidebar-width-300">
+    Hi
+  </div> -->
+  <!-- /RIGHT SIDEBAR -->
 
 </div>
