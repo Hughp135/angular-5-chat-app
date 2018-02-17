@@ -1,0 +1,25 @@
+<div class="menu" *ngIf="appState.currentServer">
+  <div class=""
+    *ngIf="!appState.currentServer.channelList">
+    <div class="ui active centered inline loader"></div>
+  </div>
+
+  <div *ngIf="appState.currentServer.channelList">
+    <form action=""
+      (submit)="createChannel()">
+      <div class="ui small icon input">
+        <input type="text"
+          name="channelName"
+          placeholder="Add New Channel"
+          [(ngModel)]="newChannelName">
+        <i class="inverted circular plus link icon"
+          (click)="createChannel()"></i>
+      </div>
+    </form>
+  </div>
+  <a class="item"
+    *ngFor="let channel of appState.currentServer.channelList"
+    (click)="joinChannel(channel)">
+    # {{ channel.name }}
+  </a>
+</div>

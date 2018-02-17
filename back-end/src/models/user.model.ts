@@ -4,13 +4,13 @@ import * as bcrypt from 'bcrypt';
 export interface IUserModel extends mongoose.Document {
   username: string;
   password: string;
-  joinedServers: [mongoose.Types.ObjectId];
+  joinedServers: [string];
 }
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
-  joinedServers: { type: [ mongoose.Schema.Types.ObjectId ] },
+  joinedServers: { type: [ String ] },
 });
 
 UserSchema.pre('save', async function (next) {

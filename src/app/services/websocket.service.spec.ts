@@ -10,6 +10,7 @@ import { ErrorService } from './error.service';
 describe('WebsocketService', () => {
   let injector: TestBed;
   let service: WebsocketService;
+  let errorService: ErrorService;
   let mockServer: Server;
   (window as any).MockSocketIo = SocketIO;
 
@@ -23,6 +24,7 @@ describe('WebsocketService', () => {
     });
     injector = getTestBed();
     service = injector.get(WebsocketService);
+    errorService = injector.get(ErrorService);
     mockServer = new Server('http://localhost:6145');
   });
   afterEach(() => {
@@ -74,5 +76,15 @@ describe('WebsocketService', () => {
       expect(service.connected).toEqual(false);
       done();
     }, 20);
+  });
+  it('creates errorService message on soft-error', async (done) => {
+    errorService.errorMessage.subscribe((val) => {
+      expect(val.message).toEqual('test message 1');
+      done();
+    });
+    mockServer.on('connection', server => {
+      mockServer.emit('soft-error', 'test message 1');
+    });
+    await service.connect().toPromise();
   });
 });

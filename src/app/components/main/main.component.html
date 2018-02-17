@@ -1,8 +1,11 @@
 <div id="main-wrapper">
+  <!-- LEFT SIDEBAR -->
   <div id="sidebar-width-300">
+
     <div id="sidebar-menu"
       class="ui visible left vertical sidebar menu"
       [class.inverted]="this.settingsService.invertedTheme">
+
       <div class="item">
         <h4 class="ui header"
           [class.inverted]="this.settingsService.invertedTheme"
@@ -14,17 +17,32 @@
           </sui-checkbox>
         </h4>
       </div>
+
       <div class="item">
         <app-server-list></app-server-list>
       </div>
+
       <div class="item" *ngIf="appState.currentServer">
         <app-current-server></app-current-server>
       </div>
+
     </div>
   </div>
+  <!-- /LEFT SIDEBAR -->
 
+  <!-- MAIN CONTENT SECTION -->
   <div id="main-content"
+    class="ui segment"
     [class.inverted]="this.settingsService.invertedTheme">
+    <app-chat-channel *ngIf="appState.currentChatChannel"></app-chat-channel>
 
   </div>
+  <!-- /MAIN CONTENT SECTION -->
+
+  <!-- RIGHT SIDEBAR -->
+  <!-- <div id="sidebar-width-300">
+    Hi
+  </div> -->
+  <!-- /RIGHT SIDEBAR -->
+
 </div>

@@ -1,4 +1,4 @@
-import { addEventHandlers } from './websocket-events';
+import { handlers, CHANNEL_LIST, CHAT_MESSAGE } from './websocket-events';
 import { AppStateService } from '../app-state.service';
 
 const result = 'success';
@@ -13,9 +13,14 @@ describe('websocket-events', () => {
   beforeEach(() => {
     appState = new AppStateService();
   });
-  it('create-channel', () => {
+  it('channel-list', () => {
     spyOn(appState, 'updateChannelsList');
-    addEventHandlers(fakeSocket, appState);
+    handlers[CHANNEL_LIST](fakeSocket, appState);
     expect(appState.updateChannelsList).toHaveBeenCalledWith(result);
+  });
+  it('chat-message', () => {
+    spyOn(appState, 'addMessage');
+    handlers[CHAT_MESSAGE](fakeSocket, appState);
+    expect(appState.addMessage).toHaveBeenCalledWith(result);
   });
 });

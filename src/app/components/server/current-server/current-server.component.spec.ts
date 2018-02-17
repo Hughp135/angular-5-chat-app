@@ -4,6 +4,7 @@ import { CurrentServerComponent } from './current-server.component';
 import { AppStateService } from '../../../services/app-state.service';
 import { FormsModule } from '@angular/forms';
 import { WebsocketService } from '../../../services/websocket.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CurrentServerComponent', () => {
   let component: CurrentServerComponent;
@@ -27,7 +28,7 @@ describe('CurrentServerComponent', () => {
         AppStateService,
         { provide: WebsocketService, useValue: fakeWebSocketService },
       ],
-
+      schemas: [NO_ERRORS_SCHEMA]
     })
       .compileComponents();
     injector = getTestBed();
@@ -42,19 +43,5 @@ describe('CurrentServerComponent', () => {
 
   it('initial state', () => {
     expect(component).toBeTruthy();
-  });
-  it('creates a new channel', () => {
-    appState.currentServer = {
-      _id: '123',
-      name: 'server',
-      owner_id: 'asd',
-    };
-    component.newChannelName = 'channel-name';
-    component.createChannel();
-    expect(fakeWebSocketService.socket.emit)
-      .toHaveBeenCalledWith('create-channel', {
-        server_id: '123',
-        name: 'channel-name'
-      });
   });
 });

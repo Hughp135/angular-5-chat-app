@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed, getTestBed, fakeAsync, tick } from '@
 import { ErrorNotificationComponent } from './error-notification.component';
 import { ErrorService, ErrorNotification } from '../../services/error.service';
 import { SuiModule } from 'ng2-semantic-ui';
+import { TransitionDirection } from 'ng2-semantic-ui';
 
 describe('ErrorNotificationComponent', () => {
   let component: ErrorNotificationComponent;
@@ -34,12 +35,15 @@ describe('ErrorNotificationComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(fakeAsync(() => {
-  }));
-
   it('initial state', () => {
     expect(component).toBeTruthy();
     expect(component.errorNotification).toBeUndefined();
+  });
+  it('should animate for correct duration', () => {
+    // Reset component to call doAnimate
+    fixture = TestBed.createComponent(ErrorNotificationComponent);
+    component = fixture.componentInstance;
+    component.doAnimate(TransitionDirection.Out, () => { });
   });
   it('shows and hides error message', fakeAsync(() => {
     expect(component.transitionDuration).toEqual(1);

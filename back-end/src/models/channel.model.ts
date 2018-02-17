@@ -5,6 +5,11 @@ const channelSchema = new mongoose.Schema({
   server_id: { type: mongoose.Schema.Types.ObjectId, required: true },
 });
 
+export interface IChannelModel extends mongoose.Document {
+  name: string;
+  server_id: mongoose.Schema.Types.ObjectId;
+}
+
 channelSchema.pre('save', async function (next) {
   /* istanbul ignore next */
   if (!this.isNew) {
@@ -24,6 +29,6 @@ channelSchema.pre('save', async function (next) {
   next();
 });
 
-const Channel = mongoose.model('Channel', channelSchema);
+const Channel: mongoose.Model<IChannelModel> = mongoose.model<IChannelModel>('Channel', channelSchema);
 
 export default Channel;

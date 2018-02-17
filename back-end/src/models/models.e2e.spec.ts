@@ -5,8 +5,9 @@ import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
 
 import User from './user.model';
-import Server from '../models/server.model';
-import Channel from '../models/channel.model';
+import Server, { IServerModel } from './server.model';
+import Channel, { IChannelModel } from './channel.model';
+import ChatMessage, { IChatMessageModel } from './chatmessage.model';
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -27,7 +28,7 @@ describe('models e2e', () => {
     await Channel.remove({});
   });
 
-  it('create related channels, server, and user', async () => {
+  it('create related channels, server, user, and message', async () => {
     const user: any = await User.create({
       username: 'test1',
       password: '123456',
@@ -40,10 +41,23 @@ describe('models e2e', () => {
       name: 'channel1',
       server_id: server._id.toString(),
     });
-    const savedServer: any = await Server.findById(server._id).lean();
-    const savedChannel: any = await Channel.findById(channel._id).lean();
+    const date = new Date();
+    date.setDate(1);
+    const message = await ChatMessage.create({
+      message: 'some message here',
+      username: user.username,
+      channel_id: channel._id,
+      user_id: user._id,
+      createdAt: date,
+      updatedAt: date,
+    });
+    const savedServer = await Server.findById(server._id);
+    const savedChannel = await Channel.findById(channel._id);
+    const savedMessage = await ChatMessage.findById(message._id);
     expect(savedServer.owner_id.toString()).to.equal(user._id.toString());
     expect(savedChannel.server_id.toString()).to.equal(server._id.toString());
+    expect(savedMessage.createdAt.toString()).to.equal(date.toString());
+    expect(savedMessage.updatedAt.toString()).to.equal(date.toString());
   });
   it('will not allow 2 channels with same name in server', async () => {
     const channel = await Channel.create({

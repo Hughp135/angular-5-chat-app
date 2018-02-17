@@ -6,30 +6,14 @@ import * as mongoose from 'mongoose';
 import { createChannel } from './create';
 import Channel from '../../models/channel.model';
 import Server from '../../models/server.model';
+import createFakeSocketEvent from '../test_helpers/fake-socket';
 
 const expect = chai.expect;
 chai.use(sinonChai);
 
 const result = sinon.spy();
 
-function createFakeSocketEvent(eventName: string, data: any, complete: any) {
-  const socket = {
-    on: async (event: string, callback: any) => {
-      await callback(data);
-      complete();
-    },
-    emit: result,
-  };
-
-  const io = {
-    on: (event: string, callback: any) => {
-      callback(socket);
-    },
-  };
-  return { io, socket };
-}
-
-describe('websocket routes: channel', () => {
+describe('websocket channel/create', () => {
   let serverId;
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -49,11 +33,11 @@ describe('websocket routes: channel', () => {
     await Channel.remove({});
     result.resetHistory();
   });
-  it('channel/create', (done) => {
+  it('channel/create success', (done) => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
       name: 'channel-name',
       server_id: serverId,
-    }, onComplete);
+    }, { user_id: '123456781234567812345678' }, onComplete, result);
     createChannel(io);
     function onComplete() {
       expect(result).to.have.been
@@ -68,10 +52,22 @@ describe('websocket routes: channel', () => {
       done();
     }
   });
-  it('emits error on fail', (done) => {
+  it('channel/create fails if no server_id given', (done) => {
     const { io, socket } = createFakeSocketEvent('create-channel', {
       name: 'channel-name',
-    }, onComplete);
+    }, { user_id: '123456781234567812345678' }, onComplete, result);
+    createChannel(io);
+    function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error', 'Failed to create channel.');
+      done();
+    }
+  });
+  it('channel/create fails if server,owner_id does not match socket.claim.user_id', (done) => {
+    const { io, socket } = createFakeSocketEvent('create-channel', {
+      name: 'channel-name',
+      server_id: serverId,
+    }, { user_id: '999996781234567812345678' }, onComplete, result);
     createChannel(io);
     function onComplete() {
       expect(result).to.have.been

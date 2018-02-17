@@ -15,11 +15,12 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { RegisterComponent } from './components/register/register.component';
 import { WebsocketService } from './services/websocket.service';
 import { ServerListComponent } from './components/server-list/server-list.component';
-import { ChannelsListComponent } from './components/channels/channels-list/channels-list.component';
+import { ChannelsListComponent } from './components/channels/channels-list.component';
 import { AppStateService } from './services/app-state.service';
 import { CurrentServerComponent } from './components/server/current-server/current-server.component';
 import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
 import { ErrorService } from './services/error.service';
+import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { ErrorService } from './services/error.service';
     ChannelsListComponent,
     CurrentServerComponent,
     ErrorNotificationComponent,
+    ChatChannelComponent,
   ],
   imports: [
     SuiModule,
