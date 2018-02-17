@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { AppStateService } from './app-state.service';
-import { addEventHandlers } from './websocket/websocket-events';
+import { handlers } from './websocket-events/websocket-events';
 import { ErrorService, ErrorNotification } from './error.service';
-import { ChatMessage } from 'shared-interfaces/message.interface';
 
 @Injectable()
 export class WebsocketService {
@@ -60,9 +59,8 @@ export class WebsocketService {
       this.errorService.errorMessage
         .next(new ErrorNotification(message, 5000));
     });
-    this.socket.on('chat-message', (message: ChatMessage) => {
-      this.appState.addMessage(message);
-    });
-    addEventHandlers(this.socket, this.appState);
+    for (const handler of Object.values(handlers)) {
+      handler(this.socket, this.appState);
+    }
   }
 }
