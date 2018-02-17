@@ -1,4 +1,3 @@
-import { AppStateService } from '..//app-state.service';
 import { ChannelList } from 'shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../../shared-interfaces/message.interface';
 

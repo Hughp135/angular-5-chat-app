@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { WebsocketService } from '../../../services/websocket.service';
 import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
@@ -10,7 +9,6 @@ import { AppStateService } from '../../../services/app-state.service';
 export class CurrentServerComponent implements OnInit {
 
   constructor(
-    private wsService: WebsocketService,
     public appState: AppStateService,
   ) { }
 
