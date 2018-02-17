@@ -1,4 +1,4 @@
-import { ActionReducerMap, ActionReducer } from '@ngrx/store';
+import { ActionReducerMap } from '@ngrx/store';
 import { AppState } from './app.states';
 import { serverListReducer } from './server-list.reducer';
 import { currentServerReducer } from './current-server.reducer';

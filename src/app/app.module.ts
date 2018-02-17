@@ -22,7 +22,6 @@ import { CurrentServerComponent } from './components/server/current-server/curre
 import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
 import { ErrorService } from './services/error.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
-import { serverListReducer } from './reducers/server-list.reducer';
 import { reducers } from './reducers/reducers';
 
 @NgModule({

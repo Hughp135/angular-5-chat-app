@@ -2,8 +2,14 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
-import { AppStateService } from './app-state.service';
 import { ErrorService } from './error.service';
+import { handlers, CHANNEL_LIST } from './websocket-events/websocket-events';
+
+import { StoreModule, Store } from '@ngrx/store';
+import { reducers } from '../reducers/reducers';
+import { AppState } from '../reducers/app.states';
+import ChatServer from '../../../shared-interfaces/server.interface';
+import { JOIN_SERVER, SET_CHANNEL_LIST } from '../reducers/current-server.reducer';
 
 // tslint:disable:no-unused-expression
 
@@ -13,19 +19,33 @@ describe('WebsocketService', () => {
   let errorService: ErrorService;
   let mockServer: Server;
   (window as any).MockSocketIo = SocketIO;
+  let store: Store<AppState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         WebsocketService,
-        AppStateService,
         ErrorService,
       ],
+      imports: [
+        StoreModule.forRoot(reducers),
+      ]
     });
     injector = getTestBed();
     service = injector.get(WebsocketService);
     errorService = injector.get(ErrorService);
     mockServer = new Server('http://localhost:6145');
+    store = injector.get(Store);
+    const currentServer: ChatServer = {
+      _id: '123',
+      name: 'server',
+      owner_id: 'asd',
+    };
+    store.dispatch({
+      type: JOIN_SERVER,
+      payload: currentServer,
+    });
+    spyOn(store, 'dispatch').and.callThrough();
   });
   afterEach(() => {
     mockServer.close();
@@ -86,5 +106,20 @@ describe('WebsocketService', () => {
       mockServer.emit('soft-error', 'test message 1');
     });
     await service.connect().toPromise();
+  });
+  it('channel-list', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback('success');
+      }
+    };
+    handlers[CHANNEL_LIST](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_CHANNEL_LIST,
+      payload: 'success',
+    });
+  });
+  it('chat-message', () => {
+    // TODO
   });
 });

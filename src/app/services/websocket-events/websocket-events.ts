@@ -6,13 +6,16 @@ export const CHAT_MESSAGE = 'chat-message';
 export const CHANNEL_LIST = 'channel-list';
 
 export const handlers: { [key: string]: (socket, appState) => void } = {
-  // [CHAT_MESSAGE]: chatMessage,
+  [CHAT_MESSAGE]: chatMessage,
   [CHANNEL_LIST]: channelList,
 };
 
-function chatMessage(socket, appState) {
+function chatMessage(socket, store) {
   socket.on('chat-message', (message: ChatMessage) => {
-    appState.addMessage(message);
+    store.dispatch({
+      type: 'TODO',
+      payload: 'todo',
+    });
   });
 }
 

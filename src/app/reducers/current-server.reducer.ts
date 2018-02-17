@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import Server from '../services/app-state.service';
 
 export const JOIN_SERVER = 'SET_CURRENT_SERVER';

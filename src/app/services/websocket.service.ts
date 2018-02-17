@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
-import { AppStateService } from './app-state.service';
 import { handlers } from './websocket-events/websocket-events';
 import { ErrorService, ErrorNotification } from './error.service';
 import { Store } from '@ngrx/store';
@@ -14,7 +13,6 @@ export class WebsocketService {
   public connected = false;
 
   constructor(
-    private appState: AppStateService,
     private errorService: ErrorService,
     private store: Store<AppState>,
   ) {

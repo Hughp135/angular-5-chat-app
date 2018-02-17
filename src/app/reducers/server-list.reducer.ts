@@ -1,4 +1,3 @@
-import { Action } from '@ngrx/store';
 import Server from 'shared-interfaces/server.interface';
 
 export const UPDATE_SERVER_LIST = 'UPDATE_SERVER_LIST';

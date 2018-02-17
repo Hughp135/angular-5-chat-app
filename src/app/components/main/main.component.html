@@ -11,7 +11,9 @@
           [class.inverted]="this.settingsService.invertedTheme"
           align="right">
           Inverted Theme &nbsp;&nbsp;
-          <sui-checkbox [(ngModel)]="this.settingsService.invertedTheme"
+          <sui-checkbox name="invertedTheme"
+            ngDefaultControl
+            [(ngModel)]="this.settingsService.invertedTheme"
             class="toggle"
             style="float:right">
           </sui-checkbox>
@@ -22,7 +24,8 @@
         <app-server-list></app-server-list>
       </div>
 
-      <div class="item" *ngIf="currentServer | async">
+      <div class="item"
+        *ngIf="currentServer | async">
         <app-current-server></app-current-server>
       </div>
 

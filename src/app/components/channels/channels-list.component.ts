@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Channel } from 'shared-interfaces/channel.interface';
-import { AppStateService } from '../../services/app-state.service';
 import { WebsocketService } from '../../services/websocket.service';
 import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 import { Store } from '@ngrx/store';
@@ -17,7 +16,6 @@ export class ChannelsListComponent implements OnInit {
   public currentServer: Observable<Server>;
 
   constructor(
-    public appState: AppStateService,
     private wsService: WebsocketService,
     private store: Store<AppState>
   ) {
@@ -33,10 +31,13 @@ export class ChannelsListComponent implements OnInit {
   }
 
   createChannel() {
-    const channel: CreateChannelRequest = {
-      server_id: this.appState.currentServer._id,
-      name: this.newChannelName,
-    };
-    this.wsService.socket.emit('create-channel', channel);
+    this.currentServer
+      .subscribe(server => {
+        const channel: CreateChannelRequest = {
+          server_id: server._id,
+          name: this.newChannelName,
+        };
+        this.wsService.socket.emit('create-channel', channel);
+      });
   }
 }

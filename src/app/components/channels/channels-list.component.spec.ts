@@ -1,16 +1,20 @@
 import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
-
+import { StoreModule, Store } from '@ngrx/store';
+import { reducers } from '../../reducers/reducers';
+import { AppState } from '../../reducers/app.states';
 import { ChannelsListComponent } from './channels-list.component';
 import { FormsModule } from '@angular/forms';
-import { AppStateService } from '../../services/app-state.service';
 import { WebsocketService } from '../../services/websocket.service';
 import { ErrorService } from '../../services/error.service';
+import ChatServer from 'shared-interfaces/server.interface';
+import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+
 
 describe('ChannelsListComponent', () => {
   let component: ChannelsListComponent;
   let fixture: ComponentFixture<ChannelsListComponent>;
   let injector: TestBed;
-  let appState: AppStateService;
+  let store: Store<AppState>;
 
   const fakeWebSocketService = {
     socket: {
@@ -21,21 +25,27 @@ describe('ChannelsListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ChannelsListComponent],
-      imports: [FormsModule],
+      imports: [
+        FormsModule,
+        StoreModule.forRoot(reducers),
+      ],
       providers: [
-        AppStateService,
         ErrorService,
         { provide: WebsocketService, useValue: fakeWebSocketService },
       ],
     })
       .compileComponents();
     injector = getTestBed();
-    appState = injector.get(AppStateService);
-    appState.currentServer = {
+    store = injector.get(Store);
+    const currentServer: ChatServer = {
       _id: '123',
       name: 'server',
       owner_id: 'asd',
     };
+    store.dispatch({
+      type: JOIN_SERVER,
+      payload: currentServer,
+    });
   }));
 
   beforeEach(() => {

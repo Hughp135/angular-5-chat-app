@@ -32,7 +32,7 @@ export class ServerListComponent implements OnInit {
     this.apiService
       .get('servers')
       .finally(() => this.onGetServersComplete())
-      .subscribe((data: any) => {
+      .subscribe((data: { servers: Server[] }) => {
         this.store.dispatch({
           type: UPDATE_SERVER_LIST,
           payload: data.servers,
