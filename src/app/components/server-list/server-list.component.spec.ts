@@ -4,7 +4,6 @@ import { ServerListComponent } from './server-list.component';
 import { SettingsService } from '../../services/settings.service';
 import { ApiService } from '../../services/api.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { AppStateService } from '../../services/app-state.service';
 import { WebsocketService } from '../../services/websocket.service';
 import ChatServer from 'shared-interfaces/server.interface';
 
@@ -14,7 +13,6 @@ describe('ServerListComponent', () => {
   let injector: TestBed;
   let apiService: ApiService;
   let httpMock: HttpTestingController;
-  let appState: AppStateService;
   const fakeWebSocketService  = {
     socket: {
       emit: jasmine.createSpy()
@@ -27,7 +25,6 @@ describe('ServerListComponent', () => {
       providers: [
         SettingsService,
         ApiService,
-        AppStateService,
         { provide: WebsocketService, useValue: fakeWebSocketService },
       ],
       imports: [HttpClientTestingModule],
@@ -35,7 +32,6 @@ describe('ServerListComponent', () => {
       .compileComponents();
     injector = getTestBed();
     apiService = injector.get(ApiService);
-    appState = injector.get(AppStateService);
     httpMock = injector.get(HttpTestingController);
   }));
 

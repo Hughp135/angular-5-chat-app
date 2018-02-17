@@ -1,10 +1,10 @@
-<div class="menu" *ngIf="appState.currentServer">
+<div class="menu">
   <div class=""
-    *ngIf="!appState.currentServer.channelList">
+    *ngIf="!(currentServer | async).channelList">
     <div class="ui active centered inline loader"></div>
   </div>
 
-  <div *ngIf="appState.currentServer.channelList">
+  <div *ngIf="(currentServer | async).channelList">
     <form action=""
       (submit)="createChannel()">
       <div class="ui small icon input">
@@ -18,7 +18,7 @@
     </form>
   </div>
   <a class="item"
-    *ngFor="let channel of appState.currentServer.channelList"
+    *ngFor="let channel of (currentServer | async).channelList"
     (click)="joinChannel(channel)">
     # {{ channel.name }}
   </a>

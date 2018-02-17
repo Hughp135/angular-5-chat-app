@@ -7,7 +7,7 @@
   [class.loading]="loading">
   {{ error }}
   <h4 class="ui blue header"
-    *ngFor="let server of serverList"
+    *ngFor="let server of serverList | async"
     (click)="joinServer(server)">
     {{ server.name }}
   </h4>

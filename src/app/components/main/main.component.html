@@ -22,7 +22,7 @@
         <app-server-list></app-server-list>
       </div>
 
-      <div class="item" *ngIf="appState.currentServer">
+      <div class="item" *ngIf="currentServer | async">
         <app-current-server></app-current-server>
       </div>
 
@@ -34,7 +34,7 @@
   <div id="main-content"
     class="ui segment"
     [class.inverted]="this.settingsService.invertedTheme">
-    <app-chat-channel *ngIf="appState.currentChatChannel"></app-chat-channel>
+    <!-- <app-chat-channel *ngIf="appState.currentChatChannel"></app-chat-channel> -->
 
   </div>
   <!-- /MAIN CONTENT SECTION -->

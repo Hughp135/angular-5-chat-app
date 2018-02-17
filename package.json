@@ -52,6 +52,7 @@
     "@angular/platform-browser": "^5.2.5",
     "@angular/platform-browser-dynamic": "^5.2.5",
     "@angular/router": "^5.2.5",
+    "@ngrx/store": "^5.1.0",
     "@types/config": "0.0.33",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",

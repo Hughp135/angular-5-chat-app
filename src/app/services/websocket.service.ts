@@ -4,6 +4,8 @@ import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { AppStateService } from './app-state.service';
 import { handlers } from './websocket-events/websocket-events';
 import { ErrorService, ErrorNotification } from './error.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../reducers/app.states';
 
 @Injectable()
 export class WebsocketService {
@@ -14,6 +16,7 @@ export class WebsocketService {
   constructor(
     private appState: AppStateService,
     private errorService: ErrorService,
+    private store: Store<AppState>,
   ) {
   }
 
@@ -60,7 +63,7 @@ export class WebsocketService {
         .next(new ErrorNotification(message, 5000));
     });
     for (const handler of Object.values(handlers)) {
-      handler(this.socket, this.appState);
+      handler(this.socket, this.store);
     }
   }
 }
