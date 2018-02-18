@@ -43,9 +43,18 @@
   <!-- /MAIN CONTENT SECTION -->
 
   <!-- RIGHT SIDEBAR -->
-  <!-- <div id="sidebar-width-300">
-    Hi
-  </div> -->
+  <div id="sidebar-width-300" *ngIf="currentServer | async">
+    <div
+      class="ui visible right vertical sidebar menu"
+      [class.inverted]="this.settingsService.invertedTheme">
+      <div class="item">
+        Users
+      </div>
+      <div class="item">
+        Users
+      </div>
+    </div>
+  </div>
   <!-- /RIGHT SIDEBAR -->
 
 </div>

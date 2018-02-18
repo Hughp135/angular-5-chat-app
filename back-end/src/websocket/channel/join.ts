@@ -1,6 +1,5 @@
 import ChannelModel from '../../models/channel.model';
 import User from '../../models/user.model';
-import Server from '../../models/server.model';
 import ChatMessageModel from '../../models/chatmessage.model';
 import * as mongoose from 'mongoose';
 import { JoinedChannelResponse } from 'shared-interfaces/channel.interface';

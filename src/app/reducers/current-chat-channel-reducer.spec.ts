@@ -29,7 +29,7 @@ describe('reducers/current-chat-channel', () => {
     const state = currentChatChannelReducer(undefined, action);
     expect(state).toBeUndefined();
   });
-  it('NEW_CHAT_MESSAGE - message gets added with correct channel_id', () => {
+  it('NEW_CHAT_MESSAGE - message gets added to correct channel_id', () => {
     const action: { type: string, payload: ChatMessage } = {
       type: NEW_CHAT_MESSAGE,
       payload: {
@@ -48,26 +48,6 @@ describe('reducers/current-chat-channel', () => {
     };
     const state = currentChatChannelReducer(initialState, action);
     expect(state).toEqual({ ...initialState, messages: [action.payload] });
-  });
-  it('NEW_CHAT_MESSAGE - message not added if channel_id incorrect', () => {
-    const action: { type: string, payload: ChatMessage } = {
-      type: NEW_CHAT_MESSAGE,
-      payload: {
-        message: 'new msg here',
-        channel_id: '345',
-        username: 'john',
-        user_id: '345',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
-    };
-    const initialState: ChatChannel = {
-      name: 'new server here',
-      _id: '123',
-      server_id: '345',
-    };
-    const state = currentChatChannelReducer(initialState, action);
-    expect(state).toEqual(initialState);
   });
   it('CHAT_HISTORY - added with correct channel_id', () => {
     const action: { type: string, payload: { messages: ChatMessage[], channel_id: string } } = {

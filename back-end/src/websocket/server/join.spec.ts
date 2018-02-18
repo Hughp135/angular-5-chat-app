@@ -56,6 +56,16 @@ describe('websocket channel/join', () => {
       done();
     }
   });
+  it('does not join server if user does not exist', (done) => {
+    const { io, socket } = createFakeSocketEvent('join-server', server._id,
+      { user_id: '123456781234567812345678' }, onComplete, result);
+    joinServer(io);
+    function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error', 'Unable to join.');
+      done();
+    }
+  });
   it('does not join server if server does not exist', (done) => {
     const { io, socket } = createFakeSocketEvent('join-server', '123456781234567812345678',
       { user_id: user._id }, onComplete, result);

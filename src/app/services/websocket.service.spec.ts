@@ -12,6 +12,7 @@ import ChatServer from '../../../shared-interfaces/server.interface';
 import { JOIN_SERVER, SET_CHANNEL_LIST } from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
+import { ChatMessage } from '../../../shared-interfaces/message.interface';
 
 // tslint:disable:no-unused-expression
 
@@ -130,17 +131,42 @@ describe('WebsocketService', () => {
       payload: 'success',
     });
   });
-  it('chat-message', () => {
+  it('chat-message dispatches NEW_CHAT_MESSAGE if channel ID matches current channel', () => {
+    const message: ChatMessage = {
+      message: 'hi thar',
+      channel_id: '345',
+      user_id: '123',
+      username: 'jake',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
     const fakeSocket = {
       on: (msg: string, callback: any) => {
-        callback({ '_id': '123', });
+        callback(message);
       }
     };
     handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: NEW_CHAT_MESSAGE,
-      payload: { '_id': '123', },
+      payload: message,
     });
+  });
+  it('chat-message does not dispatch NEW_CHAT_MESSAGE if channel ID is different', () => {
+    const message: ChatMessage = {
+      message: 'hi thar',
+      channel_id: '712361',
+      user_id: '123',
+      username: 'jake',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback(message);
+      }
+    };
+    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    expect(store.dispatch).not.toHaveBeenCalled();
   });
   it('joined-channel', () => {
     const fakeSocket = {

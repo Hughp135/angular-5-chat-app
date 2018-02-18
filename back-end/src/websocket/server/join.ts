@@ -1,8 +1,10 @@
 import Server, { IServerModel } from '../../models/server.model';
 import ChannelModel from '../../models/channel.model';
+import { ChannelList } from 'shared-interfaces/channel.interface';
 import canJoinServer from '../auth/can-join-server';
 import User from '../../models/user.model';
 import * as mongoose from 'mongoose';
+import { sendUserList } from './user-list';
 
 export function joinServer(io: any) {
   io.on('connection', async socket => {
@@ -33,8 +35,10 @@ export function joinServer(io: any) {
         server_id: server._id,
         channels: channels,
       };
+
       socket.emit('channel-list', channelList);
       socket.join(`server-${server._id}`);
+      sendUserList(io, socket, server);
     });
   });
 }

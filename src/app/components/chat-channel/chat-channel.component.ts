@@ -28,6 +28,7 @@ export class ChatChannelComponent implements OnInit {
     return this.appState.currentChannel;
   }
 
+  /* istanbul ignore next */
   isToday(date: Date) {
     const now = new Date();
     date = new Date(date);

@@ -6,3 +6,12 @@ export default interface ChatServer {
   owner_id?: string;
   channelList?: ChannelList
 }
+
+export interface ServerUserList {
+  server_id: string;
+  users: Array<{
+    user_id: string;
+    username: string;
+    online: boolean;
+  }>
+}

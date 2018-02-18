@@ -14,15 +14,10 @@ export function currentChatChannelReducer(state: ChatChannel, action) {
       return undefined;
     case NEW_CHAT_MESSAGE:
       const message: ChatMessage = action.payload;
-      if (message.channel_id === state._id) {
-        return <ChatChannel> {
-          ...state,
-          messages: [message].concat(state.messages || [])
-        };
-
-      } else {
-        return state;
-      }
+      return <ChatChannel>{
+        ...state,
+        messages: [message].concat(state.messages || [])
+      };
     case CHAT_HISTORY:
       if (action.payload.channel_id === state._id) {
         let messages: ChatMessage[] = action.payload.messages;
@@ -37,7 +32,7 @@ export function currentChatChannelReducer(state: ChatChannel, action) {
                 : 0;
           });
         }
-        return <ChatChannel> {
+        return <ChatChannel>{
           ...state,
           messages
         };

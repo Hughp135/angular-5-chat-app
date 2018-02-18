@@ -10,6 +10,7 @@ import ChatServer from 'shared-interfaces/server.interface';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
 import { JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 import { AppStateService } from '../../services/app-state.service';
+import { SettingsService } from '../../services/settings.service';
 
 
 describe('ChannelsListComponent', () => {
@@ -32,6 +33,7 @@ describe('ChannelsListComponent', () => {
         StoreModule.forRoot(reducers),
       ],
       providers: [
+        SettingsService,
         AppStateService,
         ErrorService,
         { provide: WebsocketService, useValue: fakeWebSocketService },
