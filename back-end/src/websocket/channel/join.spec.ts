@@ -49,7 +49,7 @@ describe('websocket channel/join', () => {
   });
   it('does not join channel if channel id invalid', (done) => {
     const { io, socket } = createFakeSocketEvent('join-channel', '123',
-      { user_id: user._id.toString() }, onComplete, result);
+      { user_id: user._id }, onComplete, result);
     joinChannel(io);
     function onComplete() {
       expect(result).to.have.been
@@ -59,7 +59,7 @@ describe('websocket channel/join', () => {
   });
   it('does not join channel if channel does not exist', (done) => {
     const { io, socket } = createFakeSocketEvent('join-channel', '123456781234567812345678',
-      { user_id: user._id.toString() }, onComplete, result);
+      { user_id: user._id }, onComplete, result);
     joinChannel(io);
     function onComplete() {
       expect(result).to.have.been
@@ -68,8 +68,8 @@ describe('websocket channel/join', () => {
     }
   });
   it('does not join channel if user has not joined the server', (done) => {
-    const { io, socket } = createFakeSocketEvent('join-channel', channel._id.toString(),
-      { user_id: user._id.toString() }, onComplete, result);
+    const { io, socket } = createFakeSocketEvent('join-channel', channel._id,
+      { user_id: user._id }, onComplete, result);
     joinChannel(io);
     function onComplete() {
       expect(result).to.have.been
@@ -80,12 +80,15 @@ describe('websocket channel/join', () => {
   it('joins the channel', (done) => {
     user.joinedServers = [serverId.toString()];
     user.save().then(() => {
-      const { io, socket } = createFakeSocketEvent('join-channel', channel._id.toString(),
-        { user_id: user._id.toString() }, onComplete, result);
+      const { io, socket } = createFakeSocketEvent('join-channel', channel._id,
+        { user_id: user._id }, onComplete, result);
       joinChannel(io);
       function onComplete() {
         expect(result).to.have.been
-          .calledWith('joined-channel', { messages: [] });
+          .calledWith('joined-channel', {
+            channel_id: channel._id,
+            messages: [],
+          });
         done();
       }
     });

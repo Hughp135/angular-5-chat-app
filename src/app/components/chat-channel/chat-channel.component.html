@@ -4,9 +4,11 @@
       # {{ currentChannel.name }}
     </h3>
   </div>
-  
+
   <div class="ui middle aligned divided relaxed list"
-    id="message-container">    
+    id="message-container">
+    <div *ngIf="!currentChannel.messages"
+      class="ui active centered inline loader"></div>
     <div class="item"
       *ngFor="let msg of currentChannel.messages">
       <img class="ui avatar image"

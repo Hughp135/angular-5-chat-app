@@ -1,8 +1,10 @@
 import ChannelModel from '../../models/channel.model';
 import User from '../../models/user.model';
 import Server from '../../models/server.model';
-import ChatMessage from '../../models/chatmessage.model';
+import ChatMessageModel from '../../models/chatmessage.model';
 import * as mongoose from 'mongoose';
+import { JoinedChannelResponse } from 'shared-interfaces/channel.interface';
+import { ChatMessage } from 'shared-interfaces/message.interface';
 
 export async function joinChannel(io: any) {
   io.on('connection', async socket => {
@@ -21,7 +23,7 @@ export async function joinChannel(io: any) {
         socket.emit('soft-error', 'Unable to join this channel.');
         return;
       }
-      const messages = await ChatMessage.find({ channel_id: channelId })
+      const messages: ChatMessage[] = <ChatMessage[]>await ChatMessageModel.find({ channel_id: channelId })
         .sort({ createdAt: -1 })
         .limit(50)
         .lean();
@@ -33,9 +35,12 @@ export async function joinChannel(io: any) {
       }
 
       socket.join(channelId);
-      socket.emit('joined-channel', {
-        messages
-      });
+
+      const response: JoinedChannelResponse = {
+        channel_id: channel._id,
+        messages,
+      };
+      socket.emit('joined-channel', response);
     });
   });
 }

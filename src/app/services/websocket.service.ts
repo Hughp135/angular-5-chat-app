@@ -60,8 +60,8 @@ export class WebsocketService {
       this.errorService.errorMessage
         .next(new ErrorNotification(message, 5000));
     });
-    for (const handler of Object.values(handlers)) {
-      handler(this.socket, this.store);
+    for (const addHandler of Object.values(handlers)) {
+      addHandler(this.socket, this.store);
     }
   }
 }

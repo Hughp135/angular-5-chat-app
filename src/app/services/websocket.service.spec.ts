@@ -3,7 +3,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
 import { ErrorService } from './error.service';
-import { handlers, CHANNEL_LIST } from './websocket-events/websocket-events';
+import { handlers, CHANNEL_LIST_HANDLER } from './websocket-events/websocket-events';
 
 import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
@@ -113,7 +113,7 @@ describe('WebsocketService', () => {
         callback('success');
       }
     };
-    handlers[CHANNEL_LIST](fakeSocket, store);
+    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_CHANNEL_LIST,
       payload: 'success',
