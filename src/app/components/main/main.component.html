@@ -43,16 +43,12 @@
   <!-- /MAIN CONTENT SECTION -->
 
   <!-- RIGHT SIDEBAR -->
-  <div id="sidebar-width-300" *ngIf="currentServer | async">
-    <div
-      class="ui visible right vertical sidebar menu"
+  <div id="sidebar-width-300"
+    *ngIf="currentServer | async">
+    <div class="ui visible right vertical sidebar menu"
       [class.inverted]="this.settingsService.invertedTheme">
-      <div class="item">
-        Users
-      </div>
-      <div class="item">
-        Users
-      </div>
+
+      <app-user-list></app-user-list>
     </div>
   </div>
   <!-- /RIGHT SIDEBAR -->

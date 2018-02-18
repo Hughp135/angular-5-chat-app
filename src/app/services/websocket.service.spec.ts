@@ -3,13 +3,19 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
 import { ErrorService } from './error.service';
-import { handlers, CHANNEL_LIST_HANDLER, CHAT_MESSAGE_HANDLER, JOINED_CHANNEL_HANDLER } from './websocket-events/websocket-events';
+import {
+  handlers,
+  CHANNEL_LIST_HANDLER,
+  CHAT_MESSAGE_HANDLER,
+  JOINED_CHANNEL_HANDLER,
+  SERVER_USERLIST_HANDLER
+} from './websocket-events/websocket-events';
 
 import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
 import ChatServer from '../../../shared-interfaces/server.interface';
-import { JOIN_SERVER, SET_CHANNEL_LIST } from '../reducers/current-server.reducer';
+import { JOIN_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST } from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
@@ -171,13 +177,25 @@ describe('WebsocketService', () => {
   it('joined-channel', () => {
     const fakeSocket = {
       on: (msg: string, callback: any) => {
-        callback({ 'messages' : [] });
+        callback({ 'messages': [] });
       }
     };
     handlers[JOINED_CHANNEL_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: CHAT_HISTORY,
-      payload: { 'messages' : [] },
+      payload: { 'messages': [] },
+    });
+  });
+  it('server-user-list', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback('hi');
+      }
+    };
+    handlers[SERVER_USERLIST_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SERVER_SET_USER_LIST,
+      payload: 'hi',
     });
   });
 });

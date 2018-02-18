@@ -22,6 +22,7 @@ import { ErrorNotificationComponent } from './components/error-notification/erro
 import { ErrorService } from './services/error.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
 import { reducers } from './reducers/reducers';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { reducers } from './reducers/reducers';
     ChannelsListComponent,
     ErrorNotificationComponent,
     ChatChannelComponent,
+    UserListComponent,
   ],
   imports: [
     SuiModule,

@@ -1,0 +1,23 @@
+.ui.list {
+  .item {
+    padding: 5px 10px !important;
+    &:hover {
+      background: #e4e4e4;
+    }
+  }
+}
+
+.offline-users {
+  .item {
+    a {
+      color: #999 !important;
+    }
+
+    &:not(:hover) {
+      img {
+        -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+        filter: grayscale(100%);
+      }
+    }
+  }
+}

@@ -6,7 +6,6 @@ import ChatServer from 'shared-interfaces/server.interface';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
 import { UPDATE_SERVER_LIST } from '../../reducers/server-list.reducer';
-import Server from 'shared-interfaces/server.interface';
 import { Observable } from 'rxjs/Observable';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
 import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
@@ -17,7 +16,7 @@ import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
   styleUrls: ['./server-list.component.scss']
 })
 export class ServerListComponent implements OnInit {
-  public serverList: Observable<Server[]>;
+  public serverList: Observable<ChatServer[]>;
   public loading = false;
   public error: string;
 
@@ -33,7 +32,7 @@ export class ServerListComponent implements OnInit {
     this.apiService
       .get('servers')
       .finally(() => this.onGetServersComplete())
-      .subscribe((data: { servers: Server[] }) => {
+      .subscribe((data: { servers: ChatServer[] }) => {
         this.store.dispatch({
           type: UPDATE_SERVER_LIST,
           payload: data.servers,

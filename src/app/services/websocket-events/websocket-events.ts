@@ -1,8 +1,9 @@
 import { ChannelList, JoinedChannelResponse } from 'shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../../shared-interfaces/message.interface';
-import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
+import { SET_CHANNEL_LIST, SERVER_SET_USER_LIST } from '../../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, CHAT_HISTORY } from '../../reducers/current-chat-channel.reducer';
 import 'rxjs/add/operator/take';
+import { ServerUserList } from '../../../../shared-interfaces/server.interface';
 
 export const CHAT_MESSAGE_HANDLER = 'chat-message';
 export const CHANNEL_LIST_HANDLER = 'channel-list';
@@ -48,7 +49,10 @@ function joinedChannel(socket, store) {
 }
 
 function serverUserList(socket, store) {
-  socket.on(SERVER_USERLIST_HANDLER, (response) => {
-    console.log(response);
+  socket.on(SERVER_USERLIST_HANDLER, (response: ServerUserList) => {
+    store.dispatch({
+      type: SERVER_SET_USER_LIST,
+      payload: response,
+    });
   });
 }

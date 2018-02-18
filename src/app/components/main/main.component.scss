@@ -15,8 +15,11 @@
   }
 }
 
-#sidebar-menu {
+.sidebar.menu {
   width: 250px;
+}
+
+#sidebar-menu {
   border-right: 1px solid #c9c9c9;
 
   &.inverted {

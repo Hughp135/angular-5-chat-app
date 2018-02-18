@@ -1,5 +1,5 @@
-import { currentServerReducer, JOIN_SERVER, SET_CHANNEL_LIST } from './current-server.reducer';
-import ChatServer from 'shared-interfaces/server.interface';
+import { currentServerReducer, JOIN_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST } from './current-server.reducer';
+import ChatServer, { ServerUserList } from 'shared-interfaces/server.interface';
 import { ChannelList } from '../../../shared-interfaces/channel.interface';
 
 describe('reducers/current-server', () => {
@@ -43,5 +43,35 @@ describe('reducers/current-server', () => {
     };
     const state = currentServerReducer(initialState, action);
     expect(state).toEqual(initialState);
+  });
+  it('SERVER_SET_USER_LIST with correct server ID', () => {
+    const action: { type: string, payload: ServerUserList } = {
+      type: SERVER_SET_USER_LIST,
+      payload: {
+        server_id: '345',
+        users: [{
+          username: 'dsofa',
+          user_id: 'df0g9su23',
+          online: true,
+        }]
+      }
+    };
+    const state = currentServerReducer({ _id: '345', name: 'sdf1' }, action);
+    expect(state).toEqual({ ...state, userList: action.payload });
+  });
+  it('SERVER_SET_USER_LIST fails with incorrect server ID', () => {
+    const action: { type: string, payload: ServerUserList } = {
+      type: SERVER_SET_USER_LIST,
+      payload: {
+        server_id: 'fg34g',
+        users: [{
+          username: 'dsofa',
+          user_id: 'df0g9su23',
+          online: true,
+        }]
+      }
+    };
+    const state = currentServerReducer({ _id: '345', name: 'sdf1' }, action);
+    expect(state).toEqual(state);
   });
 });
