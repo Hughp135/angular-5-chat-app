@@ -3,6 +3,7 @@ import { ChatChannel } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { SendMessageRequest } from '../../../../shared-interfaces/message.interface';
 import { AppStateService } from '../../services/app-state.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-chat-channel',
@@ -16,6 +17,7 @@ export class ChatChannelComponent implements OnInit {
   constructor(
     private wsService: WebsocketService,
     private appState: AppStateService,
+    public settingsService: SettingsService,
   ) {
   }
 
@@ -24,6 +26,33 @@ export class ChatChannelComponent implements OnInit {
 
   get currentChannel(): ChatChannel {
     return this.appState.currentChannel;
+  }
+
+  isToday(date: Date) {
+    const now = new Date();
+    date = new Date(date);
+    if (date.getFullYear() === now.getFullYear()
+      && date.getMonth() === now.getMonth()
+      && date.getDate() === now.getDate()) {
+      return true;
+    }
+    return false;
+  }
+
+  isFollowUpMsg(i: number) {
+    if (!this.currentChannel.messages[i + 1]) {
+      return false;
+    }
+    return this.currentChannel.messages[i + 1].username
+      === this.currentChannel.messages[i].username;
+  }
+
+  hasFollowUpMsg(i: number) {
+    if (!this.currentChannel.messages[i - 1]) {
+      return false;
+    }
+    return this.currentChannel.messages[i - 1].username
+      === this.currentChannel.messages[i].username;
   }
 
   sendMessage(msg: string) {

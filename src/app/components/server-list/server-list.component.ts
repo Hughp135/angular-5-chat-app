@@ -9,6 +9,7 @@ import { UPDATE_SERVER_LIST } from '../../reducers/server-list.reducer';
 import Server from 'shared-interfaces/server.interface';
 import { Observable } from 'rxjs/Observable';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 
 @Component({
   selector: 'app-server-list',
@@ -53,6 +54,10 @@ export class ServerListComponent implements OnInit {
     this.store.dispatch({
       type: JOIN_SERVER,
       payload: server,
+    });
+    this.store.dispatch({
+      type: LEAVE_CHANNEL,
+      payload: null,
     });
     this.wsService.socket.emit('join-server', server._id);
   }

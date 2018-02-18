@@ -5,6 +5,7 @@ import { AppStateService } from '../../services/app-state.service';
 import { WebsocketService } from '../../services/websocket.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
+import { SettingsService } from '../../services/settings.service';
 
 describe('ChatChannelComponent', () => {
   let component: ChatChannelComponent;
@@ -36,6 +37,7 @@ describe('ChatChannelComponent', () => {
         FormsModule,
       ],
       providers: [
+        SettingsService,
         { provide: AppStateService, useValue: fakeAppState },
         { provide: WebsocketService, useValue: { socket: { emit } } },
       ],

@@ -2,7 +2,8 @@ import {
   currentChatChannelReducer,
   JOIN_CHANNEL,
   NEW_CHAT_MESSAGE,
-  CHAT_HISTORY
+  CHAT_HISTORY,
+  LEAVE_CHANNEL
 } from './current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
@@ -19,6 +20,14 @@ describe('reducers/current-chat-channel', () => {
     };
     const state = currentChatChannelReducer(undefined, action);
     expect(state).toEqual(action.payload);
+  });
+  it('LEAVE_CHANNEL', () => {
+    const action: { type: string, payload: ChatChannel } = {
+      type: LEAVE_CHANNEL,
+      payload: null,
+    };
+    const state = currentChatChannelReducer(undefined, action);
+    expect(state).toBeUndefined();
   });
   it('NEW_CHAT_MESSAGE - message gets added with correct channel_id', () => {
     const action: { type: string, payload: ChatMessage } = {
