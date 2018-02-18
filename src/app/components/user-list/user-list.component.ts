@@ -18,7 +18,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   currentServer: Observable<ChatServer>;
   public onlineUsers: UserListUser[];
   public offlineUsers: UserListUser[];
-  private subscriptions: Subscription[] = [];
+  public subscriptions: Subscription[] = [];
 
   constructor(
     public store: Store<AppState>,
@@ -26,11 +26,11 @@ export class UserListComponent implements OnInit, OnDestroy {
   ) {
     this.currentServer = store.select(state => state.currentServer);
     this.subscriptions.push(this.currentServer
-      .filter(server => server.userList !== undefined)
-      .map(server => server.userList.users)
       .subscribe(data => {
-        this.onlineUsers = data.filter(usr => usr.online);
-        this.offlineUsers = data.filter(usr => !usr.online);
+        this.onlineUsers = data.userList &&
+          data.userList.users.filter(usr => usr.online);
+        this.offlineUsers = data.userList &&
+          data.userList.users.filter(usr => !usr.online);
       }));
   }
 

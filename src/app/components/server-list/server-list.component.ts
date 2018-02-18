@@ -51,12 +51,12 @@ export class ServerListComponent implements OnInit {
 
   joinServer(server: ChatServer) {
     this.store.dispatch({
-      type: JOIN_SERVER,
-      payload: server,
-    });
-    this.store.dispatch({
       type: LEAVE_CHANNEL,
       payload: null,
+    });
+    this.store.dispatch({
+      type: JOIN_SERVER,
+      payload: server,
     });
     this.wsService.socket.emit('join-server', server._id);
   }

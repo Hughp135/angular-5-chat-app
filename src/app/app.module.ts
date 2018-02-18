@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { appRoutes } from './app-routes';
 import { AppComponent } from './app.component';
@@ -46,6 +47,9 @@ import { UserListComponent } from './components/user-list/user-list.component';
     ),
     HttpClientModule,
     StoreModule.forRoot(reducers),
+    StoreDevtoolsModule.instrument({
+      maxAge: 10
+    }),
   ],
   providers: [
     SettingsService,
