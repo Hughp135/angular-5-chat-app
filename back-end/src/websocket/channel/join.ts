@@ -5,6 +5,7 @@ import ChatMessageModel from '../../models/chatmessage.model';
 import * as mongoose from 'mongoose';
 import { JoinedChannelResponse } from 'shared-interfaces/channel.interface';
 import { ChatMessage } from 'shared-interfaces/message.interface';
+import canJoinServer from '../auth/can-join-server';
 
 export async function joinChannel(io: any) {
   io.on('connection', async socket => {
@@ -27,9 +28,8 @@ export async function joinChannel(io: any) {
         .sort({ createdAt: -1 })
         .limit(50)
         .lean();
-      const server: any = await Server.findById(channel.server_id).lean();
 
-      if (!server || !user.joinedServers.includes(server._id.toString())) {
+      if (!await canJoinServer(user, channel.server_id)) {
         socket.emit('soft-error', 'You don\'t have permission to join this channel.');
         return;
       }
@@ -39,7 +39,6 @@ export async function joinChannel(io: any) {
         messages,
       };
       socket.emit('joined-channel', response);
-      socket.join(channelId);
     });
   });
 }

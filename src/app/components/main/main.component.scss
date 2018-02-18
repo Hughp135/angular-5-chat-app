@@ -7,11 +7,18 @@
 
 #sidebar-width-300 {
   flex: 0 0 250px;
+
+  .ui.vertical.sidebar.menu {
+    &:not(.inverted) {
+      background-color: #f3f3f3;
+    }
+  }
 }
 
 #sidebar-menu {
   width: 250px;
   border-right: 1px solid #c9c9c9;
+
   &.inverted {
     border-right: 1px solid #2f2f2f;
   }
@@ -27,9 +34,11 @@
   margin: 0;
   border-radius: 0;
   border: none;
+
   &.inverted {
     background: #2d2e2f;
   }
+
   .ui.container {
     padding: 20px;
   }
