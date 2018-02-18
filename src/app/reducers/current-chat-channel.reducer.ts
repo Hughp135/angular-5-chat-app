@@ -8,12 +8,14 @@ export function currentChatChannelReducer(state: ChatChannel, action) {
     case JOIN_CHANNEL:
       return action.payload;
     case NEW_CHAT_MESSAGE:
+      // console.log('New chat msg', action.payload);
       const message = action.payload;
       if (message.channel_id === state._id) {
         return {
           ...state,
-          messages: [message].concat(state.messages)
+          messages: [message].concat(state.messages || [])
         };
+
       } else {
         return state;
       }

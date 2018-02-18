@@ -7,6 +7,7 @@ import { AppState } from '../../reducers/app.states';
 import { Observable } from 'rxjs/Observable';
 import { JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 import ChatServer from '../../../../shared-interfaces/server.interface';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-channels-list',
@@ -19,7 +20,8 @@ export class ChannelsListComponent implements OnInit {
 
   constructor(
     private wsService: WebsocketService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private appState: AppStateService
   ) {
     this.currentServer = this.store.select(state => state.currentServer);
   }
@@ -36,13 +38,11 @@ export class ChannelsListComponent implements OnInit {
   }
 
   createChannel() {
-    this.currentServer
-      .subscribe(server => {
-        const channel: CreateChannelRequest = {
-          server_id: server._id,
-          name: this.newChannelName,
-        };
-        this.wsService.socket.emit('create-channel', channel);
-      });
+    const currentServer = this.appState.currentServer;
+    const channel: CreateChannelRequest = {
+      server_id: currentServer._id,
+      name: this.newChannelName,
+    };
+    this.wsService.socket.emit('create-channel', channel);
   }
 }

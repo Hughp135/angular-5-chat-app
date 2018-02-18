@@ -4,8 +4,10 @@ import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
 import { createChannel } from './create';
+import { joinChannel } from './join';
 import Channel from '../../models/channel.model';
 import Server from '../../models/server.model';
+import User from '../../models/user.model';
 import createFakeSocketEvent from '../test_helpers/fake-socket';
 
 const expect = chai.expect;
@@ -15,6 +17,7 @@ const result = sinon.spy();
 
 describe('websocket channel/create', () => {
   let serverId;
+
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
   });

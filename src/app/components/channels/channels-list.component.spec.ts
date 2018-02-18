@@ -9,6 +9,7 @@ import { ErrorService } from '../../services/error.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
 import { JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
+import { AppStateService } from '../../services/app-state.service';
 
 
 describe('ChannelsListComponent', () => {
@@ -31,6 +32,7 @@ describe('ChannelsListComponent', () => {
         StoreModule.forRoot(reducers),
       ],
       providers: [
+        AppStateService,
         ErrorService,
         { provide: WebsocketService, useValue: fakeWebSocketService },
       ],
@@ -56,12 +58,18 @@ describe('ChannelsListComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    fakeWebSocketService.socket.emit.calls.reset();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
   it('creates a new channel', () => {
     component.newChannelName = 'channel-name';
     component.createChannel();
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledTimes(1);
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('create-channel', {
         server_id: '123',

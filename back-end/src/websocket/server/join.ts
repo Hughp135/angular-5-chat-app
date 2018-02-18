@@ -1,6 +1,6 @@
 import Server, { IServerModel } from '../../models/server.model';
-import ChannelModel, { IChannelModel } from '../../models/channel.model';
-import { ChannelList, ChatChannel } from 'shared-interfaces/channel.interface';
+import ChannelModel from '../../models/channel.model';
+import { ChannelList } from 'shared-interfaces/channel.interface';
 
 export function joinServer(io: any) {
   io.on('connection', async socket => {

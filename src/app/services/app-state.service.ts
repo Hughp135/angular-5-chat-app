@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import ChatServer from 'shared-interfaces/server.interface';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
-import { Observable } from 'rxjs/Observable';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
 
 @Injectable()

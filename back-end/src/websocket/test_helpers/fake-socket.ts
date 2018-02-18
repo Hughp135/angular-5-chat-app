@@ -17,6 +17,7 @@ export default function createFakeSocketEvent(
       }
     },
     emit: result,
+    join: () => Promise.resolve(null),
   };
 
   const io = {

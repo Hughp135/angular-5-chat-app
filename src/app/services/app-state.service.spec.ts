@@ -1,7 +1,5 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
-
 import { AppStateService } from './app-state.service';
-import { ChannelList } from 'shared-interfaces/channel.interface';
 
 import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
