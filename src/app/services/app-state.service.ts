@@ -13,7 +13,6 @@ export class AppStateService {
     const serverObservable = this.store.select(state => state.currentServer);
     serverObservable.subscribe(serv => {
       this.currentServer = serv;
-    }, null, () => {
     });
     const channelObservable = this.store.select(state => state.currentChatChannel);
     channelObservable.subscribe(chan => {

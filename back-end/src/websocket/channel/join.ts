@@ -34,13 +34,12 @@ export async function joinChannel(io: any) {
         return;
       }
 
-      socket.join(channelId);
-
       const response: JoinedChannelResponse = {
         channel_id: channel._id,
         messages,
       };
       socket.emit('joined-channel', response);
+      socket.join(channelId);
     });
   });
 }

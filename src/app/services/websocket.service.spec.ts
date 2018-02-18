@@ -3,13 +3,15 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
 import { ErrorService } from './error.service';
-import { handlers, CHANNEL_LIST_HANDLER } from './websocket-events/websocket-events';
+import { handlers, CHANNEL_LIST_HANDLER, CHAT_MESSAGE_HANDLER, JOINED_CHANNEL_HANDLER } from './websocket-events/websocket-events';
 
 import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import { JOIN_SERVER, SET_CHANNEL_LIST } from '../reducers/current-server.reducer';
+import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
+import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 
 // tslint:disable:no-unused-expression
 
@@ -41,9 +43,18 @@ describe('WebsocketService', () => {
       name: 'server',
       owner_id: 'asd',
     };
+    const currentChannel: ChatChannel = {
+      _id: '345',
+      name: 'channel',
+      server_id: '123',
+    };
     store.dispatch({
       type: JOIN_SERVER,
       payload: currentServer,
+    });
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: currentChannel,
     });
     spyOn(store, 'dispatch').and.callThrough();
   });
@@ -120,6 +131,27 @@ describe('WebsocketService', () => {
     });
   });
   it('chat-message', () => {
-    // TODO
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback({ '_id': '123', });
+      }
+    };
+    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: NEW_CHAT_MESSAGE,
+      payload: { '_id': '123', },
+    });
+  });
+  it('joined-channel', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback({ 'messages' : [] });
+      }
+    };
+    handlers[JOINED_CHANNEL_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: CHAT_HISTORY,
+      payload: { 'messages' : [] },
+    });
   });
 });
