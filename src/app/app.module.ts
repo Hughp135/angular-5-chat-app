@@ -24,6 +24,7 @@ import { ErrorService } from './services/error.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
 import { reducers } from './reducers/reducers';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { ServerSidebarComponent } from './components/server-sidebar/server-sidebar.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
     ErrorNotificationComponent,
     ChatChannelComponent,
     UserListComponent,
+    ServerSidebarComponent,
   ],
   imports: [
     SuiModule,

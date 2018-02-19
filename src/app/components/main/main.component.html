@@ -1,15 +1,31 @@
-<div id="main-wrapper">
-  <!-- LEFT SIDEBAR -->
-  <div id="sidebar-width-300">
+<div id="page-wrapper">
 
-    <div id="sidebar-menu"
-      class="ui visible left vertical sidebar menu"
-      [class.inverted]="this.settingsService.invertedTheme">
+  <div id="server-sidebar"
+    class="ui left vertical inverted icon menu"
+    [class.light]="!this.settingsService.invertedTheme">
+    <app-server-sidebar></app-server-sidebar>
+  </div>
+  <div id="main-wrapper">
 
-      <div class="item">
+    <!-- LEFT MAIN SIDEBAR -->
+    <div id="sidebar-width-300">
+      <div id="sidebar-menu"
+        class="ui visible left vertical sidebar menu"
+        [class.inverted]="this.settingsService.invertedTheme">
+        <div>
+          <div class="item"
+            *ngIf="currentServer | async">
+            <app-channels-list></app-channels-list>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="item"
+        id="bottom-attached-item">
         <h4 class="ui header"
           [class.inverted]="this.settingsService.invertedTheme"
-          align="right">
+          align="">
           Inverted Theme &nbsp;&nbsp;
           <sui-checkbox name="invertedTheme"
             ngDefaultControl
@@ -20,37 +36,29 @@
         </h4>
       </div>
 
-      <div class="item">
-        <app-server-list></app-server-list>
-      </div>
-
-      <div class="item"
-        *ngIf="currentServer | async">
-        <app-channels-list></app-channels-list>
-      </div>
-
     </div>
-  </div>
-  <!-- /LEFT SIDEBAR -->
+    <!-- /LEFT MAIN SIDEBAR -->
 
-  <!-- MAIN CONTENT SECTION -->
-  <div id="main-content"
-    class="ui segment"
-    [class.inverted]="this.settingsService.invertedTheme">
-    <app-chat-channel *ngIf="currentChatChannel | async"></app-chat-channel>
-
-  </div>
-  <!-- /MAIN CONTENT SECTION -->
-
-  <!-- RIGHT SIDEBAR -->
-  <div id="sidebar-width-300"
-    *ngIf="currentServer | async">
-    <div class="ui visible right vertical sidebar menu"
+    <!-- MAIN CONTENT SECTION -->
+    <div id="main-content"
+      class="ui segment"
       [class.inverted]="this.settingsService.invertedTheme">
+      <app-chat-channel *ngIf="currentChatChannel | async"></app-chat-channel>
 
-      <app-user-list></app-user-list>
     </div>
+    <!-- /MAIN CONTENT SECTION -->
+
+    <!-- RIGHT SIDEBAR -->
+    <div id="sidebar-width-300"
+      *ngIf="currentServer | async">
+      <div class="ui visible right vertical sidebar menu"
+        [class.inverted]="this.settingsService.invertedTheme">
+
+        <app-user-list></app-user-list>
+      </div>
+    </div>
+    <!-- /RIGHT SIDEBAR -->
+
   </div>
-  <!-- /RIGHT SIDEBAR -->
 
 </div>

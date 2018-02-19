@@ -19,6 +19,7 @@ export class ServerListComponent implements OnInit {
   public serverList: Observable<ChatServer[]>;
   public loading = false;
   public error: string;
+  public currentServer: ChatServer;
 
   constructor(
     private apiService: ApiService,
@@ -29,6 +30,10 @@ export class ServerListComponent implements OnInit {
     this.loading = true;
     this.error = null;
     this.serverList = this.store.select(state => state.serverList);
+    this.store.select(state => state.currentServer)
+      .subscribe(server => {
+        this.currentServer = server;
+      });
     this.apiService
       .get('servers')
       .finally(() => this.onGetServersComplete())
@@ -37,6 +42,9 @@ export class ServerListComponent implements OnInit {
           type: UPDATE_SERVER_LIST,
           payload: data.servers,
         });
+        if (data.servers.length > 0) {
+          this.joinServer(data.servers[0]);
+        }
       }, e => this.onGetServersComplete(e));
   }
 

@@ -1,15 +1,28 @@
 .ui.list {
   .item {
     padding: 5px 10px !important;
+
+    .header {
+      color: #4183C4;
+    }
+
     &:hover {
       background: #e4e4e4;
+    }
+  }
+
+  &.inverted {
+    .item {
+      &:hover {
+        background: #424242;
+      }
     }
   }
 }
 
 .offline-users {
   .item {
-    a {
+    .header {
       color: #999 !important;
     }
 
