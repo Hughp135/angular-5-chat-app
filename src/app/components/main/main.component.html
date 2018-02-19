@@ -11,7 +11,9 @@
           [class.inverted]="this.settingsService.invertedTheme"
           align="right">
           Inverted Theme &nbsp;&nbsp;
-          <sui-checkbox [(ngModel)]="this.settingsService.invertedTheme"
+          <sui-checkbox name="invertedTheme"
+            ngDefaultControl
+            [(ngModel)]="this.settingsService.invertedTheme"
             class="toggle"
             style="float:right">
           </sui-checkbox>
@@ -22,8 +24,9 @@
         <app-server-list></app-server-list>
       </div>
 
-      <div class="item" *ngIf="appState.currentServer">
-        <app-current-server></app-current-server>
+      <div class="item"
+        *ngIf="currentServer | async">
+        <app-channels-list></app-channels-list>
       </div>
 
     </div>
@@ -34,15 +37,20 @@
   <div id="main-content"
     class="ui segment"
     [class.inverted]="this.settingsService.invertedTheme">
-    <app-chat-channel *ngIf="appState.currentChatChannel"></app-chat-channel>
+    <app-chat-channel *ngIf="currentChatChannel | async"></app-chat-channel>
 
   </div>
   <!-- /MAIN CONTENT SECTION -->
 
   <!-- RIGHT SIDEBAR -->
-  <!-- <div id="sidebar-width-300">
-    Hi
-  </div> -->
+  <div id="sidebar-width-300"
+    *ngIf="currentServer | async">
+    <div class="ui visible right vertical sidebar menu"
+      [class.inverted]="this.settingsService.invertedTheme">
+
+      <app-user-list></app-user-list>
+    </div>
+  </div>
   <!-- /RIGHT SIDEBAR -->
 
 </div>

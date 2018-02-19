@@ -1,10 +1,20 @@
-<div class="menu" *ngIf="appState.currentServer">
+<h4>{{ (currentServer | async).name }}</h4>
+
+<div class="menu">
   <div class=""
-    *ngIf="!appState.currentServer.channelList">
+    *ngIf="!(currentServer | async).channelList">
     <div class="ui active centered inline loader"></div>
   </div>
 
-  <div *ngIf="appState.currentServer.channelList">
+  <div *ngIf="(currentServer | async).channelList" id="chat-channel-list">   
+    <h5>Text Channels</h5>
+    <a class="item channel"
+      *ngFor="let channel of (currentServer | async).channelList.channels"
+      [class.inverted]="settingsService.invertedTheme"
+      [class.selected]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
+      (click)="joinChannel(channel)">
+      # {{ channel.name }}
+    </a>
     <form action=""
       (submit)="createChannel()">
       <div class="ui small icon input">
@@ -17,9 +27,4 @@
       </div>
     </form>
   </div>
-  <a class="item"
-    *ngFor="let channel of appState.currentServer.channelList"
-    (click)="joinChannel(channel)">
-    # {{ channel.name }}
-  </a>
 </div>

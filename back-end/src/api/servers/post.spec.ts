@@ -15,7 +15,7 @@ import User from '../../models/user.model';
 const expect = chai.expect;
 chai.use(sinonChai);
 
-describe('api/server/post', () => {
+describe('api/servers/post', () => {
   let token;
   let invalidToken;
   let user;
@@ -43,7 +43,7 @@ describe('api/server/post', () => {
   });
   it('returns 401 if not logged in', async () => {
     return supertest(app.listen(null))
-      .post('/api/server')
+      .post('/api/servers')
       .send({})
       .expect(401, {
         error: 'You must be logged in.',
@@ -51,7 +51,7 @@ describe('api/server/post', () => {
   });
   it('returns 401 if user does not exist', async () => {
     return supertest(app.listen(null))
-      .post('/api/server')
+      .post('/api/servers')
       .set('Cookie', `jwt_token=${invalidToken}`)
       .send({})
       .expect(401, {
@@ -60,7 +60,7 @@ describe('api/server/post', () => {
   });
   it('returns 400 with invalid data', async () => {
     return supertest(app.listen(null))
-      .post('/api/server')
+      .post('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
       .send({})
       .expect(400, {
@@ -69,7 +69,7 @@ describe('api/server/post', () => {
   });
   it('creates a server', async () => {
     await supertest(app.listen(null))
-      .post('/api/server')
+      .post('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
       .send({
         name: 'Automated Test Server'
@@ -77,17 +77,17 @@ describe('api/server/post', () => {
       .expect(200, {
         success: true,
       });
-    const server = await Server.findOne().lean();
+    const server: any = await Server.findOne().lean();
     expect(server).to.exist;
     expect(server.name).to.equal('Automated Test Server');
     expect(server.owner_id.toString()).to.equal(user._id.toString());
-    const usr = await User.findOne({ '_id': user._id }).lean();
+    const usr: any = await User.findOne({ '_id': user._id }).lean();
     expect(usr.joinedServers).to.have.lengthOf(1);
     expect(usr.joinedServers[0].toString()).to.equal(server._id.toString());
   });
   it('will not allow user to have more than 1 server', async () => {
     await supertest(app.listen(null))
-      .post('/api/server')
+      .post('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
       .send({
         name: 'Automated Test Server'
@@ -96,7 +96,7 @@ describe('api/server/post', () => {
         success: true,
       });
     await supertest(app.listen(null))
-      .post('/api/server')
+      .post('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
       .send({
         name: 'Automated Test Server'
@@ -104,7 +104,7 @@ describe('api/server/post', () => {
       .expect(400, {
         error: 'You already own a server. Please delete or edit your existing server.',
       });
-    const usr = await User.findOne({ '_id': user._id }).lean();
+    const usr: any = await User.findOne({ '_id': user._id }).lean();
     expect(usr.joinedServers).to.have.lengthOf(1);
   });
 });

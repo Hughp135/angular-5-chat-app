@@ -22,6 +22,7 @@ channelSchema.pre('save', async function (next) {
     name: channel.name,
   }).lean();
 
+
   if (otherChannel) {
     const error = new Error('Channel/server must be unique');
     return next(error);

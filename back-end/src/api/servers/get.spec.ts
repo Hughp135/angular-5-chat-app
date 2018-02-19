@@ -15,7 +15,7 @@ import User from '../../models/user.model';
 const expect = chai.expect;
 chai.use(sinonChai);
 
-describe('api/server/get', () => {
+describe('api/servers/get', () => {
   let token;
   let invalidToken;
   let user;
@@ -43,14 +43,14 @@ describe('api/server/get', () => {
   });
   it('returns 401 if not logged in', async () => {
     return supertest(app.listen(null))
-      .get('/api/server')
+      .get('/api/servers')
       .expect(401, {
         error: 'You must be logged in.',
       });
   });
   it('returns 401 if user does not exist', async () => {
     return supertest(app.listen(null))
-      .get('/api/server')
+      .get('/api/servers')
       .set('Cookie', `jwt_token=${invalidToken}`)
       .expect(401, {
         error: 'User not found.',
@@ -58,7 +58,7 @@ describe('api/server/get', () => {
   });
   it('returns empty server list if user has no servers', async () => {
     return supertest(app.listen(null))
-      .get('/api/server')
+      .get('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
       .expect(200, {
         servers: [],
@@ -76,7 +76,7 @@ describe('api/server/get', () => {
     user.joinedServers = [ server._id, server2._id ];
     await user.save();
     return supertest(app.listen(null))
-      .get('/api/server')
+      .get('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
       .expect(200, {
         servers: [

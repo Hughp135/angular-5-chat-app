@@ -1,0 +1,13 @@
+#chat-channel-list {
+  a.item.channel {
+    border-radius: 3px !important;
+    margin: 1px 0;
+  }
+  
+  a.item:hover, a.item.selected {
+    background: #e4e4e4 !important;
+    &.inverted {
+      background: #666 !important;
+    }  
+  }
+}

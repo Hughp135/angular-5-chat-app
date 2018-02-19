@@ -2,8 +2,23 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
-import { AppStateService } from './app-state.service';
 import { ErrorService } from './error.service';
+import {
+  handlers,
+  CHANNEL_LIST_HANDLER,
+  CHAT_MESSAGE_HANDLER,
+  JOINED_CHANNEL_HANDLER,
+  SERVER_USERLIST_HANDLER
+} from './websocket-events/websocket-events';
+
+import { StoreModule, Store } from '@ngrx/store';
+import { reducers } from '../reducers/reducers';
+import { AppState } from '../reducers/app.states';
+import ChatServer from '../../../shared-interfaces/server.interface';
+import { JOIN_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST } from '../reducers/current-server.reducer';
+import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
+import { ChatChannel } from '../../../shared-interfaces/channel.interface';
+import { ChatMessage } from '../../../shared-interfaces/message.interface';
 
 // tslint:disable:no-unused-expression
 
@@ -13,19 +28,42 @@ describe('WebsocketService', () => {
   let errorService: ErrorService;
   let mockServer: Server;
   (window as any).MockSocketIo = SocketIO;
+  let store: Store<AppState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         WebsocketService,
-        AppStateService,
         ErrorService,
       ],
+      imports: [
+        StoreModule.forRoot(reducers),
+      ]
     });
     injector = getTestBed();
     service = injector.get(WebsocketService);
     errorService = injector.get(ErrorService);
     mockServer = new Server('http://localhost:6145');
+    store = injector.get(Store);
+    const currentServer: ChatServer = {
+      _id: '123',
+      name: 'server',
+      owner_id: 'asd',
+    };
+    const currentChannel: ChatChannel = {
+      _id: '345',
+      name: 'channel',
+      server_id: '123',
+    };
+    store.dispatch({
+      type: JOIN_SERVER,
+      payload: currentServer,
+    });
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: currentChannel,
+    });
+    spyOn(store, 'dispatch').and.callThrough();
   });
   afterEach(() => {
     mockServer.close();
@@ -86,5 +124,78 @@ describe('WebsocketService', () => {
       mockServer.emit('soft-error', 'test message 1');
     });
     await service.connect().toPromise();
+  });
+  it('channel-list', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback('success');
+      }
+    };
+    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_CHANNEL_LIST,
+      payload: 'success',
+    });
+  });
+  it('chat-message dispatches NEW_CHAT_MESSAGE if channel ID matches current channel', () => {
+    const message: ChatMessage = {
+      message: 'hi thar',
+      channel_id: '345',
+      user_id: '123',
+      username: 'jake',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback(message);
+      }
+    };
+    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: NEW_CHAT_MESSAGE,
+      payload: message,
+    });
+  });
+  it('chat-message does not dispatch NEW_CHAT_MESSAGE if channel ID is different', () => {
+    const message: ChatMessage = {
+      message: 'hi thar',
+      channel_id: '712361',
+      user_id: '123',
+      username: 'jake',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback(message);
+      }
+    };
+    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+  it('joined-channel', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback({ 'messages': [] });
+      }
+    };
+    handlers[JOINED_CHANNEL_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: CHAT_HISTORY,
+      payload: { 'messages': [] },
+    });
+  });
+  it('server-user-list', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback('hi');
+      }
+    };
+    handlers[SERVER_USERLIST_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SERVER_SET_USER_LIST,
+      payload: 'hi',
+    });
   });
 });

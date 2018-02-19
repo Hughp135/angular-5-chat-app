@@ -8,12 +8,16 @@ import { AppStateService } from './app-state.service';
 import { ErrorService } from './error.service';
 
 describe('AuthGuardService', () => {
+  const fakeWebSocketService = {
+    connect: jasmine.createSpy(),
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       providers: [
         AuthGuardService,
-        WebsocketService,
+        { provide: WebsocketService, useValue: fakeWebSocketService },
         AppStateService,
         ErrorService,
       ],
@@ -28,7 +32,7 @@ describe('AuthGuardService', () => {
       [AuthGuardService, Router, WebsocketService],
       async (service: AuthGuardService, router: Router, wsService: WebsocketService) => {
         spyOn(router, 'navigate');
-        spyOn(wsService, 'connect').and.callFake(() => ({
+        fakeWebSocketService.connect.and.callFake(() => ({
           toPromise: () => {
             return Promise.resolve(false);
           }
@@ -42,7 +46,7 @@ describe('AuthGuardService', () => {
       [AuthGuardService, Router, WebsocketService],
       async (service: AuthGuardService, router: Router, wsService: WebsocketService) => {
         spyOn(router, 'navigate');
-        spyOn(wsService, 'connect').and.callFake(() => ({
+        fakeWebSocketService.connect.and.callFake(() => ({
           toPromise: () => {
             return Promise.resolve(true);
           }

@@ -26,7 +26,7 @@ export function sendMessage(io: any) {
         createdAt: now,
         updatedAt: now,
       };
-      io.in(request.channel_id).emit('chat-message', message);
+      io.in(`server-${server._id}`).emit('chat-message', message);
       await saveMessage(message, socket);
     });
   });

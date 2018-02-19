@@ -5,14 +5,19 @@ export interface CreateChannelRequest {
   server_id: string;
 }
 
-export interface Channel {
+export interface ChatChannel {
   _id: string;
   name: string;
   server_id: string;
-  messages?: Array<ChatMessage>;
+  messages?: ChatMessage[];
 }
 
 export interface ChannelList {
   server_id: string;
-  channels: Array<Channel>;
+  channels: ChatChannel[];
+}
+
+export interface JoinedChannelResponse {
+  channel_id: string;
+  messages: ChatMessage[];
 }

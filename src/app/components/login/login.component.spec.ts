@@ -19,7 +19,10 @@ describe('LoginComponent', () => {
   let service: ApiService;
   let httpMock: HttpTestingController;
   let router: Router;
-  let socketService: WebsocketService;
+
+  const fakeWebSocketService = {
+    connect: jasmine.createSpy(),
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -31,7 +34,7 @@ describe('LoginComponent', () => {
       ],
       providers: [
         ApiService,
-        WebsocketService,
+        { provide: WebsocketService, useValue: fakeWebSocketService },
         AppStateService,
         ErrorService,
       ],
@@ -39,7 +42,6 @@ describe('LoginComponent', () => {
       .compileComponents();
     injector = getTestBed();
     service = injector.get(ApiService);
-    socketService = injector.get(WebsocketService);
     httpMock = injector.get(HttpTestingController);
     router = injector.get(Router);
   }));
@@ -52,6 +54,7 @@ describe('LoginComponent', () => {
 
   afterEach(() => {
     httpMock.verify();
+    fakeWebSocketService.connect.calls.reset();
   });
 
   it('should create', () => {
@@ -62,17 +65,15 @@ describe('LoginComponent', () => {
     expect(component.error).toBeNull;
   });
   it('successful login + successful socket connection', async (done) => {
-    spyOn(socketService, 'connect').and.callFake(() => {
-      return {
-        toPromise: () => {
-          return Promise.resolve(true);
-        }
-      };
-    });
     const formData = {
       username: 'coolname',
       password: '123456'
     };
+    fakeWebSocketService.connect.and.callFake(() => ({
+      toPromise: () => {
+        return Promise.resolve(true);
+      }
+    }));
     component.loginForm.patchValue(formData);
     component.submitForm();
     expect(component.submitting).toEqual(true);
@@ -91,13 +92,11 @@ describe('LoginComponent', () => {
       username: 'coolname',
       password: '123456'
     };
-    const socketSpy = spyOn(socketService, 'connect').and.callFake(() => {
-      return {
-        toPromise: () => {
-          return Promise.resolve(false);
-        }
-      };
-    });
+    fakeWebSocketService.connect.and.callFake(() => ({
+      toPromise: () => {
+        return Promise.resolve(false);
+      }
+    }));
     spyOn(router, 'navigate');
     component.loginForm.patchValue(formData);
     component.submitForm();
@@ -105,7 +104,7 @@ describe('LoginComponent', () => {
     const called = httpMock.expectOne(`${service.BASE_URL}login`);
     expect(called.request.method).toBe('POST');
     await called.flush(null, { status: 204, statusText: 'No Content' });
-    expect(socketSpy).toHaveBeenCalled();
+    expect(fakeWebSocketService.connect).toHaveBeenCalled();
     setTimeout(() => {
       // After socket connection
       expect(component.submitting).toEqual(false);
@@ -119,7 +118,6 @@ describe('LoginComponent', () => {
       username: 'coolname',
       password: '12345',
     };
-    const socketSpy = spyOn(socketService, 'connect');
     spyOn(router, 'navigate');
     const mockResponse = { error: 'Failed' };
     component.loginForm.patchValue(formData);
@@ -131,7 +129,7 @@ describe('LoginComponent', () => {
     expect(component.submitting).toEqual(false);
     expect(component.error).toEqual('Failed');
     expect(router.navigate).not.toHaveBeenCalled();
-    expect(socketSpy).not.toHaveBeenCalled();
+    expect(fakeWebSocketService.connect).not.toHaveBeenCalled();
   });
   it('failed login with 500 error', () => {
     const formData = {
@@ -153,13 +151,11 @@ describe('LoginComponent', () => {
       username: 'coolname',
       password: '12345',
     };
-    const socketSpy = spyOn(socketService, 'connect').and.callFake(() => {
-      return {
-        toPromise: () => {
-          return Promise.resolve(true);
-        }
-      };
-    });
+    fakeWebSocketService.connect.and.callFake(() => ({
+      toPromise: () => {
+        return Promise.resolve(true);
+      }
+    }));
     const mockResponse = { error: 'Failed' };
     component.loginForm.patchValue(formData);
     component.submitForm();
@@ -170,7 +166,7 @@ describe('LoginComponent', () => {
     setTimeout(async () => {
       expect(component.submitting).toEqual(false);
       expect(component.error).toEqual('Failed');
-      expect(socketSpy).not.toHaveBeenCalled();
+      expect(fakeWebSocketService.connect).not.toHaveBeenCalled();
       // 2nd request
       component.submitForm();
       expect(component.submitting).toEqual(true);
@@ -178,7 +174,7 @@ describe('LoginComponent', () => {
       const secondcall = httpMock.expectOne(`${service.BASE_URL}login`);
       await secondcall.flush({ token: '12345' });
       setTimeout(() => {
-        expect(socketSpy).toHaveBeenCalled();
+        expect(fakeWebSocketService.connect).toHaveBeenCalled();
         expect(component.submitting).toEqual(false);
         expect(component.error).toBeNull();
         done();

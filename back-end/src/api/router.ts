@@ -2,8 +2,8 @@ import { Router } from 'express';
 import login from './auth/login';
 import register from './auth/register';
 import authMiddleware from './auth/router-middleware';
-import { createServer } from './server/post';
-import { getServers } from './server/get';
+import { createServer } from './servers/post';
+import { getServers } from './servers/get';
 
 const router = Router();
 
@@ -12,7 +12,7 @@ router.post('/login', login);
 router.post('/register', register);
 
 // Authenticated routes
-router.post('/server', authMiddleware, createServer);
-router.get('/server', authMiddleware, getServers);
+router.post('/servers', authMiddleware, createServer);
+router.get('/servers', authMiddleware, getServers);
 
 export default router;

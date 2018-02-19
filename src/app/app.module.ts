@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { appRoutes } from './app-routes';
 import { AppComponent } from './app.component';
@@ -17,10 +19,11 @@ import { WebsocketService } from './services/websocket.service';
 import { ServerListComponent } from './components/server-list/server-list.component';
 import { ChannelsListComponent } from './components/channels/channels-list.component';
 import { AppStateService } from './services/app-state.service';
-import { CurrentServerComponent } from './components/server/current-server/current-server.component';
 import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
 import { ErrorService } from './services/error.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
+import { reducers } from './reducers/reducers';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -30,9 +33,9 @@ import { ChatChannelComponent } from './components/chat-channel/chat-channel.com
     RegisterComponent,
     ServerListComponent,
     ChannelsListComponent,
-    CurrentServerComponent,
     ErrorNotificationComponent,
     ChatChannelComponent,
+    UserListComponent,
   ],
   imports: [
     SuiModule,
@@ -42,7 +45,11 @@ import { ChatChannelComponent } from './components/chat-channel/chat-channel.com
     RouterModule.forRoot(
       appRoutes
     ),
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot(reducers),
+    StoreDevtoolsModule.instrument({
+      maxAge: 10
+    }),
   ],
   providers: [
     SettingsService,
