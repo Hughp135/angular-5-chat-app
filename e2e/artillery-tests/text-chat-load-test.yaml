@@ -9,7 +9,7 @@ config:
     greeting: ["hello", "goedemorgen", "добрый день", "guten tag", "bonjour", "hola"]
   socketio:
     query:
-      guest: true
+      test: d0934i2*@!*%j4fehg0[]sdf,af2
 
 scenarios:
   - name: "A chatty user"
