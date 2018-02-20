@@ -12,12 +12,12 @@
           {{ user.username }}
         </div>
         <div class="description">
-          Fapping
+          Status
         </div>
       </div>
     </a>
   </div>
-  <h5>Offline</h5>
+  <h5>Online</h5>
   <div *ngIf="offlineUsers"
     class="ui list offline-users"
     [class.inverted]="settingsService.invertedTheme">
@@ -30,7 +30,7 @@
           {{ user.username }}
         </div>
         <div class="description">
-          Fapping
+          Offline
         </div>
       </div>
     </a>

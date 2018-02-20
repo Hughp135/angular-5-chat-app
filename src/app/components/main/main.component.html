@@ -8,7 +8,7 @@
   <div id="main-wrapper">
 
     <!-- LEFT MAIN SIDEBAR -->
-    <div id="sidebar-width-300">
+    <div id="sidebar-container">
       <div id="sidebar-menu"
         class="ui visible left vertical sidebar menu"
         [class.inverted]="this.settingsService.invertedTheme">
@@ -49,7 +49,7 @@
     <!-- /MAIN CONTENT SECTION -->
 
     <!-- RIGHT SIDEBAR -->
-    <div id="sidebar-width-300"
+    <div id="sidebar-container"
       *ngIf="currentServer | async">
       <div class="ui visible right vertical sidebar menu"
         [class.inverted]="this.settingsService.invertedTheme">

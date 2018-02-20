@@ -6,7 +6,6 @@ import * as mongoose from 'mongoose';
 import Channel from '../../models/channel.model';
 import Server from '../../models/server.model';
 import User from '../../models/user.model';
-import createFakeSocketEvent from '../test_helpers/fake-socket';
 import { sendUserList } from './user-list';
 
 const expect = chai.expect;
