@@ -1,7 +1,7 @@
 .server-title {
   margin: -15px -15px 20px -15px;
   overflow: hidden;
-  height: 50px;
+  min-height: 50px;
   border-bottom: 1px solid #666;
   padding: 15px 8px 10px 13px;
   cursor: pointer;
@@ -13,8 +13,9 @@
   }
 
   i {    
-    float: right;
-    margin-top: 2px;
+    position: absolute;
+    right: 3px;
+    top: 15px;
   }
 }
 
