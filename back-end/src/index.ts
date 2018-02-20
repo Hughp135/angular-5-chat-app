@@ -6,6 +6,7 @@ import './logger/logger';
 import * as http from 'http';
 import * as config from 'config';
 
+process.on('unhandledRejection', r => console.error(r));
 
 const API_PORT = config.get('api.port');
 

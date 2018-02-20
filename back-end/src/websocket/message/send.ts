@@ -8,12 +8,10 @@ import Server from '../../models/server.model';
 export function sendMessage(io: any) {
   io.on('connection', (socket) => {
     socket.on('send-message', async (request: SendMessageRequest) => {
-      const [user, channel, server]: any = await Promise.all([
-        User.findById(socket.claim.user_id).lean(),
-        Channel.findById(request.channel_id).lean(),
-        Server.findById(request.server_id).lean(),
-      ]);
-      if (!user || !channel || !server || !user.joinedServers.includes(server._id.toString()) ) {
+      const [user, channel, server] = await getUserChannelServer(socket, request);
+
+
+      if (!user || !channel || !server || !user.joinedServers.includes(server._id.toString())) {
         socket.emit('soft-error', 'You don\'t have permission to send this message.');
         return;
       }
@@ -35,4 +33,22 @@ export function sendMessage(io: any) {
 async function saveMessage(message, socket) {
   await Channel.findById(message.channel_id);
   await ChatMessageModel.create(message);
+}
+
+async function getUserChannelServer(socket, request) {
+  if (!socket.handshake.query.guest) {
+    return await Promise.all([
+      User.findById(socket.claim.user_id).lean(),
+      Channel.findById(request.channel_id).lean(),
+      Server.findById(request.server_id).lean(),
+    ]);
+  } else {
+    const user: any = await User.findById(socket.claim.user_id).lean();
+    const [server_id] = user.joinedServers;
+    const server: any = await Server.findById(server_id).lean();
+    const [channel]: any = await Channel.find({
+      server_id: server_id
+    }).lean();
+    return [user, channel, server];
+  }
 }
