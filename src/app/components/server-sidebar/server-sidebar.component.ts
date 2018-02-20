@@ -17,10 +17,8 @@ export class ServerSidebarComponent implements OnInit {
   openCreateServerModal() {
     this.modalService.open(new CreateServerModal())
       .onApprove(() => {
-        console.log('Approved');
       })
       .onDeny(() => {
-        console.log('Modal dismissed');
       });
   }
 

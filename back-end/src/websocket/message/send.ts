@@ -53,7 +53,3 @@ async function getUserChannelServer(socket, request) {
 
   }
 }
-
-async function handler(request: SendMessageRequest) {
-
-}

@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ServerSidebarComponent } from './server-sidebar.component';
-import { ServerListComponent } from '../server-list/server-list.component';
 import { SuiModalService, SuiComponentFactory } from 'ng2-semantic-ui/dist';
 
 describe('ServerSidebarComponent', () => {

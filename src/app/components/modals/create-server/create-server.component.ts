@@ -39,7 +39,6 @@ export class CreateServerComponent implements OnInit {
         this.modal.approve(undefined);
         this.loading = false;
       }, e => {
-        console.log(e);
         this.loading = false;
         if (e.error && e.error.error) {
           this.error = e.error.error;
