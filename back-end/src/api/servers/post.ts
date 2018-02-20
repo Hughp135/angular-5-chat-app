@@ -24,7 +24,7 @@ export async function createServer(req, res) {
     owner_id: user._id,
   }).lean();
 
-  if (existingServers.length > 3) {
+  if (existingServers.length >= 3) {
     return res.status(400).json({
       error: 'You already own 3 servers. Please delete an existing server to create a new one.'
     });
@@ -41,9 +41,10 @@ export async function createServer(req, res) {
 
     res.status(200).json({ success: true });
   } catch (e) {
+    /* istanbul ignore else */
     if (e.code === 11000) {
       return res.status(400).json({
-        error: 'You already own a server with the same name. Please edit or delete your existing server first.'
+        error: 'You already own a server with the same name. Please choose another name or edit your existing server.'
       });
     } else {
       log('error', e);

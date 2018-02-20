@@ -3,7 +3,8 @@ import Channel from '../../models/channel.model';
 import { SendMessageRequest, ChatMessage } from 'shared-interfaces/message.interface';
 import User from '../../models/user.model';
 import Server from '../../models/server.model';
-
+import * as config from 'config';
+const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
 
 export function sendMessage(io: any) {
   io.on('connection', (socket) => {
@@ -25,24 +26,17 @@ export function sendMessage(io: any) {
         updatedAt: now,
       };
       io.in(`server-${server._id}`).emit('chat-message', message);
-      await saveMessage(message, socket);
+      await saveMessage(message);
     });
   });
 }
 
-async function saveMessage(message, socket) {
-  await Channel.findById(message.channel_id);
+async function saveMessage(message) {
   await ChatMessageModel.create(message);
 }
 
 async function getUserChannelServer(socket, request) {
-  if (!socket.handshake.query.guest) {
-    return await Promise.all([
-      User.findById(socket.claim.user_id).lean(),
-      Channel.findById(request.channel_id).lean(),
-      Server.findById(request.server_id).lean(),
-    ]);
-  } else {
+  if (socket.handshake.query && socket.handshake.query.test === TEST_SECRET) {
     const user: any = await User.findById(socket.claim.user_id).lean();
     const [server_id] = user.joinedServers;
     const server: any = await Server.findById(server_id).lean();
@@ -50,5 +44,16 @@ async function getUserChannelServer(socket, request) {
       server_id: server_id
     }).lean();
     return [user, channel, server];
+  } else {
+    return await Promise.all([
+      User.findById(socket.claim.user_id).lean(),
+      Channel.findById(request.channel_id).lean(),
+      Server.findById(request.server_id).lean(),
+    ]);
+
   }
+}
+
+async function handler(request: SendMessageRequest) {
+
 }
