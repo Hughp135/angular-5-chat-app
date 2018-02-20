@@ -12,7 +12,7 @@ const serverSchema = new mongoose.Schema({
     timestamps: true,
   });
 
-serverSchema.index({ name: 1, owner_id: 1 });
+serverSchema.index({ name: 1, owner_id: 1 }, { unique: true });
 
 const Server: mongoose.Model<IServerModel> = mongoose.model<IServerModel>('Server', serverSchema);
 export default Server;
