@@ -3,8 +3,8 @@
 config:
   target: "http://127.0.0.1:7202"
   phases:
-    - duration: 15
-      arrivalRate: 10
+    - duration: 1
+      arrivalRate: 5
   variables:
     greeting: ["hello", "goedemorgen", "добрый день", "guten tag", "bonjour", "hola"]
   socketio:

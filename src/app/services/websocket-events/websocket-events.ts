@@ -20,7 +20,8 @@ export const handlers: { [key: string]: (socket, store) => void } = {
 function chatMessage(socket, store) {
   socket.on(CHAT_MESSAGE_HANDLER, (message: ChatMessage) => {
     store.select(state => state.currentChatChannel).take(1).subscribe(channel => {
-      if (message.channel_id === channel._id) {
+      // Only add message if it applies to current channel.
+      if (channel && message.channel_id === channel._id) {
         store.dispatch({
           type: NEW_CHAT_MESSAGE,
           payload: message,
