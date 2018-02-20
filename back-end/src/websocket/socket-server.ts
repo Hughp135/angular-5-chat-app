@@ -5,6 +5,7 @@ import { joinServer } from './server/join';
 import { createChannel } from './channel/create';
 import { joinChannel } from './channel/join';
 import { sendMessage } from './message/send';
+import { getUserList } from './server/get-user-list';
 
 export async function startWs(server) {
   const io = socketIo(server);
@@ -17,6 +18,7 @@ export async function startWs(server) {
   createChannel(io);
   joinChannel(io);
   sendMessage(io);
+  getUserList(io);
 
   return io;
 }

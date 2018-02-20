@@ -42,7 +42,7 @@ async function createMainUser() {
 }
 
 async function createUsersInServers(serverIds) {
-  const promises = [...Array(100)]
+  const promises = [...Array(1000)]
     .map((x, index) => {
       // const serverIdsSlice = Math.random() > 0.5
         // ? serverIds.slice(0, 3) : serverIds.slice(2, 4);

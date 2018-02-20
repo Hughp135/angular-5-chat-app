@@ -49,6 +49,9 @@
   flex-direction: row;
 
   .ui.vertical.sidebar.menu {
+    &.left {
+      z-index: 103;
+    }
     &.inverted {
       background: #242526;
     }

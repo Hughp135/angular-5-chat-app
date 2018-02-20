@@ -3,9 +3,9 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
-import Channel from '../../models/channel.model';
-import Server from '../../models/server.model';
-import User from '../../models/user.model';
+import Channel from '../../../models/channel.model';
+import Server from '../../../models/server.model';
+import User from '../../../models/user.model';
 import { sendUserList } from './user-list';
 
 const expect = chai.expect;
@@ -54,7 +54,7 @@ describe('websocket channel/user-list', () => {
   });
 
   it('server list', async () => {
-    await sendUserList(io, socket, server);
+    await sendUserList(io, socket, server._id);
     expect(socket.emit).to.have.been.calledWith('server-user-list', {
       server_id: server._id,
       users: [

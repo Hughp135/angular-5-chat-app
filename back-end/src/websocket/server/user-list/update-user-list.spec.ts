@@ -3,12 +3,12 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
-import User from '../../models/user.model';
+import User from '../../../models/user.model';
 
 const expect = chai.expect;
 chai.use(sinonChai);
 
-describe.only('websocket/server/update-user-list', () => {
+describe('websocket/server/update-user-list', () => {
   const sandbox = sinon.createSandbox();
   let io;
   let emit;
@@ -33,10 +33,6 @@ describe.only('websocket/server/update-user-list', () => {
 
   it('emits update user list to correct servers', async () => {
     await updateUserList('123', io);
-    expect(emit).to.have.been.calledTwice.and.calledWith('update-user-list', {
-      username: 'test',
-      user_id: '123',
-      online: true,
-    });
+    return expect(emit).to.have.been.calledTwice;
   });
 });

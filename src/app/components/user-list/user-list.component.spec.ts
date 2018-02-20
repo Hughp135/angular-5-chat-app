@@ -7,6 +7,7 @@ import { UserListComponent } from './user-list.component';
 import { SettingsService } from '../../services/settings.service';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
 import ChatServer from 'shared-interfaces/server.interface';
+import { WebsocketService } from '../../services/websocket.service';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -19,6 +20,7 @@ describe('UserListComponent', () => {
       imports: [StoreModule.forRoot(reducers)],
       providers: [
         SettingsService,
+        { provide: WebsocketService, useValue: { emit: () => null } },
       ]
     })
       .compileComponents();
@@ -30,8 +32,8 @@ describe('UserListComponent', () => {
       userList: {
         server_id: '123',
         users: [
-          { username: 'someusr', user_id: '1aad', online: true },
-          { username: 'someusr2', user_id: '2aad', online: false },
+          { username: 'someusr', _id: '1aad', online: true },
+          { username: 'someusr2', _id: '2aad', online: false },
         ]
       }
     };
@@ -50,10 +52,14 @@ describe('UserListComponent', () => {
   it('initial state', (done) => {
     expect(component).toBeTruthy();
     fixture.detectChanges();
+    expect(component.userList).toEqual([
+      { username: 'someusr', _id: '1aad', online: true },
+      { username: 'someusr2', _id: '2aad', online: false },
+    ]);
     setTimeout(() => {
-      expect(component.onlineUsers).toEqual([{ username: 'someusr', user_id: '1aad', online: true }]);
-      expect(component.offlineUsers).toEqual([{ username: 'someusr2', user_id: '2aad', online: false }]);
+      expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
+      expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
       done();
-    }, 200);
+    }, 250);
   });
 });

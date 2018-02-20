@@ -51,7 +51,7 @@ describe('reducers/current-server', () => {
         server_id: '345',
         users: [{
           username: 'dsofa',
-          user_id: 'df0g9su23',
+          _id: 'df0g9su23',
           online: true,
         }]
       }
@@ -66,7 +66,7 @@ describe('reducers/current-server', () => {
         server_id: 'fg34g',
         users: [{
           username: 'dsofa',
-          user_id: 'df0g9su23',
+          _id: 'df0g9su23',
           online: true,
         }]
       }

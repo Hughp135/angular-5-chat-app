@@ -3,7 +3,7 @@ import * as cookie from 'cookie';
 import { log } from 'winston';
 import User from '../../models/user.model';
 import * as config from 'config';
-import { updateUserList } from '../server/update-user-list';
+import { updateUserList } from '../server/user-list/update-user-list';
 export { logInAuth };
 
 const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
