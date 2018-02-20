@@ -19,6 +19,10 @@ export default function createFakeSocketEvent(
     },
     emit: result,
     join: async () => null,
+    rooms: {
+      'server-123': true
+    },
+    leave: async () => null,
   };
 
   const io = {

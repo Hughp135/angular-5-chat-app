@@ -102,7 +102,7 @@ describe('CreateServerComponent', () => {
     tick(50);
     expect(component.loading).toEqual(false);
   }));
-  it('submitting form POST to /register fail', fakeAsync(() => {
+  it('submitting form POST to /register fail with specific error message', fakeAsync(() => {
     const formData = {
       name: 'test-server-2'
     };
@@ -129,5 +129,33 @@ describe('CreateServerComponent', () => {
     tick(50);
     expect(component.loading).toEqual(false);
     expect(component.error).toEqual('Error thing');
+  }));
+  it('submitting form POST to /register fail with generic error msg', fakeAsync(() => {
+    const formData = {
+      name: 'test-server-3'
+    };
+
+    apiServiceMock.post.and.callFake((url: string, data) => {
+      if (url === 'servers') {
+        return new Observable(subscriber => {
+          setTimeout(() => {
+            subscriber.error({ error: 'move along now' });
+          }, 5);
+        });
+      }
+      throw new Error('Invalid API Route');
+    });
+
+    component.form.patchValue(formData);
+    component.createServer();
+    expect(component.loading).toEqual(true);
+    expect(apiServiceMock.post).toHaveBeenCalledWith(
+      'servers',
+      formData
+    );
+    // After fake API response
+    tick(50);
+    expect(component.loading).toEqual(false);
+    expect(component.error).toEqual('A server error occured.');
   }));
 });

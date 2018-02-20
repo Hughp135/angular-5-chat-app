@@ -50,6 +50,7 @@ export class CreateServerComponent implements OnInit {
 
 }
 
+/* istanbul ignore next */
 export class CreateServerModal extends ComponentModalConfig<void, void, void> {
   constructor() {
     super(CreateServerComponent);

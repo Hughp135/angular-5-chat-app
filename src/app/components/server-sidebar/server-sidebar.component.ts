@@ -14,6 +14,7 @@ export class ServerSidebarComponent implements OnInit {
   ngOnInit() {
   }
 
+  /* istanbul ignore next */
   openCreateServerModal() {
     this.modalService.open(new CreateServerModal())
       .onApprove(() => {

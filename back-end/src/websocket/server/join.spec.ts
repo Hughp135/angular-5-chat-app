@@ -92,6 +92,7 @@ describe('websocket channel/join', () => {
       const { io, socket } = createFakeSocketEvent('join-channel', server._id,
         { user_id: user._id }, onComplete, result);
       sinon.spy(socket, 'join');
+      sinon.spy(socket, 'leave');
       joinServer(io);
       function onComplete() {
         expect(result).to.have.been
@@ -105,6 +106,8 @@ describe('websocket channel/join', () => {
           });
         expect(socket.join).to.have.been
           .calledWith(`server-${server._id}`);
+        expect(socket.leave).to.have.been
+          .calledWith('server-123');
         done();
       }
     });
