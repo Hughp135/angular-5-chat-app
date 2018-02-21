@@ -5,6 +5,7 @@ import { handlers } from './websocket-events/websocket-events';
 import { ErrorService, ErrorNotification } from './error.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class WebsocketService {
@@ -15,6 +16,7 @@ export class WebsocketService {
   constructor(
     private errorService: ErrorService,
     private store: Store<AppState>,
+    private router: Router,
   ) {
   }
 
@@ -54,6 +56,7 @@ export class WebsocketService {
       if (data === 'No token provided') {
         subj.next(false);
         subj.complete();
+        this.router.navigate(['/login']);
       }
     });
     this.socket.on('soft-error', (message: string) => {

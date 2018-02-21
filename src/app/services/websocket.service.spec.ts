@@ -20,6 +20,8 @@ import { JOIN_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 // tslint:disable:no-unused-expression
 
@@ -30,6 +32,7 @@ describe('WebsocketService', () => {
   let mockServer: Server;
   (window as any).MockSocketIo = SocketIO;
   let store: Store<AppState>;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -39,12 +42,14 @@ describe('WebsocketService', () => {
       ],
       imports: [
         StoreModule.forRoot(reducers),
+        RouterTestingModule,
       ]
     });
     injector = getTestBed();
     service = injector.get(WebsocketService);
     errorService = injector.get(ErrorService);
     mockServer = new Server('http://localhost:6145');
+    router = injector.get(Router);
     store = injector.get(Store);
     const currentServer: ChatServer = {
       _id: '123',
@@ -75,7 +80,8 @@ describe('WebsocketService', () => {
     expect(service.connected).toEqual(false);
     expect(service.socket).toBeUndefined;
   });
-  it('Websocket connection fails with no token error callback', async () => {
+  fit('Websocket connection fails with no token error callback', async () => {
+    spyOn(router, 'navigate');
     spyOn((window as any).MockSocketIo, 'connect').and.callFake(() => {
       return {
         on: (type, callback) => {
@@ -88,6 +94,8 @@ describe('WebsocketService', () => {
     const connected = await service.connect().toPromise();
     expect(connected).toEqual(false);
     expect(service.connected).toEqual(false);
+    expect(router.navigate).toHaveBeenCalledTimes(1);
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
   it('doesn\'t connect if already connected', async () => {
     spyOn((window as any).MockSocketIo, 'connect');

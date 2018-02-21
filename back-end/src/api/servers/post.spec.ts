@@ -126,7 +126,7 @@ describe('api/servers/post', () => {
         name: 'Automated Test Server'
       })
       .expect(400, {
-        error: 'You already own 3 servers. Please delete an existing server to create a new one.',
+        error: 'You can only have a maximum of 3 servers. Please delete or edit an existing server before creating a new one',
       });
     const usr: any = await User.findOne({ '_id': user._id }).lean();
     expect(usr.joinedServers).to.have.lengthOf(3);

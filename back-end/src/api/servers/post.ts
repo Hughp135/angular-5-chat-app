@@ -26,7 +26,7 @@ export async function createServer(req, res) {
 
   if (existingServers.length >= 3) {
     return res.status(400).json({
-      error: 'You already own 3 servers. Please delete an existing server to create a new one.'
+      error: 'You can only have a maximum of 3 servers. Please delete or edit an existing server before creating a new one'
     });
   }
 
