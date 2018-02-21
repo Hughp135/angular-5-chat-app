@@ -57,7 +57,7 @@ async function getChannelList(serverId): Promise<ChannelList> {
   };
 }
 
-async function leaveOtherServers(socket) {
+export async function leaveOtherServers(socket) {
   const roomsUserIsIn = Object.keys(socket.rooms);
   for (const room of roomsUserIsIn) {
     if (room.startsWith('server-') && room !== socket.id) {

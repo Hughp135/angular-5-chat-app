@@ -5,7 +5,7 @@ export default interface ChatServer {
   _id: string;
   owner_id?: string;
   channelList?: ChannelList;
-  userList?: ServerUserList;
+  userList?: UserListUser[];
 }
 
 export interface UserListUser {

@@ -8,14 +8,15 @@ import {
   CHANNEL_LIST_HANDLER,
   CHAT_MESSAGE_HANDLER,
   JOINED_CHANNEL_HANDLER,
-  SERVER_USERLIST_HANDLER
+  SERVER_USERLIST_HANDLER,
+  SERVER_UPDATE_USERLIST_HANDLER
 } from './websocket-events/websocket-events';
 
 import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
 import ChatServer from '../../../shared-interfaces/server.interface';
-import { JOIN_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST } from '../reducers/current-server.reducer';
+import { JOIN_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST } from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
@@ -195,6 +196,18 @@ describe('WebsocketService', () => {
     handlers[SERVER_USERLIST_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SERVER_SET_USER_LIST,
+      payload: 'hi',
+    });
+  });
+  it('update-user-list', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback('hi');
+      }
+    };
+    handlers[SERVER_UPDATE_USERLIST_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SERVER_UPDATE_USER_LIST,
       payload: 'hi',
     });
   });

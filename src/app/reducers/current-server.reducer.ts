@@ -1,4 +1,4 @@
-import ChatServer, { ServerUserList, UserListUser } from 'shared-interfaces/server.interface';
+import ChatServer, { UserListUser } from 'shared-interfaces/server.interface';
 
 export const JOIN_SERVER = 'SET_CURRENT_SERVER';
 export const SET_CHANNEL_LIST = 'SET_CHANNEL_LIST';
@@ -13,39 +13,31 @@ export function currentServerReducer(state: ChatServer, action) {
       if (state._id === action.payload.server_id) {
         return <ChatServer>{ ...state, channelList: action.payload };
       } else {
-        console.error('Server ID of channels list doesnt match current server');
         return state;
       }
     case SERVER_SET_USER_LIST:
       if (state._id === action.payload.server_id) {
         return <ChatServer>{
           ...state,
-          userList: <ServerUserList>action.payload,
+          userList: <UserListUser[]>action.payload.users,
         };
       } else {
         return state;
       }
     case SERVER_UPDATE_USER_LIST:
-      if (state._id === action.payload.server_id) {
+      // console.log('updating user', action.payload.user);
+      if (state.userList && state._id === action.payload.server_id) {
         const userToUpdate: UserListUser = action.payload.user;
-        const newUserList = !state.userList.users
-          ? [action.payload.user]
-          : state.userList.users.map((usr: UserListUser) => {
+        const newUserList: UserListUser[] = state.userList
+          .map((usr: UserListUser) => {
             if (usr._id === userToUpdate._id) {
-              return userToUpdate;
+              return userToUpdate; // replace relevant user in list
             }
             return usr;
-          }).sort((a: UserListUser, b: UserListUser) => {
-            return a.username > b.username ? -1
-              : a.username < b.username ? 1
-                : 0;
           });
         return {
           ...state,
-          userList: <ServerUserList>{
-            ...state.userList,
-            users: newUserList,
-          }
+          userList: <UserListUser[]>newUserList,
         };
       } else {
         return state;

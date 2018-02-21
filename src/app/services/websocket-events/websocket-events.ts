@@ -9,7 +9,7 @@ export const CHAT_MESSAGE_HANDLER = 'chat-message';
 export const CHANNEL_LIST_HANDLER = 'channel-list';
 export const JOINED_CHANNEL_HANDLER = 'joined-channel';
 export const SERVER_USERLIST_HANDLER = 'server-user-list';
-const SERVER_UPDATE_USERLIST_HANDLER = 'update-user-list';
+export const SERVER_UPDATE_USERLIST_HANDLER = 'update-user-list';
 
 export const handlers: { [key: string]: (socket, store) => void } = {
   [CHAT_MESSAGE_HANDLER]: chatMessage,
