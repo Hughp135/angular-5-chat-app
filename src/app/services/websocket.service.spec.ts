@@ -80,7 +80,7 @@ describe('WebsocketService', () => {
     expect(service.connected).toEqual(false);
     expect(service.socket).toBeUndefined;
   });
-  fit('Websocket connection fails with no token error callback', async () => {
+  it('Websocket connection fails with no token error callback', async () => {
     spyOn(router, 'navigate');
     spyOn((window as any).MockSocketIo, 'connect').and.callFake(() => {
       return {
