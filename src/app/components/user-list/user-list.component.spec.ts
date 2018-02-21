@@ -7,6 +7,15 @@ import { UserListComponent } from './user-list.component';
 import { SettingsService } from '../../services/settings.service';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
 import ChatServer from 'shared-interfaces/server.interface';
+import { WebsocketService } from '../../services/websocket.service';
+
+const fakeSocket = {
+  emit: jasmine.createSpy(),
+  connected: true,
+};
+const fakeSocketService = {
+  socket: fakeSocket,
+};
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -19,6 +28,7 @@ describe('UserListComponent', () => {
       imports: [StoreModule.forRoot(reducers)],
       providers: [
         SettingsService,
+        { provide: WebsocketService, useValue: fakeSocketService },
       ]
     })
       .compileComponents();
@@ -27,13 +37,10 @@ describe('UserListComponent', () => {
       _id: '123',
       name: 'server',
       owner_id: 'asd',
-      userList: {
-        server_id: '123',
-        users: [
-          { username: 'someusr', user_id: '1aad', online: true },
-          { username: 'someusr2', user_id: '2aad', online: false },
-        ]
-      }
+      userList: [
+        { username: 'someusr', _id: '1aad', online: true },
+        { username: 'someusr2', _id: '2aad', online: false },
+      ]
     };
     store.dispatch({
       type: JOIN_SERVER,
@@ -47,13 +54,61 @@ describe('UserListComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    fakeSocket.emit.calls.reset();
+  });
+
   it('initial state', (done) => {
     expect(component).toBeTruthy();
-    fixture.detectChanges();
+    expect(component.userList).toEqual([
+      { username: 'someusr', _id: '1aad', online: true },
+      { username: 'someusr2', _id: '2aad', online: false },
+    ]);
     setTimeout(() => {
-      expect(component.onlineUsers).toEqual([{ username: 'someusr', user_id: '1aad', online: true }]);
-      expect(component.offlineUsers).toEqual([{ username: 'someusr2', user_id: '2aad', online: false }]);
+      expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
+      expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
+      expect(component.subscriptions.length).toEqual(4);
       done();
-    }, 200);
+    }, 20);
+  });
+  it('user lists are reset if new server joined', (done) => {
+    expect(component.userList).toEqual([
+      { username: 'someusr', _id: '1aad', online: true },
+      { username: 'someusr2', _id: '2aad', online: false },
+    ]);
+    setTimeout(() => {
+      expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
+      expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
+      expect(component.subscriptions.length).toEqual(4);
+      const newServer: ChatServer = {
+        _id: '0fus',
+        name: 'newserver',
+        owner_id: 'fago',
+      };
+      store.dispatch({
+        type: JOIN_SERVER,
+        payload: newServer
+      });
+      setTimeout(() => {
+        expect(component.userList).toBeUndefined();
+        expect(component.onlineUsers).toBeUndefined();
+        expect(component.offlineUsers).toBeUndefined();
+        done();
+      }, 50);
+    }, 20);
+  });
+  it('fetch user list', () => {
+    component.fetchUserList();
+    expect(fakeSocket.emit).toHaveBeenCalledWith('get-user-list', '123');
+  });
+  it('does not fetch user list if socket disconnected', () => {
+    component.wsService.socket.connected = false;
+    component.fetchUserList();
+    expect(fakeSocket.emit).not.toHaveBeenCalled();
+  });
+  it('does not fetch user list if no current server', () => {
+    component.currentServer = undefined;
+    component.fetchUserList();
+    expect(fakeSocket.emit).not.toHaveBeenCalled();
   });
 });

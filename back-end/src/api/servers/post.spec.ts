@@ -85,7 +85,7 @@ describe('api/servers/post', () => {
     expect(usr.joinedServers).to.have.lengthOf(1);
     expect(usr.joinedServers[0].toString()).to.equal(server._id.toString());
   });
-  it('will not allow user to have more than 1 server', async () => {
+  it('will not allow user to have more than 1 server with the same name', async () => {
     await supertest(app.listen(null))
       .post('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
@@ -102,9 +102,33 @@ describe('api/servers/post', () => {
         name: 'Automated Test Server'
       })
       .expect(400, {
-        error: 'You already own a server. Please delete or edit your existing server.',
+        error: 'You already own a server with the same name. Please choose another name or edit your existing server.',
       });
     const usr: any = await User.findOne({ '_id': user._id }).lean();
     expect(usr.joinedServers).to.have.lengthOf(1);
+  });
+  it('will not allow user to create more than 3 total servers', async () => {
+    for (let i = 0; i < 3; i++) {
+      await supertest(app.listen(null))
+        .post('/api/servers')
+        .set('Cookie', `jwt_token=${token}`)
+        .send({
+          name: 'Automated Test Server ' + i
+        })
+        .expect(200, {
+          success: true,
+        });
+    }
+    await supertest(app.listen(null))
+      .post('/api/servers')
+      .set('Cookie', `jwt_token=${token}`)
+      .send({
+        name: 'Automated Test Server'
+      })
+      .expect(400, {
+        error: 'You can only have a maximum of 3 servers. Please delete or edit an existing server before creating a new one',
+      });
+    const usr: any = await User.findOne({ '_id': user._id }).lean();
+    expect(usr.joinedServers).to.have.lengthOf(3);
   });
 });

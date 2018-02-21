@@ -10,6 +10,7 @@ import { reducers } from '../../reducers/reducers';
 import { AppState } from '../../reducers/app.states';
 import { UPDATE_SERVER_LIST } from '../../reducers/server-list.reducer';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 
 describe('ServerListComponent', () => {
   let component: ServerListComponent;
@@ -65,6 +66,39 @@ describe('ServerListComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith({
       type: UPDATE_SERVER_LIST,
       payload: mockResponse.servers,
+    });
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: LEAVE_CHANNEL,
+      payload: null,
+    });
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: JOIN_SERVER,
+      payload: mockResponse.servers[0],
+    });
+    component.serverList.subscribe(data => {
+      expect(data).toBe(mockResponse.servers);
+    });
+    expect(component.loading).toEqual(false);
+    expect(component.error).toEqual(null);
+    httpMock.verify();
+  });
+  it('request succeds with empty server list', () => {
+    const mockResponse: { servers: ChatServer[] } = {
+      servers: []
+    };
+    const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
+    called.flush(mockResponse);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: UPDATE_SERVER_LIST,
+      payload: mockResponse.servers,
+    });
+    expect(store.dispatch).not.toHaveBeenCalledWith({
+      type: LEAVE_CHANNEL,
+      payload: null,
+    });
+    expect(store.dispatch).not.toHaveBeenCalledWith({
+      type: JOIN_SERVER,
+      payload: undefined,
     });
     component.serverList.subscribe(data => {
       expect(data).toBe(mockResponse.servers);

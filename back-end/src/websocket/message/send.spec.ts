@@ -10,7 +10,9 @@ import createFakeSocketEvent from '../test_helpers/fake-socket';
 import { SendMessageRequest } from '../../../../shared-interfaces/message.interface';
 import serverModel from '../../models/server.model';
 import userModel from '../../models/user.model';
+import * as config from 'config';
 
+const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
 const expect = chai.expect;
 chai.use(sinonChai);
 
@@ -73,22 +75,22 @@ describe('websocket message/send', () => {
     async function onComplete() {
       expect(result).to.have.been
         .calledWith('chat-message',
-        sinon.match({
-          channel_id: channelId,
-          message: messageRequest.message,
-          username: user.username,
-          user_id: user._id,
-          createdAt: sinon.match.date,
-          updatedAt: sinon.match.date,
-        }));
+          sinon.match({
+            channel_id: channelId,
+            message: messageRequest.message,
+            username: user.username,
+            user_id: user._id,
+            createdAt: sinon.match.date,
+            updatedAt: sinon.match.date,
+          }));
       const [message] = await ChatMessage.find({
         message: messageRequest.message,
       });
       await Promise.all([
-        expect(serverModel.findById).to.have.been.called,
-        expect(userModel.findById).to.have.been.called,
-        expect(Channel.findById).to.have.been.calledTwice,
-        expect(ChatMessage.create).to.have.been.called,
+        expect(serverModel.findById).to.have.been.calledOnce,
+        expect(userModel.findById).to.have.been.calledOnce,
+        expect(Channel.findById).to.have.been.calledOnce,
+        expect(ChatMessage.create).to.have.been.calledOnce,
         expect(message).to.contain({
           username: user.username,
           message: messageRequest.message,
@@ -98,6 +100,24 @@ describe('websocket message/send', () => {
       ]);
       done();
     }
+    sendMessage(io);
+  });
+  it('succeeds if test socket', (done) => {
+    const messageRequest: SendMessageRequest = {
+      message: 'hi thar',
+      channel_id: channelId.toString(),
+      server_id: server._id.toString(),
+    };
+    sandbox.spy(Channel, 'find');
+    sandbox.spy(Channel, 'findById');
+    const { io, socket } = createFakeSocketEvent('send-message', messageRequest,
+      { user_id: user._id, username: user.username },
+      async () => {
+        await expect(Channel.find).to.have.been.calledOnce;
+        await expect(Channel.findById).not.to.have.been.called;
+        done();
+      }, result);
+    socket.handshake.query = { test: TEST_SECRET };
     sendMessage(io);
   });
   it('does not send if user.joinedServers not includes server_id', (done) => {

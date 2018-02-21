@@ -7,7 +7,7 @@ import Channel from '../../models/channel.model';
 import Server from '../../models/server.model';
 import User from '../../models/user.model';
 import createFakeSocketEvent from '../test_helpers/fake-socket';
-import { joinServer } from './join';
+import { joinServer, leaveOtherServers } from './join';
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -18,6 +18,7 @@ describe('websocket channel/join', () => {
   let server;
   let user;
   let channel;
+  const sandbox = sinon.createSandbox();
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -44,6 +45,7 @@ describe('websocket channel/join', () => {
     await Channel.remove({});
     await User.remove({});
     result.resetHistory();
+    sandbox.restore();
   });
 
   it('does not join server if server id invalid', (done) => {
@@ -91,7 +93,8 @@ describe('websocket channel/join', () => {
     user.save().then(() => {
       const { io, socket } = createFakeSocketEvent('join-channel', server._id,
         { user_id: user._id }, onComplete, result);
-      sinon.spy(socket, 'join');
+      sandbox.spy(socket, 'join');
+      sandbox.spy(socket, 'leave');
       joinServer(io);
       function onComplete() {
         expect(result).to.have.been
@@ -105,8 +108,20 @@ describe('websocket channel/join', () => {
           });
         expect(socket.join).to.have.been
           .calledWith(`server-${server._id}`);
+        expect(socket.leave).to.have.been
+          .calledWith('server-123');
         done();
       }
     });
+  });
+  it('leaves other servers', () => {
+    const socket = {
+      id: '123',
+      rooms: { '123': true, 'server-asd': true },
+      leave: sandbox.spy(),
+    };
+    leaveOtherServers(socket);
+    expect(socket.leave).to.have.been
+      .calledWith('server-asd');
   });
 });

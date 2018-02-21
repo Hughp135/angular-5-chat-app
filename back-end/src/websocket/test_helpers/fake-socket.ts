@@ -7,6 +7,7 @@ export default function createFakeSocketEvent(
   result: any
 ) {
   const socket = {
+    handshake: { query: {} },
     claim,
     on: async (event: string, callback: any) => {
       await callback(data);
@@ -17,7 +18,11 @@ export default function createFakeSocketEvent(
       }
     },
     emit: result,
-    join: () => Promise.resolve(null),
+    join: async () => null,
+    rooms: {
+      'server-123': true
+    },
+    leave: async () => null,
   };
 
   const io = {
@@ -26,6 +31,10 @@ export default function createFakeSocketEvent(
     },
     in: () => ({
       emit: result
+    }),
+    of: () => ({
+      connected: {
+      },
     }),
   };
   return { io, socket };

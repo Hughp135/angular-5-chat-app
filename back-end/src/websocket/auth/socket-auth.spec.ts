@@ -1,16 +1,45 @@
 import { logInAuth } from './socket-auth';
 import { createJWT } from '../../api/auth/jwt';
-
+import User from '../../models/user.model';
 import * as chai from 'chai';
 import * as mocha from 'mocha';
+import * as sinon from 'sinon';
+import * as sinonChai from 'sinon-chai';
+import * as config from 'config';
 
+const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
 const expect = chai.expect;
 
 const logInAuthFunction = logInAuth();
 
 // tslint:disable:no-unused-expression
 
-describe('logInAuth', () => {
+describe('websocket/socket-auth', () => {
+  const sandbox = sinon.createSandbox();
+  sandbox.stub(User, 'find').callsFake(() => ({
+    lean: () => [{
+      _id: '123123123',
+      username: 'test_user1',
+    }]
+  }));
+  afterEach(() => {
+    sandbox.restore();
+  });
+  it('succeeds for test socket connections with query.test', async () => {
+    const fakeSocket = {
+      handshake: {
+        query: {
+          test: TEST_SECRET,
+        }
+      }
+    };
+
+    const cb = result => {
+      expect(result).to.be.undefined;
+    };
+
+    await logInAuthFunction(fakeSocket, cb);
+  });
   it('succeeds with valid token', async () => {
     const validToken = createJWT({ username: 'hi' }, '1s');
     const fakeSocket = {

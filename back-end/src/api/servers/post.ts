@@ -1,6 +1,7 @@
 import Server from '../../models/server.model';
 import User from '../../models/user.model';
 import * as Joi from 'joi';
+import { log } from 'winston';
 
 const schema = Joi.object().keys({
   name: Joi.string().min(3).max(30).required(),
@@ -19,23 +20,37 @@ export async function createServer(req, res) {
     return res.status(400).json({ error: result.error.details[0].message });
   }
 
-  const existingServer = await Server.findOne({
+  const existingServers: any = await Server.find({
     owner_id: user._id,
   }).lean();
 
-  if (existingServer) {
+  if (existingServers.length >= 3) {
     return res.status(400).json({
-      error: 'You already own a server. Please delete or edit your existing server.'
+      error: 'You can only have a maximum of 3 servers. Please delete or edit an existing server before creating a new one'
     });
   }
 
-  const server = await Server.create({
-    name: req.body.name,
-    owner_id: user._id,
-  });
+  try {
+    const server = await Server.create({
+      name: req.body.name,
+      owner_id: user._id,
+    });
 
-  (user as any).joinedServers.push(server._id);
-  await user.save();
+    (user as any).joinedServers.push(server._id);
+    await user.save();
 
-  res.status(200).json({ success: true });
+    res.status(200).json({ success: true });
+  } catch (e) {
+    /* istanbul ignore else */
+    if (e.code === 11000) {
+      return res.status(400).json({
+        error: 'You already own a server with the same name. Please choose another name or edit your existing server.'
+      });
+    } else {
+      log('error', e);
+      return res.status(500).json({
+        error: 'A server error occured.'
+      });
+    }
+  }
 }

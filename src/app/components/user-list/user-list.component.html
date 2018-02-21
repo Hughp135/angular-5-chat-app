@@ -1,36 +1,42 @@
-<div class="item">
+<div class="item"
+  (mouseenter)="preventListUpdate = true"
+  (mouseleave)="preventListUpdate = false">
   <h5>Online</h5>
+  <div class=""
+    *ngIf="!onlineUsers">
+    <div class="ui active centered inline loader"></div>
+  </div>
   <div *ngIf="onlineUsers"
     class="ui list online-users"
     [class.inverted]="settingsService.invertedTheme">
     <a class="item"
-      *ngFor="let user of onlineUsers">
+      *ngFor="let user of onlineUsers; trackBy:(userListTrackBy)">
       <img class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
       <div class="content">
-        <a class="header">
+        <div class="header">
           {{ user.username }}
-        </a>
+        </div>
         <div class="description">
-          Fapping
+          Status
         </div>
       </div>
     </a>
   </div>
-  <h5>Offline</h5>
-  <div *ngIf="offlineUsers"
+  <h5>Online</h5>
+  <div *ngIf="offlineUsers && onlineUsers.length < 100"
     class="ui list offline-users"
     [class.inverted]="settingsService.invertedTheme">
     <a class="item"
-      *ngFor="let user of offlineUsers">
+      *ngFor="let user of offlineUsers; trackBy:(userListTrackBy)">
       <img class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
       <div class="content">
-        <a class="header">
+        <div class="header">
           {{ user.username }}
-        </a>
+        </div>
         <div class="description">
-          Fapping
+          Offline
         </div>
       </div>
     </a>

@@ -1,13 +1,35 @@
+.server-title {
+  margin: -15px -15px 20px -15px;
+  overflow: hidden;
+  min-height: 50px;
+  border-bottom: 1px solid #666;
+  padding: 15px 8px 10px 13px;
+  cursor: pointer;
+
+  h3 {
+    font-size: 15px;
+    float: left;
+    margin: 0;
+  }
+
+  i {    
+    position: absolute;
+    right: 3px;
+    top: 15px;
+  }
+}
+
 #chat-channel-list {
   a.item.channel {
     border-radius: 3px !important;
     margin: 1px 0;
   }
-  
-  a.item:hover, a.item.selected {
+
+  a.item:hover, a.item.active {
     background: #e4e4e4 !important;
+
     &.inverted {
       background: #666 !important;
-    }  
+    }
   }
 }

@@ -1,0 +1,49 @@
+<div class="header">
+  Create Server
+</div>
+<div class="content">
+  <div *ngIf="loading" class="ui active inverted dimmer">
+    <div class="ui text loader">Submitting...</div>
+  </div>
+  <div class="">
+    <p>
+      Make your own server to feel all cool and stuff!
+    </p>
+    <div *ngIf="error"
+      class="ui error message">
+      <h3>Failed to create server.</h3>
+      <p>{{ error }}</p>
+    </div>
+    <form [formGroup]="form"
+      (submit)="createServer()"
+      action=""
+      class="ui form">
+      <div class="field">
+        <label>
+          Server Name
+          <span *ngIf="form.controls['name'].touched && form.controls['name'].errors"
+            class="errorMsg">
+            Must be at least 3 characters long
+          </span>
+        </label>
+        <input class="ui small input"
+          formControlName="name"
+          type="text"
+          placeholder="Enter a name for your server...">
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="ui tiny red button"
+    (click)="modal.deny(undefined)">
+    Cancel
+  </button>
+  <button class="ui tiny green button"
+    [disabled]="!form.valid"
+    (click)="createServer()"
+    autofocus>
+    Create Server
+  </button>
+</div>
