@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { ShContextMenuModule } from 'ng2-right-click-menu';
 
 import { appRoutes } from './app-routes';
 import { AppComponent } from './app.component';
@@ -57,6 +58,7 @@ import { CreateServerComponent } from './components/modals/create-server/create-
     StoreDevtoolsModule.instrument({
       maxAge: 10
     }),
+    ShContextMenuModule,
   ],
   providers: [
     SettingsService,

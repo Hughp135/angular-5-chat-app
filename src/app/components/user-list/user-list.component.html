@@ -1,6 +1,6 @@
 <div class="item"
-  (mouseenter)="preventListUpdate = true"
-  (mouseleave)="preventListUpdate = false">
+  (mouseenter)="onMouseEnter(true)"
+  (mouseleave)="onMouseEnter(false)">
   <h5>Online</h5>
   <div class=""
     *ngIf="!onlineUsers">
@@ -10,7 +10,8 @@
     class="ui list online-users"
     [class.inverted]="settingsService.invertedTheme">
     <a class="item"
-      *ngFor="let user of onlineUsers; trackBy:(userListTrackBy)">
+      *ngFor="let user of onlineUsers; trackBy:(userListTrackBy)"
+      [sh-context]="menuItems">
       <img class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
       <div class="content">
