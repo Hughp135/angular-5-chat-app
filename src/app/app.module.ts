@@ -1,12 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-import { appRoutes } from './app-routes';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SuiModule } from 'ng2-semantic-ui';
 import { MainComponent } from './components/main/main.component';
@@ -26,6 +25,8 @@ import { reducers } from './reducers/reducers';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { ServerSidebarComponent } from './components/server-sidebar/server-sidebar.component';
 import { CreateServerComponent } from './components/modals/create-server/create-server.component';
+import { ViewServerComponent } from './components/view-server/view-server.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,8 @@ import { CreateServerComponent } from './components/modals/create-server/create-
     UserListComponent,
     ServerSidebarComponent,
     CreateServerComponent,
+    ViewServerComponent,
+    HomeComponent,
   ],
   entryComponents: [
     CreateServerComponent,
@@ -49,9 +52,7 @@ import { CreateServerComponent } from './components/modals/create-server/create-
     BrowserModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule.forRoot(
-      appRoutes
-    ),
+    AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({

@@ -9,6 +9,7 @@ import { UPDATE_SERVER_LIST } from '../../reducers/server-list.reducer';
 import { Observable } from 'rxjs/Observable';
 import { JOIN_SERVER } from '../../reducers/current-server.reducer';
 import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-server-list',
@@ -25,27 +26,28 @@ export class ServerListComponent implements OnInit {
     private apiService: ApiService,
     public settingsService: SettingsService,
     private wsService: WebsocketService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private router: Router,
   ) {
     this.loading = true;
     this.error = null;
     this.serverList = this.store.select(state => state.serverList);
-    this.store.select(state => state.currentServer)
-      .subscribe(server => {
-        this.currentServer = server;
-      });
-    this.apiService
-      .get('servers')
-      .finally(() => this.onGetServersComplete())
-      .subscribe((data: { servers: ChatServer[] }) => {
-        this.store.dispatch({
-          type: UPDATE_SERVER_LIST,
-          payload: data.servers,
-        });
-        if (data.servers.length > 0) {
-          this.joinServer(data.servers[0]);
-        }
-      }, e => this.onGetServersComplete(e));
+    // this.store.select(state => state.currentServer)
+    //   .subscribe(server => {
+    //     this.currentServer = server;
+    //   });
+    // this.apiService
+    //   .get('servers')
+    //   .finally(() => this.onGetServersComplete())
+    //   .subscribe((data: { servers: ChatServer[] }) => {
+    //     this.store.dispatch({
+    //       type: UPDATE_SERVER_LIST,
+    //       payload: data.servers,
+    //     });
+    //     if (data.servers.length > 0) {
+    //       this.joinServer(data.servers[0]);
+    //     }
+      // }, e => this.onGetServersComplete(e));
   }
 
   onGetServersComplete(e?) {
@@ -58,15 +60,7 @@ export class ServerListComponent implements OnInit {
   }
 
   joinServer(server: ChatServer) {
-    this.store.dispatch({
-      type: LEAVE_CHANNEL,
-      payload: null,
-    });
-    this.store.dispatch({
-      type: JOIN_SERVER,
-      payload: server,
-    });
-    this.wsService.socket.emit('join-server', server._id);
+    this.router.navigate([`channels/${server._id}`]);
   }
 
   ngOnInit() {
