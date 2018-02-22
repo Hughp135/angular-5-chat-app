@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
 import { UPDATE_SERVER_LIST } from '../../reducers/server-list.reducer';
 import { Observable } from 'rxjs/Observable';
-import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+import { SET_CURRENT_SERVER } from '../../reducers/current-server.reducer';
 import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 
 @Component({
@@ -63,7 +63,7 @@ export class ServerListComponent implements OnInit {
       payload: null,
     });
     this.store.dispatch({
-      type: JOIN_SERVER,
+      type: SET_CURRENT_SERVER,
       payload: server,
     });
     this.wsService.socket.emit('join-server', server._id);

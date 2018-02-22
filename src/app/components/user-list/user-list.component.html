@@ -11,7 +11,8 @@
     [class.inverted]="settingsService.invertedTheme">
     <a class="item"
       *ngFor="let user of onlineUsers; trackBy:(userListTrackBy)"
-      [sh-context]="menuItems">
+      [sh-context]="menuItems"
+      [sh-options]="{ theme: 'dark' }">
       <img class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
       <div class="content">
@@ -29,7 +30,9 @@
     class="ui list offline-users"
     [class.inverted]="settingsService.invertedTheme">
     <a class="item"
-      *ngFor="let user of offlineUsers; trackBy:(userListTrackBy)">
+      *ngFor="let user of offlineUsers; trackBy:(userListTrackBy)"
+      [sh-context]="menuItems"
+      [sh-options]="{ theme: 'dark' }">
       <img class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
       <div class="content">

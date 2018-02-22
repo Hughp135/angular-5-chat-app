@@ -121,5 +121,5 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 function sortAlphabetically(a: UserListUser, b: UserListUser) {
   return a.username > b.username ? -1
     : a.username < b.username ? 1
-      : 0; // sort list alphabetically
+      : 0;
 }

@@ -9,7 +9,7 @@ import ChatServer from 'shared-interfaces/server.interface';
 import { reducers } from '../../reducers/reducers';
 import { AppState } from '../../reducers/app.states';
 import { UPDATE_SERVER_LIST } from '../../reducers/server-list.reducer';
-import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+import { SET_CURRENT_SERVER } from '../../reducers/current-server.reducer';
 import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 
 describe('ServerListComponent', () => {
@@ -72,7 +72,7 @@ describe('ServerListComponent', () => {
       payload: null,
     });
     expect(store.dispatch).toHaveBeenCalledWith({
-      type: JOIN_SERVER,
+      type: SET_CURRENT_SERVER,
       payload: mockResponse.servers[0],
     });
     component.serverList.subscribe(data => {
@@ -97,7 +97,7 @@ describe('ServerListComponent', () => {
       payload: null,
     });
     expect(store.dispatch).not.toHaveBeenCalledWith({
-      type: JOIN_SERVER,
+      type: SET_CURRENT_SERVER,
       payload: undefined,
     });
     component.serverList.subscribe(data => {
@@ -129,7 +129,7 @@ describe('ServerListComponent', () => {
     };
     component.joinServer(server);
     expect(store.dispatch).toHaveBeenCalledWith({
-      type: JOIN_SERVER,
+      type: SET_CURRENT_SERVER,
       payload: server,
     });
     expect(fakeWebSocketService.socket.emit)

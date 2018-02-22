@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { WebsocketService } from '../../services/websocket.service';
 import { ErrorService } from '../../services/error.service';
 import ChatServer from 'shared-interfaces/server.interface';
-import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+import { SET_CURRENT_SERVER } from '../../reducers/current-server.reducer';
 import { JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 import { AppStateService } from '../../services/app-state.service';
 import { SettingsService } from '../../services/settings.service';
@@ -48,7 +48,7 @@ describe('ChannelsListComponent', () => {
       owner_id: 'asd',
     };
     store.dispatch({
-      type: JOIN_SERVER,
+      type: SET_CURRENT_SERVER,
       payload: currentServer,
     });
     spyOn(store, 'dispatch').and.callThrough();

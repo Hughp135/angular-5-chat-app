@@ -5,7 +5,7 @@ import { reducers } from '../../reducers/reducers';
 
 import { UserListComponent } from './user-list.component';
 import { SettingsService } from '../../services/settings.service';
-import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+import { SET_CURRENT_SERVER } from '../../reducers/current-server.reducer';
 import ChatServer from 'shared-interfaces/server.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { ShContextMenuModule } from 'ng2-right-click-menu';
@@ -44,7 +44,7 @@ describe('UserListComponent', () => {
       ]
     };
     store.dispatch({
-      type: JOIN_SERVER,
+      type: SET_CURRENT_SERVER,
       payload: currentServer,
     });
   }));
@@ -88,7 +88,7 @@ describe('UserListComponent', () => {
         owner_id: 'fago',
       };
       store.dispatch({
-        type: JOIN_SERVER,
+        type: SET_CURRENT_SERVER,
         payload: newServer
       });
       setTimeout(() => {
