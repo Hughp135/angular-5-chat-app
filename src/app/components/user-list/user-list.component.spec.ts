@@ -5,9 +5,10 @@ import { reducers } from '../../reducers/reducers';
 
 import { UserListComponent } from './user-list.component';
 import { SettingsService } from '../../services/settings.service';
-import { JOIN_SERVER } from '../../reducers/current-server.reducer';
+import { SET_CURRENT_SERVER } from '../../reducers/current-server.reducer';
 import ChatServer from 'shared-interfaces/server.interface';
 import { WebsocketService } from '../../services/websocket.service';
+import { ShContextMenuModule } from 'ng2-right-click-menu';
 
 const fakeSocket = {
   emit: jasmine.createSpy(),
@@ -25,7 +26,7 @@ describe('UserListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [UserListComponent],
-      imports: [StoreModule.forRoot(reducers)],
+      imports: [StoreModule.forRoot(reducers), ShContextMenuModule],
       providers: [
         SettingsService,
         { provide: WebsocketService, useValue: fakeSocketService },
@@ -43,7 +44,7 @@ describe('UserListComponent', () => {
       ]
     };
     store.dispatch({
-      type: JOIN_SERVER,
+      type: SET_CURRENT_SERVER,
       payload: currentServer,
     });
   }));
@@ -68,6 +69,7 @@ describe('UserListComponent', () => {
       expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
       expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
       expect(component.subscriptions.length).toEqual(4);
+      expect(component.menuItems).toBeDefined();
       done();
     }, 20);
   });
@@ -86,7 +88,7 @@ describe('UserListComponent', () => {
         owner_id: 'fago',
       };
       store.dispatch({
-        type: JOIN_SERVER,
+        type: SET_CURRENT_SERVER,
         payload: newServer
       });
       setTimeout(() => {
@@ -110,5 +112,14 @@ describe('UserListComponent', () => {
     component.currentServer = undefined;
     component.fetchUserList();
     expect(fakeSocket.emit).not.toHaveBeenCalled();
+  });
+  it('userList track by', () => {
+    expect(component.userListTrackBy(null, { _id: true })).toEqual(true);
+  });
+  it('mouse enter userlist', () => {
+    component.onMouseEnter(true);
+    expect(component.preventListUpdate).toEqual(true);
+    component.onMouseEnter(false);
+    expect(component.preventListUpdate).toEqual(false);
   });
 });

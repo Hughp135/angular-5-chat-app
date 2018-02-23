@@ -1,10 +1,13 @@
 <div id="page-wrapper">
 
+  <!-- SERVER LIST SIDEBAR -->
   <div id="server-sidebar"
     class="ui left vertical inverted icon menu"
     [class.light]="!this.settingsService.invertedTheme">
     <app-server-sidebar></app-server-sidebar>
   </div>
+  <!-- /SERVER LIST SIDEBAR -->
+
   <div id="main-wrapper">
 
     <router-outlet></router-outlet>

@@ -9,31 +9,42 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { OnDestroy, AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Subscription } from 'rxjs/Subscription';
 import { WebsocketService } from '../../services/websocket.service';
-
+import { IShContextMenuItem } from 'ng2-right-click-menu/sh-context-menu.models';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit, OnDestroy {
+export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentServer: ChatServer;
   public userList: UserListUser[];
   public onlineUsers: UserListUser[];
   public offlineUsers: UserListUser[];
   public subscriptions: Subscription[] = [];
   public preventListUpdate = false;
+  public menuItems: IShContextMenuItem[];
 
   constructor(
     public store: Store<AppState>,
     public settingsService: SettingsService,
     public wsService: WebsocketService,
+    private ref: ChangeDetectorRef,
   ) {
-    const currentServerObs = store.select(state => state.currentServer);
+    this.ref.detach();
+    this.addContextMenuItems();
+  }
+
+  ngAfterViewInit() {
+    const currentServerObs = this.store.select(state => state.currentServer);
     this.subscriptions.push(
       currentServerObs
+        .distinctUntilChanged((a, b) => {
+          return JSON.stringify(a) === JSON.stringify(b);
+        })
         .subscribe(data => {
           this.currentServer = data;
         }),
@@ -43,28 +54,18 @@ export class UserListComponent implements OnInit, OnDestroy {
           return JSON.stringify(a) === JSON.stringify(b);
         })
         .subscribe(userList => {
-          if (!userList) {
-            // New server - reset lists
-            this.onlineUsers = undefined;
-            this.offlineUsers = undefined;
-          }
-          if (!this.userList) {
-            // First user list received - save value & filter immediately
-            this.userList = userList;
-            this.filterUserList();
-          } else {
-            // User list changed
-            this.userList = userList;
-          }
+          this.userList = userList;
+          this.updateUserLists();
         }),
-      Observable.timer(250, 5000)
+      Observable.timer(250, 2000)
         .subscribe(() => {
           // Update filtered lists (short timer)
           /* istanbul ignore next */
           if (!this.preventListUpdate) {
-            this.filterUserList();
+            this.ref.detectChanges();
           }
         }),
+
       Observable.interval(60000)
         .subscribe(() => {
           /* istanbul ignore next */
@@ -72,16 +73,18 @@ export class UserListComponent implements OnInit, OnDestroy {
           this.fetchUserList();
         }),
     );
-
   }
 
-  filterUserList() {
+  updateUserLists() {
     this.onlineUsers = this.userList &&
       this.userList.filter(usr => usr.online)
         .sort(sortAlphabetically);
     this.offlineUsers = this.userList &&
       this.userList.filter(usr => !usr.online)
         .sort(sortAlphabetically);
+    if (!this.userList) {
+      this.ref.detectChanges();
+    }
   }
 
   fetchUserList() {
@@ -100,11 +103,23 @@ export class UserListComponent implements OnInit, OnDestroy {
   userListTrackBy(index, user) {
     return user._id;
   }
+
+  addContextMenuItems() {
+    this.menuItems = [
+      {
+        label: 'User'
+      }
+    ];
+  }
+
+  onMouseEnter(enter: boolean) {
+    this.preventListUpdate = enter && this.userList !== undefined;
+  }
 }
 
 /* istanbul ignore next */
 function sortAlphabetically(a: UserListUser, b: UserListUser) {
   return a.username > b.username ? -1
     : a.username < b.username ? 1
-      : 0; // sort list alphabetically
+      : 0;
 }

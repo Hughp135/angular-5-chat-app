@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { ShContextMenuModule } from 'ng2-right-click-menu';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -58,6 +59,7 @@ import { HomeComponent } from './components/home/home.component';
     StoreDevtoolsModule.instrument({
       maxAge: 10
     }),
+    ShContextMenuModule,
   ],
   providers: [
     SettingsService,
