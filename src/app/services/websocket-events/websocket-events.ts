@@ -1,7 +1,7 @@
 import { ChannelList, JoinedChannelResponse } from 'shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../../shared-interfaces/message.interface';
 import { SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST } from '../../reducers/current-server.reducer';
-import { NEW_CHAT_MESSAGE, CHAT_HISTORY } from '../../reducers/current-chat-channel.reducer';
+import { NEW_CHAT_MESSAGE, CHAT_HISTORY, JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 import 'rxjs/add/operator/take';
 import { ServerUserList, UserListUpdate } from '../../../../shared-interfaces/server.interface';
 
@@ -21,7 +21,7 @@ export const handlers: { [key: string]: (socket, store) => void } = {
 
 function chatMessage(socket, store) {
   socket.on(CHAT_MESSAGE_HANDLER, (message: ChatMessage) => {
-    store.select(state => state.currentChatChannel).take(1).subscribe(channel => {
+    store.select('currentChatChannel').take(1).subscribe(channel => {
       // Only add message if it applies to current channel.
       if (channel && message.channel_id === channel._id) {
         store.dispatch({
@@ -34,11 +34,24 @@ function chatMessage(socket, store) {
 }
 
 function channelList(socket, store) {
-  socket.on(CHANNEL_LIST_HANDLER, (channels: ChannelList) => {
+  socket.on(CHANNEL_LIST_HANDLER, (channelList: ChannelList) => {
+    let joinAChannel = false;
+    store.select('currentServer').take(1).subscribe(server => {
+      if (!server.channelList) {
+        joinAChannel = true;
+      }
+    });
     store.dispatch({
       type: SET_CHANNEL_LIST,
-      payload: channels,
+      payload: channelList,
     });
+    if (joinAChannel) {
+      store.dispatch({
+        type: JOIN_CHANNEL,
+        payload: channelList.channels[0]
+      });
+      socket.emit('join-channel', channelList.channels[0]._id);
+    }
   });
 }
 

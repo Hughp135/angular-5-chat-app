@@ -28,6 +28,8 @@ import { ServerSidebarComponent } from './components/server-sidebar/server-sideb
 import { CreateServerComponent } from './components/modals/create-server/create-server.component';
 import { ViewServerComponent } from './components/view-server/view-server.component';
 import { HomeComponent } from './components/home/home.component';
+import { ServerResolver } from './services/server-resolver.service';
+import { MainResolver } from './services/main-resolver.service';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,8 @@ import { HomeComponent } from './components/home/home.component';
     WebsocketService,
     AppStateService,
     ErrorService,
+    ServerResolver,
+    MainResolver,
   ],
   bootstrap: [AppComponent]
 })

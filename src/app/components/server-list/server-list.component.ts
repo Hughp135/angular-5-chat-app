@@ -7,7 +7,6 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
 import { UPDATE_SERVER_LIST } from '../../reducers/server-list.reducer';
 import { Observable } from 'rxjs/Observable';
-import { JOIN_SERVER } from '../../reducers/current-server.reducer';
 import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 import { Router } from '@angular/router';
 
@@ -18,9 +17,7 @@ import { Router } from '@angular/router';
 })
 export class ServerListComponent implements OnInit {
   public serverList: Observable<ChatServer[]>;
-  public loading = false;
-  public error: string;
-  public currentServer: ChatServer;
+  public currentServer: Observable<ChatServer>;
 
   constructor(
     private apiService: ApiService,
@@ -29,34 +26,9 @@ export class ServerListComponent implements OnInit {
     private store: Store<AppState>,
     private router: Router,
   ) {
-    this.loading = true;
-    this.error = null;
-    this.serverList = this.store.select(state => state.serverList);
-    // this.store.select(state => state.currentServer)
-    //   .subscribe(server => {
-    //     this.currentServer = server;
-    //   });
-    // this.apiService
-    //   .get('servers')
-    //   .finally(() => this.onGetServersComplete())
-    //   .subscribe((data: { servers: ChatServer[] }) => {
-    //     this.store.dispatch({
-    //       type: UPDATE_SERVER_LIST,
-    //       payload: data.servers,
-    //     });
-    //     if (data.servers.length > 0) {
-    //       this.joinServer(data.servers[0]);
-    //     }
-      // }, e => this.onGetServersComplete(e));
-  }
+    this.serverList = this.store.select('serverList');
+    this.currentServer = this.store.select('currentServer');
 
-  onGetServersComplete(e?) {
-    this.loading = false;
-
-    if (e) {
-      this.error = 'Unable to retrieve server list.';
-      return;
-    }
   }
 
   joinServer(server: ChatServer) {

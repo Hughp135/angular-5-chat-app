@@ -11,7 +11,7 @@ export function joinServer(io: any) {
   io.on('connection', async socket => {
 
     socket.on('join-server', async serverId => {
-
+      console.log('joining');
       if (!mongoose.Types.ObjectId.isValid(serverId)) {
         socket.emit('soft-error', 'Invalid server ID');
         return;
@@ -39,8 +39,11 @@ export function joinServer(io: any) {
       socket.join(`server-${server._id}`);
 
       // Send state
-      sendUserList(io, socket, server._id);
+      console.log('ready');
       sendChannelList(socket, server._id);
+      setTimeout(() => {
+        sendUserList(io, socket, server._id);
+      }, 1000);
     });
   });
 }
@@ -54,6 +57,7 @@ async function sendChannelList(socket, serverId) {
     server_id: serverId,
     channels: channels,
   };
+
   socket.emit('channel-list', list);
 }
 

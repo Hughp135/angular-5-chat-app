@@ -1,3 +1,7 @@
+:host {
+  display: flex;
+  width: 100%;
+}
 
 #main-content {
   position: relative;
@@ -28,6 +32,11 @@
     &.left {
       z-index: 103;
     }
+
+    &:not(.inverted) {
+      background-color: #edeff1;
+    }
+
     &.inverted {
       background: #242526;
     }
@@ -37,10 +46,6 @@
     position: absolute;
     flex: 1;
     margin-bottom: auto;
-
-    &:not(.inverted) {
-      background-color: #f3f3f3;
-    }
   }
 
   #bottom-attached-item {

@@ -18,10 +18,8 @@ export class AuthGuardService implements CanActivate {
     } else {
       const connected = await this.wsService.connect().toPromise();
       if (connected) {
-        console.log('route', route);
         return true;
       } else {
-        console.log('redirecting');
         this.router.navigate(['/login']);
         return false;
       }

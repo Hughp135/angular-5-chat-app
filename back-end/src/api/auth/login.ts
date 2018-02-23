@@ -8,7 +8,7 @@ const schema = Joi.object().keys({
   password: Joi.string().required(),
 });
 
-const TOKEN_EXPIRY_MINS = 30;
+const TOKEN_EXPIRY_MINS = 120;
 
 export default async function (req, res) {
   const validation = Joi.validate(req.body, schema);

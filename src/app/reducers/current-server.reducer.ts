@@ -10,7 +10,7 @@ export function currentServerReducer(state: ChatServer, action) {
     case SET_CURRENT_SERVER:
       return <ChatServer>action.payload;
     case SET_CHANNEL_LIST:
-      if (state._id === action.payload.server_id) {
+      if (state && state._id === action.payload.server_id) {
         return <ChatServer>{ ...state, channelList: action.payload };
       } else {
         return state;
