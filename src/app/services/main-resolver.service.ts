@@ -20,9 +20,10 @@ export class MainResolver implements Resolve<any> {
 
   async resolve(): Promise<any> {
     try {
-      const { servers } = <{ servers: ChatServer[] }>await this.apiService
-        .get('servers')
-        .toPromise();
+      const { servers }: any =
+        await this.apiService
+          .get('servers')
+          .toPromise();
       this.store.dispatch({
         type: UPDATE_SERVER_LIST,
         payload: servers,

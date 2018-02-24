@@ -22,7 +22,6 @@ export class ServerListComponent implements OnInit {
   ) {
     this.serverList = this.store.select('serverList');
     this.currentServer = this.store.select('currentServer');
-
   }
 
   joinServer(server: ChatServer) {

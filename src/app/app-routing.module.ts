@@ -14,6 +14,9 @@ import { ChatChannelResolver } from './services/chat-channel-resolver.service';
 
 export const appRoutes: Routes = [
   {
+    path: '', redirectTo: '/channels', pathMatch: 'full'
+  },
+  {
     path: 'channels', component: MainComponent,
     canActivate: [AuthGuardService],
     resolve: { state: MainResolver },

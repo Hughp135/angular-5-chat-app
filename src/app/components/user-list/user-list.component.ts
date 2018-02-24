@@ -15,10 +15,9 @@ import { WebsocketService } from '../../services/websocket.service';
 })
 export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   public subscriptions: Subscription[] = [];
-  private preventListUpdate = false;
+  public preventListUpdate = false;
   public menuItems: IShContextMenuItem[];
   @Input() currentServer: ChatServer;
-  @Input() userList: UserListUser[];
 
   constructor(
     public settingsService: SettingsService,
@@ -36,6 +35,10 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
           this.fetchUserList();
         }),
     );
+  }
+
+  get userList() {
+    return this.currentServer.userList;
   }
 
   get onlineUsers() {

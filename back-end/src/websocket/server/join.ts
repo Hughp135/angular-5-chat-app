@@ -39,9 +39,7 @@ export function joinServer(io: any) {
 
       // Send state
       sendChannelList(socket, server._id);
-      setTimeout(() => {
-        sendUserList(io, socket, server._id);
-      }, 1000);
+      sendUserList(io, socket, server._id);
     });
   });
 }

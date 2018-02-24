@@ -42,8 +42,6 @@ export class ServerResolver implements Resolve<ChatServer> {
       .take(1)
       .toPromise();
 
-    console.log('serverlist', serverList);
-
     const server = serverList.find(srv => srv._id === id);
 
     this.store.dispatch({

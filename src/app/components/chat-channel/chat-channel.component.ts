@@ -27,11 +27,7 @@ export class ChatChannelComponent implements OnInit {
     this.route.data
       .subscribe(data => {
         this.currentChannel = data.state.channel;
-        console.log(this.currentChannel);
       });
-    // this.currentChannel.subscribe(chan => {
-    //   console.log('new state', chan);
-    // });
   }
 
   ngOnInit() {
