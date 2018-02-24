@@ -20,9 +20,9 @@ export class ChatChannelResolver implements Resolve<any> {
     private errorService: ErrorService
   ) { }
 
-  async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot, timeout?: number) {
+  async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot) {
     const id = route.paramMap.get('id');
-    const channel = await this.getChannel(id, timeout);
+    const channel = await this.getChannel(id);
     if (!channel) {
       this.errorService.errorMessage.next({
         message: 'Channel does not exist.',
@@ -44,10 +44,10 @@ export class ChatChannelResolver implements Resolve<any> {
     };
   }
 
-  async getChannel(id: string, timeout: number) {
+  async getChannel(id: string) {
     const server = await this.store.select('currentServer')
       .filter(srv => !!srv.channelList)
-      .timeout(timeout || 10000)
+      .timeout(10000)
       .take(1)
       .toPromise();
     return server.channelList.channels.find(chan => chan._id === id);

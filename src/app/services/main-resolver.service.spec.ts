@@ -1,4 +1,4 @@
-import { TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MainResolver } from './main-resolver.service';
 import { ApiService } from './api.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -64,9 +64,6 @@ describe('MainResolverService', () => {
     });
   }));
   it('fails to get server list and redirects to login on 401', fakeAsync(() => {
-    const mockResponse: { servers: ChatServer[] } = {
-      servers: [{ name: 'server1', _id: '123', owner_id: '345' }]
-    };
     service.resolve();
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush('Error', { status: 401, statusText: 'Unauthorized' });
@@ -76,9 +73,6 @@ describe('MainResolverService', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   }));
   it('fails to get server list and shows error for any other code', fakeAsync(() => {
-    const mockResponse: { servers: ChatServer[] } = {
-      servers: [{ name: 'server1', _id: '123', owner_id: '345' }]
-    };
     service.resolve();
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush('Error', { status: 500, statusText: 'Unauthorized' });

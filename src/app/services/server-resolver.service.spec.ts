@@ -1,5 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
 import { ServerResolver } from './server-resolver.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -10,7 +9,6 @@ import { WebsocketService } from './websocket.service';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import { LEAVE_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router/src/router_state';
 
 const serverList: ChatServer[] = [
   { name: 'server1', _id: '123', owner_id: '345' }

@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
@@ -76,21 +76,14 @@ describe('ChatChannelResolverService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  it('times out if current server has no channel list', async () => {
-    try {
-      await service.resolve(<any>route, null, 50);
-      throw new Error('Expected a timeout error');
-    } catch (e) {
-      expect(e.name).toEqual('TimeoutError');
-    }
-  });
+
   it('resolves if current server contains channel list', async () => {
     store.dispatch({
       type: SET_CURRENT_SERVER,
       payload: { ...server, channelList: channelList },
     });
     spyOn(store, 'dispatch');
-    await service.resolve(<any>route, null, 50);
+    await service.resolve(<any>route, null);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: JOIN_CHANNEL,
       payload: channelList.channels[0],
@@ -108,7 +101,7 @@ describe('ChatChannelResolverService', () => {
       }
     };
     spyOn(store, 'dispatch');
-    await service.resolve(<any>routeWithInvalidId, null, 50);
+    await service.resolve(<any>routeWithInvalidId, null);
     expect(store.dispatch).not.toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalled();
   });

@@ -17,12 +17,6 @@ describe('ServerListComponent', () => {
   let store: Store<AppState>;
   let router: Router;
 
-  const fakeWebSocketService = {
-    socket: {
-      emit: jasmine.createSpy()
-    }
-  };
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ServerListComponent],

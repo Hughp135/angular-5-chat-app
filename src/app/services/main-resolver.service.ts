@@ -4,7 +4,6 @@ import { ApiService } from './api.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
-import ChatServer from '../../../shared-interfaces/server.interface';
 import { ErrorService } from './error.service';
 import { Router } from '@angular/router';
 

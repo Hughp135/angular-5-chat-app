@@ -10,7 +10,7 @@
     "compile:server": "tsc -p back-end/tsconfig.json && node back-end/dist/index.js",
     "build": "ng build --prod",
     "test": "npm run test:server && npm run test:app",
-    "test:app:dev": "ng test --browsers",
+    "test:app:dev": "ng test --browsers --code-coverage",
     "test:server:dev": "mocha --exit  -t 3000 -r ts-node/register \"back-end/src/**/*.spec.ts\"",
     "test:app": "ng test --code-coverage --watch=false",
     "test:server": "./node_modules/.bin/nyc --report-dir coverage mocha --exit -t 3000 -r ts-node/register \"back-end/src/**/*.spec.ts\"",

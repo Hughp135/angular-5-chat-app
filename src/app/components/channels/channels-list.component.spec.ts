@@ -7,8 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { WebsocketService } from '../../services/websocket.service';
 import { ErrorService } from '../../services/error.service';
 import ChatServer from 'shared-interfaces/server.interface';
-import { SET_CURRENT_SERVER } from '../../reducers/current-server.reducer';
-import { JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 import { AppStateService } from '../../services/app-state.service';
 import { SettingsService } from '../../services/settings.service';
 import { RouterTestingModule } from '@angular/router/testing';

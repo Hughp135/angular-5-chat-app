@@ -1,7 +1,7 @@
 import { ChannelList, JoinedChannelResponse } from 'shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../../shared-interfaces/message.interface';
 import { SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST } from '../../reducers/current-server.reducer';
-import { NEW_CHAT_MESSAGE, CHAT_HISTORY, JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
+import { NEW_CHAT_MESSAGE, CHAT_HISTORY } from '../../reducers/current-chat-channel.reducer';
 import 'rxjs/add/operator/take';
 import { ServerUserList, UserListUpdate } from '../../../../shared-interfaces/server.interface';
 
