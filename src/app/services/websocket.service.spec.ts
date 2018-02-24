@@ -134,52 +134,6 @@ describe('WebsocketService', () => {
     });
     await service.connect().toPromise();
   });
-  it('channel-list navigates to 1st channel if not in a channel', () => {
-    const channelList: ChannelList = {
-      server_id: '456',
-      channels: [{ server_id: 'asd', _id: '123', name: 'chan1' }]
-    };
-    const fakeRouter = {
-      url: '/channels/asd',
-      navigate: jasmine.createSpy(),
-    };
-    const fakeSocket = {
-      on: (msg: string, callback: any) => {
-        callback(channelList);
-      }
-    };
-    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store, fakeRouter);
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: SET_CHANNEL_LIST,
-      payload: channelList,
-    });
-
-    expect(fakeRouter.navigate).toHaveBeenCalledWith(['/channels/asd/123']);
-  });
-  it('channel-list does note navigate to 1st channel if in a channel', () => {
-    const channelList: ChannelList = {
-      server_id: '456',
-      channels: [{ server_id: 'asd', _id: '123', name: 'chan1' }]
-    };
-    const fakeRouter = {
-      url: '/channels/asd/gaylord',
-      navigate: jasmine.createSpy(),
-    };
-    const fakeSocket = {
-      on: (msg: string, callback: any) => {
-        callback(channelList);
-      }
-    };
-    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store, fakeRouter);
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: SET_CHANNEL_LIST,
-      payload: channelList,
-    });
-
-    expect(fakeRouter.navigate).not.toHaveBeenCalledWith();
-  });
   it('chat-message dispatches NEW_CHAT_MESSAGE if channel ID matches current channel', () => {
     const message: ChatMessage = {
       message: 'hi thar',

@@ -11,6 +11,7 @@ import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/filter';
 import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
 import { LEAVE_CHANNEL } from '../reducers/current-chat-channel.reducer';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ServerResolver implements Resolve<ChatServer> {
@@ -18,14 +19,26 @@ export class ServerResolver implements Resolve<ChatServer> {
   constructor(
     private store: Store<AppState>,
     private wsService: WebsocketService,
+    private router: Router,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     const id = route.paramMap.get('id');
+    console.log('id', id);
 
     const currentServerStore = this.store.select('currentServer');
 
     await this.joinServer(id);
+
+    if (route.children.length < 1) {
+      // Wait for channel list then redirect to first channel
+      currentServerStore
+        .filter(server => !!server && !!server.channelList)
+        .take(1)
+        .subscribe(server => {
+          this.router.navigate([`/channels/${server._id}/${server.channelList.channels[0]._id}`]);
+        });
+    }
 
     return {
       server: currentServerStore,

@@ -11,16 +11,32 @@ import { ServerResolver } from './services/server-resolver.service';
 import { MainResolver } from './services/main-resolver.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
 import { ChatChannelResolver } from './services/chat-channel-resolver.service';
+import { FriendsComponent } from './components/friends/friends.component';
 
 export const appRoutes: Routes = [
   {
     path: '', redirectTo: '/channels', pathMatch: 'full'
+  },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  {
+    path: 'friends', component: MainComponent,
+    canActivate: [AuthGuardService],
+    resolve: { state: MainResolver },
+    children: [
+      {
+        path: '', component: FriendsComponent
+      },
+    ],
   },
   {
     path: 'channels', component: MainComponent,
     canActivate: [AuthGuardService],
     resolve: { state: MainResolver },
     children: [
+      {
+        path: '', component: HomeComponent
+      },
       {
         path: ':id', component: ViewServerComponent,
         resolve: { state: ServerResolver },
@@ -31,13 +47,8 @@ export const appRoutes: Routes = [
           }
         ]
       },
-      {
-        path: '', component: HomeComponent
-      },
     ],
   },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
 ];
 
 @NgModule({

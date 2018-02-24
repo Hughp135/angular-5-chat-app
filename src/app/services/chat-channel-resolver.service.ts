@@ -5,7 +5,7 @@ import {
 } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
-import { JOIN_CHANNEL } from '../reducers/current-chat-channel.reducer';
+import { JOIN_CHANNEL, LEAVE_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { WebsocketService } from './websocket.service';
 import { Router } from '@angular/router';
 import { ErrorService } from './error.service';
@@ -34,13 +34,18 @@ export class ChatChannelResolver implements Resolve<any> {
     }
 
     this.store.dispatch({
+      type: LEAVE_CHANNEL,
+      payload: null
+    });
+
+    this.store.dispatch({
       type: JOIN_CHANNEL,
       payload: channel
     });
     this.wsService.socket.emit('join-channel', id);
 
     return {
-      channel: this.store.select('currentChatChannel'),
+      channel: this.store.select('currentChatChannel').filter(chan => !!chan),
     };
   }
 

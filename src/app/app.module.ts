@@ -31,6 +31,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ServerResolver } from './services/server-resolver.service';
 import { MainResolver } from './services/main-resolver.service';
 import { ChatChannelResolver } from './services/chat-channel-resolver.service';
+import { FriendsComponent } from './components/friends/friends.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { ChatChannelResolver } from './services/chat-channel-resolver.service';
     CreateServerComponent,
     ViewServerComponent,
     HomeComponent,
+    FriendsComponent,
   ],
   entryComponents: [
     CreateServerComponent,
