@@ -34,7 +34,7 @@ function chatMessage(socket, store) {
 }
 
 function channelList(socket, store) {
-  socket.on(CHANNEL_LIST_HANDLER, (channelList: ChannelList) => {
+  socket.on(CHANNEL_LIST_HANDLER, (list: ChannelList) => {
     let joinAChannel = false;
     store.select('currentServer').take(1).subscribe(server => {
       if (!server.channelList) {
@@ -43,14 +43,14 @@ function channelList(socket, store) {
     });
     store.dispatch({
       type: SET_CHANNEL_LIST,
-      payload: channelList,
+      payload: list,
     });
     if (joinAChannel) {
       store.dispatch({
         type: JOIN_CHANNEL,
-        payload: channelList.channels[0]
+        payload: list.channels[0]
       });
-      socket.emit('join-channel', channelList.channels[0]._id);
+      socket.emit('join-channel', list.channels[0]._id);
     }
   });
 }

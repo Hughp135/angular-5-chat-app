@@ -23,15 +23,12 @@ export class MainResolver implements Resolve<any> {
       const { servers } = <{ servers: ChatServer[] }>await this.apiService
         .get('servers')
         .toPromise();
-      console.log('got servers', servers);
       this.store.dispatch({
         type: UPDATE_SERVER_LIST,
         payload: servers,
       });
     } catch (e) {
-      console.log(e);
       if (e.status === 401) {
-        console.log('redirecting');
         this.router.navigate(['/login']);
       } else {
         this.errorService.errorMessage.next({
@@ -42,11 +39,5 @@ export class MainResolver implements Resolve<any> {
       }
 
     }
-
-    // .finally(() => this.onGetServersComplete())
-    // .subscribe((data: { servers: ChatServer[] }) => {
-
-    //   }, e => this.onGetServersComplete(e));
-    // return 'hi';
   }
 }

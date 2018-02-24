@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
-  Router, Resolve, RouterStateSnapshot,
+  Resolve, RouterStateSnapshot,
   ActivatedRouteSnapshot
 } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { WebsocketService } from './websocket.service';
-import { AppStateService } from './app-state.service';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/filter';
@@ -20,7 +18,6 @@ export class ServerResolver implements Resolve<ChatServer> {
   constructor(
     private store: Store<AppState>,
     private wsService: WebsocketService,
-    private appState: AppStateService,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {

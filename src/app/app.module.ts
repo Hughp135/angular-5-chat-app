@@ -30,6 +30,7 @@ import { ViewServerComponent } from './components/view-server/view-server.compon
 import { HomeComponent } from './components/home/home.component';
 import { ServerResolver } from './services/server-resolver.service';
 import { MainResolver } from './services/main-resolver.service';
+import { ChatChannelResolver } from './services/chat-channel-resolver.service';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { MainResolver } from './services/main-resolver.service';
     ErrorService,
     ServerResolver,
     MainResolver,
+    ChatChannelResolver,
   ],
   bootstrap: [AppComponent]
 })

@@ -26,7 +26,6 @@ export class MainComponent {
     this.currentServer = this.store.select(state => state.currentServer);
     this.currentChatChannel = this.store.select(state => state.currentChatChannel);
     this.route.paramMap.switchMap((params: ParamMap) => {
-      console.log('params', params.get('id'));
       return 'got something';
     });
   }

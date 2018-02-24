@@ -9,6 +9,8 @@ import { ViewServerComponent } from './components/view-server/view-server.compon
 import { HomeComponent } from './components/home/home.component';
 import { ServerResolver } from './services/server-resolver.service';
 import { MainResolver } from './services/main-resolver.service';
+import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
+import { ChatChannelResolver } from './services/chat-channel-resolver.service';
 
 export const appRoutes: Routes = [
   {
@@ -19,6 +21,12 @@ export const appRoutes: Routes = [
       {
         path: ':id', component: ViewServerComponent,
         resolve: { state: ServerResolver },
+        children: [
+          {
+            path: ':id', component: ChatChannelComponent,
+            resolve: { state: ChatChannelResolver },
+          }
+        ]
       },
       {
         path: '', component: HomeComponent

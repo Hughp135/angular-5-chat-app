@@ -14,7 +14,6 @@ export class ErrorNotificationComponent {
 
   constructor(errorService: ErrorService) {
     errorService.errorMessage.subscribe((notification: ErrorNotification) => {
-      console.log('got new error');
       this.errorNotification = { ...notification }; // clone
       this.doAnimate(TransitionDirection.In);
       setTimeout(() => {

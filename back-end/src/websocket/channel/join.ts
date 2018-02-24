@@ -37,7 +37,10 @@ export async function joinChannel(io: any) {
         channel_id: channel._id,
         messages,
       };
-      socket.emit('joined-channel', response);
+      setTimeout(() => {
+        socket.emit('joined-channel', response);
+      }, 1000);
+
     });
   });
 }
