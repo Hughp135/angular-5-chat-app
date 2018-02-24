@@ -1,11 +1,14 @@
-const {app, BrowserWindow} = require('electron')
-const path = require('path')
-const url = require('url')
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
+const url = require('url');
+
+const appPath = app.getAppPath();
 
 let win
+function createWindow() {
+  win = new BrowserWindow({ width: 1800, height: 1000 })
 
-function createWindow () {
-  win = new BrowserWindow({width: 1400, height: 1000})
+  win.setMenu(null);
 
   // load the dist folder from Angular
   win.loadURL(url.format({
