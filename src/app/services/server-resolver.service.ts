@@ -34,13 +34,15 @@ export class ServerResolver implements Resolve<ChatServer> {
   }
 
   async joinServer(id: string) {
-    const currentServerStore = this.store.select('serverList');
+    const serverListStore = this.store.select('serverList');
 
-    const serverList = await currentServerStore
+    const serverList = await serverListStore
       .filter(list => list.some(srv => srv._id === id))
       .timeout(10000)
       .take(1)
       .toPromise();
+
+    console.log('serverlist', serverList);
 
     const server = serverList.find(srv => srv._id === id);
 
@@ -54,7 +56,6 @@ export class ServerResolver implements Resolve<ChatServer> {
     });
 
     this.wsService.socket.emit('join-server', id);
-    return server;
   }
 
 }

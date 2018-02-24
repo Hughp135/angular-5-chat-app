@@ -11,6 +11,7 @@ import { AppState } from '../../reducers/app.states';
 import { UPDATE_SERVER_LIST } from '../../reducers/server-list.reducer';
 import { SET_CURRENT_SERVER } from '../../reducers/current-server.reducer';
 import { LEAVE_CHANNEL } from '../../reducers/current-chat-channel.reducer';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ServerListComponent', () => {
   let component: ServerListComponent;
@@ -35,6 +36,7 @@ describe('ServerListComponent', () => {
         { provide: WebsocketService, useValue: fakeWebSocketService },
       ],
       imports: [
+        RouterTestingModule,
         HttpClientTestingModule,
         StoreModule.forRoot(reducers),
       ],
@@ -78,8 +80,6 @@ describe('ServerListComponent', () => {
     component.serverList.subscribe(data => {
       expect(data).toBe(mockResponse.servers);
     });
-    expect(component.loading).toEqual(false);
-    expect(component.error).toEqual(null);
     httpMock.verify();
   });
   it('request succeds with empty server list', () => {

@@ -11,18 +11,26 @@ import { SET_CURRENT_SERVER } from '../../reducers/current-server.reducer';
 import { JOIN_CHANNEL } from '../../reducers/current-chat-channel.reducer';
 import { AppStateService } from '../../services/app-state.service';
 import { SettingsService } from '../../services/settings.service';
-
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 describe('ChannelsListComponent', () => {
   let component: ChannelsListComponent;
   let fixture: ComponentFixture<ChannelsListComponent>;
   let injector: TestBed;
   let store: Store<AppState>;
+  let router: Router;
 
   const fakeWebSocketService = {
     socket: {
       emit: jasmine.createSpy()
     }
+  };
+
+  const currentServer: ChatServer = {
+    _id: '123',
+    name: 'server',
+    owner_id: 'asd',
   };
 
   beforeEach(async(() => {
@@ -31,6 +39,7 @@ describe('ChannelsListComponent', () => {
       imports: [
         FormsModule,
         StoreModule.forRoot(reducers),
+        RouterTestingModule,
       ],
       providers: [
         SettingsService,
@@ -42,21 +51,15 @@ describe('ChannelsListComponent', () => {
       .compileComponents();
     injector = getTestBed();
     store = injector.get(Store);
-    const currentServer: ChatServer = {
-      _id: '123',
-      name: 'server',
-      owner_id: 'asd',
-    };
-    store.dispatch({
-      type: SET_CURRENT_SERVER,
-      payload: currentServer,
-    });
+    router = injector.get(Router);
     spyOn(store, 'dispatch').and.callThrough();
+    spyOn(router, 'navigate');
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ChannelsListComponent);
     component = fixture.componentInstance;
+    component.currentServer = currentServer;
     fixture.detectChanges();
   });
 
@@ -85,11 +88,7 @@ describe('ChannelsListComponent', () => {
       server_id: '345',
     };
     component.joinChannel(chan);
-    expect(fakeWebSocketService.socket.emit)
-      .toHaveBeenCalledWith('join-channel', chan._id);
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: JOIN_CHANNEL,
-      payload: chan,
-    });
+    expect(router.navigate)
+      .toHaveBeenCalledWith([`channels/${chan.server_id}/${chan._id}`]);
   });
 });

@@ -5,7 +5,6 @@ import ChatServer from 'shared-interfaces/server.interface';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
-import { ActivatedRoute } from '@angular/router';
 import { ParamMap } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 
@@ -21,12 +20,8 @@ export class MainComponent {
   constructor(
     public settingsService: SettingsService,
     private store: Store<AppState>,
-    private route: ActivatedRoute,
   ) {
     this.currentServer = this.store.select(state => state.currentServer);
     this.currentChatChannel = this.store.select(state => state.currentChatChannel);
-    this.route.paramMap.switchMap((params: ParamMap) => {
-      return 'got something';
-    });
   }
 }
