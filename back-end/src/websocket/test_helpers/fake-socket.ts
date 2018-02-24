@@ -12,7 +12,9 @@ export default function createFakeSocketEvent(
     on: async (event: string, callback: any) => {
       await callback(data);
       try {
-        await complete();
+        setTimeout(async () => {
+          await complete();
+        }, 10);
       } catch (e) {
         console.error(e);
       }

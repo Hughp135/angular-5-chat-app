@@ -38,6 +38,7 @@ export async function joinChannel(io: any) {
         messages,
       };
       socket.emit('joined-channel', response);
+
     });
   });
 }

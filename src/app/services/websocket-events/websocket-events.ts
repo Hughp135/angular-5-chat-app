@@ -11,7 +11,7 @@ export const JOINED_CHANNEL_HANDLER = 'joined-channel';
 export const SERVER_USERLIST_HANDLER = 'server-user-list';
 export const SERVER_UPDATE_USERLIST_HANDLER = 'update-user-list';
 
-export const handlers: { [key: string]: (socket, store) => void } = {
+export const handlers: { [key: string]: (socket, store, router?) => void } = {
   [CHAT_MESSAGE_HANDLER]: chatMessage,
   [CHANNEL_LIST_HANDLER]: channelList,
   [JOINED_CHANNEL_HANDLER]: joinedChannel,
@@ -21,7 +21,7 @@ export const handlers: { [key: string]: (socket, store) => void } = {
 
 function chatMessage(socket, store) {
   socket.on(CHAT_MESSAGE_HANDLER, (message: ChatMessage) => {
-    store.select(state => state.currentChatChannel).take(1).subscribe(channel => {
+    store.select('currentChatChannel').take(1).subscribe(channel => {
       // Only add message if it applies to current channel.
       if (channel && message.channel_id === channel._id) {
         store.dispatch({
@@ -33,12 +33,17 @@ function chatMessage(socket, store) {
   });
 }
 
-function channelList(socket, store) {
-  socket.on(CHANNEL_LIST_HANDLER, (channels: ChannelList) => {
+function channelList(socket, store, router) {
+  socket.on(CHANNEL_LIST_HANDLER, (list: ChannelList) => {
     store.dispatch({
       type: SET_CHANNEL_LIST,
-      payload: channels,
+      payload: list,
     });
+    const channel = list.channels[0];
+    // Join first channel if not already in a channel
+    if (router.url === `/channels/${channel.server_id}`) {
+      router.navigate([`/channels/${channel.server_id}/${channel._id}`]);
+    }
   });
 }
 

@@ -1,6 +1,5 @@
 <a class="item"
-  [class.loading]="loading"
-  [class.active]="currentServer && currentServer._id === server._id"
+  [class.active]="(currentServer | async) && (currentServer | async)._id === server._id"
   *ngFor="let server of serverList | async"
   (click)="joinServer(server)">
   {{ server.name.substring(0,3) | uppercase }}

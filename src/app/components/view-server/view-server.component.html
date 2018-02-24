@@ -1,0 +1,54 @@
+<!-- LEFT MAIN SIDEBAR -->
+<div id="sidebar-container">
+  <div id="sidebar-menu"
+    class="ui visible left vertical sidebar menu"
+    [class.inverted]="settingsService.invertedTheme">
+    <div>
+      <div class="item"
+        *ngIf="currentServer | async">
+        <app-channels-list [currentServer]="(currentServer | async)"
+          [currentChatChannel]="(currentChatChannel | async)">
+        </app-channels-list>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="item"
+    id="bottom-attached-item">
+    <h4 class="ui header"
+      [class.inverted]="settingsService.invertedTheme"
+      align="">
+      Inverted Theme &nbsp;&nbsp;
+      <sui-checkbox name="invertedTheme"
+        ngDefaultControl
+        [(ngModel)]="settingsService.invertedTheme"
+        class="toggle"
+        style="float:right">
+      </sui-checkbox>
+    </h4>
+  </div>
+
+</div>
+<!-- /LEFT MAIN SIDEBAR -->
+
+<!-- MAIN CONTENT SECTION -->
+<div id="main-content"
+  class="ui segment"
+  [class.inverted]="settingsService.invertedTheme">
+  <router-outlet></router-outlet>
+  <!-- <app-chat-channel *ngIf="currentChatChannel | async"></app-chat-channel> -->
+
+</div>
+<!-- /MAIN CONTENT SECTION -->
+
+<!-- RIGHT SIDEBAR -->
+<div id="sidebar-container"
+  *ngIf="currentServer | async">
+  <div class="ui visible right vertical sidebar menu"
+    [class.inverted]="settingsService.invertedTheme">
+
+    <app-user-list [currentServer]="(currentServer | async)"></app-user-list>
+  </div>
+</div>
+<!-- /RIGHT SIDEBAR -->

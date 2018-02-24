@@ -4,6 +4,9 @@ import { WebsocketService } from '../../services/websocket.service';
 import { SendMessageRequest } from '../../../../shared-interfaces/message.interface';
 import { AppStateService } from '../../services/app-state.service';
 import { SettingsService } from '../../services/settings.service';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-chat-channel',
@@ -11,21 +14,23 @@ import { SettingsService } from '../../services/settings.service';
   styleUrls: ['./chat-channel.component.scss']
 })
 export class ChatChannelComponent implements OnInit {
-  // public messages: Array<any>;
   public chatMessage = '';
+  public currentChannel: Observable<ChatChannel>;
 
   constructor(
     private wsService: WebsocketService,
     private appState: AppStateService,
     public settingsService: SettingsService,
+    private route: ActivatedRoute,
   ) {
+
+    this.route.data
+      .subscribe(data => {
+        this.currentChannel = data.state.channel;
+      });
   }
 
   ngOnInit() {
-  }
-
-  get currentChannel(): ChatChannel {
-    return this.appState.currentChannel;
   }
 
   /* istanbul ignore next */
@@ -41,19 +46,19 @@ export class ChatChannelComponent implements OnInit {
   }
 
   isFollowUpMsg(i: number) {
-    if (!this.currentChannel.messages[i + 1]) {
-      return false;
-    }
-    return this.currentChannel.messages[i + 1].username
-      === this.currentChannel.messages[i].username;
+    // if (!this.currentChannel.messages[i + 1]) {
+    return false;
+    // }
+    // return this.currentChannel.messages[i + 1].username
+    //   === this.currentChannel.messages[i].username;
   }
 
   hasFollowUpMsg(i: number) {
-    if (!this.currentChannel.messages[i - 1]) {
-      return false;
-    }
-    return this.currentChannel.messages[i - 1].username
-      === this.currentChannel.messages[i].username;
+    // if (!this.currentChannel.messages[i - 1]) {
+    return false;
+    // }
+    // return this.currentChannel.messages[i - 1].username
+    //   === this.currentChannel.messages[i].username;
   }
 
   sendMessage(msg: string) {

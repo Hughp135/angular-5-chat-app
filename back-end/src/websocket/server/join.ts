@@ -11,7 +11,6 @@ export function joinServer(io: any) {
   io.on('connection', async socket => {
 
     socket.on('join-server', async serverId => {
-
       if (!mongoose.Types.ObjectId.isValid(serverId)) {
         socket.emit('soft-error', 'Invalid server ID');
         return;
@@ -34,27 +33,28 @@ export function joinServer(io: any) {
         return;
       }
 
-      const channelList: ChannelList = await getChannelList(server._id);
-      socket.emit('channel-list', channelList);
-
+      // Leave / Join appropriate socket rooms
       leaveOtherServers(socket);
-
       socket.join(`server-${server._id}`);
 
+      // Send state
+      sendChannelList(socket, server._id);
       sendUserList(io, socket, server._id);
     });
   });
 }
 
-async function getChannelList(serverId): Promise<ChannelList> {
+async function sendChannelList(socket, serverId) {
   const channels: any = await ChannelModel.find({
     server_id: serverId
   }).lean();
 
-  return <ChannelList>{
+  const list = <ChannelList>{
     server_id: serverId,
     channels: channels,
   };
+
+  socket.emit('channel-list', list);
 }
 
 export async function leaveOtherServers(socket) {

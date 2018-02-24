@@ -64,7 +64,7 @@ export class WebsocketService {
         .next(new ErrorNotification(message, 5000));
     });
     for (const addHandler of Object.values(handlers)) {
-      addHandler(this.socket, this.store);
+      addHandler(this.socket, this.store, this.router);
     }
   }
 }
