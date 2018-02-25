@@ -3,15 +3,12 @@
   <div id="sidebar-menu"
     class="ui visible left vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-    <div>
-      <div class="item"
-        *ngIf="currentServer | async">
-        <app-channels-list [currentServer]="(currentServer | async)"
-          [currentChatChannel]="(currentChatChannel | async)">
-        </app-channels-list>
-      </div>
+    <div class="item"
+      *ngIf="currentServer | async">
+      <app-channels-list [currentServer]="(currentServer | async)"
+        [currentChatChannel]="(currentChatChannel | async)">
+      </app-channels-list>
     </div>
-
   </div>
 
   <div class="item"

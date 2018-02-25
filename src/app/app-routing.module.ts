@@ -12,6 +12,7 @@ import { MainResolver } from './resolvers/main-resolver.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
 import { ChatChannelResolver } from './resolvers/chat-channel-resolver.service';
 import { FriendsComponent } from './components/friends/friends.component';
+import { FriendsResolver } from './resolvers/friends-resolver.service';
 
 export const appRoutes: Routes = [
   {
@@ -23,7 +24,7 @@ export const appRoutes: Routes = [
         path: '', component: HomeComponent,
       },
       {
-        path: 'friends', component: FriendsComponent,
+        path: 'friends', component: FriendsComponent, resolve: { state: FriendsResolver }
       },
       {
         path: 'channels', redirectTo: '/', pathMatch: 'full'

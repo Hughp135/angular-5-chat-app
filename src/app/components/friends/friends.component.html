@@ -3,12 +3,20 @@
   <div id="sidebar-menu"
     class="ui visible left vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-    <div>
-      <div class="item">
-        <p>DMs</p>
-      </div>
+    <div class="item">
+      <h4>Direct Messages</h4>
     </div>
 
+    <div class="item"
+      *ngIf="(currentServer | async).channelList">
+      <a class="item channel"
+        *ngFor="let channel of (currentServer | async).channelList.channels"
+        [class.inverted]="settingsService.invertedTheme"
+        [class.active]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
+        (click)="joinChannel(channel)">
+        {{ channel.name }}
+      </a>
+    </div>
   </div>
 
   <div class="item"
@@ -47,4 +55,3 @@
   </div>
 </div>
 <!-- /RIGHT SIDEBAR -->
-

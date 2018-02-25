@@ -14,8 +14,8 @@ export interface IChannelModel extends mongoose.Document {
 
 channelSchema.pre('save', async function (next) {
   /* istanbul ignore next */
-  if (!this.isNew) {
-    // Only check newly created channels
+  if (!this.isNew || !this.server_id) {
+    // Only check newly created server channels
     return next();
   }
   const channel = this;

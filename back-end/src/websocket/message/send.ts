@@ -9,6 +9,10 @@ const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
 export function sendMessage(io: any) {
   io.on('connection', (socket) => {
     socket.on('send-message', async (request: SendMessageRequest) => {
+      if (request.message.length < 1 || request.message.length > 5000) {
+        socket.emit('soft-error', 'Invalid message length');
+        return;
+      }
       const [user, channel, server] = await getUserChannelServer(socket, request);
 
 

@@ -49,13 +49,12 @@ fdescribe('FriendsResolverService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  it('gets friends and updates store', fakeAsync(() => {
-    const mockResponse: { friends: UserListUser[], channels: ChatChannel[] } = {
-      friends: [{ username: 'user1', _id: '123', online: true }],
+  it('gets channels and updates store', fakeAsync(() => {
+    const mockResponse: { channels: ChatChannel[] } = {
       channels: [{ name: 'chan1', _id: 'asd', user_ids: ['123'] }]
     };
     service.resolve(null, null);
-    const called = httpMock.expectOne(`${apiService.BASE_URL}friends`);
+    const called = httpMock.expectOne(`${apiService.BASE_URL}channels`);
     called.flush(mockResponse);
     httpMock.verify();
     tick(1);

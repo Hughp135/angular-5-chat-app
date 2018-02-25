@@ -23,6 +23,10 @@
   }
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+}
+
 #sidebar-container {
   flex: 0 0 230px;
   display: flex;
@@ -31,7 +35,7 @@
   .ui.vertical.sidebar.menu {
     &.left {
       z-index: 103;
-    }
+    }    
 
     &:not(.inverted) {
       background-color: #edeff1;

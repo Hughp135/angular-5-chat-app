@@ -6,35 +6,43 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { Router } from '@angular/router';
 import { ErrorService } from '../services/error.service';
+import { WebsocketService } from '../services/websocket.service';
+import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
+import ChatServer from '../../../shared-interfaces/server.interface';
+import { LEAVE_CHANNEL } from '../reducers/current-chat-channel.reducer';
 
 @Injectable()
 export class FriendsResolver implements Resolve<any> {
 
   constructor(
-    private apiService: ApiService,
+    private wsService: WebsocketService,
     private store: Store<AppState>,
     private router: Router,
     private errorService: ErrorService,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
-    try {
-      const { friends, channels }: any =
-        await this.apiService
-          .get('friends')
-          .toPromise();
-      console.log('friends', friends, 'channels', channels);
-    } catch (e) {
-      if (e.status === 401) {
-        this.router.navigate(['/login']);
-      } else {
-        this.errorService.errorMessage.next({
-          duration: 60000,
-          message: 'Unable to retrieve server list.',
-          id: new Date().toUTCString(),
-        });
-      }
 
-    }
+    const dmServer: ChatServer = {
+      _id: 'friends',
+      name: 'Direct Messages',
+    };
+
+    this.store.dispatch({
+      type: LEAVE_CHANNEL,
+      payload: null
+    });
+    this.store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: dmServer
+    });
+
+    this.wsService.socket.emit('get-dm-channels', undefined);
+
+    return {
+      server: this.store.select('currentServer'),
+      channel: this.store.select('currentChatChannel'),
+    };
+
   }
 }
