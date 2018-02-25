@@ -26,7 +26,7 @@ export class ChatChannelComponent implements OnInit {
 
     this.route.data
       .subscribe(data => {
-        this.currentChannel = data.state.channel;
+        this.currentChannel = data.state.channel.filter(chan => !!chan);
       });
   }
 

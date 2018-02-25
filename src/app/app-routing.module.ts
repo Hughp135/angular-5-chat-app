@@ -15,30 +15,21 @@ import { FriendsComponent } from './components/friends/friends.component';
 
 export const appRoutes: Routes = [
   {
-    path: '', redirectTo: '/channels', pathMatch: 'full'
-  },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  {
-    path: 'friends', component: MainComponent,
+    path: '', component: MainComponent,
     canActivate: [AuthGuardService],
     resolve: { state: MainResolver },
     children: [
       {
-        path: '', component: FriendsComponent
-      },
-    ],
-  },
-  {
-    path: 'channels', component: MainComponent,
-    canActivate: [AuthGuardService],
-    resolve: { state: MainResolver },
-    children: [
-      {
-        path: '', component: HomeComponent
+        path: '', component: HomeComponent,
       },
       {
-        path: ':id', component: ViewServerComponent,
+        path: 'friends', component: FriendsComponent,
+      },
+      {
+        path: 'channels', redirectTo: '/', pathMatch: 'full'
+      },
+      {
+        path: 'channels/:id', component: ViewServerComponent,
         resolve: { state: ServerResolver },
         children: [
           {
@@ -47,8 +38,11 @@ export const appRoutes: Routes = [
           }
         ]
       },
+
     ],
   },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
 ];
 
 @NgModule({

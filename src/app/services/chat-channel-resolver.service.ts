@@ -45,7 +45,7 @@ export class ChatChannelResolver implements Resolve<any> {
     this.wsService.socket.emit('join-channel', id);
 
     return {
-      channel: this.store.select('currentChatChannel').filter(chan => !!chan),
+      channel: this.store.select('currentChatChannel'),
     };
   }
 

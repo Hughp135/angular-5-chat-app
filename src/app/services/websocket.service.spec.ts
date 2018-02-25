@@ -18,7 +18,7 @@ import { AppState } from '../reducers/app.states';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import { SET_CURRENT_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST } from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
-import { ChatChannel, ChannelList } from '../../../shared-interfaces/channel.interface';
+import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
@@ -170,6 +170,18 @@ describe('WebsocketService', () => {
     };
     handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
     expect(store.dispatch).not.toHaveBeenCalled();
+  });
+  it('channel-list', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback('boo');
+      }
+    };
+    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_CHANNEL_LIST,
+      payload: 'boo',
+    });
   });
   it('joined-channel', () => {
     const fakeSocket = {

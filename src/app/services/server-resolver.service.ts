@@ -24,20 +24,17 @@ export class ServerResolver implements Resolve<ChatServer> {
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     const id = route.paramMap.get('id');
-    console.log('id', id);
 
     const currentServerStore = this.store.select('currentServer');
-
     await this.joinServer(id);
 
     if (route.children.length < 1) {
       // Wait for channel list then redirect to first channel
-      currentServerStore
-        .filter(server => !!server && !!server.channelList)
+      const server = await currentServerStore
+        .filter(srv => !!srv && !!srv.channelList)
         .take(1)
-        .subscribe(server => {
-          this.router.navigate([`/channels/${server._id}/${server.channelList.channels[0]._id}`]);
-        });
+        .toPromise();
+      this.router.navigate([`/channels/${server._id}/${server.channelList.channels[0]._id}`]);
     }
 
     return {
@@ -48,7 +45,6 @@ export class ServerResolver implements Resolve<ChatServer> {
 
   async joinServer(id: string) {
     const serverListStore = this.store.select('serverList');
-
     const serverList = await serverListStore
       .filter(list => list.some(srv => srv._id === id))
       .timeout(10000)
@@ -65,7 +61,6 @@ export class ServerResolver implements Resolve<ChatServer> {
       type: SET_CURRENT_SERVER,
       payload: server,
     });
-
     this.wsService.socket.emit('join-server', id);
   }
 

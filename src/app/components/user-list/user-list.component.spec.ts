@@ -59,17 +59,10 @@ describe('UserListComponent', () => {
     ]);
     expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
     expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
-    expect(component.subscriptions.length).toEqual(1);
+    expect(component.subscriptions.length).toEqual(2);
     expect(component.menuItems).toBeDefined();
   });
   it('user lists are reset if new server joined', () => {
-    expect(component.userList).toEqual([
-      { username: 'someusr', _id: '1aad', online: true },
-      { username: 'someusr2', _id: '2aad', online: false },
-    ]);
-    expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
-    expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
-    expect(component.subscriptions.length).toEqual(1);
     const newServer: ChatServer = {
       _id: '0fus',
       name: 'newserver',

@@ -23,7 +23,7 @@ const fakeWebSocketService = {
   }
 };
 
-fdescribe('ServerResolver.Service.TsService', () => {
+describe('ServerResolver.Service.TsService', () => {
   let httpMock: HttpTestingController;
   let store: Store<AppState>;
   let service: ServerResolver;
@@ -81,34 +81,30 @@ fdescribe('ServerResolver.Service.TsService', () => {
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('join-server', serverList[0]._id);
   });
-  fit('resolves with correct data', async () => {
-    store.dispatch({
-      type: SET_CURRENT_SERVER,
-      payload: serverList[0],
-    });
+  it('resolves with correct data', async () => {
     const result = await service.resolve(<any>route, null);
     expect(result.server).toBeTruthy();
     expect(result.channel).toBeTruthy();
   });
 
-  fit('navigates to 1st channel if not in a channel', fakeAsync(async () => {
+  it('navigates to 1st channel if not in a channel', fakeAsync(async () => {
     route.children = [];
-    store.dispatch({
-      type: SET_CURRENT_SERVER,
-      payload: serverList[0],
-    });
     const channelList: ChannelList = {
       server_id: serverList[0]._id,
       channels: [
         { name: 'chan1', _id: 'sdf9', server_id: serverList[0]._id }
       ]
     };
+
+    service.resolve(<any>route, null);
+    tick(10);
     store.dispatch({
       type: SET_CHANNEL_LIST,
       payload: channelList,
     });
-    const result = await service.resolve(<any>route, null);
-    tick(200);
-    expect(router.navigate).toHaveBeenCalledWith('test');
+    tick(10);
+
+    expect(router.navigate)
+      .toHaveBeenCalledWith([`/channels/${serverList[0]._id}/${channelList.channels[0]._id}`]);
   }));
 });

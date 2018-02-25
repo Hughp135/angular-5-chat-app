@@ -7,6 +7,7 @@ import { OnDestroy, AfterViewInit } from '@angular/core/src/metadata/lifecycle_h
 import { Subscription } from 'rxjs/Subscription';
 import { IShContextMenuItem } from 'ng2-right-click-menu/sh-context-menu.models';
 import { WebsocketService } from '../../services/websocket.service';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -22,6 +23,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     public settingsService: SettingsService,
     public wsService: WebsocketService,
+    private ref: ChangeDetectorRef,
   ) {
     this.addContextMenuItems();
   }
@@ -31,9 +33,12 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
       Observable.interval(60000)
         .subscribe(() => {
           /* istanbul ignore next */
-          // Request new user list (long timer)
+          // Long poll the user list
           this.fetchUserList();
         }),
+      this.settingsService.invertedThemeSubj.subscribe(() => {
+        this.ref.detectChanges();
+      })
     );
   }
 

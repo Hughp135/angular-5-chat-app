@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FriendsComponent } from './friends.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { SettingsService } from '../../services/settings.service';
 
 describe('FriendsComponent', () => {
   let component: FriendsComponent;
@@ -8,9 +10,13 @@ describe('FriendsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FriendsComponent ]
+      declarations: [FriendsComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        SettingsService,
+      ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

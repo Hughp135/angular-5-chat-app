@@ -6,6 +6,7 @@ import { AppState } from '../reducers/app.states';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import { ErrorService } from './error.service';
 import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router/src/router_state';
 
 @Injectable()
 export class MainResolver implements Resolve<any> {
@@ -17,7 +18,7 @@ export class MainResolver implements Resolve<any> {
     private router: Router
   ) { }
 
-  async resolve(): Promise<any> {
+  async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     try {
       const { servers }: any =
         await this.apiService

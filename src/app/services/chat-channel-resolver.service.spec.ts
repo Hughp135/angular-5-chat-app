@@ -28,7 +28,7 @@ describe('ChatChannelResolverService', () => {
     },
     parent: {
       url: [
-        { path: 'parentPath'}
+        { path: 'parentPath' }
       ]
     }
   };
@@ -82,21 +82,23 @@ describe('ChatChannelResolverService', () => {
       type: SET_CURRENT_SERVER,
       payload: { ...server, channelList: channelList },
     });
-    spyOn(store, 'dispatch');
+    spyOn(store, 'dispatch').and.callThrough();
     await service.resolve(<any>route, null);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: JOIN_CHANNEL,
       payload: channelList.channels[0],
     });
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('join-channel', 'asd');
   });
-  it('redirects resolves if channel not found in server', async () => {
+  it('redirects if channel not found in server', async () => {
     store.dispatch({
       type: SET_CURRENT_SERVER,
       payload: { ...server, channelList: channelList },
     });
     const routeWithInvalidId = {
       ...route,
-      paramMap : {
+      paramMap: {
         get: () => 'wrong'
       }
     };
