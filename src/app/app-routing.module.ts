@@ -7,10 +7,10 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { RegisterComponent } from './components/register/register.component';
 import { ViewServerComponent } from './components/view-server/view-server.component';
 import { HomeComponent } from './components/home/home.component';
-import { ServerResolver } from './services/server-resolver.service';
-import { MainResolver } from './services/main-resolver.service';
+import { ServerResolver } from './resolvers/server-resolver.service';
+import { MainResolver } from './resolvers/main-resolver.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
-import { ChatChannelResolver } from './services/chat-channel-resolver.service';
+import { ChatChannelResolver } from './resolvers/chat-channel-resolver.service';
 import { FriendsComponent } from './components/friends/friends.component';
 
 export const appRoutes: Routes = [

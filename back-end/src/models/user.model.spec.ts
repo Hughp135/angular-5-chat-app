@@ -58,4 +58,14 @@ describe('models/user', () => {
     }
     throw new Error('User create worked when it shouldn\'t have');
   });
+  it('creates with user with joinedServers / friends', async () => {
+    const user = await User.create({
+      username: 'test',
+      password: '123456',
+      joinedServers: ['123', '456'],
+      friends: ['asd', 'fgh'],
+    });
+    expect(user.joinedServers).to.deep.equal(['123', '456']);
+    expect(user.friends).to.deep.equal(['asd', 'fgh']);
+  });
 });

@@ -4,12 +4,12 @@ import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
 
 import { ChatChannelResolver } from './chat-channel-resolver.service';
-import { WebsocketService } from './websocket.service';
+import { WebsocketService } from '../services/websocket.service';
 import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
 import { ChannelList } from '../../../shared-interfaces/channel.interface';
 import { JOIN_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ErrorService } from './error.service';
+import { ErrorService } from '../services/error.service';
 import { Router } from '@angular/router';
 
 describe('ChatChannelResolverService', () => {

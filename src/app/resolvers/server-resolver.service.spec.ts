@@ -5,7 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { StoreModule, Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { reducers } from '../reducers/reducers';
-import { WebsocketService } from './websocket.service';
+import { WebsocketService } from '../services/websocket.service';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import { LEAVE_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { SET_CURRENT_SERVER, SET_CHANNEL_LIST } from '../reducers/current-server.reducer';

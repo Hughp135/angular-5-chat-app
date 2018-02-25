@@ -10,18 +10,20 @@ import * as config from 'config';
 const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
 const expect = chai.expect;
 
-const logInAuthFunction = logInAuth();
+const logInAuthFunction = logInAuth(null);
 
 // tslint:disable:no-unused-expression
 
 describe('websocket/socket-auth', () => {
   const sandbox = sinon.createSandbox();
-  sandbox.stub(User, 'find').callsFake(() => ({
-    lean: () => [{
-      _id: '123123123',
-      username: 'test_user1',
-    }]
-  }));
+  beforeEach(() => {
+    sandbox.stub(User, 'find').callsFake(() => ({
+      lean: () => [{
+        _id: '123123123',
+        username: 'test_user1',
+      }]
+    }));
+  });
   afterEach(() => {
     sandbox.restore();
   });

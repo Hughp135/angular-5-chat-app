@@ -1,12 +1,12 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MainResolver } from './main-resolver.service';
-import { ApiService } from './api.service';
+import { ApiService } from '../services/api.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
-import { ErrorService } from './error.service';
+import { ErrorService } from '../services/error.service';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import { Router } from '@angular/router';

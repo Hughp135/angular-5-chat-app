@@ -6,9 +6,9 @@ import {
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { JOIN_CHANNEL, LEAVE_CHANNEL } from '../reducers/current-chat-channel.reducer';
-import { WebsocketService } from './websocket.service';
+import { WebsocketService } from '../services/websocket.service';
 import { Router } from '@angular/router';
-import { ErrorService } from './error.service';
+import { ErrorService } from '../services/error.service';
 
 @Injectable()
 export class ChatChannelResolver implements Resolve<any> {

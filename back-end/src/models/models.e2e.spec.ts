@@ -74,4 +74,19 @@ describe('models e2e', () => {
       expect(e.message).to.equal('Channel/server must be unique');
     }
   });
+  it('create group channel with members', async () => {
+    const user1: any = await User.create({
+      username: 'test1',
+      password: '123456',
+    });
+    const user2: any = await User.create({
+      username: 'test2',
+      password: '123456',
+    });
+    const channel: any = await Channel.create({
+      name: 'testchan',
+      user_ids: [user1._id, user2._id],
+    });
+    expect(channel.user_ids.length).to.equal(2);
+  });
 });

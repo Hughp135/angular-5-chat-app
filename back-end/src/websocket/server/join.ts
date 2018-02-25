@@ -39,6 +39,7 @@ export function joinServer(io: any) {
 
       // Send state
       sendChannelList(socket, server._id);
+      console.log('sending user list');
       sendUserList(io, socket, server._id);
     });
   });

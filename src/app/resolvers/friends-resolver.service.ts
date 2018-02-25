@@ -1,33 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { ApiService } from './api.service';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router/src/router_state';
+import { ApiService } from '../services/api.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
-import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
-import { ErrorService } from './error.service';
 import { Router } from '@angular/router';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router/src/router_state';
+import { ErrorService } from '../services/error.service';
 
 @Injectable()
-export class MainResolver implements Resolve<any> {
+export class FriendsResolver implements Resolve<any> {
 
   constructor(
     private apiService: ApiService,
     private store: Store<AppState>,
+    private router: Router,
     private errorService: ErrorService,
-    private router: Router
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     try {
-      const { servers }: any =
+      const { friends, channels }: any =
         await this.apiService
-          .get('servers')
+          .get('friends')
           .toPromise();
-      this.store.dispatch({
-        type: UPDATE_SERVER_LIST,
-        payload: servers,
-      });
+      console.log('friends', friends, 'channels', channels);
     } catch (e) {
       if (e.status === 401) {
         this.router.navigate(['/login']);

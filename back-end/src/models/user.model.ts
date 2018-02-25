@@ -5,12 +5,14 @@ export interface IUserModel extends mongoose.Document {
   username: string;
   password: string;
   joinedServers: [string];
+  friends: [string];
 }
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
   joinedServers: { type: [ String ], default: [] },
+  friends: { type: [ String ], default: [] },
 });
 
 UserSchema.pre('save', async function (next) {

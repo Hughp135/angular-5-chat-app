@@ -5,7 +5,7 @@ import {
 } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
-import { WebsocketService } from './websocket.service';
+import { WebsocketService } from '../services/websocket.service';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/filter';
@@ -34,7 +34,9 @@ export class ServerResolver implements Resolve<ChatServer> {
         .filter(srv => !!srv && !!srv.channelList)
         .take(1)
         .toPromise();
-      this.router.navigate([`/channels/${server._id}/${server.channelList.channels[0]._id}`]);
+      setTimeout(() => {
+        this.router.navigate([`/channels/${server._id}/${server.channelList.channels[0]._id}`]);
+      }, 1);
     }
 
     return {

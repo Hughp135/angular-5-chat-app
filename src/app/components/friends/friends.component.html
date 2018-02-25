@@ -5,7 +5,7 @@
     [class.inverted]="settingsService.invertedTheme">
     <div>
       <div class="item">
-        <p>Friends list here</p>
+        <p>DMs</p>
       </div>
     </div>
 
@@ -28,3 +28,23 @@
 
 </div>
 <!-- /LEFT MAIN SIDEBAR -->
+
+<!-- MAIN CONTENT SECTION -->
+<div id="main-content"
+  class="ui segment"
+  [class.inverted]="settingsService.invertedTheme">
+  <router-outlet></router-outlet>
+</div>
+<!-- /MAIN CONTENT SECTION -->
+
+<!-- RIGHT SIDEBAR -->
+<div id="sidebar-container">
+  <div class="ui visible right vertical sidebar menu"
+    [class.inverted]="settingsService.invertedTheme">
+    <p>Group chat members (if in a group chat)</p>
+
+    <p>Friends list here</p>
+  </div>
+</div>
+<!-- /RIGHT SIDEBAR -->
+

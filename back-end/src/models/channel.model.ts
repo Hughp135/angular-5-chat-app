@@ -2,12 +2,14 @@ import * as mongoose from 'mongoose';
 
 const channelSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  server_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  server_id: { type: mongoose.Schema.Types.ObjectId },
+  user_ids: [{ type: mongoose.Schema.Types.ObjectId }],
 });
 
 export interface IChannelModel extends mongoose.Document {
   name: string;
-  server_id: mongoose.Schema.Types.ObjectId;
+  server_id?: mongoose.Schema.Types.ObjectId;
+  user_ids?: mongoose.Schema.Types.ObjectId[];
 }
 
 channelSchema.pre('save', async function (next) {

@@ -28,10 +28,11 @@ import { ServerSidebarComponent } from './components/server-sidebar/server-sideb
 import { CreateServerComponent } from './components/modals/create-server/create-server.component';
 import { ViewServerComponent } from './components/view-server/view-server.component';
 import { HomeComponent } from './components/home/home.component';
-import { ServerResolver } from './services/server-resolver.service';
-import { MainResolver } from './services/main-resolver.service';
-import { ChatChannelResolver } from './services/chat-channel-resolver.service';
+import { ServerResolver } from './resolvers/server-resolver.service';
+import { MainResolver } from './resolvers/main-resolver.service';
+import { ChatChannelResolver } from './resolvers/chat-channel-resolver.service';
 import { FriendsComponent } from './components/friends/friends.component';
+import { FriendsResolver } from './resolvers/friends-resolver.service';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { FriendsComponent } from './components/friends/friends.component';
     ServerResolver,
     MainResolver,
     ChatChannelResolver,
+    FriendsResolver,
   ],
   bootstrap: [AppComponent]
 })
