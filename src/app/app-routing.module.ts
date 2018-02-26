@@ -25,6 +25,12 @@ export const appRoutes: Routes = [
       },
       {
         path: 'friends', component: FriendsComponent, resolve: { state: FriendsResolver }
+        children: [
+          {
+            path: ':id', component: ChatChannelComponent,
+            resolve: { state: ChatChannelResolver },
+          }
+        ]
       },
       {
         path: 'channels', redirectTo: '/', pathMatch: 'full'

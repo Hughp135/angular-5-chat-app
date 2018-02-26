@@ -3,6 +3,11 @@
   <div id="sidebar-menu"
     class="ui visible left vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
+    <div class="server-title">
+      <h3>{{ (currentServer| async).name }}</h3>
+      <i class="vertical ellipsis icon"></i>
+    </div>
+
     <div class="item"
       *ngIf="currentServer | async">
       <app-channels-list [currentServer]="(currentServer | async)"
@@ -44,7 +49,9 @@
   *ngIf="currentServer | async">
   <div class="ui visible right vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-
+    <div class="item">
+      <h4>Members</h4>
+    </div>
     <app-user-list [currentServer]="(currentServer | async)"></app-user-list>
   </div>
 </div>

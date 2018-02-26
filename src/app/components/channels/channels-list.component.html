@@ -1,18 +1,13 @@
-<div class="server-title">
-  <h3>{{ currentServer.name }}</h3>
-  <i class="vertical ellipsis icon"></i> 
-</div>
-
-
 <div class="menu">
   <div class=""
     *ngIf="!channelList">
     <div class="ui active centered inline loader"></div>
-  </div>
-
+  </div> 
+  <h5>Text Channels</h5>
   <div *ngIf="channelList"
     id="chat-channel-list">
-    <h5>Text Channels</h5>
+    
+    
     <a class="item channel"
       *ngFor="let channel of channelList.channels"
       [class.inverted]="settingsService.invertedTheme"
