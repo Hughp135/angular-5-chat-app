@@ -15,7 +15,7 @@
   border: none;
 
   &.inverted {
-    background: #42474e;
+    background: #262c33;
   }
 
   .ui.container {
@@ -35,14 +35,10 @@
   .ui.vertical.sidebar.menu {
     &.left {
       z-index: 103;
-    }    
-
-    &:not(.inverted) {
-      background-color: #edeff1;
     }
 
-    &.inverted {
-      background: #373f49;
+    &:not(.inverted) {
+      background-color: #e4e7ea;
     }
 
     box-shadow: none;

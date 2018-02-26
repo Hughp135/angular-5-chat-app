@@ -3,6 +3,7 @@ import Server from '../models/server.model';
 import Channel from '../models/channel.model';
 import User from '../models/user.model';
 import ChatMessage from '../models/chatmessage.model';
+import * as bcrypt from 'bcrypt';
 
 console.warn('Warning! Wiping database in 5 seconds... Terminate the process now to abort.');
 setTimeout(seed, 5000);
@@ -48,13 +49,14 @@ async function createMainUser() {
 }
 
 async function createUsersInServers(serverIds) {
+  const pass = await bcrypt.hash('asdasd', 1);
   const users = [...Array(1000)]
     .map((x, index) => {
       // const serverIdsSlice = Math.random() > 0.5
       // ? serverIds.slice(0, 3) : serverIds.slice(2, 4);
       return new User({
         username: `User ${index}`,
-        password: 'asdasd',
+        password: pass,
         joinedServers: serverIds
       });
     });

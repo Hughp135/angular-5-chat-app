@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router/src/router_state';
-import { ApiService } from '../services/api.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
-import { Router } from '@angular/router';
-import { ErrorService } from '../services/error.service';
 import { WebsocketService } from '../services/websocket.service';
 import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
 import ChatServer from '../../../shared-interfaces/server.interface';
@@ -17,8 +14,6 @@ export class FriendsResolver implements Resolve<any> {
   constructor(
     private wsService: WebsocketService,
     private store: Store<AppState>,
-    private router: Router,
-    private errorService: ErrorService,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {

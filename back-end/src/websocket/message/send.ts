@@ -29,6 +29,7 @@ export function sendMessage(io: any) {
         createdAt: now,
         updatedAt: now,
       };
+
       io.in(`server-${server._id}`).emit('chat-message', message);
       await saveMessage(message);
     });

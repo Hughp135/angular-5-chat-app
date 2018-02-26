@@ -24,7 +24,6 @@ export class ServerResolver implements Resolve<ChatServer> {
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     const id = route.paramMap.get('id');
-
     const currentServerStore = this.store.select('currentServer');
     await this.joinServer(id);
 
@@ -67,5 +66,3 @@ export class ServerResolver implements Resolve<ChatServer> {
   }
 
 }
-
-

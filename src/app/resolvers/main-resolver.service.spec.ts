@@ -81,7 +81,7 @@ describe('MainResolverService', () => {
     expect(store.dispatch).not.toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();
     expect(fakeErrorService.errorMessage.next).toHaveBeenCalledWith({
-      duration: 60000,
+      duration: 5000,
       message: 'Unable to retrieve server list.',
       id: new Date().toUTCString(),
     });

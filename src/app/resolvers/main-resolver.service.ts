@@ -33,7 +33,7 @@ export class MainResolver implements Resolve<any> {
         this.router.navigate(['/login']);
       } else {
         this.errorService.errorMessage.next({
-          duration: 60000,
+          duration: 5000,
           message: 'Unable to retrieve server list.',
           id: new Date().toUTCString(),
         });

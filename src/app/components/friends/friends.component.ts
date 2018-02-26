@@ -31,7 +31,7 @@ export class FriendsComponent implements OnInit {
   }
 
   joinChannel(channel: ChatChannel) {
-    this.router.navigate([`channels/${channel.server_id}/${channel._id}`]);
+    this.router.navigate([`friends/${channel._id}`]);
   }
 
 }

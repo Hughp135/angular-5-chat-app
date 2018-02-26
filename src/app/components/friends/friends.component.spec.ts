@@ -3,29 +3,68 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FriendsComponent } from './friends.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router } from '@angular/router';
+import ChatServer from 'shared-interfaces/server.interface';
+import { ChatChannel } from 'shared-interfaces/channel.interface';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 describe('FriendsComponent', () => {
   let component: FriendsComponent;
   let fixture: ComponentFixture<FriendsComponent>;
+  let router: Router;
+
+  const channel: ChatChannel = {
+    name: 'name',
+    _id: '123',
+    server_id: '345',
+  };
+  const server: ChatServer = {
+    name: 'Friendserver test',
+    _id: 'friends',
+  };
+
+  const route = {
+    data: Observable.of({
+      state: {
+        channel: Observable.of(channel),
+        server: Observable.of(server),
+      }
+    })
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [FriendsComponent],
       schemas: [NO_ERRORS_SCHEMA],
+      imports: [
+        RouterTestingModule,
+      ],
       providers: [
+        { provide: ActivatedRoute, useValue: route },
         SettingsService,
       ],
     })
       .compileComponents();
+    router = TestBed.get(Router);
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FriendsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    spyOn(router, 'navigate');
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(component.currentServer).toBeTruthy();
+    expect(component.currentChatChannel).toBeTruthy();
+  });
+  it('join server should redirect', () => {
+    component.joinChannel(channel);
+    expect(router.navigate)
+      .toHaveBeenCalledWith([`friends/${channel._id}`]);
   });
 });

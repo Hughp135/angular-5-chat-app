@@ -8,7 +8,10 @@ export async function sendFriendsUserList(io: any, socket: any, user) {
   const connectedUsers = Object.values(connectedSockets)
     .map((sock: any) => {
       return sock.claim.user_id.toString();
-    });
+    }).reduce((acc, cur) => {
+      acc[cur] = true;
+      return acc;
+    }, {});
 
   const allFriends: any = await User.find({
     _id: user.friends,
@@ -20,7 +23,7 @@ export async function sendFriendsUserList(io: any, socket: any, user) {
   const usersWithStatuses = allFriends.map(usr => {
     return <UserListUser>{
       ...usr,
-      online: connectedUsers.includes(usr._id.toString()),
+      online: !!connectedUsers[usr._id.toString()],
     };
   });
 
@@ -28,6 +31,5 @@ export async function sendFriendsUserList(io: any, socket: any, user) {
     server_id: 'friends',
     users: usersWithStatuses
   };
-
   socket.emit('server-user-list', serverUserList);
 }

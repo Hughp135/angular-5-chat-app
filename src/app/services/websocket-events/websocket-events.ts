@@ -35,7 +35,6 @@ function chatMessage(socket, store) {
 
 function channelList(socket, store) {
   socket.on(CHANNEL_LIST_HANDLER, (list: ChannelList) => {
-    console.log('list', list);
     store.dispatch({
       type: SET_CHANNEL_LIST,
       payload: list,

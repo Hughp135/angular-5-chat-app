@@ -7,7 +7,7 @@
       <h4>Direct Messages</h4>
     </div>
 
-    <div class="item"
+    <div class="item dm-list"
       *ngIf="(currentServer | async).channelList">
       <a class="item channel"
         *ngFor="let channel of (currentServer | async).channelList.channels"
@@ -49,9 +49,10 @@
 <div id="sidebar-container">
   <div class="ui visible right vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-    <p>Group chat members (if in a group chat)</p>
-
-    <p>Friends list here</p>
+    <div class="item">
+      <h4>All Friends</h4>
+    </div>
+    <app-user-list [currentServer]="(currentServer | async)"></app-user-list>
   </div>
 </div>
 <!-- /RIGHT SIDEBAR -->

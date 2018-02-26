@@ -62,6 +62,9 @@ export class ChatChannelComponent implements OnInit {
   }
 
   sendMessage(msg: string) {
+    if (msg.length < 1) {
+      return;
+    }
     const currentChannel = this.appState.currentChannel;
     const currentServer = this.appState.currentServer;
     const message: SendMessageRequest = {
