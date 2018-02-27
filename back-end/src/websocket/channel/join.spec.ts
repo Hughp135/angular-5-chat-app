@@ -73,7 +73,7 @@ describe('websocket channel/join', () => {
     joinChannel(io);
     function onComplete() {
       expect(result).to.have.been
-        .calledWith('soft-error', 'You don\'t have permission to join this channel.');
+        .calledWith('soft-error', 'You don\'t have permission to join this server.');
       done();
     }
   });

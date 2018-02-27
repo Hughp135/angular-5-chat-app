@@ -44,7 +44,16 @@ describe('websocket channel/get-dm-channels', () => {
     await User.remove({});
     await Channel.remove({});
   });
-
+  it('emits error if user not found', (done) => {
+    const { io, socket } = createFakeSocketEvent('get-dm-channels', undefined,
+      { user_id: '123456781234567812345678' }, onComplete, result);
+    getDmChannels(io);
+    function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error', 'You are not logged in.');
+      done();
+    }
+  });
   it('sends channel list', (done) => {
     const { io, socket } = createFakeSocketEvent('get-dm-channels', undefined,
       { user_id: user1._id.toString() }, onComplete, result);

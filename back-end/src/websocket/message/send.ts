@@ -15,8 +15,6 @@ export function sendMessage(io: any) {
         return;
       }
 
-      console.log('message', request);
-
       // TEST SOCKET ONLY
       if (socket.handshake.query && socket.handshake.query.test === TEST_SECRET) {
         const [testUser, firstChannel, srv] = await getTestUserObjects(socket, request);
@@ -34,7 +32,6 @@ export function sendMessage(io: any) {
       if (channel.user_ids && channel.user_ids.length > 0) {
         if (!channel.user_ids.toString().includes(user._id.toString())) {
           socket.emit('soft-error', 'You are not allowed to send this message.');
-          console.log('returning');
           return;
         }
         await emitMessage(io, request.message, channel, user, null);
@@ -42,8 +39,8 @@ export function sendMessage(io: any) {
       }
 
       // NORMAL SERVER
-      const server = await Server.find({ _id: channel.sever_id }).lean();
-      if (!server || !canJoinServer(user, channel.server_id)) {
+      const server = await Server.findById(channel.server_id).lean();
+      if (!server || !await canJoinServer(user, channel.server_id)) {
         socket.emit('soft-error', 'You don\'t have permission to send this message.');
         return;
       }
@@ -68,7 +65,6 @@ async function emitMessage(io, message: string, channel, user, server?) {
   if (server) {
     io.in(`server-${server._id}`).emit('chat-message', chatMessage);
   } else {
-    console.log('emitting to ', `dmchannel-${channel._id}`);
     io.in(`dmchannel-${channel._id}`).emit('chat-message', chatMessage);
   }
 

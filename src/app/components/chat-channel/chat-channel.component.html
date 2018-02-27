@@ -3,7 +3,7 @@
     [class.inverted]="settingsService.invertedTheme">
     <h3 class="ui header"
       [class.inverted]="settingsService.invertedTheme">
-      # {{ (currentChannel | async).name }}
+      {{(currentChannel | async).server_id ? '#' : '@'}} {{ (currentChannel | async).name }}
     </h3>
   </div>
   <div class="ui middle aligned divided very relaxed list"

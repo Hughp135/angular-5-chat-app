@@ -24,7 +24,7 @@ export const appRoutes: Routes = [
         path: '', component: HomeComponent,
       },
       {
-        path: 'friends', component: FriendsComponent, resolve: { state: FriendsResolver }
+        path: 'friends', component: FriendsComponent, resolve: { state: FriendsResolver },
         children: [
           {
             path: ':id', component: ChatChannelComponent,
