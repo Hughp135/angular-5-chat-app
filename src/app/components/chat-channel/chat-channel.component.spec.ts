@@ -69,6 +69,10 @@ describe('ChatChannelComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    emit.calls.reset();
+  });
+
   it('initial state', () => {
     expect(component).toBeTruthy();
   });
@@ -79,6 +83,10 @@ describe('ChatChannelComponent', () => {
       channel_id: channel._id,
       server_id: server._id,
     });
+  });
+  it('doesnt emit if message is too short', () => {
+    component.sendMessage('');
+    expect(emit).not.toHaveBeenCalled();
   });
   // it('is follow up message', () => {
   //   expect(component.isFollowUpMsg(0)).toEqual(true);

@@ -6,6 +6,10 @@ const channelSchema = new mongoose.Schema({
   user_ids: [{ type: mongoose.Schema.Types.ObjectId }],
 });
 
+export const SERVER_CHANNEL = 'server-channel';
+export const DM_CHANNEL = 'dm-channel';
+type ChannelType = 'server-channel' | 'dm-channel';
+
 export interface IChannelModel extends mongoose.Document {
   name: string;
   server_id?: mongoose.Schema.Types.ObjectId;
@@ -31,6 +35,14 @@ channelSchema.pre('save', async function (next) {
   }
   next();
 });
+
+channelSchema.methods.getChannelType = function (): ChannelType {
+  if (this.server_id) {
+    return SERVER_CHANNEL;
+  } else {
+    return DM_CHANNEL;
+  }
+};
 
 const Channel: mongoose.Model<IChannelModel> = mongoose.model<IChannelModel>('Channel', channelSchema);
 

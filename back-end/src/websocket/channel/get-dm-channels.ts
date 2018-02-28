@@ -1,7 +1,7 @@
 import { ChatChannel, ChannelList } from 'shared-interfaces/channel.interface';
 import Channel from '../../models/channel.model';
 import User from '../../models/user.model';
-import { sendFriendsUserList } from '../friends/get-friends-list';
+import { sendFriendsUserList } from '../friends/send-friends-list';
 
 export function getDmChannels(io: any) {
   io.on('connection', socket => {

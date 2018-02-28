@@ -72,6 +72,7 @@ export class ChatChannelComponent implements OnInit {
       channel_id: currentChannel._id,
       server_id: currentServer._id,
     };
+
     this.wsService.socket.emit('send-message', message);
     this.chatMessage = '';
   }

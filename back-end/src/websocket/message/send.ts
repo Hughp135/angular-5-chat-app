@@ -1,5 +1,5 @@
 import ChatMessageModel from '../../models/chatmessage.model';
-import Channel from '../../models/channel.model';
+import Channel, { DM_CHANNEL } from '../../models/channel.model';
 import { SendMessageRequest, ChatMessage } from 'shared-interfaces/message.interface';
 import User from '../../models/user.model';
 import Server from '../../models/server.model';
@@ -25,11 +25,11 @@ export function sendMessage(io: any) {
 
       const [user, channel]: Array<any> = await Promise.all([
         User.findById(socket.claim.user_id).lean(),
-        Channel.findById(request.channel_id).lean()
+        Channel.findById(request.channel_id)
       ]);
 
       // FRIENDS SERVER (DM)
-      if (channel.user_ids && channel.user_ids.length > 0) {
+      if (channel.getChannelType() === DM_CHANNEL) {
         if (!channel.user_ids.toString().includes(user._id.toString())) {
           socket.emit('soft-error', 'You are not allowed to send this message.');
           return;
