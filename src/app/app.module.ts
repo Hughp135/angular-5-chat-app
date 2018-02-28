@@ -33,6 +33,7 @@ import { MainResolver } from './resolvers/main-resolver.service';
 import { ChatChannelResolver } from './resolvers/chat-channel-resolver.service';
 import { FriendsComponent } from './components/friends/friends.component';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
+import { DirectMessageService } from './services/direct-message.service';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { FriendsResolver } from './resolvers/friends-resolver.service';
     MainResolver,
     ChatChannelResolver,
     FriendsResolver,
+    DirectMessageService,
   ],
   bootstrap: [AppComponent]
 })

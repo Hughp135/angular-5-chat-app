@@ -29,7 +29,11 @@ export class ChatChannelResolver implements Resolve<any> {
         duration: 5000,
         id: new Date().toUTCString(),
       });
-      this.router.navigate([`channels/${route.parent.url[0].path}`]);
+      if (route.parent.url[0].path === 'friends') {
+        this.router.navigate([`friends/${route.parent.url[0].path}`]);
+      } else {
+        this.router.navigate([`channels/${route.parent.url[0].path}`]);
+      }
       return false;
     }
 
@@ -51,7 +55,7 @@ export class ChatChannelResolver implements Resolve<any> {
 
   async getChannel(id: string) {
     const server = await this.store.select('currentServer')
-      .filter(srv => !!srv.channelList)
+      .filter(srv => srv && !!srv.channelList)
       .timeout(10000)
       .take(1)
       .toPromise();

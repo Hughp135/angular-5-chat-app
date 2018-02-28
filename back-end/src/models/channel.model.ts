@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 const channelSchema = new mongoose.Schema({
   name: { type: String, required: true },
   server_id: { type: mongoose.Schema.Types.ObjectId },
-  user_ids: [{ type: mongoose.Schema.Types.ObjectId }],
+  user_ids: { type: [mongoose.Schema.Types.ObjectId], index: true },
 });
 
 export const SERVER_CHANNEL = 'server-channel';

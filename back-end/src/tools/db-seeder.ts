@@ -110,12 +110,12 @@ async function createDMChannels(user) {
   const otherUsers: any = await User
     .find({ '_id': { $ne: user._id } })
     .sort({ '_id': -1 })
-    .limit(40)
+    .limit(5)
     .lean();
   const promises = [];
   otherUsers.forEach(async usr => {
     promises.push(Channel.create({
-      name: 'dmchannel',
+      name: usr.username,
       user_ids: [user._id, usr._id]
     }));
   });

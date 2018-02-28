@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IShContextMenuItem } from 'ng2-right-click-menu/sh-context-menu.models';
 import { WebsocketService } from '../../services/websocket.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { DirectMessageService } from '../../services/direct-message.service';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -24,6 +25,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     public settingsService: SettingsService,
     public wsService: WebsocketService,
     private ref: ChangeDetectorRef,
+    private dmService: DirectMessageService,
   ) {
     this.addContextMenuItems();
   }
@@ -82,7 +84,15 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   addContextMenuItems() {
     this.menuItems = [
       {
-        label: 'User'
+        label: (ctx) => ctx._id,
+        disabled: (ctx) => true,
+      },
+      {
+        divider: true
+      },
+      {
+        label: 'Send Message',
+        disabled: (ctx) => false,
       }
     ];
   }
