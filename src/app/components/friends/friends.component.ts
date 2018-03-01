@@ -31,7 +31,6 @@ export class FriendsComponent implements OnInit, OnDestroy {
           data.state.server
             .filter(server => server._id === 'friends')
             .subscribe(server => {
-              console.log(server.channelList);
               this.channelList = server.channelList;
             })
         );

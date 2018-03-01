@@ -98,7 +98,7 @@ async function removeAllCollections() {
 async function addFriendsToUser(user) {
   const otherUsers: any = await User
     .find({ '_id': { $ne: user._id } })
-    .limit(50)
+    .limit(500)
     .lean();
   otherUsers.forEach(otherUser => {
     user.friends.push(otherUser._id.toString());
@@ -110,7 +110,7 @@ async function createDMChannels(user) {
   const otherUsers: any = await User
     .find({ '_id': { $ne: user._id } })
     .sort({ '_id': -1 })
-    .limit(5)
+    .limit(300)
     .lean();
   const promises = [];
   otherUsers.forEach(async usr => {

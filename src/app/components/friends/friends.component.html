@@ -4,19 +4,28 @@
     class="ui visible left vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
     <div class="item">
-      <h4>Direct Messages</h4>
+      <h5>Direct Messages</h5>
+    </div>
+    <div class="item less-padding">
+      <div class="ui list dm-list"
+        [class.inverted]="settingsService.invertedTheme"
+        *ngIf="(currentServer | async).channelList">
+
+        <a class="item channel"
+          *ngFor="let channel of (currentServer | async).channelList.channels"
+          [class.active]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
+          (click)="joinChannel(channel)">
+          <img class="ui avatar image"
+            src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
+          <div class="content">
+            <div class="header">
+              {{ getChannelName(channel) }}
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
 
-    <div class="item dm-list"
-      *ngIf="(currentServer | async).channelList">
-      <a class="item channel"
-        *ngFor="let channel of (currentServer | async).channelList.channels"
-        [class.inverted]="settingsService.invertedTheme"
-        [class.active]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
-        (click)="joinChannel(channel)">
-        {{ getChannelName(channel) }}
-      </a>
-    </div>
   </div>
 
   <div class="item"

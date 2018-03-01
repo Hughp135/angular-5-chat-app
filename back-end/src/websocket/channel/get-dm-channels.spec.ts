@@ -3,10 +3,11 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
-import { getDmChannels } from './get-dm-channels';
+import { getDmChannels, sendChannelList } from './get-dm-channels';
 import Channel from '../../models/channel.model';
 import User from '../../models/user.model';
 import createFakeSocketEvent from '../test_helpers/fake-socket';
+import { sendFriendsUserList } from '../friends/send-friends-list';
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -16,6 +17,7 @@ const result = sinon.spy();
 describe('websocket channel/get-dm-channels', () => {
   let user1, user2, user3;
   let channel1, channel2;
+  const sandbox = sinon.createSandbox();
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -43,6 +45,8 @@ describe('websocket channel/get-dm-channels', () => {
   afterEach(async () => {
     await User.remove({});
     await Channel.remove({});
+    result.resetHistory();
+    sandbox.restore();
   });
   it('emits error if user not found', (done) => {
     const { io, socket } = createFakeSocketEvent('get-dm-channels', undefined,
@@ -54,55 +58,62 @@ describe('websocket channel/get-dm-channels', () => {
       done();
     }
   });
-  it('sends channel list', (done) => {
-    const { io, socket } = createFakeSocketEvent('get-dm-channels', undefined,
-      { user_id: user1._id.toString() }, onComplete, result);
-    getDmChannels(io);
-    function onComplete() {
-      expect(result).to.have.been
-        .calledWith('channel-list',
+  it('sends channel list', async () => {
+    const socket = {
+      emit: sandbox.spy()
+    };
+    await sendChannelList(user1._id, socket);
+    await expect(socket.emit).to.have.been
+      .calledWith('channel-list',
+      {
+        channels: [
           {
-            channels: [
-              {
-                _id: channel1._id,
-                name: 'chantest',
-                user_ids: [user1._id, user2._id]
-              },
-              {
-                _id: channel2._id,
-                name: 'chantest2',
-                user_ids: [user1._id, user3._id]
-              },
-            ],
-            server_id: 'friends',
-          }
-        );
-      done();
-    }
+            _id: channel1._id,
+            name: 'chantest',
+            user_ids: [user1._id, user2._id]
+          },
+          {
+            _id: channel2._id,
+            name: 'chantest2',
+            user_ids: [user1._id, user3._id]
+          },
+        ],
+        server_id: 'friends',
+        users: {
+          [user1._id]: { _id: user1._id, username: user1.username },
+          [user2._id]: { _id: user2._id, username: user2.username },
+          [user3._id]: { _id: user3._id, username: user3.username },
+        },
+      }
+      );
   });
-  it('sends friends list', (done) => {
-    const { io, socket } = createFakeSocketEvent('get-dm-channels', undefined,
-      { user_id: user3._id.toString() }, onComplete, result);
-    getDmChannels(io);
-    function onComplete() {
-      expect(result).to.have.been
-        .calledWith('server-user-list',
+  it('sends friends list', async () => {
+    const io = {
+      of: () => ({
+        connected: {
+        },
+      }),
+    };
+    const socket = {
+      emit: sandbox.spy()
+    };
+    await sendFriendsUserList(io, socket, user3);
+    expect(socket.emit).to.have.been
+      .calledWith('server-user-list',
+      {
+        server_id: 'friends',
+        users:
+          [{
+            _id: user1._id,
+            username: 'test-user1',
+            online: false
+          },
           {
-            server_id: 'friends',
-            users:
-              [{
-                _id: user1._id,
-                username: 'test-user1',
-                online: false
-              },
-              {
-                _id: user2._id,
-                username: 'test-user2',
-                online: false
-              }]
-          }
-        );
-      done();
-    }
+            _id: user2._id,
+            username: 'test-user2',
+            online: false
+          }]
+      }
+      );
   });
 });

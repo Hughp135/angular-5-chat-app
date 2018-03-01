@@ -26,8 +26,6 @@ export function joinDmChannel(io: any) {
         }
       }).lean();
 
-      console.log('existing channel', existingChannel);
-
       const channel = existingChannel
         || await createNewChannel([socket.claim.user_id, userId]); // or create existing
 
@@ -40,7 +38,6 @@ export function joinDmChannel(io: any) {
 }
 
 async function createNewChannel(userIds: Array<string>) {
-  console.log('creating new channel');
   return await Channel.create({
     name: 'Direct Message',
     user_ids: userIds,

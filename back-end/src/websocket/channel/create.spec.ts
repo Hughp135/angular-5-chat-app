@@ -7,7 +7,6 @@ import { createChannel } from './create';
 import { joinChannel } from './join';
 import Channel from '../../models/channel.model';
 import Server from '../../models/server.model';
-import User from '../../models/user.model';
 import createFakeSocketEvent from '../test_helpers/fake-socket';
 
 const expect = chai.expect;

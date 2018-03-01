@@ -1,8 +1,16 @@
+.ui.left.sidebar.menu {
+  &.inverted {
+    .server-title {
+      border-bottom: 1px solid rgb(63, 63, 63);
+    }
+  }
+}
+
 .server-title {
   // margin: -15px -15px 20px -15px;
   overflow: hidden;
   min-height: 50px;
-  border-bottom: 1px solid #666;
+  border-bottom: 1px solid rgb(196, 196, 196);
   padding: 15px 8px 10px 13px;
   cursor: pointer;
 

@@ -14,14 +14,27 @@
   padding: 0 !important;
 }
 
-.ui.menu {
+.ui.list {
+  margin-top: 0;
+
   .item {
-    border: none !important;
+    padding: 5px 10px !important;
+
+    .header {
+      // color: #4183C4;
+      padding-top: 5px;
+    }
+
+    &:hover {
+      background: #d6d6d6;
+    }
   }
 
   &.inverted {
-    .active.item {
-      background: rgba(255, 255, 255, 0.08);
+    .item {
+      &:hover {
+        background: #424242;
+      }
     }
   }
 }
