@@ -16,6 +16,7 @@ export interface ChatChannel {
 export interface ChannelList {
   server_id: string;
   channels: ChatChannel[];
+  users?: any;
 }
 
 export interface JoinedChannelResponse {

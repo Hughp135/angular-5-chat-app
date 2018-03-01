@@ -6,6 +6,7 @@ import { ErrorService, ErrorNotification } from './error.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class WebsocketService {
@@ -66,5 +67,19 @@ export class WebsocketService {
     for (const addHandler of Object.values(handlers)) {
       addHandler(this.socket, this.store);
     }
+  }
+
+  async awaitNextEvent(eventName: string, timeOut: number) {
+    const now = new Date();
+    return await new Promise((resolve, reject) => {
+      const onComplete = (data) => {
+        resolve(data);
+      };
+      this.socket.once(eventName, onComplete);
+      setTimeout(() => {
+        this.socket.removeListener(eventName, onComplete);
+        reject(new Error('Request timed out'));
+      }, timeOut);
+    });
   }
 }

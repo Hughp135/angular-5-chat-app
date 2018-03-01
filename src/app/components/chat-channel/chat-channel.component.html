@@ -1,10 +1,10 @@
 <div id="chat-wrapper">
   <div id="header"
     [class.inverted]="settingsService.invertedTheme">
-    <h3 class="ui header"
+    <h4 class="ui header"
       [class.inverted]="settingsService.invertedTheme">
       {{(currentChannel | async).server_id ? '#' : '@'}} {{ (currentChannel | async).name }}
-    </h3>
+    </h4>
   </div>
   <div class="ui middle aligned divided very relaxed list"
     [class.inverted]="settingsService.invertedTheme"
@@ -15,7 +15,7 @@
     <div *ngIf="(currentChannel | async).messages && (currentChannel | async).messages.length < 1"
       class="ui item">
       <p align="center">
-        <i>No chat messages here yet!</i>
+        <i>No messages here yet!</i>
       </p>
     </div>
     <div class="item"

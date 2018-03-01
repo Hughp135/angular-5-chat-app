@@ -22,20 +22,27 @@ export class ChatChannelResolver implements Resolve<any> {
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot) {
     const id = route.paramMap.get('id');
-    const channel = await this.getChannel(id);
-    if (!channel) {
-      this.errorService.errorMessage.next({
-        message: 'Channel does not exist.',
-        duration: 5000,
-        id: new Date().toUTCString(),
-      });
-      if (route.parent.url[0].path === 'friends') {
-        this.router.navigate([`friends/${route.parent.url[0].path}`]);
-      } else {
-        this.router.navigate([`channels/${route.parent.url[0].path}`]);
-      }
-      return false;
+
+    const isOnFriendsPage = route.parent.url[0].path === 'friends';
+    if (isOnFriendsPage) {
+      // Refresh channel list
+      this.wsService.socket.emit('get-dm-channels', undefined);
     }
+
+    const channel = await this.getChannel(id)
+      .catch(e => {
+        this.errorService.errorMessage.next({
+          message: 'Channel not found.',
+          duration: 5000,
+          id: new Date().toUTCString(),
+        });
+        if (isOnFriendsPage) {
+          this.router.navigate([`friends`]);
+        } else {
+          this.router.navigate([`channels/${route.parent.url[0].path}`]);
+        }
+        return false;
+      });
 
     this.store.dispatch({
       type: LEAVE_CHANNEL,
@@ -54,11 +61,13 @@ export class ChatChannelResolver implements Resolve<any> {
   }
 
   async getChannel(id: string) {
-    const server = await this.store.select('currentServer')
+    const channels = await this.store.select('currentServer')
       .filter(srv => srv && !!srv.channelList)
-      .timeout(10000)
+      .map(srv => srv.channelList.channels)
+      .filter(chans => chans.some(chan => chan._id === id))
+      .timeout(2500)
       .take(1)
       .toPromise();
-    return server.channelList.channels.find(chan => chan._id === id);
+    return channels.find(chan => chan._id === id);
   }
 }

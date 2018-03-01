@@ -1,10 +1,14 @@
 import * as mongoose from 'mongoose';
 
-const channelSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  server_id: { type: mongoose.Schema.Types.ObjectId },
-  user_ids: { type: [mongoose.Schema.Types.ObjectId], index: true },
-});
+const channelSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    server_id: { type: mongoose.Schema.Types.ObjectId },
+    user_ids: { type: [mongoose.Schema.Types.ObjectId], index: true },
+  },
+  {
+    timestamps: true,
+  });
 
 export const SERVER_CHANNEL = 'server-channel';
 export const DM_CHANNEL = 'dm-channel';

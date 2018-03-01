@@ -14,23 +14,47 @@ export function getDmChannels(io: any) {
         return;
       }
 
-      const channels = await Channel
-        .find({
-          user_ids: user._id
-        },
-        {
-          name: 1,
-          user_ids: 1,
-        }).lean();
-
-      const list = <ChannelList>{
-        server_id: 'friends',
-        channels: channels,
-      };
+      sendChannelList(user._id, socket);
 
       sendFriendsUserList(io, socket, user);
-
-      socket.emit('channel-list', list);
     });
   });
+}
+
+export async function sendChannelList(userId, socket) {
+  const channels: any = await Channel
+    .find({
+      user_ids: userId
+    },
+    {
+      name: 1,
+      user_ids: 1,
+    }).lean();
+
+  // Get all users in channels for their usernames etc.
+  const usersObject = channels.reduce((acc, chan) => {
+    chan.user_ids.forEach(id => acc[id] = null);
+    return acc;
+  }, {});
+
+  const usersArray = Object.keys(usersObject);
+
+  const users: any = await User.find(
+    {
+      _id: usersArray
+    }, {
+      username: 1
+    }).lean();
+
+  users.forEach(user => {
+    usersObject[user._id] = user;
+  });
+
+  const list = <ChannelList>{
+    server_id: 'friends',
+    channels: channels,
+    users: usersObject
+  };
+  console.log(list);
+  socket.emit('channel-list', list);
 }

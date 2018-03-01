@@ -7,6 +7,7 @@ import { joinChannel } from './channel/join';
 import { sendMessage } from './message/send';
 import { getUserList } from './server/get-user-list';
 import { getDmChannels } from './channel/get-dm-channels';
+import { joinDmChannel } from './channel/join-or-create-dm';
 
 export async function startWs(server) {
   const io = socketIo(server);
@@ -21,6 +22,7 @@ export async function startWs(server) {
   sendMessage(io);
   getUserList(io);
   getDmChannels(io);
+  joinDmChannel(io);
   return io;
 }
 

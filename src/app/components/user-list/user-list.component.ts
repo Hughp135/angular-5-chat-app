@@ -9,6 +9,7 @@ import { IShContextMenuItem } from 'ng2-right-click-menu/sh-context-menu.models'
 import { WebsocketService } from '../../services/websocket.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { DirectMessageService } from '../../services/direct-message.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -26,6 +27,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     public wsService: WebsocketService,
     private ref: ChangeDetectorRef,
     private dmService: DirectMessageService,
+    private router: Router
   ) {
     this.addContextMenuItems();
   }
@@ -93,8 +95,13 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         label: 'Send Message',
         disabled: (ctx) => false,
+        onClick: (ctx) => this.openDm(ctx.dataContext._id),
       }
     ];
+  }
+
+  openDm(userId) {
+    this.dmService.startPm(userId);
   }
 
   onMouseEnter(enter: boolean) {

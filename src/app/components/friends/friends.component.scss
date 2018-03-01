@@ -1,9 +1,10 @@
 ::-webkit-scrollbar {
-    width: 3px;
+  width: 3px;
 }
 
 .left.vertical.sidebar.menu {
   overflow: hidden !important;
+
   &:hover {
     overflow-y: auto !important;
   }
@@ -11,4 +12,16 @@
 
 .dm-list {
   padding: 0 !important;
+}
+
+.ui.menu {
+  .item {
+    border: none !important;
+  }
+
+  &.inverted {
+    .active.item {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
 }

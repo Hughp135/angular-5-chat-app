@@ -17,7 +17,6 @@ export class FriendsResolver implements Resolve<any> {
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
-
     const dmServer: ChatServer = {
       _id: 'friends',
       name: 'Direct Messages',

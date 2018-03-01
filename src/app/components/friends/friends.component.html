@@ -14,7 +14,7 @@
         [class.inverted]="settingsService.invertedTheme"
         [class.active]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
         (click)="joinChannel(channel)">
-        {{ channel.name }}
+        {{ getChannelName(channel) }}
       </a>
     </div>
   </div>
