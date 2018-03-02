@@ -89,10 +89,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
         disabled: (ctx) => true,
       },
       {
-        divider: true
-      },
-      {
-        label: 'Send Message',
+        label: '<i class=""></i>Send Message',
         disabled: (ctx) => false,
         onClick: (ctx) => this.sendUserMessage(ctx.dataContext._id),
       }

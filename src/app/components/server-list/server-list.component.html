@@ -1,7 +1,20 @@
 <a class="item"
   [class.active]="(currentServer | async) && (currentServer | async)._id === server._id"
   *ngFor="let server of serverList | async"
+  suiPopup
+  popupText="{{server.name}}"
+  popupInverted
+  popupTransitionDuration="50"
+  [popupPlacement]="'right'"
   (click)="joinServer(server)">
-  {{ server.name.substring(0,3) | uppercase }}
-  <i class="gamepad icon"></i>
+  <img *ngIf="server.image_url"
+    class="server-content image"
+    [src]="server.image_url"
+    alt="">
+  <div class="server-content text"
+    *ngIf="!server.image_url">
+    {{ server.name.substring(0,3) | uppercase }}
+  </div>
+
+  <!-- <i class="gamepad icon"></i> -->
 </a>

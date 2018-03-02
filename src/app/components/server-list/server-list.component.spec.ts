@@ -8,6 +8,7 @@ import { reducers } from '../../reducers/reducers';
 import { AppState } from '../../reducers/app.states';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
+import { SuiModule } from 'ng2-semantic-ui';
 
 describe('ServerListComponent', () => {
   let component: ServerListComponent;
@@ -27,6 +28,7 @@ describe('ServerListComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         StoreModule.forRoot(reducers),
+        SuiModule
       ],
     })
       .compileComponents();

@@ -1,3 +1,59 @@
 h4 {
   cursor: pointer;
 }
+
+.item {
+  margin: 10px 7px;
+  background-size: 100% !important;
+  height: 50px !important;
+  width: 50px !important;
+  filter: brightness(90%);
+  background: grey !important;
+  padding: 0 !important;
+
+  &:before {
+    display: none;
+  }
+
+  background: none !important;
+
+  .server-content {
+    border-radius: 5px;
+    width: 90% !important;
+    height: 90% !important;
+    margin: 5% !important;
+    max-width: none !important;
+    max-height: none !important;
+
+    &.image {
+      padding: 5% !important;
+    }
+
+    &.text {
+      padding: 17px 0;
+      text-align: center;
+    }
+  }
+
+  &.active, &:hover {
+    .server-content {
+      border-radius: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      transition: 0.2s;
+      filter: brightness(100%);
+      outline: 1px solid #7595a3;
+      margin: 0 !important;
+
+      &.image {
+        
+        padding: 0 !important;
+      }
+
+      &.text {
+        padding: 15px 0;
+        font-size: 16px !important;
+      }
+    }
+  }
+}
