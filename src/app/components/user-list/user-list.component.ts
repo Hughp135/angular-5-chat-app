@@ -84,6 +84,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addContextMenuItems() {
+    /* istanbul ignore next */
     this.menuItems = [
       {
         label: (ctx) => ctx._id,
@@ -95,12 +96,12 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         label: 'Send Message',
         disabled: (ctx) => false,
-        onClick: (ctx) => this.openDm(ctx.dataContext._id),
+        onClick: (ctx) => this.sendUserMessage(ctx.dataContext._id),
       }
     ];
   }
 
-  openDm(userId) {
+  sendUserMessage(userId) {
     this.dmService.startPm(userId);
   }
 

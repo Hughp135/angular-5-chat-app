@@ -219,4 +219,24 @@ describe('WebsocketService', () => {
       payload: 'hi',
     });
   });
+  it('awaitNextEvent', async () => {
+    service.socket = {
+      once: (eventName, cb) => cb('some response'),
+    };
+    const result = await service.awaitNextEvent('test', 1);
+    expect(service.socket.removeListener).not.toHaveBeenCalled;
+    expect(result).toEqual('some response');
+  });
+  it('awaitNextEvent timesout if response not in time', async () => {
+    service.socket = {
+      once: (eventName, cb) => setTimeout(() => cb('some response'), 5),
+      removeListener: () => null,
+    };
+    try {
+      await service.awaitNextEvent('test', 1);
+      expect('Expected function to be rejected').toEqual('lol');
+    } catch (e) {
+      expect(e.message).toEqual('Request timed out');
+    }
+  });
 });

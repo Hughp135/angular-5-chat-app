@@ -31,18 +31,13 @@ export class ChatChannelResolver implements Resolve<any> {
 
     const channel = await this.getChannel(id)
       .catch(e => {
-        this.errorService.errorMessage.next({
-          message: 'Channel not found.',
-          duration: 5000,
-          id: new Date().toUTCString(),
-        });
-        if (isOnFriendsPage) {
-          this.router.navigate([`friends`]);
-        } else {
-          this.router.navigate([`channels/${route.parent.url[0].path}`]);
-        }
-        return false;
+        return this.channelNotFound(isOnFriendsPage, route);
       });
+    if (!channel) {
+      return this.channelNotFound(isOnFriendsPage, route);
+    }
+
+    console.log('got chan', channel);
 
     this.store.dispatch({
       type: LEAVE_CHANNEL,
@@ -70,4 +65,18 @@ export class ChatChannelResolver implements Resolve<any> {
       .toPromise();
     return channels.find(chan => chan._id === id);
   }
+
+  channelNotFound(isOnFriendsPage, route) {
+  this.errorService.errorMessage.next({
+    message: 'Channel not found.',
+    duration: 5000,
+    id: new Date().toUTCString(),
+  });
+  if (isOnFriendsPage) {
+    this.router.navigate([`friends`]);
+  } else {
+    this.router.navigate([`channels/${route.parent.url[0].path}`]);
+  }
+  return false;
+}
 }

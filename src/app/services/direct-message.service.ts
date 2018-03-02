@@ -18,7 +18,6 @@ export class DirectMessageService {
     try {
       const id = await this.wsService
         .awaitNextEvent('got-dm-channel', 10000);
-      // Refresh channel list
 
       this.router.navigate([`friends/${id}`]);
     } catch (e) {

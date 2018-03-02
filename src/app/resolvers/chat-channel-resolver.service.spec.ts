@@ -71,6 +71,7 @@ describe('ChatChannelResolverService', () => {
 
   afterEach(() => {
     fakeErrorService.errorMessage.next.calls.reset();
+    fakeWebSocketService.socket.emit.calls.reset();
   });
 
   it('should be created', () => {
@@ -90,6 +91,37 @@ describe('ChatChannelResolverService', () => {
     });
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('join-channel', 'asd');
+  });
+  it('gets dm channels if parent path  === friends', async () => {
+    const friendsRoute = {
+      paramMap: {
+        get: () => 'asd'
+      },
+      parent: {
+        url: [
+          { path: 'friends' }
+        ]
+      }
+    };
+
+    await service.resolve(<any>friendsRoute, null);
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('get-dm-channels', undefined);
+  });
+  it('redirects to correct path when path === friends', async () => {
+    const friendsRoute = {
+      paramMap: {
+        get: () => 'asd'
+      },
+      parent: {
+        url: [
+          { path: 'friends' }
+        ]
+      }
+    };
+
+    await service.resolve(<any>friendsRoute, null);
+    expect(router.navigate).toHaveBeenCalledWith(['friends']);
   });
   it('redirects if channel not found in server', async () => {
     store.dispatch({

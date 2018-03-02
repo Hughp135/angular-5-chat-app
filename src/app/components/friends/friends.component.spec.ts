@@ -19,10 +19,18 @@ describe('FriendsComponent', () => {
     name: 'name',
     _id: '123',
     server_id: '345',
+    user_ids: ['123', '345'],
   };
   const server: ChatServer = {
     name: 'Friendserver test',
     _id: 'friends',
+    channelList: {
+      server_id: 'friends',
+      users: {
+        '345': { username: 'user345' }
+      },
+      channels: [channel]
+    }
   };
 
   const route = {
@@ -66,5 +74,15 @@ describe('FriendsComponent', () => {
     component.joinChannel(channel);
     expect(router.navigate)
       .toHaveBeenCalledWith([`friends/${channel._id}`]);
+  });
+  it('getChannelName returns correct channel name', () => {
+    expect(component.getChannelName(channel)).toEqual('user345');
+  });
+  it('getChannelName returns unknown if user id not found', () => {
+    const channel1 = {
+      ...channel,
+      user_ids: ['asd', 'bcd']
+    };
+    expect(component.getChannelName(channel1)).toEqual('Unknown');
   });
 });

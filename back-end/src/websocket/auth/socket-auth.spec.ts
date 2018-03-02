@@ -62,6 +62,27 @@ describe('websocket/socket-auth', () => {
 
     await logInAuthFunction(fakeSocket, cb);
   });
+  it('fails if token valid but user doesnt exist', async () => {
+    sandbox.restore();
+    sandbox.stub(User, 'findById').callsFake(() => ({
+      lean: () => null,
+    }));
+    const validToken = createJWT({ username: 'hi' }, '1s');
+    const fakeSocket = {
+      handshake: {
+        headers: {
+          cookie: `jwt_token=${validToken};`
+        }
+      }
+    };
+
+    const cb = result => {
+      expect(User.findById).to.have.been.called;
+      expect(result.message).to.equal('Invalid token');
+    };
+
+    await logInAuthFunction(fakeSocket, cb);
+  });
   it('fails with invalid token', async () => {
     const fakeSocket = {
       handshake: {

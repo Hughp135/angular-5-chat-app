@@ -72,13 +72,18 @@ export class WebsocketService {
   async awaitNextEvent(eventName: string, timeOut: number) {
     const now = new Date();
     return await new Promise((resolve, reject) => {
+      let resolved = false;
       const onComplete = (data) => {
-        resolve(data);
+        resolved = true;
+        return resolve(data);
       };
       this.socket.once(eventName, onComplete);
       setTimeout(() => {
-        this.socket.removeListener(eventName, onComplete);
-        reject(new Error('Request timed out'));
+        if (!resolved) {
+          console.log('removing event', this.socket);
+          this.socket.removeListener(eventName, onComplete);
+          reject(new Error('Request timed out'));
+        }
       }, timeOut);
     });
   }
