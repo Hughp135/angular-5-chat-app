@@ -5,21 +5,24 @@ import { sendFriendsUserList } from '../friends/send-friends-list';
 
 export function getDmChannels(io: any) {
   io.on('connection', socket => {
-    socket.on('get-dm-channels', async (data: ChatChannel[]) => {
-      const user: any = await User
-        .findById(socket.claim.user_id)
-        .lean();
-      if (!user) {
-        socket.emit('soft-error', 'You are not logged in.');
-        return;
-      }
-
-      console.log('SENDING CHANNEL LIST');
-      sendChannelList(user._id, socket);
-
-      sendFriendsUserList(io, socket, user);
-    });
+    socket.on('get-dm-channels', handler(io, socket));
   });
+}
+
+export function handler(io, socket) {
+  return async () => {
+    const user: any = await User
+      .findById(socket.claim.user_id)
+      .lean();
+    if (!user) {
+      socket.emit('soft-error', 'You are not logged in.');
+      return;
+    }
+    await Promise.all([
+      sendChannelList(user._id, socket),
+      sendFriendsUserList(io, socket, user),
+    ]);
+  };
 }
 
 export async function sendChannelList(userId, socket) {
@@ -41,7 +44,7 @@ export async function sendChannelList(userId, socket) {
     })
     .lean();
 
-  elapsed_time('GOTCHANNELS');
+  elapsed_time('1 GOTCHANNELS');
 
   // Get all users in channels for their usernames etc.
   const usersObject = channels.reduce((acc, chan) => {
@@ -50,7 +53,6 @@ export async function sendChannelList(userId, socket) {
   }, {});
 
   const usersArray = Object.keys(usersObject);
-  elapsed_time('USERSARRAY');
   const users: any = await User.find(
     {
       _id: usersArray
@@ -59,17 +61,16 @@ export async function sendChannelList(userId, socket) {
     })
     .lean();
 
-  elapsed_time('GOTUSERS');
+  elapsed_time('1 GOTUSERS');
 
   users.forEach(user => {
     usersObject[user._id] = user;
   });
-  elapsed_time('USR1');
+
   const list = <ChannelList>{
     server_id: 'friends',
     channels: channels,
     users: usersObject
   };
-  console.log('EMITTING');
   socket.emit('channel-list', list);
 }

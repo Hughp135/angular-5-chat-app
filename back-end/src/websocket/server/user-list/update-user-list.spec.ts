@@ -12,14 +12,13 @@ describe('websocket/server/update-user-list', () => {
   const sandbox = sinon.createSandbox();
   let io;
   let emit;
+  let user;
   beforeEach(() => {
-    sandbox.stub(User, 'findById').callsFake(() => ({
-      lean: () => ({
-        _id: '123',
-        username: 'test',
-        joinedServers: ['345', '678'],
-      })
-    }));
+    user = new User({
+      _id: '123',
+      username: 'test',
+      joinedServers: ['345', '678'],
+    });
     emit = sandbox.spy();
     io = {
       in: () => ({
@@ -32,7 +31,7 @@ describe('websocket/server/update-user-list', () => {
   });
 
   it('emits update user list to correct servers', async () => {
-    await updateUserList('123', io);
+    await updateUserList(user, io);
     return expect(emit).to.have.been.calledTwice;
   });
 });

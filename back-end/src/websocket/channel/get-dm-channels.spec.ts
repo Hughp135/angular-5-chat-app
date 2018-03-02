@@ -3,7 +3,7 @@ import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
-import { getDmChannels, sendChannelList } from './get-dm-channels';
+import { getDmChannels, sendChannelList, handler } from './get-dm-channels';
 import Channel from '../../models/channel.model';
 import User from '../../models/user.model';
 import createFakeSocketEvent from '../test_helpers/fake-socket';
@@ -58,7 +58,50 @@ describe('websocket channel/get-dm-channels', () => {
       done();
     }
   });
-  it('sends channel list', async () => {
+  it('getDmChannels emits channel-list and server-user-list', async () => {
+    const socket = {
+      claim: { user_id: user1._id },
+      emit: sandbox.spy()
+    };
+    const io = {
+      of: () => ({
+        connected: {
+        },
+      }),
+    };
+
+    socket.emit = sandbox.spy();
+    await handler(io, socket)();
+    expect(socket.emit).to.have.been
+      .calledWith('server-user-list', {
+        server_id: 'friends',
+        users: []
+      });
+    expect(socket.emit).to.have.been
+      .calledWith('channel-list', {
+        channels: [
+          {
+            _id: channel1._id,
+            name: 'chantest',
+            user_ids: [user1._id, user2._id]
+          },
+          {
+            _id: channel2._id,
+            name: 'chantest2',
+            user_ids: [user1._id, user3._id]
+          },
+        ],
+        server_id: 'friends',
+        users: {
+          [user1._id]: { _id: user1._id, username: user1.username },
+          [user2._id]: { _id: user2._id, username: user2.username },
+          [user3._id]: { _id: user3._id, username: user3.username },
+        },
+      });
+    await expect(socket.emit).to.have.been
+      .calledTwice;
+  });
+  it('sendChannelList function sends channel list', async () => {
     const socket = {
       emit: sandbox.spy()
     };

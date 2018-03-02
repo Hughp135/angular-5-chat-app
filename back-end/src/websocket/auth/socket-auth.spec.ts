@@ -16,12 +16,16 @@ const logInAuthFunction = logInAuth(null);
 
 describe('websocket/socket-auth', () => {
   const sandbox = sinon.createSandbox();
+  const user = new User({
+    _id: '123123123',
+    username: 'test_user1',
+  });
   beforeEach(() => {
     sandbox.stub(User, 'find').callsFake(() => ({
-      lean: () => [{
-        _id: '123123123',
-        username: 'test_user1',
-      }]
+      lean: () => [user],
+    }));
+    sandbox.stub(User, 'findById').callsFake(() => ({
+      lean: () => user,
     }));
   });
   afterEach(() => {

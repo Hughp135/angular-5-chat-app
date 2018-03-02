@@ -54,7 +54,7 @@ export class WebsocketService {
     this.socket.on('error', (data: Object) => {
       console.warn('Websocket Error', data);
       /* istanbul ignore next  */
-      if (data === 'No token provided') {
+      if (data === 'No token provided' || data === 'Invalid token') {
         subj.next(false);
         subj.complete();
         this.router.navigate(['/login']);

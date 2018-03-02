@@ -15,7 +15,7 @@ function logInAuth(io) {
       const index = Math.floor(Math.random() * allUsers.length);
       const user = allUsers[index];
       socket.claim = { username: user.username, user_id: user._id };
-      updateUserList(user._id.toString(), io);
+      updateUserList(user, io);
       return next();
     }
     const cookieString = socket.handshake.headers.cookie;
@@ -26,7 +26,11 @@ function logInAuth(io) {
     }
     try {
       socket.claim = await verifyJWT(cookies.jwt_token);
-      updateUserList(socket.claim.user_id, io);
+      const user = await User.findById(socket.claim.user_id).lean();
+      if (!user) {
+        return next(new Error('Invalid token'));
+      }
+      updateUserList(user, io);
       return next();
     } catch (e) {
       log('info', 'Invalid token');
