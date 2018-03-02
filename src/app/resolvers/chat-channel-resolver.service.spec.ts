@@ -4,12 +4,12 @@ import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
 
 import { ChatChannelResolver } from './chat-channel-resolver.service';
-import { WebsocketService } from './websocket.service';
+import { WebsocketService } from '../services/websocket.service';
 import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
 import { ChannelList } from '../../../shared-interfaces/channel.interface';
 import { JOIN_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ErrorService } from './error.service';
+import { ErrorService } from '../services/error.service';
 import { Router } from '@angular/router';
 
 describe('ChatChannelResolverService', () => {
@@ -28,7 +28,7 @@ describe('ChatChannelResolverService', () => {
     },
     parent: {
       url: [
-        { path: 'parentPath'}
+        { path: 'parentPath' }
       ]
     }
   };
@@ -71,6 +71,7 @@ describe('ChatChannelResolverService', () => {
 
   afterEach(() => {
     fakeErrorService.errorMessage.next.calls.reset();
+    fakeWebSocketService.socket.emit.calls.reset();
   });
 
   it('should be created', () => {
@@ -82,21 +83,54 @@ describe('ChatChannelResolverService', () => {
       type: SET_CURRENT_SERVER,
       payload: { ...server, channelList: channelList },
     });
-    spyOn(store, 'dispatch');
+    spyOn(store, 'dispatch').and.callThrough();
     await service.resolve(<any>route, null);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: JOIN_CHANNEL,
       payload: channelList.channels[0],
     });
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('join-channel', 'asd');
   });
-  it('redirects resolves if channel not found in server', async () => {
+  it('gets dm channels if parent path  === friends', async () => {
+    const friendsRoute = {
+      paramMap: {
+        get: () => 'asd'
+      },
+      parent: {
+        url: [
+          { path: 'friends' }
+        ]
+      }
+    };
+
+    await service.resolve(<any>friendsRoute, null);
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('get-dm-channels', undefined);
+  });
+  it('redirects to correct path when path === friends', async () => {
+    const friendsRoute = {
+      paramMap: {
+        get: () => 'asd'
+      },
+      parent: {
+        url: [
+          { path: 'friends' }
+        ]
+      }
+    };
+
+    await service.resolve(<any>friendsRoute, null);
+    expect(router.navigate).toHaveBeenCalledWith(['friends']);
+  });
+  it('redirects if channel not found in server', async () => {
     store.dispatch({
       type: SET_CURRENT_SERVER,
       payload: { ...server, channelList: channelList },
     });
     const routeWithInvalidId = {
       ...route,
-      paramMap : {
+      paramMap: {
         get: () => 'wrong'
       }
     };

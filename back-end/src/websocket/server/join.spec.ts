@@ -14,7 +14,7 @@ chai.use(sinonChai);
 
 const result = sinon.spy();
 
-describe('websocket channel/join', () => {
+describe('websocket server/join', () => {
   let server;
   let user;
   let channel;

@@ -23,13 +23,19 @@ input.ng-invalid.ng-dirty.ng-touched {
   background-color: #750d0d !important;
   border-radius: 0;
   padding: 10px 15px;
-  color: rgba(255,255,255,.9) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .ui.message.error .header {
-  color: rgba(255,255,255,.9) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .ui.message .close.icon {
   top: 0.7em !important;
+}
+
+.item {
+  &.less-padding {
+    padding: 13px 8px !important;
+  }
 }

@@ -23,6 +23,7 @@ describe('websocket message/send', () => {
   let sandbox;
   let server;
   let user;
+  let dmChannel, channel, dmChannel2;
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
   });
@@ -44,9 +45,17 @@ describe('websocket message/send', () => {
         joinedServers: [server._id]
       }
     });
-    const channel = await Channel.create({
+    channel = await Channel.create({
       name: 'test-channel',
       server_id: server._id,
+    });
+    dmChannel = await Channel.create({
+      name: 'dm-channel',
+      user_ids: [user._id]
+    });
+    dmChannel2 = await Channel.create({
+      name: 'dm-channel',
+      user_ids: []
     });
 
     channelId = channel._id;
@@ -59,7 +68,7 @@ describe('websocket message/send', () => {
     await ChatMessage.remove({});
     result.resetHistory();
   });
-  it('sends a message', (done) => {
+  it('sends a message to a server channel', (done) => {
     const messageRequest: SendMessageRequest = {
       message: 'hi thar',
       channel_id: channelId.toString(),
@@ -75,14 +84,14 @@ describe('websocket message/send', () => {
     async function onComplete() {
       expect(result).to.have.been
         .calledWith('chat-message',
-          sinon.match({
-            channel_id: channelId,
-            message: messageRequest.message,
-            username: user.username,
-            user_id: user._id,
-            createdAt: sinon.match.date,
-            updatedAt: sinon.match.date,
-          }));
+        sinon.match({
+          channel_id: channelId,
+          message: messageRequest.message,
+          username: user.username,
+          user_id: user._id,
+          createdAt: sinon.match.date,
+          updatedAt: sinon.match.date,
+        }));
       const [message] = await ChatMessage.find({
         message: messageRequest.message,
       });
@@ -98,6 +107,61 @@ describe('websocket message/send', () => {
         expect(message.channel_id.toString()).to.equal(channelId.toString()),
         expect(message.createdAt.getDay.toString()).to.equal(new Date().getDay.toString()),
       ]);
+      done();
+    }
+    sendMessage(io);
+  });
+  it('sends a message to a dm channel', (done) => {
+    const messageRequest: SendMessageRequest = {
+      message: 'hi thar',
+      channel_id: dmChannel._id.toString(),
+      server_id: 'friends',
+    };
+    const { io, socket } = createFakeSocketEvent('send-message', messageRequest,
+      { user_id: user._id, username: user.username },
+      onComplete, result);
+    sandbox.spy(ChatMessage, 'create');
+    async function onComplete() {
+      expect(result).to.have.been
+        .calledWith('chat-message',
+        sinon.match({
+          channel_id: dmChannel._id,
+          message: messageRequest.message,
+          username: user.username,
+          user_id: user._id,
+          createdAt: sinon.match.date,
+          updatedAt: sinon.match.date,
+        }));
+      const [message] = await ChatMessage.find({
+        message: messageRequest.message,
+      });
+      await Promise.all([
+        expect(ChatMessage.create).to.have.been.calledOnce,
+        expect(message).to.contain({
+          username: user.username,
+          message: messageRequest.message,
+        }),
+        expect(message.channel_id.toString()).to.equal(dmChannel._id.toString()),
+        expect(message.createdAt.getDay.toString()).to.equal(new Date().getDay.toString()),
+      ]);
+      done();
+    }
+    sendMessage(io);
+  });
+  it('do not send dm channel if user not in channel', (done) => {
+    const messageRequest: SendMessageRequest = {
+      message: 'hi thar',
+      channel_id: dmChannel2._id.toString(),
+      server_id: 'friends',
+    };
+    const { io, socket } = createFakeSocketEvent('send-message', messageRequest,
+      { user_id: user._id, username: user.username },
+      onComplete, result);
+    sandbox.spy(ChatMessage, 'create');
+    async function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error',  'You are not allowed to send this message.');
+      await  expect(ChatMessage.create).to.not.have.been.called;
       done();
     }
     sendMessage(io);
@@ -155,5 +219,38 @@ describe('websocket message/send', () => {
     }, () => {
       sendMessage(io);
     });
+  });
+  it('doesnt send if message is too short', (done) => {
+    const messageRequest: SendMessageRequest = {
+      message: '',
+      channel_id: channelId.toString(),
+      server_id: server._id.toString(),
+    };
+    const { io, socket } = createFakeSocketEvent('send-message', messageRequest,
+      { user_id: user._id, username: user.username },
+      onComplete, result);
+    async function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error', 'Invalid message length');
+      done();
+    }
+    sendMessage(io);
+  });
+  it('doesnt send if message is too long', (done) => {
+    const longString = new Array(5001).fill('a').join('');
+    const messageRequest: SendMessageRequest = {
+      message: longString,
+      channel_id: channelId.toString(),
+      server_id: server._id.toString(),
+    };
+    const { io, socket } = createFakeSocketEvent('send-message', messageRequest,
+      { user_id: user._id, username: user.username },
+      onComplete, result);
+    async function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error', 'Invalid message length');
+      done();
+    }
+    sendMessage(io);
   });
 });

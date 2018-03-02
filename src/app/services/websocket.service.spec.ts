@@ -18,7 +18,7 @@ import { AppState } from '../reducers/app.states';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import { SET_CURRENT_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST } from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
-import { ChatChannel, ChannelList } from '../../../shared-interfaces/channel.interface';
+import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
@@ -134,52 +134,6 @@ describe('WebsocketService', () => {
     });
     await service.connect().toPromise();
   });
-  it('channel-list navigates to 1st channel if not in a channel', () => {
-    const channelList: ChannelList = {
-      server_id: '456',
-      channels: [{ server_id: 'asd', _id: '123', name: 'chan1' }]
-    };
-    const fakeRouter = {
-      url: '/channels/asd',
-      navigate: jasmine.createSpy(),
-    };
-    const fakeSocket = {
-      on: (msg: string, callback: any) => {
-        callback(channelList);
-      }
-    };
-    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store, fakeRouter);
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: SET_CHANNEL_LIST,
-      payload: channelList,
-    });
-
-    expect(fakeRouter.navigate).toHaveBeenCalledWith(['/channels/asd/123']);
-  });
-  it('channel-list does note navigate to 1st channel if in a channel', () => {
-    const channelList: ChannelList = {
-      server_id: '456',
-      channels: [{ server_id: 'asd', _id: '123', name: 'chan1' }]
-    };
-    const fakeRouter = {
-      url: '/channels/asd/gaylord',
-      navigate: jasmine.createSpy(),
-    };
-    const fakeSocket = {
-      on: (msg: string, callback: any) => {
-        callback(channelList);
-      }
-    };
-    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store, fakeRouter);
-
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: SET_CHANNEL_LIST,
-      payload: channelList,
-    });
-
-    expect(fakeRouter.navigate).not.toHaveBeenCalledWith();
-  });
   it('chat-message dispatches NEW_CHAT_MESSAGE if channel ID matches current channel', () => {
     const message: ChatMessage = {
       message: 'hi thar',
@@ -217,6 +171,18 @@ describe('WebsocketService', () => {
     handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
     expect(store.dispatch).not.toHaveBeenCalled();
   });
+  it('channel-list', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback('boo');
+      }
+    };
+    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_CHANNEL_LIST,
+      payload: 'boo',
+    });
+  });
   it('joined-channel', () => {
     const fakeSocket = {
       on: (msg: string, callback: any) => {
@@ -252,5 +218,25 @@ describe('WebsocketService', () => {
       type: SERVER_UPDATE_USER_LIST,
       payload: 'hi',
     });
+  });
+  it('awaitNextEvent', async () => {
+    service.socket = {
+      once: (eventName, cb) => cb('some response'),
+    };
+    const result = await service.awaitNextEvent('test', 1);
+    expect(service.socket.removeListener).not.toHaveBeenCalled;
+    expect(result).toEqual('some response');
+  });
+  it('awaitNextEvent timesout if response not in time', async () => {
+    service.socket = {
+      once: (eventName, cb) => setTimeout(() => cb('some response'), 5),
+      removeListener: () => null,
+    };
+    try {
+      await service.awaitNextEvent('test', 1);
+      expect('Expected function to be rejected').toEqual('lol');
+    } catch (e) {
+      expect(e.message).toEqual('Request timed out');
+    }
   });
 });

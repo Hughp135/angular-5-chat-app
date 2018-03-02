@@ -8,7 +8,7 @@ import { ChatChannel } from 'shared-interfaces/channel.interface';
 @Component({
   selector: 'app-view-server',
   templateUrl: './view-server.component.html',
-  styleUrls: ['./view-server.component.scss']
+  styleUrls: ['./view-server.component.scss', '../../styles/layout.scss']
 })
 export class ViewServerComponent implements OnInit {
   public currentServer: Observable<ChatServer>;

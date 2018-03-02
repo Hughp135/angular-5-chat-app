@@ -1,12 +1,12 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MainResolver } from './main-resolver.service';
-import { ApiService } from './api.service';
+import { ApiService } from '../services/api.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
-import { ErrorService } from './error.service';
+import { ErrorService } from '../services/error.service';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import { Router } from '@angular/router';
@@ -53,7 +53,7 @@ describe('MainResolverService', () => {
     const mockResponse: { servers: ChatServer[] } = {
       servers: [{ name: 'server1', _id: '123', owner_id: '345' }]
     };
-    service.resolve();
+    service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush(mockResponse);
     httpMock.verify();
@@ -64,7 +64,7 @@ describe('MainResolverService', () => {
     });
   }));
   it('fails to get server list and redirects to login on 401', fakeAsync(() => {
-    service.resolve();
+    service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush('Error', { status: 401, statusText: 'Unauthorized' });
     httpMock.verify();
@@ -73,7 +73,7 @@ describe('MainResolverService', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   }));
   it('fails to get server list and shows error for any other code', fakeAsync(() => {
-    service.resolve();
+    service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush('Error', { status: 500, statusText: 'Unauthorized' });
     httpMock.verify();
@@ -81,7 +81,7 @@ describe('MainResolverService', () => {
     expect(store.dispatch).not.toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();
     expect(fakeErrorService.errorMessage.next).toHaveBeenCalledWith({
-      duration: 60000,
+      duration: 5000,
       message: 'Unable to retrieve server list.',
       id: new Date().toUTCString(),
     });

@@ -3,19 +3,29 @@
   <div id="sidebar-menu"
     class="ui visible left vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-    <div class="server-title">
-      <h3 class="ui header" [class.inverted]="settingsService.invertedTheme">
-        {{ (currentServer| async).name }}
-      </h3>
-      <i class="vertical ellipsis icon"></i>
+    <div class="item">
+      <h5>Direct Messages</h5>
+    </div>
+    <div class="item less-padding">
+      <div class="ui list dm-list"
+        [class.inverted]="settingsService.invertedTheme"
+        *ngIf="(currentServer | async).channelList">
+
+        <a class="item channel"
+          *ngFor="let channel of (currentServer | async).channelList.channels"
+          [class.active]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
+          (click)="joinChannel(channel)">
+          <img class="ui avatar image"
+            src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
+          <div class="content">
+            <div class="header">
+              {{ getChannelName(channel) }}
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
 
-    <div class="item"
-      *ngIf="currentServer | async">
-      <app-channels-list [currentServer]="(currentServer | async)"
-        [currentChatChannel]="(currentChatChannel | async)">
-      </app-channels-list>
-    </div>
   </div>
 
   <div class="item"
@@ -40,19 +50,25 @@
 <div id="main-content"
   class="ui segment"
   [class.inverted]="settingsService.invertedTheme">
-
-  <router-outlet></router-outlet>
-
+  <h3 align="left"
+    *ngIf="!(currentChatChannel | async)">
+    < Direct
+      Messages
+      </h3>
+      <h3 align="right"
+        *ngIf="!(currentChatChannel | async)">
+        Friends List >
+      </h3>
+      <router-outlet></router-outlet>
 </div>
 <!-- /MAIN CONTENT SECTION -->
 
 <!-- RIGHT SIDEBAR -->
-<div id="sidebar-container"
-  *ngIf="currentServer | async">
+<div id="sidebar-container">
   <div class="ui visible right vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
     <div class="item">
-      <h4>Members</h4>
+      <h4>All Friends</h4>
     </div>
     <app-user-list [currentServer]="(currentServer | async)"></app-user-list>
   </div>

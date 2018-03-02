@@ -53,7 +53,7 @@ export class WebsocketService {
     this.socket.on('error', (data: Object) => {
       console.warn('Websocket Error', data);
       /* istanbul ignore next  */
-      if (data === 'No token provided') {
+      if (data === 'No token provided' || data === 'Invalid token') {
         subj.next(false);
         subj.complete();
         this.router.navigate(['/login']);
@@ -64,7 +64,24 @@ export class WebsocketService {
         .next(new ErrorNotification(message, 5000));
     });
     for (const addHandler of Object.values(handlers)) {
-      addHandler(this.socket, this.store, this.router);
+      addHandler(this.socket, this.store);
     }
+  }
+
+  async awaitNextEvent(eventName: string, timeOut: number) {
+    return await new Promise((resolve, reject) => {
+      let resolved = false;
+      const onComplete = (data) => {
+        resolved = true;
+        return resolve(data);
+      };
+      this.socket.once(eventName, onComplete);
+      setTimeout(() => {
+        if (!resolved) {
+          this.socket.removeListener(eventName, onComplete);
+          reject(new Error('Request timed out'));
+        }
+      }, timeOut);
+    });
   }
 }

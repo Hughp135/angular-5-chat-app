@@ -1,17 +1,18 @@
-<div class="item"
+<div class="item less-padding"
   (mouseenter)="onMouseEnter(true)"
   (mouseleave)="onMouseEnter(false)">
-  <h5>Online</h5>
   <div class=""
     *ngIf="!onlineUsers">
     <div class="ui active centered inline loader"></div>
   </div>
-  <div *ngIf="onlineUsers"
+  <div *ngIf="onlineUsers && onlineUsers.length > 0"
     class="ui list online-users"
     [class.inverted]="settingsService.invertedTheme">
+    <h5>Online</h5>
     <a class="item"
       *ngFor="let user of onlineUsers; trackBy:(userListTrackBy)"
       [sh-context]="menuItems"
+      [sh-data-context]="user"
       [sh-options]="{ theme: 'dark' }">
       <img class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
@@ -25,13 +26,14 @@
       </div>
     </a>
   </div>
-  <h5>Online</h5>
-  <div *ngIf="offlineUsers && onlineUsers.length < 100"
+  <div *ngIf="offlineUsers && offlineUsers.length > 0 && onlineUsers.length < 100"
     class="ui list offline-users"
     [class.inverted]="settingsService.invertedTheme">
+    <h5>Offline</h5>
     <a class="item"
       *ngFor="let user of offlineUsers; trackBy:(userListTrackBy)"
       [sh-context]="menuItems"
+      [sh-data-context]="user"
       [sh-options]="{ theme: 'dark' }">
       <img class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">

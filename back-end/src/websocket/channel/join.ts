@@ -1,4 +1,4 @@
-import ChannelModel from '../../models/channel.model';
+import ChannelModel, { SERVER_CHANNEL, DM_CHANNEL } from '../../models/channel.model';
 import User from '../../models/user.model';
 import ChatMessageModel from '../../models/chatmessage.model';
 import * as mongoose from 'mongoose';
@@ -16,29 +16,41 @@ export async function joinChannel(io: any) {
 
       const [user, channel]: any = await Promise.all([
         User.findById(socket.claim.user_id).lean(),
-        ChannelModel.findById(channelId).lean(),
+        ChannelModel.findById(channelId),
       ]);
 
       if (!user || !channel) {
         socket.emit('soft-error', 'Unable to join this channel.');
         return;
       }
-      const messages: ChatMessage[] = <ChatMessage[]>await ChatMessageModel.find({ channel_id: channelId })
+
+      const messages: ChatMessage[] = <ChatMessage[]> await ChatMessageModel
+        .find({ channel_id: channelId })
         .sort({ createdAt: -1 })
         .limit(50)
         .lean();
 
-      if (!await canJoinServer(user, channel.server_id)) {
-        socket.emit('soft-error', 'You don\'t have permission to join this channel.');
+      // NORMAL SERVER CHANNEL
+      if (channel.getChannelType() === SERVER_CHANNEL && !await canJoinServer(user, channel.server_id)) {
+        socket.emit('soft-error', 'You don\'t have permission to join this server.');
         return;
       }
 
+      // FRIENDS CHANNEL (DM)
+      if (channel.getChannelType() === DM_CHANNEL) {
+        if (!channel.user_ids.toString().includes(user._id.toString())) {
+          socket.emit('soft-error', 'You don\'t have permission to join this channel.');
+          return;
+        }
+        socket.join(`dmchannel-${channel._id}`);
+      }
+
+      // Send response with message history
       const response: JoinedChannelResponse = {
         channel_id: channel._id,
         messages,
       };
       socket.emit('joined-channel', response);
-
     });
   });
 }

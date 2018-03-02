@@ -10,18 +10,24 @@ import * as config from 'config';
 const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
 const expect = chai.expect;
 
-const logInAuthFunction = logInAuth();
+const logInAuthFunction = logInAuth(null);
 
 // tslint:disable:no-unused-expression
 
 describe('websocket/socket-auth', () => {
   const sandbox = sinon.createSandbox();
-  sandbox.stub(User, 'find').callsFake(() => ({
-    lean: () => [{
-      _id: '123123123',
-      username: 'test_user1',
-    }]
-  }));
+  const user = new User({
+    _id: '123123123',
+    username: 'test_user1',
+  });
+  beforeEach(() => {
+    sandbox.stub(User, 'find').callsFake(() => ({
+      lean: () => [user],
+    }));
+    sandbox.stub(User, 'findById').callsFake(() => ({
+      lean: () => user,
+    }));
+  });
   afterEach(() => {
     sandbox.restore();
   });
@@ -52,6 +58,27 @@ describe('websocket/socket-auth', () => {
 
     const cb = result => {
       expect(result).to.be.undefined;
+    };
+
+    await logInAuthFunction(fakeSocket, cb);
+  });
+  it('fails if token valid but user doesnt exist', async () => {
+    sandbox.restore();
+    sandbox.stub(User, 'findById').callsFake(() => ({
+      lean: () => null,
+    }));
+    const validToken = createJWT({ username: 'hi' }, '1s');
+    const fakeSocket = {
+      handshake: {
+        headers: {
+          cookie: `jwt_token=${validToken};`
+        }
+      }
+    };
+
+    const cb = result => {
+      expect(User.findById).to.have.been.called;
+      expect(result.message).to.equal('Invalid token');
     };
 
     await logInAuthFunction(fakeSocket, cb);

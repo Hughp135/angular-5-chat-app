@@ -73,7 +73,7 @@ describe('websocket channel/join', () => {
     joinChannel(io);
     function onComplete() {
       expect(result).to.have.been
-        .calledWith('soft-error', 'You don\'t have permission to join this channel.');
+        .calledWith('soft-error', 'You don\'t have permission to join this server.');
       done();
     }
   });
@@ -89,6 +89,41 @@ describe('websocket channel/join', () => {
             channel_id: channel._id,
             messages: [],
           });
+        done();
+      }
+    });
+  });
+  it('joins a DM channel', (done) => {
+    channel.user_ids = [user._id];
+    channel.server_id = undefined;
+    channel.save().then(() => {
+      const { io, socket } = createFakeSocketEvent('join-channel', channel._id,
+        { user_id: user._id }, onComplete, result);
+      sinon.spy(socket, 'join');
+      joinChannel(io);
+      function onComplete() {
+        expect(result).to.have.been
+          .calledWith('joined-channel', {
+            channel_id: channel._id,
+            messages: [],
+          });
+        expect(socket.join).to.have.been
+          .calledWith(`dmchannel-${channel._id}`);
+        done();
+      }
+    });
+});
+  it('does not join DM channel if user ID not in user_ids', (done) => {
+    channel.user_ids = ['123456780987654323456789'];
+    channel.server_id = undefined;
+    channel.save().then(() => {
+      const { io, socket } = createFakeSocketEvent('join-channel', channel._id,
+        { user_id: user._id }, onComplete, result);
+      sinon.spy(socket, 'join');
+      joinChannel(io);
+      function onComplete() {
+        expect(result).to.have.been
+          .calledWith('soft-error', 'You don\'t have permission to join this channel.');
         done();
       }
     });

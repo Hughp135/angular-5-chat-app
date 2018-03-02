@@ -4,7 +4,6 @@ import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as supertest from 'supertest';
 import * as mongoose from 'mongoose';
-import * as bcrypt from 'bcrypt';
 
 import { verifyJWT, createJWT } from './jwt';
 

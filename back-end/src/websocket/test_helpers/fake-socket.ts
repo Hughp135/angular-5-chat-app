@@ -4,7 +4,7 @@ export default function createFakeSocketEvent(
   data: any,
   claim: any,
   complete: any,
-  result: any
+  result: any,
 ) {
   const socket = {
     handshake: { query: {} },
@@ -20,7 +20,7 @@ export default function createFakeSocketEvent(
       }
     },
     emit: result,
-    join: async () => null,
+    join: () => null,
     rooms: {
       'server-123': true
     },

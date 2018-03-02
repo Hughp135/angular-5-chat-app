@@ -1,0 +1,40 @@
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+.left.vertical.sidebar.menu {
+  overflow: hidden !important;
+
+  &:hover {
+    overflow-y: auto !important;
+  }
+}
+
+.dm-list {
+  padding: 0 !important;
+}
+
+.ui.list {
+  margin-top: 0;
+
+  .item {
+    padding: 5px 10px !important;
+
+    .header {
+      // color: #4183C4;
+      padding-top: 5px;
+    }
+
+    &:hover {
+      background: #d6d6d6;
+    }
+  }
+
+  &.inverted {
+    .item {
+      &:hover {
+        background: #424242;
+      }
+    }
+  }
+}

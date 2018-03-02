@@ -5,6 +5,7 @@ import { SettingsService } from '../../services/settings.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { ShContextMenuModule } from 'ng2-right-click-menu';
+import { DirectMessageService } from '../../services/direct-message.service';
 
 const fakeSocket = {
   emit: jasmine.createSpy(),
@@ -17,16 +18,20 @@ const fakeSocketService = {
 describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
+  const fakeDmService = {
+    startPm: jasmine.createSpy()
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [UserListComponent],
       imports: [
-        ShContextMenuModule
+        ShContextMenuModule,
       ],
       providers: [
         SettingsService,
         { provide: WebsocketService, useValue: fakeSocketService },
+        { provide: DirectMessageService, useValue: fakeDmService },
       ]
     })
       .compileComponents();
@@ -49,6 +54,7 @@ describe('UserListComponent', () => {
 
   afterEach(() => {
     fakeSocket.emit.calls.reset();
+    fakeDmService.startPm.calls.reset();
   });
 
   it('initial state', () => {
@@ -59,17 +65,10 @@ describe('UserListComponent', () => {
     ]);
     expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
     expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
-    expect(component.subscriptions.length).toEqual(1);
+    expect(component.subscriptions.length).toEqual(2);
     expect(component.menuItems).toBeDefined();
   });
   it('user lists are reset if new server joined', () => {
-    expect(component.userList).toEqual([
-      { username: 'someusr', _id: '1aad', online: true },
-      { username: 'someusr2', _id: '2aad', online: false },
-    ]);
-    expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
-    expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
-    expect(component.subscriptions.length).toEqual(1);
     const newServer: ChatServer = {
       _id: '0fus',
       name: 'newserver',
@@ -102,5 +101,9 @@ describe('UserListComponent', () => {
     expect(component.preventListUpdate).toEqual(true);
     component.onMouseEnter(false);
     expect(component.preventListUpdate).toEqual(false);
+  });
+  it('openDm calls dmService.startPm', () => {
+    component.sendUserMessage('123');
+    expect(fakeDmService.startPm).toHaveBeenCalledWith('123');
   });
 });

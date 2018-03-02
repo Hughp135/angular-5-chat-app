@@ -5,7 +5,8 @@
 }
 
 #header {
-  padding: 20px;
+  height: 50px;
+  padding: 17px 20px;
   border-bottom: 1px solid #ebebeb;
   &.inverted {
     border-bottom: 1px solid #454545;
@@ -18,7 +19,7 @@
   overflow-y: scroll;
   display: flex;
   flex-direction: column-reverse;
-  padding: 15px;
+  padding: 15px 15px 0 15px;
   .loader {
     margin: auto;
   }
@@ -52,7 +53,7 @@
     }
   }
   padding: 15px;
-  padding-top: 0;
+  padding-top: 15px;
   margin-top: auto;  
 }
 
