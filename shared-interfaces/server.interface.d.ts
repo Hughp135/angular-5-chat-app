@@ -3,9 +3,10 @@ import { ChannelList } from "./channel.interface";
 export default interface ChatServer {
   name: string;
   _id: string;
+  image_url?: string;
   owner_id?: string;
   channelList?: ChannelList;
-  userList?: UserListUser[];
+  userList?: UserListUser[];  
 }
 
 export interface UserListUser {

@@ -39,3 +39,25 @@ input.ng-invalid.ng-dirty.ng-touched {
     padding: 13px 8px !important;
   }
 }
+
+.sh-menu-item {
+  div {
+    color: #dcdcdc !important;
+  }
+
+  &:hover {
+    background: #1e1f21 !important;
+
+    &.sh-menu-disabled {
+      cursor: auto !important;
+      background: initial !important;
+      div {
+        color: #dcdcdc !important;
+      }
+    }
+
+    div {
+      color: #fff !important;
+    }
+  }
+}

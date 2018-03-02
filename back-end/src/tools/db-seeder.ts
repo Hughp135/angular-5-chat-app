@@ -69,6 +69,7 @@ async function createServers(owner_id) {
       return new Server({
         name: `Server ${index + 1}`,
         owner_id: owner_id,
+        image_url: index % 2 === 0 ? 'https://semantic-ui.com/images/avatar/small/elliot.jpg' : undefined,
       });
     });
   return await Server.insertMany(servers);
@@ -77,7 +78,7 @@ async function createServers(owner_id) {
 async function createChannels(serverIds) {
   const promises = serverIds
     .map((server_id) =>
-      [...Array(5)].map((x, idx) =>
+      [...Array(3)].map((x, idx) =>
         Channel.create({
           name: `Text Channel ${idx + 1}`,
           server_id: server_id,
@@ -115,7 +116,7 @@ async function createDMChannels(user) {
   const promises = [];
   otherUsers.forEach(async usr => {
     promises.push(Channel.create({
-      name: usr.username,
+      name: 'DMChannel @ ' + usr.username,
       user_ids: [user._id, usr._id]
     }));
   });
