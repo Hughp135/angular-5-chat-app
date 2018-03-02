@@ -1,21 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { SendMessageRequest } from '../../../../shared-interfaces/message.interface';
 import { AppStateService } from '../../services/app-state.service';
 import { SettingsService } from '../../services/settings.service';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-chat-channel',
   templateUrl: './chat-channel.component.html',
   styleUrls: ['./chat-channel.component.scss']
 })
-export class ChatChannelComponent implements OnInit {
+export class ChatChannelComponent implements OnInit, OnDestroy {
   public chatMessage = '';
-  public currentChannel: Observable<ChatChannel>;
+  public currentChannel: ChatChannel;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private wsService: WebsocketService,
@@ -23,14 +23,21 @@ export class ChatChannelComponent implements OnInit {
     public settingsService: SettingsService,
     private route: ActivatedRoute,
   ) {
-
     this.route.data
       .subscribe(data => {
-        this.currentChannel = data.state.channel.filter(chan => !!chan);
+        this.subscriptions.push(
+          data.state.channel
+            .filter(chan => !!chan)
+            .subscribe(chan => this.currentChannel = chan)
+        );
       });
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe);
   }
 
   /* istanbul ignore next */
@@ -46,19 +53,20 @@ export class ChatChannelComponent implements OnInit {
   }
 
   isFollowUpMsg(i: number) {
-    // if (!this.currentChannel.messages[i + 1]) {
-    return false;
-    // }
-    // return this.currentChannel.messages[i + 1].username
-    //   === this.currentChannel.messages[i].username;
+    if (!this.currentChannel.messages[i + 1]) {
+      return false;
+    }
+    const nextMessage = this.currentChannel.messages[i + 1];
+    return nextMessage.username
+      === this.currentChannel.messages[i].username;
   }
 
   hasFollowUpMsg(i: number) {
-    // if (!this.currentChannel.messages[i - 1]) {
-    return false;
-    // }
-    // return this.currentChannel.messages[i - 1].username
-    //   === this.currentChannel.messages[i].username;
+    if (!this.currentChannel.messages[i - 1]) {
+      return false;
+    }
+    return this.currentChannel.messages[i - 1].username
+      === this.currentChannel.messages[i].username;
   }
 
   sendMessage(msg: string) {

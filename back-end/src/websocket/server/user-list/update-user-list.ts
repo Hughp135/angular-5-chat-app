@@ -1,5 +1,3 @@
-import User from '../../../models/user.model';
-import { log } from 'winston';
 import { UserListUpdate } from 'shared-interfaces/server.interface';
 
 // Called when user changes status e.g. on login

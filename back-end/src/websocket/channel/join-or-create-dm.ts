@@ -1,6 +1,5 @@
 import User from '../../models/user.model';
 import Channel from '../../models/channel.model';
-import { sendChannelList } from '../channel/get-dm-channels';
 
 export function joinDmChannel(io: any) {
   io.on('connection', socket => {
@@ -29,10 +28,7 @@ export function joinDmChannel(io: any) {
       const channel = existingChannel
         || await createNewChannel([socket.claim.user_id, userId]); // or create existing
 
-      // setTimeout(() => {
       socket.emit('got-dm-channel', channel._id);
-      // }, 1000);
-
     });
   });
 }

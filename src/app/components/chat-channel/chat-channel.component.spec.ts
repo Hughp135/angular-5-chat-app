@@ -88,18 +88,18 @@ describe('ChatChannelComponent', () => {
     component.sendMessage('');
     expect(emit).not.toHaveBeenCalled();
   });
-  // it('is follow up message', () => {
-  //   expect(component.isFollowUpMsg(0)).toEqual(true);
-  //   expect(component.isFollowUpMsg(1)).toEqual(false);
-  //   expect(component.isFollowUpMsg(2)).toEqual(true);
-  //   expect(component.isFollowUpMsg(3)).toEqual(false);
-  // });
-  // it('has follow up message', () => {
-  //   expect(component.hasFollowUpMsg(0)).toEqual(false);
-  //   expect(component.hasFollowUpMsg(1)).toEqual(true);
-  //   expect(component.hasFollowUpMsg(2)).toEqual(false);
-  //   expect(component.hasFollowUpMsg(3)).toEqual(true);
-  // });
+  it('is follow up message', () => {
+    expect(component.isFollowUpMsg(0)).toEqual(true);
+    expect(component.isFollowUpMsg(1)).toEqual(false);
+    expect(component.isFollowUpMsg(2)).toEqual(true);
+    expect(component.isFollowUpMsg(3)).toEqual(false);
+  });
+  it('has follow up message', () => {
+    expect(component.hasFollowUpMsg(0)).toEqual(false);
+    expect(component.hasFollowUpMsg(1)).toEqual(true);
+    expect(component.hasFollowUpMsg(2)).toEqual(false);
+    expect(component.hasFollowUpMsg(3)).toEqual(true);
+  });
 });
 
 function createChatMsg(username: string) {

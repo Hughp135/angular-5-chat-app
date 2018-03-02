@@ -5,7 +5,6 @@ import { SettingsService } from '../../services/settings.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { ShContextMenuModule } from 'ng2-right-click-menu';
-import { RouterTestingModule } from '@angular/router/testing';
 import { DirectMessageService } from '../../services/direct-message.service';
 
 const fakeSocket = {
@@ -28,7 +27,6 @@ describe('UserListComponent', () => {
       declarations: [UserListComponent],
       imports: [
         ShContextMenuModule,
-        RouterTestingModule
       ],
       providers: [
         SettingsService,

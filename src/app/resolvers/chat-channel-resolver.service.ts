@@ -9,6 +9,7 @@ import { JOIN_CHANNEL, LEAVE_CHANNEL } from '../reducers/current-chat-channel.re
 import { WebsocketService } from '../services/websocket.service';
 import { Router } from '@angular/router';
 import { ErrorService } from '../services/error.service';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ChatChannelResolver implements Resolve<any> {
@@ -36,8 +37,6 @@ export class ChatChannelResolver implements Resolve<any> {
     if (!channel) {
       return this.channelNotFound(isOnFriendsPage, route);
     }
-
-    console.log('got chan', channel);
 
     this.store.dispatch({
       type: LEAVE_CHANNEL,

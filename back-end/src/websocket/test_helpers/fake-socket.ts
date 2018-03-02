@@ -40,4 +40,4 @@ export default function createFakeSocketEvent(
     }),
   };
   return { io, socket };
-};
+}

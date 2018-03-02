@@ -50,7 +50,16 @@
 <div id="main-content"
   class="ui segment"
   [class.inverted]="settingsService.invertedTheme">
-  <router-outlet></router-outlet>
+  <h3 align="left"
+    *ngIf="!(currentChatChannel | async)">
+    < Direct
+      Messages
+      </h3>
+      <h3 align="right"
+        *ngIf="!(currentChatChannel | async)">
+        Friends List >
+      </h3>
+      <router-outlet></router-outlet>
 </div>
 <!-- /MAIN CONTENT SECTION -->
 

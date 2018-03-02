@@ -3,23 +3,23 @@
     [class.inverted]="settingsService.invertedTheme">
     <h4 class="ui header"
       [class.inverted]="settingsService.invertedTheme">
-      {{(currentChannel | async).server_id ? '#' : '@'}} {{ (currentChannel | async).name }}
+      {{currentChannel.server_id ? '#' : '@'}} {{ currentChannel.name }}
     </h4>
   </div>
   <div class="ui middle aligned divided very relaxed list"
     [class.inverted]="settingsService.invertedTheme"
     id="message-container">
-    <div *ngIf="!(currentChannel | async).messages"
+    <div *ngIf="!currentChannel.messages"
       class="ui active centered inline loader">
     </div>
-    <div *ngIf="(currentChannel | async).messages && (currentChannel | async).messages.length < 1"
+    <div *ngIf="currentChannel.messages && currentChannel.messages.length < 1"
       class="ui item">
       <p align="center">
         <i>No messages here yet!</i>
       </p>
     </div>
     <div class="item"
-      *ngFor="let msg of (currentChannel | async).messages; let i = index;"
+      *ngFor="let msg of currentChannel.messages; let i = index;"
       [class.follow-up]="isFollowUpMsg(i)"
       [class.has-follow-up]="hasFollowUpMsg(i)">
       <img *ngIf="!isFollowUpMsg(i)"
@@ -52,7 +52,7 @@
       <div class="ui fluid small input">
         <input type="text"
           autocomplete="off"
-          placeholder="Chat in #{{ (currentChannel | async).name }}..."
+          placeholder="Chat in #{{ currentChannel.name }}..."
           name="chatMessage"
           [(ngModel)]="chatMessage">
       </div>
