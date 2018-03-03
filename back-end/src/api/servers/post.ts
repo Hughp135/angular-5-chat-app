@@ -2,12 +2,15 @@ import Server from '../../models/server.model';
 import User from '../../models/user.model';
 import * as Joi from 'joi';
 import { log } from 'winston';
+import * as fs from 'fs';
 
 const schema = Joi.object().keys({
   name: Joi.string().min(3).max(30).required(),
+  icon: Joi.string().base64().min(8).max(20000).allow(null),
 });
 
 export async function createServer(req, res) {
+
   const user = await User.findOne({ '_id': req.claim.user_id });
   if (!user) {
     return res.status(401).json({
@@ -16,19 +19,20 @@ export async function createServer(req, res) {
   }
 
   const result = Joi.validate(req.body, schema);
+
   if (result.error) {
-    return res.status(400).json({ error: result.error.details[0].message });
+    log('error', result.error.details[0].message);
+    const errorMessage = getValidationMessage(result.error.details);
+    return res.status(400).json({ error: errorMessage });
   }
 
-  const existingServers: any = await Server.find({
-    owner_id: user._id,
-  }).lean();
-
-  if (existingServers.length >= 3) {
+  if (await existingServerCount(user) >= 3) {
     return res.status(400).json({
-      error: 'You can only have a maximum of 3 servers. Please delete or edit an existing server before creating a new one'
+      error: 'You can only own a maximum of 3 servers. Please delete or edit an existing server before creating a new one'
     });
   }
+
+
 
   try {
     const server = await Server.create({
@@ -40,6 +44,9 @@ export async function createServer(req, res) {
     await user.save();
 
     res.status(200).json({ success: true });
+
+    saveServerIcon(server, req.body.icon);
+
   } catch (e) {
     /* istanbul ignore else */
     if (e.code === 11000) {
@@ -53,4 +60,34 @@ export async function createServer(req, res) {
       });
     }
   }
+}
+
+async function saveServerIcon(server, icon) {
+  fs.writeFile(`back-end/dist/public/img/test.png`, icon, 'base64', (e) => {
+    if (e) {
+      return log('error', 'Error Writing File:', e);
+    }
+    server.image_url = 'back-end/dist/public/img/test.png';
+    await server.save();
+  });
+}
+
+function getValidationMessage(details) {
+  for (const error of details) {
+    switch (error.context.key) {
+      case 'name':
+        return 'Invalid server name. Must be at least 3 characters and max 30 characters long.';
+      case 'icon':
+        return 'Uploaded Image is too large or in an invalid format.';
+      default:
+        return 'Invalid data submitted, please try again later.';
+    }
+  }
+}
+
+async function existingServerCount(user) {
+  const servers: any = await Server.find({
+    owner_id: user._id,
+  }).lean();
+  return servers.length;
 }

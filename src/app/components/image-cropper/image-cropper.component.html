@@ -1,0 +1,20 @@
+<div class="ui stackable grid">
+  <div class="left floated nine wide column"
+    id="cropper-container">
+    <h5>Crop image</h5>
+    <img [src]="imgSrc"
+      #cropperContainer />
+
+  </div>
+
+  <div class="right  floated six wide column"
+    id="preview-container">
+    <h5>Preview</h5>
+    <img *ngIf="previewSrc"
+      width="128"
+      height="128"
+      [src]="previewSrc" />
+
+  </div>
+
+</div>

@@ -20,7 +20,8 @@
       "prefix": "app",
       "styles": [
         "styles.scss",
-        "../src/assets/semantic.min.css"
+        "../src/assets/semantic.min.css",
+        "../src/assets/cropper.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

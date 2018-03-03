@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SuiModal, ComponentModalConfig, ModalSize } from 'ng2-semantic-ui';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../../services/api.service';
@@ -6,12 +6,13 @@ import { ApiService } from '../../../services/api.service';
 @Component({
   selector: 'app-create-server',
   templateUrl: './create-server.component.html',
-  styleUrls: ['./create-server.component.scss']
+  styleUrls: ['./create-server.component.scss'],
 })
 export class CreateServerComponent implements OnInit {
   public form: FormGroup;
   public error: string = undefined;
   public loading = false;
+  public cropperImgSrc: string;
 
   constructor(
     public modal: SuiModal<void, void>,
@@ -19,11 +20,32 @@ export class CreateServerComponent implements OnInit {
     private apiService: ApiService,
   ) {
     this.form = this.fb.group({
-      name: ['', [Validators.minLength(3), Validators.required]]
+      name: ['', [Validators.minLength(3), Validators.required]],
+      icon: null,
     });
   }
 
   ngOnInit() {
+  }
+
+  onFileChange(event) {
+    const reader = new FileReader();
+    this.cropperImgSrc = null;
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.cropperImgSrc = reader.result;
+      };
+    }
+  }
+
+  setIconField(dataUrl: string) {
+    if (dataUrl && dataUrl.startsWith('data:image/jpeg;base64')) {
+      this.form.get('icon').setValue(dataUrl.split(',')[1]);
+    } else {
+      this.form.get('icon').setValue(null);
+    }
   }
 
   createServer() {
@@ -54,7 +76,7 @@ export class CreateServerComponent implements OnInit {
 export class CreateServerModal extends ComponentModalConfig<void, void, void> {
   constructor() {
     super(CreateServerComponent);
-
-    this.size = ModalSize.Tiny;
+    this.mustScroll = true;
+    this.size = ModalSize.Small;
   }
 }
