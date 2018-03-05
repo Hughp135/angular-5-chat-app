@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ServerResolver } from './server-resolver.service';
 import ChatServer from 'shared-interfaces/server.interface';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { reducers } from '../reducers/reducers';
@@ -12,6 +12,7 @@ import { SET_CURRENT_SERVER, SET_CHANNEL_LIST } from '../reducers/current-server
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { ChannelList } from '../../../shared-interfaces/channel.interface';
+import { ErrorService } from '../services/error.service';
 
 const serverList: ChatServer[] = [
   { name: 'server1', _id: '123', owner_id: '345' }
@@ -24,7 +25,6 @@ const fakeWebSocketService = {
 };
 
 describe('ServerResolver.Service.TsService', () => {
-  let httpMock: HttpTestingController;
   let store: Store<AppState>;
   let service: ServerResolver;
   let route;
@@ -35,6 +35,7 @@ describe('ServerResolver.Service.TsService', () => {
       providers: [
         ServerResolver,
         { provide: WebsocketService, useValue: fakeWebSocketService },
+        ErrorService
       ],
       imports: [
         HttpClientTestingModule,
@@ -43,7 +44,6 @@ describe('ServerResolver.Service.TsService', () => {
       ],
     });
 
-    httpMock = TestBed.get(HttpTestingController);
     store = TestBed.get(Store);
     service = TestBed.get(ServerResolver);
     router = TestBed.get(Router);

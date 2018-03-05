@@ -32,4 +32,7 @@ function makePublicDirectory() {
   if (!fs.existsSync('back-end/dist/public/img')) {
     fs.mkdirSync('back-end/dist/public/img');
   }
+  if (!fs.existsSync('back-end/dist/public/img/server-icons')) {
+    fs.mkdirSync('back-end/dist/public/img/server-icons');
+  }
 }

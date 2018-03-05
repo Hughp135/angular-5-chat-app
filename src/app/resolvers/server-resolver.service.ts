@@ -12,6 +12,7 @@ import 'rxjs/add/operator/filter';
 import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
 import { LEAVE_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { Router } from '@angular/router';
+import { ErrorService } from '../services/error.service';
 
 @Injectable()
 export class ServerResolver implements Resolve<ChatServer> {
@@ -20,24 +21,40 @@ export class ServerResolver implements Resolve<ChatServer> {
     private store: Store<AppState>,
     private wsService: WebsocketService,
     private router: Router,
+    private errorService: ErrorService
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     const id = route.paramMap.get('id');
     const currentServerStore = this.store.select('currentServer');
-    await this.joinServer(id);
 
-    if (route.children.length < 1) {
-      // Wait for channel list then redirect to first channel
-      const server = await currentServerStore
-        .filter(srv => !!srv && !!srv.channelList)
-        .take(1)
-        .toPromise();
+    try {
+      await this.joinServer(id);
+      if (route.children.length < 1) {
+        // Wait for channel list then redirect to first channel
+        const server = await currentServerStore
+          .filter(srv => !!srv && !!srv.channelList)
+          .take(1)
+          .toPromise();
+        setTimeout(() => {
+          if (server.channelList.channels.length > 0) {
+            this.router.navigate([`/channels/${server._id}/${server.channelList.channels[0]._id}`]);
+          } else {
+            this.router.navigate([`/channels/${server._id}`]);
+          }
+        }, 1);
+
+      }
+    } catch (e) {
+      this.errorService.errorMessage.next({
+        message: 'Failed to join server.',
+        duration: 2500,
+        id: new Date().toUTCString(),
+      });
       setTimeout(() => {
-        this.router.navigate([`/channels/${server._id}/${server.channelList.channels[0]._id}`]);
+        this.router.navigate(['']);
       }, 1);
     }
-
     return {
       server: currentServerStore,
       channel: this.store.select('currentChatChannel'),
@@ -47,12 +64,14 @@ export class ServerResolver implements Resolve<ChatServer> {
   async joinServer(id: string) {
     const serverListStore = this.store.select('serverList');
     const serverList = await serverListStore
-      .filter(list => list.some(srv => srv._id === id))
+      // .filter(list => list.some(srv => srv._id === id))
       .timeout(10000)
       .take(1)
       .toPromise();
-
     const server = serverList.find(srv => srv._id === id);
+    if (!server) {
+      throw new Error();
+    }
 
     this.store.dispatch({
       type: LEAVE_CHANNEL,

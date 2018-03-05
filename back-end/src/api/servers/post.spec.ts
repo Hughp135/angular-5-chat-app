@@ -64,7 +64,7 @@ describe('api/servers/post', () => {
       .set('Cookie', `jwt_token=${token}`)
       .send({})
       .expect(400, {
-        error: '"name" is required',
+        error: 'Invalid server name. Must be at least 3 characters and max 30 characters long.',
       });
   });
   it('creates a server', async () => {
@@ -74,8 +74,10 @@ describe('api/servers/post', () => {
       .send({
         name: 'Automated Test Server'
       })
-      .expect(200, {
-        success: true,
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.server).to.exist;
+        expect(body.server.name).to.equal('Automated Test Server');
       });
     const server: any = await Server.findOne().lean();
     expect(server).to.exist;
@@ -92,8 +94,10 @@ describe('api/servers/post', () => {
       .send({
         name: 'Automated Test Server'
       })
-      .expect(200, {
-        success: true,
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.server).to.exist;
+        expect(body.server.name).to.equal('Automated Test Server');
       });
     await supertest(app.listen(null))
       .post('/api/servers')
@@ -115,9 +119,7 @@ describe('api/servers/post', () => {
         .send({
           name: 'Automated Test Server ' + i
         })
-        .expect(200, {
-          success: true,
-        });
+        .expect(200);
     }
     await supertest(app.listen(null))
       .post('/api/servers')
@@ -126,7 +128,7 @@ describe('api/servers/post', () => {
         name: 'Automated Test Server'
       })
       .expect(400, {
-        error: 'You can only have a maximum of 3 servers. Please delete or edit an existing server before creating a new one',
+        error: 'You can only own a maximum of 3 servers. Please delete or edit an existing server before creating a new one',
       });
     const usr: any = await User.findOne({ '_id': user._id }).lean();
     expect(usr.joinedServers).to.have.lengthOf(3);

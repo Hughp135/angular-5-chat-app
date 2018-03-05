@@ -43,10 +43,11 @@ export async function createServer(req, res) {
     (user as any).joinedServers.push(server._id);
     await user.save();
 
-    res.status(200).json({ success: true });
+    await saveServerIcon(server, req.body.icon);
 
-    saveServerIcon(server, req.body.icon);
-
+    res.status(200).json({
+      server
+    });
   } catch (e) {
     /* istanbul ignore else */
     if (e.code === 11000) {
@@ -63,12 +64,21 @@ export async function createServer(req, res) {
 }
 
 async function saveServerIcon(server, icon) {
-  fs.writeFile(`back-end/dist/public/img/test.png`, icon, 'base64', (e) => {
-    if (e) {
-      return log('error', 'Error Writing File:', e);
-    }
-    server.image_url = 'back-end/dist/public/img/test.png';
-    await server.save();
+  return await new Promise(resolve => {
+    fs.writeFile(
+      `back-end/dist/public/img/server-icons/${server._id}.jpg`,
+      icon,
+      'base64',
+      async (e) => {
+        if (e) {
+          log('error', 'Error Writing File:', e);
+          resolve(false);
+        }
+        server.image_url = `img/server-icons/${server._id}.jpg`;
+        await server.save();
+        resolve(server);
+      }
+    );
   });
 }
 

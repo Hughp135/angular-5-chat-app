@@ -6,6 +6,7 @@
   popupInverted
   popupTransitionDuration="50"
   [popupPlacement]="'right'"
+  [popupBasic]="true"
   (click)="joinServer(server)">
   <img *ngIf="server.image_url"
     class="server-content image"

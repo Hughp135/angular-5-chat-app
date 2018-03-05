@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChatChannelComponent } from './chat-channel.component';
 import { FormsModule } from '@angular/forms';
 import { AppStateService } from '../../services/app-state.service';
@@ -14,8 +14,6 @@ import 'rxjs/add/observable/of';
 describe('ChatChannelComponent', () => {
   let component: ChatChannelComponent;
   let fixture: ComponentFixture<ChatChannelComponent>;
-  let injector: TestBed;
-  let appState: AppStateService;
   const emit = jasmine.createSpy();
 
   const channel: ChatChannel = {
@@ -58,9 +56,6 @@ describe('ChatChannelComponent', () => {
       ],
     })
       .compileComponents();
-    injector = getTestBed();
-    appState = injector.get(AppStateService);
-
   }));
 
   beforeEach(() => {

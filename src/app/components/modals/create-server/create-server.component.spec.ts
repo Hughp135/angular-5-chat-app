@@ -9,6 +9,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/throw';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 describe('CreateServerComponent', () => {
   let component: CreateServerComponent;
@@ -30,11 +32,13 @@ describe('CreateServerComponent', () => {
       providers: [
         { provide: SuiModal, useValue: fakeModalService },
         { provide: ApiService, useValue: apiServiceMock },
+        { provide: Store, useValue: { dispatch: () => { } } },
       ],
       imports: [
         ReactiveFormsModule,
         FormsModule
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
       .compileComponents();
   }));
@@ -82,6 +86,7 @@ describe('CreateServerComponent', () => {
   it('POSTS to /servers and succeeds', fakeAsync(() => {
     const formData = {
       name: 'createServer-test',
+      icon: null
     };
 
     apiServiceMock.post.and.callFake((url: string, data) => {
@@ -99,12 +104,14 @@ describe('CreateServerComponent', () => {
       formData
     );
     // After fake API response
-    tick(50);
+    tick(40);
+    fixture.detectChanges();
     expect(component.loading).toEqual(false);
   }));
   it('submitting form POST to /register fail with specific error message', fakeAsync(() => {
     const formData = {
-      name: 'test-server-2'
+      name: 'test-server-2',
+      icon: null,
     };
 
     apiServiceMock.post.and.callFake((url: string, data) => {
@@ -132,7 +139,8 @@ describe('CreateServerComponent', () => {
   }));
   it('submitting form POST to /register fail with generic error msg', fakeAsync(() => {
     const formData = {
-      name: 'test-server-3'
+      name: 'test-server-3',
+      icon: null,
     };
 
     apiServiceMock.post.and.callFake((url: string, data) => {

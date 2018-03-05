@@ -1,7 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SuiModal, ComponentModalConfig, ModalSize } from 'ng2-semantic-ui';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../../services/api.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../reducers/app.states';
+import ChatServer from 'shared-interfaces/server.interface';
+import { ADD_SERVER_TO_LIST } from '../../../reducers/server-list.reducer';
 
 @Component({
   selector: 'app-create-server',
@@ -18,6 +22,7 @@ export class CreateServerComponent implements OnInit {
     public modal: SuiModal<void, void>,
     private fb: FormBuilder,
     private apiService: ApiService,
+    private store: Store<AppState>,
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.minLength(3), Validators.required]],
@@ -57,9 +62,13 @@ export class CreateServerComponent implements OnInit {
     this.loading = true;
     this.apiService
       .post('servers', this.form.value)
-      .subscribe(async (data: any) => {
+      .subscribe(async (data: { server: ChatServer }) => {
         this.modal.approve(undefined);
         this.loading = false;
+        this.store.dispatch({
+          type: ADD_SERVER_TO_LIST,
+          payload: data.server,
+        });
       }, e => {
         this.loading = false;
         if (e.error && e.error.error) {

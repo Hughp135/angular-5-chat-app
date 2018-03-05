@@ -1,13 +1,8 @@
 import {
-  Component, ViewChild, ElementRef, Renderer2, AfterViewInit,
-  AfterViewChecked, OnDestroy, Input, EventEmitter, Output
+  Component, ViewChild, ElementRef, AfterViewInit,
+  OnDestroy, Input, EventEmitter, Output
 } from '@angular/core';
 import Cropper from 'cropperjs';
-
-
-interface CanvasOptions extends Cropper.GetCroppedCanvasOptions {
-  imageSmoothingQuality: any;
-}
 
 @Component({
   selector: 'app-image-cropper',
@@ -21,7 +16,7 @@ export class ImageCropperComponent implements AfterViewInit, OnDestroy {
   @ViewChild('cropperContainer') cropperContainer: ElementRef;
   @ViewChild('preview') preview: ElementRef;
   @Input() imgSrc: string;
-  constructor(private renderer: Renderer2) {
+  constructor() {
   }
   @Output() croppedImgSrc: EventEmitter<string> = new EventEmitter<string>();
 

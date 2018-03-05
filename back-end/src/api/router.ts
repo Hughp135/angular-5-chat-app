@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import login from './auth/login';
 import register from './auth/register';
-import authMiddleware from './auth/router-middleware';
+import { authMiddleware } from './auth/router-middleware';
 import { createServer } from './servers/post';
 import { getServers } from './servers/get';
 import { getChannels } from './channels/get';

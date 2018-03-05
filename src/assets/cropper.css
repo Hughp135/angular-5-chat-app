@@ -143,7 +143,7 @@
 }
 
 .cropper-line {
-  background-color: rgb(255, 255, 0);
+  background-color: rgb(0, 183, 255);
 }
 
 .cropper-line.line-e {
@@ -175,10 +175,10 @@
 }
 
 .cropper-point {
-  background-color: rgb(255, 255, 0);
-  height: 15px;
+  background-color: rgb(0, 153, 255);
+  height: 10px;
   opacity: .75;
-  width: 15px;
+  width: 10px;
 }
 
 .cropper-point.point-e {
@@ -230,31 +230,16 @@
 .cropper-point.point-se {
   bottom: -3px;
   cursor: nwse-resize;
-  height: 20px;
+  height: 10px;
   opacity: 1;
   right: -3px;
-  width: 20px;
+  width: 10px;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   .cropper-point.point-se {
     height: 15px;
     width: 15px;
-  }
-}
-
-@media (min-width: 992px) {
-  .cropper-point.point-se {
-    height: 10px;
-    width: 10px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .cropper-point.point-se {
-    height: 5px;
-    opacity: .75;
-    width: 5px;
   }
 }
 
@@ -276,7 +261,7 @@
 
 .cropper-bg {
   /* background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC'); */
-  background: #efefef;
+  background: #2d3656;
 }
 
 .cropper-hide {

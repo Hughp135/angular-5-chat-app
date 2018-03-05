@@ -1,19 +1,25 @@
 <div class="menu">
+  <h5>Text Channels</h5>
+
   <div class=""
     *ngIf="!channelList">
     <div class="ui active centered inline loader"></div>
-  </div> 
-  <h5>Text Channels</h5>
+  </div>
+
   <div *ngIf="channelList"
     id="chat-channel-list">
-    
-    
+
     <a class="item channel"
       *ngFor="let channel of channelList.channels"
       [class.inverted]="settingsService.invertedTheme"
       [class.active]="currentChatChannel && currentChatChannel._id === channel._id"
       (click)="joinChannel(channel)">
       # {{ channel.name }}
+    </a>
+    <a class="item channel"
+      [class.inverted]="settingsService.invertedTheme"
+      (click)="joinChannel({server_id: currentChatChannel.server_id, _id: '123456781234567812345678'})">
+      # MISSING_CHANNEL
     </a>
     <form action=""
       (submit)="createChannel()">
