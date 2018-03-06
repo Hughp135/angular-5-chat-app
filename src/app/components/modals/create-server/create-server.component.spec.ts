@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CreateServerComponent } from './create-server.component';
 import { By } from '@angular/platform-browser';
@@ -46,7 +46,6 @@ describe('CreateServerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateServerComponent);
     component = fixture.componentInstance;
-    // (component as any).
     fixture.detectChanges();
   });
 
@@ -75,15 +74,18 @@ describe('CreateServerComponent', () => {
     const button = fixture.debugElement.query(By.css('button.green')).nativeElement;
     expect(button.disabled).toEqual(true);
   });
-  it('does not send request if form invalid', () => {
+  it('does not send request if form invalid', async () => {
     component.form.patchValue({
       name: '',
     });
     expect(component.form.valid).toEqual(false);
-    component.createServer();
+    apiServiceMock.post.and.callFake(() => {
+      return Observable.of({ success: true });
+    });
+    await component.createServer();
     expect(component.error).toEqual('Please enter a server name first.');
   });
-  it('POSTS to /servers and succeeds', fakeAsync(() => {
+  it('POSTS to /servers and succeeds', ((done) => {
     const formData = {
       name: 'createServer-test',
       icon: null
@@ -91,24 +93,24 @@ describe('CreateServerComponent', () => {
 
     apiServiceMock.post.and.callFake((url: string, data) => {
       if (url === 'servers') {
-        return Observable.of({ success: true }).delay(1);
+        return Observable.of({ success: true }).delay(5);
       }
       throw new Error('Invalid API Route');
     });
 
     component.form.patchValue(formData);
-    component.createServer();
+    component.createServer().then(() => {
+      fixture.detectChanges();
+      expect(component.loading).toEqual(false);
+      done();
+    });
     expect(component.loading).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'servers',
       formData
     );
-    // After fake API response
-    tick(40);
-    fixture.detectChanges();
-    expect(component.loading).toEqual(false);
   }));
-  it('submitting form POST to /register fail with specific error message', fakeAsync(() => {
+  it('submitting form POST to /register fail with specific error message', (done) => {
     const formData = {
       name: 'test-server-2',
       icon: null,
@@ -126,18 +128,18 @@ describe('CreateServerComponent', () => {
     });
 
     component.form.patchValue(formData);
-    component.createServer();
+    component.createServer().then(() => {
+      expect(component.loading).toEqual(false);
+      expect(component.error).toEqual('Error thing');
+      done();
+    });
     expect(component.loading).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'servers',
       formData
     );
-    // After fake API response
-    tick(50);
-    expect(component.loading).toEqual(false);
-    expect(component.error).toEqual('Error thing');
-  }));
-  it('submitting form POST to /register fail with generic error msg', fakeAsync(() => {
+  });
+  it('submitting form POST to /register fail with generic error msg', (done) => {
     const formData = {
       name: 'test-server-3',
       icon: null,
@@ -155,15 +157,51 @@ describe('CreateServerComponent', () => {
     });
 
     component.form.patchValue(formData);
-    component.createServer();
+    component.createServer().then(() => {
+      expect(component.loading).toEqual(false);
+      expect(component.error).toEqual('A server error occured.');
+      done();
+    });
     expect(component.loading).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'servers',
       formData
     );
-    // After fake API response
-    tick(50);
-    expect(component.loading).toEqual(false);
-    expect(component.error).toEqual('A server error occured.');
-  }));
+  });
+  it('selecting an image file', (done) => {
+    expect(component.cropperImgSrc).toBeUndefined();
+    const file = new File(['hi there'], 'filename');
+    const event = {
+      target: { files: [file] }
+    };
+    component.onFileChange(event);
+    setTimeout(() => {
+      expect(component.cropperImgSrc).toBeDefined();
+      expect(component.cropperImgSrc).not.toEqual(null);
+      done();
+    }, 10);
+  });
+  it('selecting no image file', (done) => {
+    expect(component.cropperImgSrc).toBeUndefined();
+    const event = {
+      target: { files: [] }
+    };
+    component.onFileChange(event);
+    setTimeout(() => {
+      expect(component.cropperImgSrc).toEqual(null);
+      done();
+    });
+  });
+  it('sets icon field to data url', () => {
+    component.setIconField('data:image/jpeg;base64,hi');
+    expect(component.form.get('icon').value).toEqual('hi');
+  });
+  it('resets icon field', () => {
+    component.setIconField(undefined);
+    expect(component.form.get('icon').value).toEqual(null);
+  });
+  it('does not set icon field if invalid dataurl given', () => {
+    component.setIconField('data:image/png;base64,hi');
+    expect(component.form.get('icon').value).toEqual(null);
+  });
 });

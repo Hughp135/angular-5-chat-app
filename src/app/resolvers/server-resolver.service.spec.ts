@@ -29,6 +29,7 @@ describe('ServerResolver.Service.TsService', () => {
   let service: ServerResolver;
   let route;
   let router: Router;
+  let errorService: ErrorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -47,7 +48,9 @@ describe('ServerResolver.Service.TsService', () => {
     store = TestBed.get(Store);
     service = TestBed.get(ServerResolver);
     router = TestBed.get(Router);
+    errorService = TestBed.get(ErrorService);
     spyOn(router, 'navigate');
+    spyOn(errorService.errorMessage, 'next');
     store.dispatch({
       type: UPDATE_SERVER_LIST,
       payload: serverList
@@ -106,5 +109,34 @@ describe('ServerResolver.Service.TsService', () => {
 
     expect(router.navigate)
       .toHaveBeenCalledWith([`/channels/${serverList[0]._id}/${channelList.channels[0]._id}`]);
+  }));
+  it('navigates to server if not in a channel and no channel list', fakeAsync(async () => {
+    route.children = [];
+    const channelList: ChannelList = {
+      server_id: serverList[0]._id,
+      channels: []
+    };
+
+    service.resolve(<any>route, null);
+    tick(10);
+    store.dispatch({
+      type: SET_CHANNEL_LIST,
+      payload: channelList,
+    });
+    tick(10);
+
+    expect(router.navigate)
+      .toHaveBeenCalledWith([`/channels/${serverList[0]._id}`]);
+  }));
+  it('shows error & redirects to home if server not found', fakeAsync(() => {
+    store.dispatch({
+      type: UPDATE_SERVER_LIST,
+      payload: []
+    });
+    service.resolve(<any>route, null);
+    tick(10);
+    expect(errorService.errorMessage.next).toHaveBeenCalled();
+    expect(router.navigate)
+      .toHaveBeenCalledWith([``]);
   }));
 });

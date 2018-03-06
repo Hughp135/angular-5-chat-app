@@ -35,6 +35,7 @@ export async function createServer(req, res) {
 
 
   try {
+
     const server = await Server.create({
       name: req.body.name,
       owner_id: user._id,
@@ -55,7 +56,6 @@ export async function createServer(req, res) {
         error: 'You already own a server with the same name. Please choose another name or edit your existing server.'
       });
     } else {
-      log('error', e);
       return res.status(500).json({
         error: 'A server error occured.'
       });
@@ -65,18 +65,19 @@ export async function createServer(req, res) {
 
 async function saveServerIcon(server, icon) {
   return await new Promise(resolve => {
+    const imgUrl = `img/server-icons/${server._id}.jpg`;
     fs.writeFile(
-      `back-end/dist/public/img/server-icons/${server._id}.jpg`,
+      `back-end/dist/public/${imgUrl}`,
       icon,
       'base64',
       async (e) => {
         if (e) {
-          log('error', 'Error Writing File:', e);
+          log('error', 'Error Writing Server Image File:', server, e);
           resolve(false);
         }
         server.image_url = `img/server-icons/${server._id}.jpg`;
         await server.save();
-        resolve(server);
+        resolve(true);
       }
     );
   });
@@ -89,6 +90,7 @@ function getValidationMessage(details) {
         return 'Invalid server name. Must be at least 3 characters and max 30 characters long.';
       case 'icon':
         return 'Uploaded Image is too large or in an invalid format.';
+      /* istanbul ignore next */
       default:
         return 'Invalid data submitted, please try again later.';
     }

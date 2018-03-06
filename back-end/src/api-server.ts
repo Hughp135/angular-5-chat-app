@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 
 app.use('/api', apiRouter);
 
+/* istanbul ignore next */
 app.get('/img/server-icons/:img', authMiddleware, (req, res) => {
   res.sendFile(`${__dirname}/public/img/server-icons/${req.params.img}`);
 });

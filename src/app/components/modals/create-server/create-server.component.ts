@@ -53,30 +53,32 @@ export class CreateServerComponent implements OnInit {
     }
   }
 
-  createServer() {
+  async createServer() {
     if (!this.form.valid) {
       this.error = 'Please enter a server name first.';
       return;
     }
     this.error = undefined;
     this.loading = true;
-    this.apiService
-      .post('servers', this.form.value)
-      .subscribe(async (data: { server: ChatServer }) => {
-        this.modal.approve(undefined);
-        this.loading = false;
-        this.store.dispatch({
-          type: ADD_SERVER_TO_LIST,
-          payload: data.server,
-        });
-      }, e => {
-        this.loading = false;
-        if (e.error && e.error.error) {
-          this.error = e.error.error;
-        } else {
-          this.error = 'A server error occured.';
-        }
+    try {
+      const { server }: { server: ChatServer } = <any>await this.apiService
+        .post('servers', this.form.value)
+        .toPromise();
+      this.modal.approve(undefined);
+      this.loading = false;
+      this.store.dispatch({
+        type: ADD_SERVER_TO_LIST,
+        payload: server,
       });
+    } catch (e) {
+      this.loading = false;
+      if (e.error && e.error.error) {
+        this.error = e.error.error;
+      } else {
+        this.error = 'A server error occured.';
+
+      }
+    }
   }
 
 }

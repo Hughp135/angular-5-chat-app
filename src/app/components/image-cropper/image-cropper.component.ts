@@ -38,9 +38,9 @@ export class ImageCropperComponent implements AfterViewInit, OnDestroy {
       background: true,
       modal: false,
       viewMode: 1,
-      cropend: () => this.getCanvasData(),
-      zoom: () => this.getCanvasData(),
-      ready: () => this.getCanvasData(),
+      cropend: this.getCanvasData.bind(this),
+      zoom: this.getCanvasData.bind(this),
+      ready: this.getCanvasData.bind(this),
     });
   }
 
@@ -54,9 +54,10 @@ export class ImageCropperComponent implements AfterViewInit, OnDestroy {
     // hack because of TS error when setting imageSmoothingQuality value
     const allOptions: any = { ...baseOptions, imageSmoothingQuality: 'high', };
     const canvasData = this.cropper.getCroppedCanvas(allOptions);
-    const outputSrc = canvasData.toDataURL('image/jpeg');
 
-    this.previewSrc = outputSrc;
-    this.croppedImgSrc.emit(outputSrc);
+    const dataURL = canvasData.toDataURL('image/jpeg');
+
+    this.previewSrc = dataURL;
+    this.croppedImgSrc.emit(dataURL);
   }
 }

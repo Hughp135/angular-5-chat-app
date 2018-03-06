@@ -64,8 +64,7 @@ export class ServerResolver implements Resolve<ChatServer> {
   async joinServer(id: string) {
     const serverListStore = this.store.select('serverList');
     const serverList = await serverListStore
-      // .filter(list => list.some(srv => srv._id === id))
-      .timeout(10000)
+      .timeout(2500)
       .take(1)
       .toPromise();
     const server = serverList.find(srv => srv._id === id);
