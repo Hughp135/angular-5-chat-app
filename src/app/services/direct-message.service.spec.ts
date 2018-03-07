@@ -50,7 +50,7 @@ describe('DirectMessageService', () => {
     expect(router.navigate).toHaveBeenCalledWith([`friends/123`]);
   });
   it('should call errorMessage on fail', async () => {
-    fakeWsService.awaitNextEvent.and.callFake(() => { throw new Error(); });
+    fakeWsService.awaitNextEvent.and.throwError('');
     await service.startPm('123');
     expect(fakeWsService.socket.emit).toHaveBeenCalledTimes(1);
     expect(fakeWsService.socket.emit).toHaveBeenCalledWith('join-or-create-dm-channel', '123');

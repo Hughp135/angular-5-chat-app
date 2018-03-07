@@ -6,6 +6,7 @@ import ChatServer from 'shared-interfaces/server.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { ShContextMenuModule } from 'ng2-right-click-menu';
 import { DirectMessageService } from '../../services/direct-message.service';
+import { FriendRequestService } from '../../services/friend-request.service';
 
 const fakeSocket = {
   emit: jasmine.createSpy(),
@@ -21,6 +22,9 @@ describe('UserListComponent', () => {
   const fakeDmService = {
     startPm: jasmine.createSpy()
   };
+  const fakeFriendsService = {
+    sendFriendRequest: jasmine.createSpy(),
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,6 +36,7 @@ describe('UserListComponent', () => {
         SettingsService,
         { provide: WebsocketService, useValue: fakeSocketService },
         { provide: DirectMessageService, useValue: fakeDmService },
+        { provide: FriendRequestService, useValue: fakeFriendsService }
       ]
     })
       .compileComponents();
@@ -55,6 +60,7 @@ describe('UserListComponent', () => {
   afterEach(() => {
     fakeSocket.emit.calls.reset();
     fakeDmService.startPm.calls.reset();
+    fakeFriendsService.sendFriendRequest.calls.reset();
   });
 
   it('initial state', () => {
@@ -105,5 +111,9 @@ describe('UserListComponent', () => {
   it('openDm calls dmService.startPm', () => {
     component.sendUserMessage('123');
     expect(fakeDmService.startPm).toHaveBeenCalledWith('123');
+  });
+  it('addFriend calls friendService.sendFriendRequest', () => {
+    component.addFriend('123');
+    expect(fakeFriendsService.sendFriendRequest).toHaveBeenCalledWith('123');
   });
 });

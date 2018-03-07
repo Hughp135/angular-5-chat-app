@@ -35,6 +35,7 @@ import { FriendsComponent } from './components/friends/friends.component';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
 import { DirectMessageService } from './services/direct-message.service';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
+import { FriendRequestService } from './services/friend-request.service';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
     ChatChannelResolver,
     FriendsResolver,
     DirectMessageService,
+    FriendRequestService,
   ],
   bootstrap: [AppComponent]
 })

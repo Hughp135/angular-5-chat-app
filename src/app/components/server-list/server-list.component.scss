@@ -31,23 +31,23 @@ h4 {
 
     &.text {
       border: 1px solid grey;
-      padding: 14px 0;
+      padding: 15px 0;
       text-align: center;
     }
   }
 
   &.active, &:hover {
     .server-content {
-      border-radius: 0 !important;
+      border-radius: 3px !important;
+      border-left: 4px solid #00caf3 !important;
       width: 100% !important;
       height: 100% !important;
       transition: 0.2s;
       filter: brightness(100%);
-      box-shadow: 0 0 4px #30b4ef;
+      // box-shadow: 0 0 4px #30b4ef;
       margin: 0 !important;
 
       &.image {
-        
         padding: 0 !important;
       }
 

@@ -36,8 +36,8 @@
         id="upload-field">
         <label for="">Upload an Icon for your server (Optional)</label>
         <label for="file"
-          class="ui icon button">
-          <i class="upload icon"></i>
+          class="ui labeled icon primary basic button">
+          <i class="large image outline icon"></i>
           Select an Image
         </label>
         <input type="file"
@@ -61,9 +61,9 @@
 </div>
 
 <div class="actions">
-  <button class="ui tiny red button"
+  <button class="ui tiny basic tertiary button"
     (click)="modal.deny(undefined)">
-    Cancel
+    CANCEL
   </button>
   <button class="ui tiny green button"
     [disabled]="!form.valid"

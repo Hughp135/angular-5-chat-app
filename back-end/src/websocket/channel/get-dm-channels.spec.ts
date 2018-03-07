@@ -40,7 +40,7 @@ describe('websocket channel/get-dm-channels', () => {
     });
   });
   after(async () => {
-    mongoose.connection.close();
+    await mongoose.connection.close();
   });
   afterEach(async () => {
     await User.remove({});

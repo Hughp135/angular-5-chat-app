@@ -15,7 +15,6 @@ describe('models/user', () => {
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
-    await User.remove({});
   });
   after(async () => {
     await mongoose.connection.close();
@@ -57,6 +56,20 @@ describe('models/user', () => {
       return expect(e.message).to.equal('duplicate username');
     }
     throw new Error('User create worked when it shouldn\'t have');
+  });
+  it('creates user with friend requests', async () => {
+    const objectId = mongoose.Types.ObjectId();
+    const user = await User.create({
+      username: 'test',
+      password: '123456',
+      friend_requests: [{
+        type: 'outgoing',
+        user_id: objectId,
+      }]
+    });
+
+    expect(user.friend_requests[0].type).to.equal('outgoing');
+    expect(user.friend_requests[0].user_id).to.equal(objectId);
   });
   it('creates with user with joinedServers / friends', async () => {
     const user = await User.create({
