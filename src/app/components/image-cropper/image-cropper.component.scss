@@ -1,0 +1,27 @@
+.ui.grid {
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+img {
+  max-width: 90%;
+}
+
+#cropper-container {
+  padding-right: 20px;
+}
+
+#preview-container {
+  img {
+    box-shadow: 0 0 5px #474747;
+  }
+}
+
+h5 {
+  display: block;
+  margin: 0 0 .28571429rem 0;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: .8em;
+  font-weight: 700;
+  text-transform: uppercase;
+}

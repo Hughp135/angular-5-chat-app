@@ -13,7 +13,8 @@ export class ServerSidebarComponent implements OnInit {
   constructor(
     private modalService: SuiModalService,
     public appState: AppStateService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
   }

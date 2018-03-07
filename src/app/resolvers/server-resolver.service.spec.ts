@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ServerResolver } from './server-resolver.service';
 import ChatServer from 'shared-interfaces/server.interface';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { reducers } from '../reducers/reducers';
@@ -12,6 +12,7 @@ import { SET_CURRENT_SERVER, SET_CHANNEL_LIST } from '../reducers/current-server
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { ChannelList } from '../../../shared-interfaces/channel.interface';
+import { ErrorService } from '../services/error.service';
 
 const serverList: ChatServer[] = [
   { name: 'server1', _id: '123', owner_id: '345' }
@@ -24,17 +25,18 @@ const fakeWebSocketService = {
 };
 
 describe('ServerResolver.Service.TsService', () => {
-  let httpMock: HttpTestingController;
   let store: Store<AppState>;
   let service: ServerResolver;
   let route;
   let router: Router;
+  let errorService: ErrorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         ServerResolver,
         { provide: WebsocketService, useValue: fakeWebSocketService },
+        ErrorService
       ],
       imports: [
         HttpClientTestingModule,
@@ -43,11 +45,12 @@ describe('ServerResolver.Service.TsService', () => {
       ],
     });
 
-    httpMock = TestBed.get(HttpTestingController);
     store = TestBed.get(Store);
     service = TestBed.get(ServerResolver);
     router = TestBed.get(Router);
+    errorService = TestBed.get(ErrorService);
     spyOn(router, 'navigate');
+    spyOn(errorService.errorMessage, 'next');
     store.dispatch({
       type: UPDATE_SERVER_LIST,
       payload: serverList
@@ -106,5 +109,34 @@ describe('ServerResolver.Service.TsService', () => {
 
     expect(router.navigate)
       .toHaveBeenCalledWith([`/channels/${serverList[0]._id}/${channelList.channels[0]._id}`]);
+  }));
+  it('navigates to server if not in a channel and no channel list', fakeAsync(async () => {
+    route.children = [];
+    const channelList: ChannelList = {
+      server_id: serverList[0]._id,
+      channels: []
+    };
+
+    service.resolve(<any>route, null);
+    tick(10);
+    store.dispatch({
+      type: SET_CHANNEL_LIST,
+      payload: channelList,
+    });
+    tick(10);
+
+    expect(router.navigate)
+      .toHaveBeenCalledWith([`/channels/${serverList[0]._id}`]);
+  }));
+  it('shows error & redirects to home if server not found', fakeAsync(() => {
+    store.dispatch({
+      type: UPDATE_SERVER_LIST,
+      payload: []
+    });
+    service.resolve(<any>route, null);
+    tick(10);
+    expect(errorService.errorMessage.next).toHaveBeenCalled();
+    expect(router.navigate)
+      .toHaveBeenCalledWith([``]);
   }));
 });

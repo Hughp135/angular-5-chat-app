@@ -23,7 +23,6 @@ describe('FriendsResolverService', () => {
 
   let store: Store<AppState>;
   let service: FriendsResolver;
-  let wsService: WebsocketService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -37,7 +36,6 @@ describe('FriendsResolverService', () => {
       ]
     });
     service = TestBed.get(FriendsResolver);
-    wsService = TestBed.get(WebsocketService);
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
   });

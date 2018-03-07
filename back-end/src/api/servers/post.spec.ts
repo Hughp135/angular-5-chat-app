@@ -9,6 +9,7 @@ import { app } from '../../api-server';
 import { createJWT } from '../auth/jwt';
 import Server from '../../models/server.model';
 import User from '../../models/user.model';
+import * as fs from 'fs';
 
 // tslint:disable:no-unused-expression
 
@@ -19,6 +20,7 @@ describe('api/servers/post', () => {
   let token;
   let invalidToken;
   let user;
+  const sandbox = sinon.createSandbox();
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -40,6 +42,7 @@ describe('api/servers/post', () => {
   afterEach(async () => {
     await User.remove({});
     await Server.remove({});
+    sandbox.restore();
   });
   it('returns 401 if not logged in', async () => {
     return supertest(app.listen(null))
@@ -58,13 +61,22 @@ describe('api/servers/post', () => {
         error: 'User not found.',
       });
   });
-  it('returns 400 with invalid data', async () => {
+  it('returns 400 with invalid name', async () => {
     return supertest(app.listen(null))
       .post('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
       .send({})
       .expect(400, {
-        error: '"name" is required',
+        error: 'Invalid server name. Must be at least 3 characters and max 30 characters long.',
+      });
+  });
+  it('returns 400 with invalid icon', async () => {
+    return supertest(app.listen(null))
+      .post('/api/servers')
+      .set('Cookie', `jwt_token=${token}`)
+      .send({name: 'asd', icon: 'badicon'})
+      .expect(400, {
+        error: 'Uploaded Image is too large or in an invalid format.',
       });
   });
   it('creates a server', async () => {
@@ -74,8 +86,10 @@ describe('api/servers/post', () => {
       .send({
         name: 'Automated Test Server'
       })
-      .expect(200, {
-        success: true,
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.server).to.exist;
+        expect(body.server.name).to.equal('Automated Test Server');
       });
     const server: any = await Server.findOne().lean();
     expect(server).to.exist;
@@ -92,8 +106,10 @@ describe('api/servers/post', () => {
       .send({
         name: 'Automated Test Server'
       })
-      .expect(200, {
-        success: true,
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.server).to.exist;
+        expect(body.server.name).to.equal('Automated Test Server');
       });
     await supertest(app.listen(null))
       .post('/api/servers')
@@ -115,9 +131,7 @@ describe('api/servers/post', () => {
         .send({
           name: 'Automated Test Server ' + i
         })
-        .expect(200, {
-          success: true,
-        });
+        .expect(200);
     }
     await supertest(app.listen(null))
       .post('/api/servers')
@@ -126,9 +140,23 @@ describe('api/servers/post', () => {
         name: 'Automated Test Server'
       })
       .expect(400, {
-        error: 'You can only have a maximum of 3 servers. Please delete or edit an existing server before creating a new one',
+        error: 'You can only own a maximum of 3 servers. Please delete or edit an existing server before creating a new one',
       });
     const usr: any = await User.findOne({ '_id': user._id }).lean();
     expect(usr.joinedServers).to.have.lengthOf(3);
+  });
+  it('if icon is not saved to file still return 200', async () => {
+    sandbox.stub(fs, 'writeFile')
+      .callsArgWith(3, true);
+    await supertest(app.listen(null))
+      .post('/api/servers')
+      .set('Cookie', `jwt_token=${token}`)
+      .send({
+        name: 'Automated Test Server',
+        icon: 'someIconHere',
+      })
+      .expect(200);
+    const server: any = await Server.findOne().lean();
+    expect(server).to.exist;
   });
 });

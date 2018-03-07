@@ -1,6 +1,6 @@
 import { verifyJWT } from './jwt';
 
-async function authMiddleware(req, res, next) {
+export async function authMiddleware(req, res, next) {
   try {
     req.claim = await verifyJWT(req.cookies.jwt_token);
     return next();
@@ -10,5 +10,3 @@ async function authMiddleware(req, res, next) {
     });
   }
 }
-
-export default authMiddleware;

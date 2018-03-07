@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/test
 import { StoreModule, Store } from '@ngrx/store';
 import { ServerListComponent } from './server-list.component';
 import { SettingsService } from '../../services/settings.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import ChatServer from 'shared-interfaces/server.interface';
 import { reducers } from '../../reducers/reducers';
 import { AppState } from '../../reducers/app.states';
@@ -14,7 +14,6 @@ describe('ServerListComponent', () => {
   let component: ServerListComponent;
   let fixture: ComponentFixture<ServerListComponent>;
   let injector: TestBed;
-  let httpMock: HttpTestingController;
   let store: Store<AppState>;
   let router: Router;
 
@@ -33,7 +32,6 @@ describe('ServerListComponent', () => {
     })
       .compileComponents();
     injector = getTestBed();
-    httpMock = injector.get(HttpTestingController);
     store = injector.get(Store);
     router = injector.get(Router);
     spyOn(router, 'navigate');

@@ -19,18 +19,19 @@ h4 {
 
   .server-content {
     border-radius: 5px;
-    width: 90% !important;
-    height: 90% !important;
-    margin: 5% !important;
+    width: 95% !important;
+    height: 95% !important;
+    margin: 2.5% !important;
     max-width: none !important;
     max-height: none !important;
 
     &.image {
-      padding: 5% !important;
+      padding: 2.5% !important;
     }
 
     &.text {
-      padding: 17px 0;
+      border: 1px solid grey;
+      padding: 14px 0;
       text-align: center;
     }
   }
@@ -42,7 +43,7 @@ h4 {
       height: 100% !important;
       transition: 0.2s;
       filter: brightness(100%);
-      outline: 1px solid #7595a3;
+      box-shadow: 0 0 4px #30b4ef;
       margin: 0 !important;
 
       &.image {

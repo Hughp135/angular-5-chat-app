@@ -1,6 +1,6 @@
 <a class="item friends"
   [routerLink]="'/friends'"
-  [class.active]="appState.currentServer._id === 'friends'">
+  [class.active]="appState.currentServer && appState.currentServer._id === 'friends'">
   <i class="violet large users icon"></i>
   <span>Friends</span>
 </a>

@@ -23,7 +23,6 @@ export class ChatChannelResolver implements Resolve<any> {
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot) {
     const id = route.paramMap.get('id');
-
     const isOnFriendsPage = route.parent.url[0].path === 'friends';
     if (isOnFriendsPage) {
       // Refresh channel list
@@ -34,8 +33,9 @@ export class ChatChannelResolver implements Resolve<any> {
       .catch(e => {
         return this.channelNotFound(isOnFriendsPage, route);
       });
+
     if (!channel) {
-      return this.channelNotFound(isOnFriendsPage, route);
+      return;
     }
 
     this.store.dispatch({
@@ -66,16 +66,16 @@ export class ChatChannelResolver implements Resolve<any> {
   }
 
   channelNotFound(isOnFriendsPage, route) {
-  this.errorService.errorMessage.next({
-    message: 'Channel not found.',
-    duration: 5000,
-    id: new Date().toUTCString(),
-  });
-  if (isOnFriendsPage) {
-    this.router.navigate([`friends`]);
-  } else {
-    this.router.navigate([`channels/${route.parent.url[0].path}`]);
+    this.errorService.errorMessage.next({
+      message: 'Channel not found.',
+      duration: 5000,
+      id: new Date().toUTCString(),
+    });
+    if (isOnFriendsPage) {
+      this.router.navigate([`friends`]);
+    } else {
+      this.router.navigate([`../channels/${route.parent.url[1]}`]);
+    }
+    return false;
   }
-  return false;
-}
 }

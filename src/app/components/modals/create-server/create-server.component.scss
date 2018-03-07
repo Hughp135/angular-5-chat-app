@@ -10,3 +10,13 @@
 .errorMsg {
   color: red;
 }
+
+#upload-field {
+  overflow: hidden;
+
+  .button {
+    max-width: 200px;
+    float: left;
+    margin-right: 15px;
+  }
+}

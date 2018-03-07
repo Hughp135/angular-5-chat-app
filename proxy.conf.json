@@ -2,5 +2,9 @@
   "/api": {
     "target": "http://localhost:7202",
     "secure": false
+  },
+  "/img": {
+    "target": "http://localhost:7202",
+    "secure": false
   }
 }

@@ -1,14 +1,12 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { AppStateService } from './app-state.service';
 
-import { StoreModule, Store } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
-import { AppState } from '../reducers/app.states';
 
 describe('AppStateService', () => {
   let injector: TestBed;
   let service: AppStateService;
-  let store: Store<AppState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -19,7 +17,6 @@ describe('AppStateService', () => {
     });
     injector = getTestBed();
     service = injector.get(AppStateService);
-    store = injector.get(Store);
   });
 
   it('initial state', () => {

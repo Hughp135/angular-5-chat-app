@@ -49,7 +49,6 @@ export class FriendsComponent implements OnInit, OnDestroy {
   }
 
   getChannelName(channel: ChatChannel) {
-    // console.log(channel);
     const userId = channel.user_ids[1];
     const user = this.channelList.users[userId];
     return user ? user.username : 'Unknown';

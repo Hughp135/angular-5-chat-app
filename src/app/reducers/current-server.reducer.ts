@@ -25,7 +25,6 @@ export function currentServerReducer(state: ChatServer, action) {
         return state;
       }
     case SERVER_UPDATE_USER_LIST:
-      // console.log('updating user', action.payload.user);
       if (state.userList && state._id === action.payload.server_id) {
         const userToUpdate: UserListUser = action.payload.user;
         const newUserList: UserListUser[] = state.userList

@@ -2,7 +2,8 @@
   Create Server
 </div>
 <div class="content">
-  <div *ngIf="loading" class="ui active inverted dimmer">
+  <div *ngIf="loading"
+    class="ui active inverted dimmer">
     <div class="ui text loader">Submitting...</div>
   </div>
   <div class="">
@@ -31,7 +32,31 @@
           type="text"
           placeholder="Enter a name for your server...">
       </div>
+      <div class="field"
+        id="upload-field">
+        <label for="">Upload an Icon for your server (Optional)</label>
+        <label for="file"
+          class="ui icon button">
+          <i class="upload icon"></i>
+          Select an Image
+        </label>
+        <input type="file"
+          id="file"
+          (change)="onFileChange($event)"
+          style="display:none"
+          accept="image/*">
+        <div class="ui tiny red button"
+          *ngIf="cropperImgSrc"
+          (click)="cropperImgSrc = null">
+          <i class="remove icon"></i>
+          Remove image
+        </div>
+      </div>
     </form>
+    <app-image-cropper *ngIf="cropperImgSrc"
+      [imgSrc]="cropperImgSrc"
+      (croppedImgSrc)="setIconField($event)">
+    </app-image-cropper>
   </div>
 </div>
 
