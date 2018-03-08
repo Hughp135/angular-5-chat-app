@@ -6,10 +6,12 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
+import * as chaiAsPromised from 'chai-as-promised';
 import createFakeSocketEvent from '../test_helpers/fake-socket';
 
 const expect = chai.expect;
 chai.use(sinonChai);
+chai.use(chaiAsPromised);
 
 describe('friends/', async () => {
   let user1, user2, user3;
@@ -140,6 +142,17 @@ describe('friends/', async () => {
     });
   });
   describe.only('get-friends-list', () => {
+    it('throws and errors socket if user not found', async () => {
+      const socket = {
+        claim: { user_id: mongoose.Types.ObjectId()},
+        error: sinon.spy(),
+      };
+
+      await expect(getFriendRequests(socket)).to.be
+        .rejectedWith('User not found with id ' + socket.claim.user_id);
+      expect(socket.error).to.have.been
+        .calledWith('Invalid token');
+    });
     it('emits "friend-requests" to user', async () => {
       const socket = {
         claim: { user_id: user3._id.toString() },

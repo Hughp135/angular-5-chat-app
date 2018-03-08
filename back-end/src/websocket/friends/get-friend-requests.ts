@@ -2,6 +2,7 @@ import User from '../../models/user.model';
 import { FriendRequest } from 'shared-interfaces/user.interface';
 import { log } from 'winston';
 
+/* istanbul ignore next */
 export function getFriendRequests(io: any) {
   io.on('connection', socket => {
     socket.on('get-friend-requests', async () => {
