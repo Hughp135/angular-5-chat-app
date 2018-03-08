@@ -44,6 +44,11 @@ async function getUsers(socket, userId: string) {
     throw new Error(`User ${fromUser._id} not found`);
   }
 
+  if (fromUser._id === toUser._id) {
+    socket.emit('soft-error', 'You cannot friend yourself.');
+    throw new Error(`fromUser and toUser are the same`);
+  }
+
   return [fromUser, toUser];
 }
 

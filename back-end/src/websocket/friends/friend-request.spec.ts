@@ -59,6 +59,18 @@ describe('friends/send-friends-list', async () => {
       done();
     }
   });
+  it('emits soft-error if toUser and fromUser are same', (done) => {
+    const objectId = mongoose.Types.ObjectId();
+    const { io, socket } = createFakeSocketEvent('send-friend-request', user1._id.toString(),
+      { user_id: user1._id.toString() }, onComplete, result);
+
+    sendFriendRequest(io);
+    function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error', 'You cannot friend yourself.');
+      done();
+    }
+  });
   it('saves friend_requests to users', async () => {
     const socket = {
       claim: { user_id: user1._id.toString() },
