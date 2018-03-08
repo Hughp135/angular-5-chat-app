@@ -89,7 +89,7 @@ describe('websocket server/join', () => {
     }
   });
   it('joins the server', (done) => {
-    user.joinedServers = [server._id.toString()];
+    user.joined_servers = [server._id.toString()];
     user.save().then(() => {
       const { io, socket } = createFakeSocketEvent('join-channel', server._id,
         { user_id: user._id }, onComplete, result);

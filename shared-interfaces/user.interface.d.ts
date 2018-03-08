@@ -6,9 +6,10 @@ export interface FriendRequest {
 export interface User {
   // public properties only
   username: string;
-  joinedServers: string[];
+  joined_servers: string[];
   friends: string[];
   friend_requests: {
+    _id: string;
     type: string;
     user_id: string;
   }[];

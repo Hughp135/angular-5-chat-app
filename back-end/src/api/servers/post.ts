@@ -41,7 +41,7 @@ export async function createServer(req, res) {
       owner_id: user._id,
     });
 
-    (user as any).joinedServers.push(server._id);
+    (user as any).joined_servers.push(server._id);
     await user.save();
 
     await saveServerIcon(server, req.body.icon);

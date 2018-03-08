@@ -4,12 +4,16 @@ import { SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST } from 
 import { NEW_CHAT_MESSAGE, CHAT_HISTORY } from '../../reducers/current-chat-channel.reducer';
 import 'rxjs/add/operator/take';
 import { ServerUserList, UserListUpdate } from '../../../../shared-interfaces/server.interface';
+import { User } from '../../../../shared-interfaces/user.interface';
+import { SET_FRIEND_REQUESTS } from '../../reducers/friends-reducer';
 
 export const CHAT_MESSAGE_HANDLER = 'chat-message';
 export const CHANNEL_LIST_HANDLER = 'channel-list';
 export const JOINED_CHANNEL_HANDLER = 'joined-channel';
 export const SERVER_USERLIST_HANDLER = 'server-user-list';
 export const SERVER_UPDATE_USERLIST_HANDLER = 'update-user-list';
+export const SET_FRIEND_REQUESTS_HANDLER = 'friend-requests';
+export const SENT_FRIEND_REQUEST_HANDLER = 'sent-friend-request';
 
 export const handlers: { [key: string]: (socket, store) => void } = {
   [CHAT_MESSAGE_HANDLER]: chatMessage,
@@ -17,6 +21,8 @@ export const handlers: { [key: string]: (socket, store) => void } = {
   [JOINED_CHANNEL_HANDLER]: joinedChannel,
   [SERVER_USERLIST_HANDLER]: serverUserList,
   [SERVER_UPDATE_USERLIST_HANDLER]: updateUserList,
+  [SET_FRIEND_REQUESTS_HANDLER]: setFriendRequests,
+  [SENT_FRIEND_REQUEST_HANDLER]: sentFriendRequest,
 };
 
 function chatMessage(socket, store) {
@@ -65,6 +71,24 @@ function updateUserList(socket, store) {
     store.dispatch({
       type: SERVER_UPDATE_USER_LIST,
       payload: response,
+    });
+  });
+}
+
+function setFriendRequests(socket, store) {
+  socket.on(SET_FRIEND_REQUESTS_HANDLER, (friend_requests: User['friend_requests']) => {
+    store.dispatch({
+      type: SET_FRIEND_REQUESTS,
+      payload: friend_requests,
+    });
+  });
+}
+
+function sentFriendRequest(socket, store) {
+  socket.on(SENT_FRIEND_REQUEST_HANDLER, (friend_requests: User['friend_requests']) => {
+    store.dispatch({
+      type: SET_FRIEND_REQUESTS,
+      payload: friend_requests,
     });
   });
 }

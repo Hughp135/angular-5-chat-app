@@ -9,6 +9,7 @@ import { getUserList } from './server/get-user-list';
 import { getDmChannels } from './channel/get-dm-channels';
 import { joinDmChannel } from './channel/join-or-create-dm';
 import { sendFriendRequest } from './friends/friend-request';
+import { getFriendRequests } from './friends/get-friend-requests';
 
 export async function startWs(server) {
   const io = socketIo(server);
@@ -25,6 +26,7 @@ export async function startWs(server) {
   getDmChannels(io);
   joinDmChannel(io);
   sendFriendRequest(io);
+  getFriendRequests(io);
   return io;
 }
 

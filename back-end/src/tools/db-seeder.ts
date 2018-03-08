@@ -20,8 +20,8 @@ async function seed() {
   const servers = await createServers(user._id);
   const serverIds = servers.map(srv => srv._id.toString());
 
-  // Set user.joinedServers and save
-  user.joinedServers = serverIds;
+  // Set user.joined_servers and save
+  user.joined_servers = serverIds;
   await user.save();
 
   console.warn('Creating channels...');
@@ -57,7 +57,7 @@ async function createUsersInServers(serverIds) {
       return new User({
         username: `User ${index}`,
         password: pass,
-        joinedServers: serverIds
+        joined_servers: serverIds
       });
     });
   return await User.insertMany(users);

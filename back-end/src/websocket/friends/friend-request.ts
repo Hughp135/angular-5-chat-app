@@ -17,7 +17,7 @@ export function sendFriendRequest(io: any) {
 export async function handler(socket, userId: string) {
   const [fromUser, toUser] = await getUsers(socket, userId);
   await saveFriendRequests(fromUser, toUser);
-  socket.emit('sent-friend-request', toUser._id);
+  socket.emit('sent-friend-request', fromUser.friend_requests);
 }
 
 async function getUsers(socket, userId: string) {

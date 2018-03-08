@@ -78,7 +78,7 @@ async function saveMessage(message) {
 async function getTestUserObjects(socket, request) {
   // TEST USERS ONLY
   const user: any = await User.findById(socket.claim.user_id).lean();
-  const [server_id] = user.joinedServers;
+  const [server_id] = user.joined_servers;
   const server: any = await Server.findById(server_id).lean();
   const [channel]: any = await Channel.find({
     server_id: server_id

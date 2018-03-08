@@ -9,7 +9,7 @@ export async function getServers(req, res) {
     });
   }
 
-  const serverIds = user.joinedServers;
+  const serverIds = user.joined_servers;
   const servers = await Server.find({
     '_id': serverIds
   }).lean();

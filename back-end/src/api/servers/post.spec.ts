@@ -96,8 +96,8 @@ describe('api/servers/post', () => {
     expect(server.name).to.equal('Automated Test Server');
     expect(server.owner_id.toString()).to.equal(user._id.toString());
     const usr: any = await User.findOne({ '_id': user._id }).lean();
-    expect(usr.joinedServers).to.have.lengthOf(1);
-    expect(usr.joinedServers[0].toString()).to.equal(server._id.toString());
+    expect(usr.joined_servers).to.have.lengthOf(1);
+    expect(usr.joined_servers[0].toString()).to.equal(server._id.toString());
   });
   it('will not allow user to have more than 1 server with the same name', async () => {
     await supertest(app.listen(null))
@@ -121,7 +121,7 @@ describe('api/servers/post', () => {
         error: 'You already own a server with the same name. Please choose another name or edit your existing server.',
       });
     const usr: any = await User.findOne({ '_id': user._id }).lean();
-    expect(usr.joinedServers).to.have.lengthOf(1);
+    expect(usr.joined_servers).to.have.lengthOf(1);
   });
   it('will not allow user to create more than 3 total servers', async () => {
     for (let i = 0; i < 3; i++) {
@@ -143,7 +143,7 @@ describe('api/servers/post', () => {
         error: 'You can only own a maximum of 3 servers. Please delete or edit an existing server before creating a new one',
       });
     const usr: any = await User.findOne({ '_id': user._id }).lean();
-    expect(usr.joinedServers).to.have.lengthOf(3);
+    expect(usr.joined_servers).to.have.lengthOf(3);
   });
   it('if icon is not saved to file still return 200', async () => {
     sandbox.stub(fs, 'writeFile')

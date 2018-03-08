@@ -17,7 +17,7 @@ describe('websocket/server/update-user-list', () => {
     user = new User({
       _id: '123',
       username: 'test',
-      joinedServers: ['345', '678'],
+      joined_servers: ['345', '678'],
     });
     emit = sandbox.spy();
     io = {

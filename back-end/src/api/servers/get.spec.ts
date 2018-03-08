@@ -73,7 +73,7 @@ describe('api/servers/get', () => {
       name: 'namehere2',
       owner_id: user._id
     });
-    user.joinedServers = [ server._id, server2._id ];
+    user.joined_servers = [ server._id, server2._id ];
     await user.save();
     return supertest(app.listen(null))
       .get('/api/servers')

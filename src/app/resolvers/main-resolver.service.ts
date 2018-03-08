@@ -7,6 +7,7 @@ import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import { ErrorService } from '../services/error.service';
 import { Router } from '@angular/router';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router/src/router_state';
+import { WebsocketService } from '../services/websocket.service';
 
 @Injectable()
 export class MainResolver implements Resolve<any> {
@@ -15,7 +16,8 @@ export class MainResolver implements Resolve<any> {
     private apiService: ApiService,
     private store: Store<AppState>,
     private errorService: ErrorService,
-    private router: Router
+    private router: Router,
+    private wsService: WebsocketService,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
@@ -38,7 +40,7 @@ export class MainResolver implements Resolve<any> {
           id: new Date().toUTCString(),
         });
       }
-
     }
+    this.wsService.socket.emit('get-friend-requests');
   }
 }

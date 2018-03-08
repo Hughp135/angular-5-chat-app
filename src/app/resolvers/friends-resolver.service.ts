@@ -36,6 +36,7 @@ export class FriendsResolver implements Resolve<any> {
     return {
       server: this.store.select('currentServer'),
       channel: this.store.select('currentChatChannel'),
+      friends: this.store.select('friends'),
     };
 
   }
