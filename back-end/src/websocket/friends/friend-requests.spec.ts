@@ -141,7 +141,7 @@ describe('friends/', async () => {
       expect(toUser.friend_requests).to.have.lengthOf(1);
     });
   });
-  describe.only('get-friends-list', () => {
+  describe('get-friends-list', () => {
     it('throws and errors socket if user not found', async () => {
       const socket = {
         claim: { user_id: mongoose.Types.ObjectId()},

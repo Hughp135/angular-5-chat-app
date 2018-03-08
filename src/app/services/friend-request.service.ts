@@ -13,7 +13,7 @@ export class FriendRequestService {
   async sendFriendRequest(userId: string) {
     this.wsService.socket.emit('send-friend-request', userId);
     try {
-      const result = await this.wsService
+      await this.wsService
         .awaitNextEvent('sent-friend-request', 2500);
     } catch (e) {
       this.errorService.errorMessage.next({

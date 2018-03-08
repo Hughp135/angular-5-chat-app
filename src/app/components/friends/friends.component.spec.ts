@@ -9,6 +9,7 @@ import ChatServer from 'shared-interfaces/server.interface';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { FriendsStore } from '../../reducers/friends-reducer';
 
 describe('FriendsComponent', () => {
   let component: FriendsComponent;
@@ -32,12 +33,18 @@ describe('FriendsComponent', () => {
       channels: [channel]
     }
   };
+  const friends: FriendsStore = {
+    friendRequests: [
+      { type: 'incoming', user_id: 'ab1', _id: 'lo1' }
+    ]
+  };
 
   const route = {
     data: Observable.of({
       state: {
         channel: Observable.of(channel),
         server: Observable.of(server),
+        friends: Observable.of(friends),
       }
     })
   };
@@ -65,10 +72,11 @@ describe('FriendsComponent', () => {
     spyOn(router, 'navigate');
   });
 
-  it('should create', () => {
+  it('should create + initial state', () => {
     expect(component).toBeTruthy();
     expect(component.currentServer).toBeTruthy();
     expect(component.currentChatChannel).toBeTruthy();
+    expect(component.friendsStore).toBeTruthy();
   });
   it('join server should redirect', () => {
     component.joinChannel(channel);

@@ -1,5 +1,4 @@
 import User from '../../models/user.model';
-import { FriendRequest } from 'shared-interfaces/user.interface';
 import { log } from 'winston';
 
 /* istanbul ignore next */

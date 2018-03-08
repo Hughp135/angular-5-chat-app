@@ -10,6 +10,7 @@ import { ErrorService } from '../services/error.service';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import { Router } from '@angular/router';
+import { WebsocketService } from '../services/websocket.service';
 
 describe('MainResolverService', () => {
   let apiService: ApiService;
@@ -22,6 +23,11 @@ describe('MainResolverService', () => {
       next: jasmine.createSpy()
     }
   };
+  const fakeWsService = {
+    socket: {
+      emit: jasmine.createSpy()
+    }
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -29,6 +35,7 @@ describe('MainResolverService', () => {
         MainResolver,
         ApiService,
         { provide: ErrorService, useValue: fakeErrorService },
+        { provide: WebsocketService, useValue: fakeWsService },
       ],
       imports: [
         RouterTestingModule,
@@ -43,7 +50,11 @@ describe('MainResolverService', () => {
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     spyOn(router, 'navigate');
+  });
+
+  afterEach(() => {
     fakeErrorService.errorMessage.next.calls.reset();
+    fakeWsService.socket.emit.calls.reset();
   });
 
   it('should be created', () => {
@@ -62,6 +73,17 @@ describe('MainResolverService', () => {
       type: UPDATE_SERVER_LIST,
       payload: mockResponse.servers,
     });
+  }));
+  it('gets server list and updates store', fakeAsync(() => {
+    const mockResponse: { servers: ChatServer[] } = {
+      servers: [{ name: 'server1', _id: '123', owner_id: '345' }]
+    };
+    service.resolve(null, null);
+    const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
+    called.flush(mockResponse);
+    tick(1);
+    expect(fakeWsService.socket.emit).toHaveBeenCalledTimes(1);
+    expect(fakeWsService.socket.emit).toHaveBeenCalledWith('get-friend-requests');
   }));
   it('fails to get server list and redirects to login on 401', fakeAsync(() => {
     service.resolve(null, null);
