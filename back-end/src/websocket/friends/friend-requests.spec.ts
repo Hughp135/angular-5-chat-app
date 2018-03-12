@@ -141,10 +141,61 @@ describe('friends/', async () => {
       expect(toUser.friend_requests).to.have.lengthOf(1);
     });
   });
+  it('if toUser has also made request to fromUser, add friends', async () => {
+    const socket1 = {
+      claim: { user_id: user1._id.toString() },
+      emit: () => { },
+    };
+    const socket2 = {
+      claim: { user_id: user2._id.toString() },
+      emit: () => { },
+    };
+
+    await sendFriendRequestHandler(socket1, user2._id.toString());
+    await sendFriendRequestHandler(socket2, user1._id.toString());
+
+    const fromUser: any = await User.findById(user2._id).lean();
+    const toUser: any = await User.findById(user1._id).lean();
+
+    expect(fromUser.friend_requests).to.have.lengthOf(0);
+    expect(toUser.friend_requests).to.have.lengthOf(0);
+    expect(fromUser.friends).to.have.lengthOf(1);
+    expect(toUser.friends).to.have.lengthOf(1);
+  });
+  it('if already friends do not create friend requests', async () => {
+    user1.friends = [user2._id];
+    await user1.save();
+    const socket1 = {
+      claim: { user_id: user1._id.toString() },
+      emit: () => { },
+    };
+
+    await sendFriendRequestHandler(socket1, user2._id.toString());
+
+    const fromUser: any = await User.findById(user2._id).lean();
+    const toUser: any = await User.findById(user1._id).lean();
+    console.log('after test', fromUser.friends);
+    expect(fromUser.friend_requests).to.have.lengthOf(0);
+    expect(toUser.friend_requests).to.have.lengthOf(0);
+  });
+  it('do not make users friends if same user sends request twice', async () => {
+    const socket1 = {
+      claim: { user_id: user1._id.toString() },
+      emit: () => { },
+    };
+
+    await sendFriendRequestHandler(socket1, user2._id.toString());
+    await sendFriendRequestHandler(socket1, user2._id.toString());
+
+    const fromUser: any = await User.findById(user2._id).lean();
+    const toUser: any = await User.findById(user1._id).lean();
+
+    expect(fromUser.friends).to.have.lengthOf(0);
+  });
   describe('get-friends-list', () => {
     it('throws and errors socket if user not found', async () => {
       const socket = {
-        claim: { user_id: mongoose.Types.ObjectId()},
+        claim: { user_id: mongoose.Types.ObjectId() },
         error: sinon.spy(),
       };
 
@@ -161,10 +212,10 @@ describe('friends/', async () => {
 
       await getFriendRequests(socket);
       expect(socket.emit).to.have.been
-      .calledWith('friend-requests', [
-        sinon.match({ type: 'incoming', user_id: user1._id }),
-        sinon.match({ type: 'outgoing', user_id: user2._id }),
-      ]);
+        .calledWith('friend-requests', [
+          sinon.match({ type: 'incoming', user_id: user1._id }),
+          sinon.match({ type: 'outgoing', user_id: user2._id }),
+        ]);
     });
   });
 });

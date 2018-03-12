@@ -16,7 +16,13 @@ export function sendFriendRequest(io: any) {
 
 export async function handler(socket, userId: string) {
   const [fromUser, toUser] = await getUsers(socket, userId);
-  await saveFriendRequests(fromUser, toUser);
+  if (await checkIfAlreadyFriends(fromUser, toUser)) {
+    return socket.emit('soft-error', 'You are already friends with this user.');
+  }
+
+  if (!await checkIfRequestExists(fromUser, toUser)) {
+    await saveFriendRequests(fromUser, toUser);
+  }
   socket.emit('sent-friend-request', fromUser.friend_requests);
 }
 
@@ -28,6 +34,7 @@ async function getUsers(socket, userId: string) {
     {
       username: 1,
       friend_requests: 1,
+      friends: 1,
     });
 
 
@@ -50,6 +57,32 @@ async function getUsers(socket, userId: string) {
   }
 
   return [fromUser, toUser];
+}
+
+async function checkIfAlreadyFriends(fromUser, toUser) {
+  if (fromUser.friends && fromUser.friends.some(id => id === toUser._id.toString())) {
+    return true;
+  }
+  return false;
+}
+
+async function checkIfRequestExists(fromUser, toUser) {
+  if (toUser.friend_requests
+    .some(req => req.user_id.toString() === fromUser._id.toString()
+      && req.type === 'outgoing')
+  ) {
+    // toUser has already sent fromUser a friend request, so add friends
+    toUser.friends = [...toUser.friends, fromUser._id.toString()];
+    fromUser.friends = [...fromUser.friends, toUser._id.toString()];
+    toUser.friend_requests = toUser.friend_requests
+      .filter(req => req.user_id.toString() !== fromUser._id.toString());
+    fromUser.friend_requests = fromUser.friend_requests
+      .filter(req => req.user_id.toString() !== toUser._id.toString());
+
+    await Promise.all([toUser.save(), fromUser.save()]);
+    return true;
+  }
+  return false;
 }
 
 async function saveFriendRequests(fromUser, toUser) {
