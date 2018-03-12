@@ -11,6 +11,7 @@ export interface IUserModel extends mongoose.Document, User {
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
+  socket_id: { type: String },
   joined_servers: { type: [String], default: [] },
   friends: { type: [String], default: [] },
   friend_requests: {

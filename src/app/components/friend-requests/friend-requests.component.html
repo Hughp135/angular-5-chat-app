@@ -1,0 +1,30 @@
+<div class="ui basic padded segment">
+
+  <h3>Friend Requests</h3>
+  <table class="ui very basic celled padded table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let friendRequest of (friendsStore | async).friendRequests">
+        <td>
+          <h5 class="ui header">
+            {{ friendRequest._id }}
+          </h5>
+        </td>
+        <td>
+          {{ friendRequest.type }}
+        </td>
+        <td>
+          <button class="ui icon button">
+            <i class="remove icon"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

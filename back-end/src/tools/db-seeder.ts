@@ -31,7 +31,7 @@ async function seed() {
   await createUsersInServers(serverIds);
 
   console.warn('Adding friends to main user');
-  await addFriendsToUser(user);
+  // await addFriendsToUser(user);
 
   console.warn('Creating DM channels');
   await createDMChannels(user);

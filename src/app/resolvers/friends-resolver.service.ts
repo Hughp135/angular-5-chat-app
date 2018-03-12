@@ -32,6 +32,7 @@ export class FriendsResolver implements Resolve<any> {
     });
 
     this.wsService.socket.emit('get-dm-channels', undefined);
+    this.wsService.socket.emit('get-friend-requests');
 
     return {
       server: this.store.select('currentServer'),

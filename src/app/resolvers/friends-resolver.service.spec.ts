@@ -64,5 +64,6 @@ describe('FriendsResolverService', () => {
     });
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('get-dm-channels', undefined);
+    expect(fakeWebSocketService.socket.emit).toHaveBeenCalledWith('get-friend-requests');
   });
 });

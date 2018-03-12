@@ -83,7 +83,6 @@ describe('MainResolverService', () => {
     called.flush(mockResponse);
     tick(1);
     expect(fakeWsService.socket.emit).toHaveBeenCalledTimes(1);
-    expect(fakeWsService.socket.emit).toHaveBeenCalledWith('get-friend-requests');
   }));
   it('fails to get server list and redirects to login on 401', fakeAsync(() => {
     service.resolve(null, null);

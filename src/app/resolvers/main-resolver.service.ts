@@ -21,6 +21,7 @@ export class MainResolver implements Resolve<any> {
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
+    console.log('main resolver');
     try {
       const { servers }: any =
         await this.apiService
@@ -41,6 +42,5 @@ export class MainResolver implements Resolve<any> {
         });
       }
     }
-    this.wsService.socket.emit('get-friend-requests');
   }
 }

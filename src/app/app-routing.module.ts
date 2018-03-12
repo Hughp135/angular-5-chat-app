@@ -13,6 +13,7 @@ import { ChatChannelComponent } from './components/chat-channel/chat-channel.com
 import { ChatChannelResolver } from './resolvers/chat-channel-resolver.service';
 import { FriendsComponent } from './components/friends/friends.component';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
+import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
 
 export const appRoutes: Routes = [
   {
@@ -26,6 +27,9 @@ export const appRoutes: Routes = [
       {
         path: 'friends', component: FriendsComponent, resolve: { state: FriendsResolver },
         children: [
+          {
+            path: '', component: FriendRequestsComponent
+          },
           {
             path: ':id', component: ChatChannelComponent,
             resolve: { state: ChatChannelResolver },
