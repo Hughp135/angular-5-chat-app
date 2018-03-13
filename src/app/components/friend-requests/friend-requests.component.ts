@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { FriendsStore } from '../../reducers/friends-reducer';
+import { FriendRequestService } from '../../services/friend-request.service';
 
 @Component({
   selector: 'app-friend-requests',
@@ -12,9 +13,10 @@ export class FriendRequestsComponent implements OnInit {
   public friendsStore: Observable<FriendsStore>;
 
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private friendRequestService: FriendRequestService
   ) {
-    route.data.subscribe(data => {
+    this.route.data.subscribe(data => {
       this.friendsStore = data.state.friends;
     });
   }
@@ -22,4 +24,11 @@ export class FriendRequestsComponent implements OnInit {
   ngOnInit() {
   }
 
+  addFriend(userId: string) {
+    this.friendRequestService.sendFriendRequest(userId);
+  }
+
+  rejectFriendRequest(userId: string) {
+    this.friendRequestService.rejectFriendRequest(userId);
+  }
 }

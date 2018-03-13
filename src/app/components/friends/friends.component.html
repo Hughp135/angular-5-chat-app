@@ -6,10 +6,16 @@
     <div class="item">
       <h5>Direct Messages</h5>
     </div>
-    <div class="item less-padding">
+    <div class="item"
+      *ngIf="(currentServer | async).channelList && (currentServer | async).channelList.channels.length < 1">
+      <p>
+        No direct messages yet.
+      </p>
+    </div>
+    <div class="item less-padding"
+      *ngIf="(currentServer | async).channelList && (currentServer | async).channelList.channels.length >= 1">
       <div class="ui list dm-list"
-        [class.inverted]="settingsService.invertedTheme"
-        *ngIf="(currentServer | async).channelList">
+        [class.inverted]="settingsService.invertedTheme">
 
         <a class="item channel"
           *ngFor="let channel of (currentServer | async).channelList.channels"

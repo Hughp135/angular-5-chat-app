@@ -24,9 +24,8 @@ describe('websocket/socket-auth', () => {
     sandbox.stub(User, 'find').callsFake(() => ({
       lean: () => [user],
     }));
-    sandbox.stub(User, 'findById').callsFake(() => ({
-      lean: () => user,
-    }));
+    sandbox.stub(User, 'findById').callsFake(() => user);
+    sandbox.stub(User.prototype, 'save').callsFake(() => {});
   });
   afterEach(() => {
     sandbox.restore();
@@ -40,7 +39,7 @@ describe('websocket/socket-auth', () => {
       }
     };
 
-    const cb = result => {
+    const cb = (result) => {
       expect(result).to.be.undefined;
     };
 
@@ -64,9 +63,7 @@ describe('websocket/socket-auth', () => {
   });
   it('fails if token valid but user doesnt exist', async () => {
     sandbox.restore();
-    sandbox.stub(User, 'findById').callsFake(() => ({
-      lean: () => null,
-    }));
+    sandbox.stub(User, 'findById').callsFake(() => null);
     const validToken = createJWT({ username: 'hi' }, '1s');
     const fakeSocket = {
       handshake: {
@@ -78,7 +75,7 @@ describe('websocket/socket-auth', () => {
 
     const cb = result => {
       expect(User.findById).to.have.been.called;
-      expect(result.message).to.equal('Invalid token');
+      expect(result.message).to.equal('User not found');
     };
 
     await logInAuthFunction(fakeSocket, cb);

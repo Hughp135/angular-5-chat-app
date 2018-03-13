@@ -5,6 +5,8 @@ import User from '../models/user.model';
 import ChatMessage from '../models/chatmessage.model';
 import * as bcrypt from 'bcrypt';
 
+/* tslint:disable:no-unused-variable */
+
 console.warn('Warning! Wiping database in 5 seconds... Terminate the process now to abort.');
 setTimeout(seed, 5000);
 
@@ -34,7 +36,7 @@ async function seed() {
   // await addFriendsToUser(user);
 
   console.warn('Creating DM channels');
-  await createDMChannels(user);
+  // await createDMChannels(user);
 
   console.warn('Finished!');
   await mongoose.disconnect();
@@ -50,7 +52,7 @@ async function createMainUser() {
 
 async function createUsersInServers(serverIds) {
   const pass = await bcrypt.hash('asdasd', 1);
-  const users = [...Array(1000)]
+  const users = [...Array(10)]
     .map((x, index) => {
       // const serverIdsSlice = Math.random() > 0.5
       // ? serverIds.slice(0, 3) : serverIds.slice(2, 4);

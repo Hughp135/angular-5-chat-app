@@ -15,6 +15,7 @@ export class FriendRequestService {
     try {
       await this.wsService
         .awaitNextEvent('sent-friend-request', 2500);
+      this.wsService.socket.emit('get-friend-requests');
     } catch (e) {
       this.errorService.errorMessage.next({
         duration: 2500,
@@ -22,5 +23,9 @@ export class FriendRequestService {
         id: new Date().toUTCString(),
       });
     }
+  }
+
+  rejectFriendRequest(userId: string) {
+    this.wsService.socket.emit('reject-friend-request', userId);
   }
 }

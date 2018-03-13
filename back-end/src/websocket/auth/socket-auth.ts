@@ -31,7 +31,7 @@ function logInAuth(io) {
       const user: any = await User.findById(socket.claim.user_id);
 
       if (!user) {
-        return next(new Error('Invalid token'));
+        return next(new Error('User not found'));
       }
       user.socket_id = socket.id;
       await user.save();

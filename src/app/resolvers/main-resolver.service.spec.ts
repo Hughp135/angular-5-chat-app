@@ -10,7 +10,6 @@ import { ErrorService } from '../services/error.service';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import { Router } from '@angular/router';
-import { WebsocketService } from '../services/websocket.service';
 
 describe('MainResolverService', () => {
   let apiService: ApiService;
@@ -23,11 +22,6 @@ describe('MainResolverService', () => {
       next: jasmine.createSpy()
     }
   };
-  const fakeWsService = {
-    socket: {
-      emit: jasmine.createSpy()
-    }
-  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -35,7 +29,6 @@ describe('MainResolverService', () => {
         MainResolver,
         ApiService,
         { provide: ErrorService, useValue: fakeErrorService },
-        { provide: WebsocketService, useValue: fakeWsService },
       ],
       imports: [
         RouterTestingModule,
@@ -54,7 +47,6 @@ describe('MainResolverService', () => {
 
   afterEach(() => {
     fakeErrorService.errorMessage.next.calls.reset();
-    fakeWsService.socket.emit.calls.reset();
   });
 
   it('should be created', () => {
@@ -82,7 +74,6 @@ describe('MainResolverService', () => {
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush(mockResponse);
     tick(1);
-    expect(fakeWsService.socket.emit).toHaveBeenCalledTimes(1);
   }));
   it('fails to get server list and redirects to login on 401', fakeAsync(() => {
     service.resolve(null, null);

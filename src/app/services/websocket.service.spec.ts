@@ -11,7 +11,6 @@ import {
   SERVER_USERLIST_HANDLER,
   SERVER_UPDATE_USERLIST_HANDLER,
   SET_FRIEND_REQUESTS_HANDLER,
-  SENT_FRIEND_REQUEST_HANDLER
 } from './websocket-events/websocket-events';
 
 import { StoreModule, Store } from '@ngrx/store';
@@ -229,18 +228,6 @@ describe('WebsocketService', () => {
       }
     };
     handlers[SET_FRIEND_REQUESTS_HANDLER](fakeSocket, store);
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: SET_FRIEND_REQUESTS,
-      payload: 'hi',
-    });
-  });
-  it('friend-requests handler', () => {
-    const fakeSocket = {
-      on: (msg: string, callback: any) => {
-        callback('hi');
-      }
-    };
-    handlers[SENT_FRIEND_REQUEST_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_FRIEND_REQUESTS,
       payload: 'hi',

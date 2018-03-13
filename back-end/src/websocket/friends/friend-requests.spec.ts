@@ -174,7 +174,6 @@ describe('friends/', async () => {
 
     const fromUser: any = await User.findById(user2._id).lean();
     const toUser: any = await User.findById(user1._id).lean();
-    console.log('after test', fromUser.friends);
     expect(fromUser.friend_requests).to.have.lengthOf(0);
     expect(toUser.friend_requests).to.have.lengthOf(0);
   });
@@ -192,7 +191,7 @@ describe('friends/', async () => {
 
     expect(fromUser.friends).to.have.lengthOf(0);
   });
-  describe('get-friends-list', () => {
+  describe('get-friend-requests', () => {
     it('throws and errors socket if user not found', async () => {
       const socket = {
         claim: { user_id: mongoose.Types.ObjectId() },
@@ -213,8 +212,8 @@ describe('friends/', async () => {
       await getFriendRequests(socket);
       expect(socket.emit).to.have.been
         .calledWith('friend-requests', [
-          sinon.match({ type: 'incoming', user_id: user1._id }),
-          sinon.match({ type: 'outgoing', user_id: user2._id }),
+          sinon.match({ type: 'incoming', user_id: user1._id.toString(), username: user1.username }),
+          sinon.match({ type: 'outgoing', user_id: user2._id.toString(), username: user2.username }),
         ]);
     });
   });

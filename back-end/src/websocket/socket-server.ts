@@ -10,6 +10,7 @@ import { getDmChannels } from './channel/get-dm-channels';
 import { joinDmChannel } from './channel/join-or-create-dm';
 import { sendFriendRequest } from './friends/friend-request';
 import { getFriendRequests } from './friends/get-friend-requests';
+import { rejectFriendRequest } from './friends/reject-friend-request';
 
 export async function startWs(server) {
   const io = socketIo(server);
@@ -17,6 +18,7 @@ export async function startWs(server) {
   io.on('connection', async socket => {
     log('info', 'User connected ' + socket.id);
   });
+  io.setMaxListeners(20);
   // Add event handlers
   joinServer(io);
   createChannel(io);
@@ -27,6 +29,7 @@ export async function startWs(server) {
   joinDmChannel(io);
   sendFriendRequest(io);
   getFriendRequests(io);
+  rejectFriendRequest(io);
   return io;
 }
 
