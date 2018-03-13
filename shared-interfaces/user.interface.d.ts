@@ -13,4 +13,5 @@ export interface User {
     type: string;
     user_id: string;
   }[];
+  socket_id: string;
 }

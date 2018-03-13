@@ -16,6 +16,7 @@ chai.use(chaiAsPromised);
 describe('friends/', async () => {
   let user1, user2, user3;
   const result = sinon.spy();
+  let fakeIoConnected, socketId2EmitSpy;
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -27,7 +28,8 @@ describe('friends/', async () => {
     });
     user2 = await User.create({
       username: 'testuser2',
-      password: '123456'
+      password: '123456',
+      socket_id: 'socketId2',
     });
     user3 = await User.create({
       username: 'testuser3',
@@ -36,7 +38,16 @@ describe('friends/', async () => {
         { type: 'incoming', user_id: user1._id },
         { type: 'outgoing', user_id: user2._id }
       ],
+      socket_id: 'offlineid',
     });
+    socketId2EmitSpy = sinon.spy();
+    fakeIoConnected = {
+      of: () => ({
+        connected: {
+          socketId2: { emit: socketId2EmitSpy },
+        }
+      }),
+    };
   });
   after(async () => {
     await mongoose.connection.close();
@@ -89,7 +100,7 @@ describe('friends/', async () => {
         emit: () => { },
       };
 
-      await sendFriendRequestHandler(socket, user2._id.toString());
+      await sendFriendRequestHandler(fakeIoConnected, socket, user2._id.toString());
       const fromUser: any = await User.findById(user1._id).lean();
       const toUser: any = await User.findById(user2._id).lean();
 
@@ -107,8 +118,35 @@ describe('friends/', async () => {
         emit: sinon.spy(),
       };
 
-      await sendFriendRequestHandler(socket, user2._id.toString());
+      await sendFriendRequestHandler(fakeIoConnected, socket, user2._id.toString());
       expect(socket.emit).to.have.been.calledWith('sent-friend-request');
+    });
+    it('emits "friend-requests" to toUser', async () => {
+      const socket = {
+        claim: { user_id: user1._id.toString() },
+        emit: () => { },
+      };
+
+      await sendFriendRequestHandler(fakeIoConnected, socket, user2._id.toString());
+      // tslint:disable-next-line:no-unused-expression
+      expect(socketId2EmitSpy).to.have.been.calledOnce;
+      expect(socketId2EmitSpy).to.have.been.calledWith('friend-requests', [
+        sinon.match({
+          type: 'incoming',
+          user_id: user1._id.toString(),
+          username: 'testuser1'
+        })
+      ]);
+    });
+    it('sets toUser socket_id to null if user not online', async () => {
+      const socket = {
+        claim: { user_id: user1._id.toString() },
+        emit: () => { },
+      };
+
+      await sendFriendRequestHandler(fakeIoConnected, socket, user3._id.toString());
+      const user3Updated = await User.findById(user3._id);
+      expect(user3Updated.socket_id).to.equal(null);
     });
     it('does not save more than 1 friend request if called twice', async () => {
       const socket = {
@@ -116,8 +154,8 @@ describe('friends/', async () => {
         emit: () => { },
       };
 
-      await sendFriendRequestHandler(socket, user2._id.toString());
-      await sendFriendRequestHandler(socket, user2._id.toString());
+      await sendFriendRequestHandler(fakeIoConnected, socket, user2._id.toString());
+      await sendFriendRequestHandler(fakeIoConnected, socket, user2._id.toString());
 
       const fromUser: any = await User.findById(user1._id).lean();
       const toUser: any = await User.findById(user2._id).lean();
@@ -131,8 +169,8 @@ describe('friends/', async () => {
         emit: () => { },
       };
 
-      await sendFriendRequestHandler(socket, user1._id.toString());
-      await sendFriendRequestHandler(socket, user1._id.toString());
+      await sendFriendRequestHandler(fakeIoConnected, socket, user1._id.toString());
+      await sendFriendRequestHandler(fakeIoConnected, socket, user1._id.toString());
 
       const fromUser: any = await User.findById(user2._id).lean();
       const toUser: any = await User.findById(user1._id).lean();
@@ -151,8 +189,8 @@ describe('friends/', async () => {
       emit: () => { },
     };
 
-    await sendFriendRequestHandler(socket1, user2._id.toString());
-    await sendFriendRequestHandler(socket2, user1._id.toString());
+    await sendFriendRequestHandler(fakeIoConnected, socket1, user2._id.toString());
+    await sendFriendRequestHandler(fakeIoConnected, socket2, user1._id.toString());
 
     const fromUser: any = await User.findById(user2._id).lean();
     const toUser: any = await User.findById(user1._id).lean();
@@ -170,7 +208,7 @@ describe('friends/', async () => {
       emit: () => { },
     };
 
-    await sendFriendRequestHandler(socket1, user2._id.toString());
+    await sendFriendRequestHandler(fakeIoConnected, socket1, user2._id.toString());
 
     const fromUser: any = await User.findById(user2._id).lean();
     const toUser: any = await User.findById(user1._id).lean();
@@ -183,8 +221,8 @@ describe('friends/', async () => {
       emit: () => { },
     };
 
-    await sendFriendRequestHandler(socket1, user2._id.toString());
-    await sendFriendRequestHandler(socket1, user2._id.toString());
+    await sendFriendRequestHandler(fakeIoConnected, socket1, user2._id.toString());
+    await sendFriendRequestHandler(fakeIoConnected, socket1, user2._id.toString());
 
     const fromUser: any = await User.findById(user2._id).lean();
     const toUser: any = await User.findById(user1._id).lean();

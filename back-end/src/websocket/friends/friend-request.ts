@@ -1,12 +1,13 @@
 import User from '../../models/user.model';
 import { FriendRequest } from 'shared-interfaces/user.interface';
 import { log } from 'winston';
+import { addUsernamesToFriendRequests } from './get-friend-requests';
 
 export function sendFriendRequest(io: any) {
   io.on('connection', socket => {
     socket.on('send-friend-request', async (userId: string) => {
       try {
-        await handler(socket, userId);
+        await handler(io, socket, userId);
       } catch (e) {
         log('error', 'sendFriendRequest', e);
       }
@@ -14,16 +15,37 @@ export function sendFriendRequest(io: any) {
   });
 }
 
-export async function handler(socket, userId: string) {
+export async function handler(io, socket, userId: string) {
   const [fromUser, toUser] = await getUsers(socket, userId);
   if (await checkIfAlreadyFriends(fromUser, toUser)) {
     return socket.emit('soft-error', 'You are already friends with this user.');
   }
 
-  if (!await checkIfShouldAddFriends(fromUser, toUser)) {
-    await saveFriendRequests(fromUser, toUser);
+  let friendRequestsAdded;
+
+  if (!await acceptFriendRequest(fromUser, toUser)) {
+    friendRequestsAdded = await saveFriendRequests(fromUser, toUser);
   }
+
   socket.emit('sent-friend-request');
+
+  if (friendRequestsAdded) {
+    await sendFriendRequestsToSocket(io, toUser);
+  }
+}
+
+async function sendFriendRequestsToSocket(io, user) {
+  const socket = io.of('/').connected[user.socket_id];
+  if (socket) {
+    // toUser is online, send friend requests
+    const requestsWithUsers = await addUsernamesToFriendRequests(user.friend_requests);
+
+    socket.emit('friend-requests', requestsWithUsers);
+  } else {
+    // User not connected, remove socket id from user
+    user.socket_id = null;
+    await user.save();
+  }
 }
 
 async function getUsers(socket, userId: string) {
@@ -35,6 +57,7 @@ async function getUsers(socket, userId: string) {
       username: 1,
       friend_requests: 1,
       friends: 1,
+      socket_id: 1,
     });
 
 
@@ -53,7 +76,7 @@ async function getUsers(socket, userId: string) {
 
   if (fromUser._id === toUser._id) {
     socket.emit('soft-error', 'You cannot friend yourself.');
-    throw new Error(`fromUser and toUser are the same`);
+    throw new Error(`fromUser and toUser are the same: ${fromUser._id}`);
   }
 
   return [fromUser, toUser];
@@ -66,15 +89,17 @@ async function checkIfAlreadyFriends(fromUser, toUser) {
   return false;
 }
 
-async function checkIfShouldAddFriends(fromUser, toUser) {
+async function acceptFriendRequest(fromUser, toUser) {
   // Checks if toUser has an outgoing friend request to fromUser
   if (toUser.friend_requests
     .some(req => req.user_id.toString() === fromUser._id.toString()
       && req.type === 'outgoing')
   ) {
-    // toUser has also sent fromUser a friend request, so add friends
+    // Add user to friends lists
     toUser.friends = [...toUser.friends, fromUser._id.toString()];
     fromUser.friends = [...fromUser.friends, toUser._id.toString()];
+
+    // Remove friend request from users
     toUser.friend_requests = toUser.friend_requests
       .filter(req => req.user_id.toString() !== fromUser._id.toString());
     fromUser.friend_requests = fromUser.friend_requests
@@ -109,4 +134,5 @@ async function saveFriendRequests(fromUser, toUser) {
 
 
   await Promise.all(promises);
+  return promises.length;
 }
