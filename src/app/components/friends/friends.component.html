@@ -3,34 +3,42 @@
   <div id="sidebar-menu"
     class="ui visible left vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
+    <a class="item"
+      [routerLink]="['/friends']">
+      <h5>Friend Requests</h5>
+      <i class="ui label"
+        [class.blue]="(friendsStore | async).friendRequests.length > 0">
+        {{ (friendsStore | async).friendRequests.length }}
+      </i>
+    </a>
     <div class="item">
       <h5>Direct Messages</h5>
-    </div>
-    <div class="item"
-      *ngIf="(currentServer | async).channelList && (currentServer | async).channelList.channels.length < 1">
-      <p>
-        No direct messages yet.
-      </p>
-    </div>
-    <div class="item less-padding"
-      *ngIf="(currentServer | async).channelList && (currentServer | async).channelList.channels.length >= 1">
-      <div class="ui list dm-list"
-        [class.inverted]="settingsService.invertedTheme">
+      <div class="item"
+        *ngIf="(currentServer | async).channelList && (currentServer | async).channelList.channels.length < 1">
+        <p>
+          No direct messages yet.
+        </p>
+      </div>
+      <div *ngIf="(currentServer | async).channelList && (currentServer | async).channelList.channels.length >= 1">
+        <div class="ui list dm-list"
+          [class.inverted]="settingsService.invertedTheme">
 
-        <a class="item channel"
-          *ngFor="let channel of (currentServer | async).channelList.channels"
-          [class.active]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
-          (click)="joinChannel(channel)">
-          <img class="ui avatar image"
-            src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
-          <div class="content">
-            <div class="header">
-              {{ getChannelName(channel) }}
+          <a class="item channel"
+            *ngFor="let channel of (currentServer | async).channelList.channels"
+            [class.active]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
+            (click)="joinChannel(channel)">
+            <img class="ui avatar image"
+              src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
+            <div class="content">
+              <div class="header">
+                {{ getChannelName(channel) }}
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
     </div>
+
 
   </div>
 

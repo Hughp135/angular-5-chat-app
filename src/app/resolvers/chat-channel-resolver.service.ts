@@ -51,6 +51,7 @@ export class ChatChannelResolver implements Resolve<any> {
 
     return {
       channel: this.store.select('currentChatChannel'),
+      server: this.store.select('currentServer'),
     };
   }
 

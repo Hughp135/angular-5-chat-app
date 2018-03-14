@@ -2,8 +2,14 @@
   <div id="header"
     [class.inverted]="settingsService.invertedTheme">
     <h4 class="ui header"
+      *ngIf="currentChannel.server_id"
       [class.inverted]="settingsService.invertedTheme">
-      {{currentChannel.server_id ? '#' : '@'}} {{ currentChannel.name }}
+      # {{ currentChannel.name }}
+    </h4>
+    <h4 class="ui header"
+      *ngIf="!currentChannel.server_id"
+      [class.inverted]="settingsService.invertedTheme">
+      @ {{ getFriendChannelName() }}
     </h4>
   </div>
   <div class="ui middle aligned divided very relaxed list"

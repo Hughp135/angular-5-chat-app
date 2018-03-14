@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { FriendsStore } from '../../reducers/friends-reducer';
 import { FriendRequestService } from '../../services/friend-request.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-friend-requests',
@@ -14,7 +15,8 @@ export class FriendRequestsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private friendRequestService: FriendRequestService
+    private friendRequestService: FriendRequestService,
+    public settingsService: SettingsService,
   ) {
     this.route.data.subscribe(data => {
       this.friendsStore = data.state.friends;

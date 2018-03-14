@@ -38,6 +38,10 @@ describe('FriendRequestService', () => {
     await (service.sendFriendRequest('123'));
     expect(fakeWsService.socket.emit).toHaveBeenCalledWith('send-friend-request', '123');
   });
+  it('should emit "reject-friend-requeset"', async () => {
+    await (service.rejectFriendRequest('123'));
+    expect(fakeWsService.socket.emit).toHaveBeenCalledWith('reject-friend-request', '123');
+  });
   it('should succeed', async () => {
     await (service.sendFriendRequest('123'));
     fakeWsService.awaitNextEvent.and.callFake(() => { });

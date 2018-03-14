@@ -1,3 +1,19 @@
+h3 {
+  margin-bottom: 35px !important;
+}
+
 .ui.icon.button {
   padding: 0.53em;
+}
+
+th {
+  text-transform: uppercase !important;
+  font-weight: normal !important;
+  font-size: 0.85em;
+}
+
+td, th {
+  border-top: none !important;
+  border-right: none !important;
+  border-left: none !important;
 }

@@ -1,7 +1,11 @@
 <div class="ui basic padded segment">
+  <h3 class="ui header"
+    [class.inverted]="settingsService.invertedTheme">
+    Friend Requests
+  </h3>
 
-  <h3>Friend Requests</h3>
-  <table class="ui very basic celled padded table">
+  <table class="ui very basic celled padded table"
+    [class.inverted]="settingsService.invertedTheme">
     <thead>
       <tr>
         <th>Username</th>
@@ -12,17 +16,14 @@
     <tbody>
       <tr *ngFor="let friendRequest of (friendsStore | async).friendRequests">
         <td>
-          <h5 class="ui header">
-            {{ friendRequest.username }}
-          </h5>
-          {{friendRequest | json}}
+          {{ friendRequest.username }}
         </td>
         <td>
-          {{ friendRequest.type }}
+          {{ friendRequest.type | uppercase }}
         </td>
         <td>
           <button class="ui red icon button"
-           (click)="rejectFriendRequest(friendRequest.user_id)">
+            (click)="rejectFriendRequest(friendRequest.user_id)">
             <i class="remove icon"></i>
           </button>
           <button *ngIf="friendRequest.type === 'incoming'"

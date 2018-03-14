@@ -26,7 +26,7 @@ export function joinDmChannel(io: any) {
       }).lean();
 
       const channel = existingChannel
-        || await createNewChannel([socket.claim.user_id, userId]); // or create existing
+        || await createNewChannel([socket.claim.user_id, userId]);
 
       socket.emit('got-dm-channel', channel._id);
     });

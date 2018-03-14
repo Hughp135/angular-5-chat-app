@@ -14,6 +14,14 @@
   padding: 0 !important;
 }
 
+a.item {
+  overflow: hidden;
+  h5 {
+    float: left;
+    margin: 0;
+  }
+}
+
 .ui.list {
   margin-top: 0;
 
@@ -21,7 +29,6 @@
     padding: 5px 10px !important;
 
     .header {
-      // color: #4183C4;
       padding-top: 5px;
     }
 

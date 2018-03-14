@@ -27,7 +27,6 @@ export class ServerResolver implements Resolve<ChatServer> {
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     const id = route.paramMap.get('id');
     const currentServerStore = this.store.select('currentServer');
-
     try {
       await this.joinServer(id);
       if (route.children.length < 1) {

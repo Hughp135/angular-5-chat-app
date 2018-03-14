@@ -14,6 +14,7 @@ import { ChatChannelResolver } from './resolvers/chat-channel-resolver.service';
 import { FriendsComponent } from './components/friends/friends.component';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
 import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
+import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
 
 export const appRoutes: Routes = [
   {
@@ -28,7 +29,8 @@ export const appRoutes: Routes = [
         path: 'friends', component: FriendsComponent, resolve: { state: FriendsResolver },
         children: [
           {
-            path: '', component: FriendRequestsComponent
+            path: '', component: FriendRequestsComponent,
+            resolve: { unused: FriendRequestsResolver },
           },
           {
             path: ':id', component: ChatChannelComponent,
@@ -37,6 +39,7 @@ export const appRoutes: Routes = [
         ]
       },
       {
+        // Unused route - no server selected
         path: 'channels', redirectTo: '/', pathMatch: 'full'
       },
       {

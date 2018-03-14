@@ -6,6 +6,7 @@ import { AppStateService } from '../../services/app-state.service';
 import { SettingsService } from '../../services/settings.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import ChatServer from '../../../../shared-interfaces/server.interface';
 
 @Component({
   selector: 'app-chat-channel',
@@ -15,6 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 export class ChatChannelComponent implements OnInit, OnDestroy {
   public chatMessage = '';
   public currentChannel: ChatChannel;
+  public currentServer: ChatServer;
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -29,6 +31,10 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
           data.state.channel
             .filter(chan => !!chan)
             .subscribe(chan => this.currentChannel = chan)
+        );
+        this.subscriptions.push(
+          data.state.server
+            .subscribe(server => this.currentServer = server)
         );
       });
   }
@@ -85,4 +91,13 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
     this.chatMessage = '';
   }
 
+  getFriendChannelName(): string {
+    const channelUsers = this.currentChannel.user_ids;
+    const usernames = channelUsers.map((userId: string) => {
+      const user = this.currentServer.channelList.users[userId];
+      return user ? user.username : 'Unknown';
+    });
+
+    return usernames.join(', ');
+  }
 }

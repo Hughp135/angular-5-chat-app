@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FriendsStore } from '../../reducers/friends-reducer';
 import { Observable } from 'rxjs/Observable';
 import { FriendRequestService } from '../../services/friend-request.service';
+import { SettingsService } from '../../services/settings.service';
 
 describe('FriendRequestsComponent', () => {
   let component: FriendRequestsComponent;
@@ -36,7 +37,8 @@ describe('FriendRequestsComponent', () => {
       declarations: [ FriendRequestsComponent ],
       providers: [
         { provide: ActivatedRoute, useValue: route },
-        { provide: FriendRequestService, useValue: fakeFriendsService }
+        { provide: FriendRequestService, useValue: fakeFriendsService },
+        SettingsService,
       ],
     })
     .compileComponents();
@@ -48,7 +50,20 @@ describe('FriendRequestsComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    fakeFriendsService.sendFriendRequest.calls.reset();
+    fakeFriendsService.rejectFriendRequest.calls.reset();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should send friend request', () => {
+    component.addFriend('123');
+    expect(fakeFriendsService.sendFriendRequest).toHaveBeenCalledTimes(1);
+  });
+  it('should reject friend request', () => {
+    component.rejectFriendRequest('123');
+    expect(fakeFriendsService.rejectFriendRequest).toHaveBeenCalledTimes(1);
   });
 });

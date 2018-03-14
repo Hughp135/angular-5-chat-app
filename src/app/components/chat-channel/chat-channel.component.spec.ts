@@ -39,7 +39,13 @@ describe('ChatChannelComponent', () => {
   };
 
   const route = {
-    data: Observable.of({ state: { channel: Observable.of(channel) } })
+    data: Observable.of({
+      state:
+        {
+          channel: Observable.of(channel),
+          server: Observable.of(server),
+        }
+    })
   };
 
   beforeEach(async(() => {
@@ -94,6 +100,25 @@ describe('ChatChannelComponent', () => {
     expect(component.hasFollowUpMsg(1)).toEqual(true);
     expect(component.hasFollowUpMsg(2)).toEqual(false);
     expect(component.hasFollowUpMsg(3)).toEqual(true);
+  });
+  it('gets correct channel name for a dm channel', () => {
+    component.currentServer = <ChatServer>{
+      channelList: {
+        users: {
+          '123': {
+            username: 'user123'
+          },
+          '456': {
+            username: 'user456'
+          },
+        },
+      },
+    };
+    component.currentChannel = <ChatChannel>{
+      user_ids: ['123', '456'],
+    };
+    const result = component.getFriendChannelName();
+    expect(result).toEqual('user123, user456');
   });
 });
 

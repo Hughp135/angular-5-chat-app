@@ -11,6 +11,7 @@ import { JOIN_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ErrorService } from '../services/error.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 describe('ChatChannelResolverService', () => {
   let service: ChatChannelResolver;
@@ -93,6 +94,10 @@ describe('ChatChannelResolverService', () => {
       .toHaveBeenCalledWith('join-channel', 'asd');
   });
   it('gets dm channels if parent path  === friends', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: { ...server, channelList: channelList },
+    });
     const friendsRoute = {
       paramMap: {
         get: () => 'asd'
@@ -120,6 +125,9 @@ describe('ChatChannelResolverService', () => {
       }
     };
 
+    // Throw error to speed up timeout process
+    spyOn(Observable.prototype, 'timeout').and.throwError('testerror');
+
     await service.resolve(<any>friendsRoute, null);
     expect(router.navigate).toHaveBeenCalledWith(['friends']);
   });
@@ -134,7 +142,10 @@ describe('ChatChannelResolverService', () => {
         get: () => 'wrong'
       }
     };
+    // Throw error to speed up timeout process
+    spyOn(Observable.prototype, 'timeout').and.throwError('testerror');
     spyOn(store, 'dispatch');
+
     await service.resolve(<any>routeWithInvalidId, null);
     expect(store.dispatch).not.toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalled();
