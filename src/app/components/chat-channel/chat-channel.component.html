@@ -7,7 +7,7 @@
       # {{ currentChannel.name }}
     </h4>
     <h4 class="ui header"
-      *ngIf="!currentChannel.server_id"
+      *ngIf="currentServer.channelList && !currentChannel.server_id"
       [class.inverted]="settingsService.invertedTheme">
       @ {{ getFriendChannelName() }}
     </h4>

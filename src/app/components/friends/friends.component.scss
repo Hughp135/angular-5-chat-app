@@ -16,6 +16,11 @@
 
 a.item {
   overflow: hidden;
+  &:hover {
+    h5 {
+      text-decoration: underline;
+    }
+  }
   h5 {
     float: left;
     margin: 0;

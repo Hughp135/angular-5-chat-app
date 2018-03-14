@@ -1,12 +1,13 @@
 import User from '../../models/user.model';
 import { log } from 'winston';
 import { addUsernamesToFriendRequests } from './get-friend-requests';
+import { sendFriendRequestsToSocket } from './friend-request';
 
 export function rejectFriendRequest(io: any) {
   io.on('connection', socket => {
     socket.on('reject-friend-request', async (userId: string) => {
       try {
-        await handler(socket, userId);
+        await handler(io, socket, userId);
       } catch (e) {
         log('error', 'sendFriendRequest', e);
       }
@@ -14,7 +15,7 @@ export function rejectFriendRequest(io: any) {
   });
 }
 
-export async function handler(socket, userId) {
+export async function handler(io, socket, userId) {
   const [fromUser, toUser] = await getUsers(socket, userId);
 
   if (fromUser.friend_requests.some(req => req.user_id.toString() === userId)) {
@@ -31,6 +32,7 @@ export async function handler(socket, userId) {
   const requestsWithUsers = await addUsernamesToFriendRequests(fromUser.friend_requests);
 
   socket.emit('friend-requests', requestsWithUsers);
+  await sendFriendRequestsToSocket(io, toUser);
 }
 
 async function getUsers(socket, userId: string) {
@@ -42,6 +44,7 @@ async function getUsers(socket, userId: string) {
       username: 1,
       friend_requests: 1,
       friends: 1,
+      socket_id: 1,
     });
 
 
