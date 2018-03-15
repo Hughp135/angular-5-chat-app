@@ -1,7 +1,7 @@
 import User from '../../models/user.model';
 import { ServerUserList, UserListUser } from 'shared-interfaces/server.interface';
 
-export async function sendFriendsUserList(io: any, socket: any, user) {
+export async function sendFriendsUserList(io: any, socket, user) {
   const connectedSockets = io.of('/').connected;
 
   const allFriends: any = await User.find({
@@ -26,5 +26,6 @@ export async function sendFriendsUserList(io: any, socket: any, user) {
     server_id: 'friends',
     users: usersWithStatuses
   };
+
   socket.emit('server-user-list', serverUserList);
 }

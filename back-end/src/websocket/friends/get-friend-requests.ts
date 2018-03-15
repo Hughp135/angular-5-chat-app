@@ -27,25 +27,28 @@ export async function handler(socket) {
 }
 
 export async function addUsernamesToFriendRequests(friend_requests) {
-  const userIds = friend_requests.map(req => req.user_id);
-  const users: any = await User.find({
-    _id: userIds
+  const friendIds = friend_requests.map(req => req.user_id);
+  const friends: any = await User.find({
+    _id: friendIds
   }, {
       username: 1,
     }).lean();
 
-  return JSON.parse(JSON.stringify(friend_requests)).map(req => {
-    const matchingUser = users
-      .find(usr => usr._id.toString() === req.user_id.toString());
+  return friend_requests
+    // Filter out requests with no existing user
+    .filter(req => friends.some(friend => friend._id.toString() === req.user_id.toString()))
+    // Add username to each request
+    .map(req => {
+      const matchingUser = friends
+        .find(usr => usr._id.toString() === req.user_id.toString());
 
-    if (!matchingUser) {
-      return log('error', 'No matching user found with ID', req.user_id);
-    }
-    const withUsername = {
-      ...req,
-      username: matchingUser && matchingUser.username
-    };
+      const withUsername = {
+        type: req.type,
+        user_id: req.user_id.toString(),
+        _id: req._id.toString(),
+        username: matchingUser && matchingUser.username
+      };
 
-    return withUsername;
-  });
+      return withUsername;
+    });
 }

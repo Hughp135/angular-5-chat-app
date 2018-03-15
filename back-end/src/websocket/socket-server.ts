@@ -11,6 +11,7 @@ import { joinDmChannel } from './channel/join-or-create-dm';
 import { sendFriendRequest } from './friends/friend-request';
 import { getFriendRequests } from './friends/get-friend-requests';
 import { rejectFriendRequest } from './friends/reject-friend-request';
+import { removeFriend } from './friends/remove-friend';
 
 export async function startWs(server) {
   const io = socketIo(server);
@@ -30,6 +31,7 @@ export async function startWs(server) {
   sendFriendRequest(io);
   getFriendRequests(io);
   rejectFriendRequest(io);
+  removeFriend(io);
   return io;
 }
 

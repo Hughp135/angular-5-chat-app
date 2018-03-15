@@ -55,7 +55,7 @@ function joinedChannel(socket, store) {
   });
 }
 
-function serverUserList(socket, store) { 
+function serverUserList(socket, store) {
   socket.on(SERVER_USERLIST_HANDLER, (response: ServerUserList) => {
     store.dispatch({
       type: SERVER_SET_USER_LIST,

@@ -22,21 +22,27 @@ export async function handler(io, socket, userId: string) {
     return socket.emit('soft-error', 'You are already friends with this user.');
   }
 
-  let friendRequestsAdded;
+  const promises = [];
 
   if (await acceptFriendRequest(fromUser, toUser)) {
-    sendFriendsUserList(io, socket, fromUser);
+    promises.push(
+      sendFriendsUserList(io, socket, fromUser)
+    );
     const toUserSocket = io.of('/').connected[toUser.socket_id];
+
     if (toUserSocket) {
-      sendFriendsUserList(io, toUserSocket, toUser);
+      promises.push(
+        sendFriendsUserList(io, toUserSocket, toUser)
+      );
     }
   } else {
-    friendRequestsAdded = await saveFriendRequests(fromUser, toUser);
+    await saveFriendRequests(fromUser, toUser);
   }
 
   socket.emit('sent-friend-request');
+  promises.push(sendFriendRequestsToSocket(io, toUser));
 
-  await sendFriendRequestsToSocket(io, toUser);
+  await Promise.all(promises);
 }
 
 export async function sendFriendRequestsToSocket(io, user) {

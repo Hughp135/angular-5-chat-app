@@ -34,7 +34,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     this.subscriptions.push(
-      Observable.interval(60000)
+      Observable.interval(5000)
         .subscribe(() => {
           /* istanbul ignore next */
           // Long poll the user list
@@ -97,12 +97,20 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         label: 'Add Friend',
         onClick: (ctx) => this.addFriend(ctx.dataContext._id),
+      },
+      {
+        label: '<span class="text-danger">Remove Friend</span>',
+        onClick: (ctx) => this.removeFriend(ctx.dataContext._id),
       }
     ];
   }
 
   addFriend(userId) {
     this.friendRequest.sendFriendRequest(userId);
+  }
+
+  removeFriend(userId) {
+    this.friendRequest.removeFriend(userId);
   }
 
   sendUserMessage(userId) {

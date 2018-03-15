@@ -10,6 +10,10 @@ export class FriendRequestService {
     private errorService: ErrorService,
   ) { }
 
+  async removeFriend(userId: string) {
+    this.wsService.socket.emit('remove-friend', userId);
+  }
+
   async sendFriendRequest(userId: string) {
     this.wsService.socket.emit('send-friend-request', userId);
     try {

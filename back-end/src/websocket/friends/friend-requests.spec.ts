@@ -24,7 +24,8 @@ describe('friends/', async () => {
   beforeEach(async () => {
     user1 = await User.create({
       username: 'testuser1',
-      password: '123456'
+      password: '123456',
+      socket_id: 'socketId1'
     });
     user2 = await User.create({
       username: 'testuser2',
@@ -57,7 +58,7 @@ describe('friends/', async () => {
     result.resetHistory();
   });
 
-  describe('send-friends-list', () => {
+  describe('friend-requests', () => {
     it('sends error event if fromUser not found', (done) => {
       const objectId = mongoose.Types.ObjectId();
       const { io, socket } = createFakeSocketEvent('send-friend-request', objectId,
@@ -199,6 +200,56 @@ describe('friends/', async () => {
     expect(toUser.friend_requests).to.have.lengthOf(0);
     expect(fromUser.friends).to.have.lengthOf(1);
     expect(toUser.friends).to.have.lengthOf(1);
+  });
+  it('after adding friends, send friends (server-user-lists) to fromUser', async () => {
+    const socketId1EmitSpy = sinon.spy();
+    const socket1 = {
+      claim: { user_id: user1._id.toString() },
+      emit: () => { },
+    };
+    const socket2 = {
+      claim: { user_id: user2._id.toString() },
+      emit: sinon.spy(),
+    };
+
+    await sendFriendRequestHandler(fakeIoConnected, socket1, user2._id.toString());
+    await sendFriendRequestHandler(fakeIoConnected, socket2, user1._id.toString());
+
+    expect(socket2.emit).to.have.been.calledWith('server-user-list', {
+      server_id: 'friends',
+      users: [
+        { _id: user1._id, online: false, username: user1.username }
+      ]
+    });
+  });
+  it('after adding friends, send friends (server-user-lists) to toUser', async () => {
+    const socketId1EmitSpy = sinon.spy();
+    const fakeIo = {
+      of: () => ({
+        connected: {
+          socketId2: { emit: () => { } },
+          socketId1: { emit: socketId1EmitSpy },
+        }
+      }),
+    };
+    const socket1 = {
+      claim: { user_id: user1._id.toString() },
+      emit: () => { },
+    };
+    const socket2 = {
+      claim: { user_id: user2._id.toString() },
+      emit: () => { },
+    };
+
+    await sendFriendRequestHandler(fakeIo, socket1, user2._id.toString());
+    await sendFriendRequestHandler(fakeIo, socket2, user1._id.toString());
+
+    expect(socketId1EmitSpy).to.have.been.calledWith('server-user-list', {
+      server_id: 'friends',
+      users: [
+        { _id: user2._id, online: true, username: user2.username }
+      ]
+    });
   });
   it('if already friends do not create friend requests', async () => {
     user1.friends = [user2._id];

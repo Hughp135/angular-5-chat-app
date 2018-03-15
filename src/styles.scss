@@ -19,13 +19,11 @@ input.ng-invalid.ng-dirty.ng-touched {
 
 .ui.button {
   border-radius: 8px !important;
-
   &.tertiary {
     &:not(:hover) {
       box-shadow: none !important;
       background: none !important;
     }
-
     &.basic {
       color: rgba(0, 0, 0, 0.8) !important;
     }
@@ -59,21 +57,21 @@ input.ng-invalid.ng-dirty.ng-touched {
   div {
     color: #dcdcdc !important;
   }
-
   &:hover {
     background: #1e1f21 !important;
-
     &.sh-menu-disabled {
       cursor: auto !important;
       background: initial !important;
-
       div {
         color: #dcdcdc !important;
       }
     }
-
     div {
       color: #fff !important;
     }
   }
+}
+
+.text-danger {
+  color: rgb(223, 39, 39);
 }

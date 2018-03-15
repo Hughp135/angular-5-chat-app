@@ -24,6 +24,7 @@ describe('UserListComponent', () => {
   };
   const fakeFriendsService = {
     sendFriendRequest: jasmine.createSpy(),
+    removeFriend: jasmine.createSpy(),
   };
 
   beforeEach(async(() => {
@@ -61,6 +62,7 @@ describe('UserListComponent', () => {
     fakeSocket.emit.calls.reset();
     fakeDmService.startPm.calls.reset();
     fakeFriendsService.sendFriendRequest.calls.reset();
+    fakeFriendsService.removeFriend.calls.reset();
   });
 
   it('initial state', () => {
@@ -115,5 +117,9 @@ describe('UserListComponent', () => {
   it('addFriend calls friendService.sendFriendRequest', () => {
     component.addFriend('123');
     expect(fakeFriendsService.sendFriendRequest).toHaveBeenCalledWith('123');
+  });
+  it('removeFriend calls dmService.removeFriend', () => {
+    component.removeFriend('123');
+    expect(fakeFriendsService.removeFriend).toHaveBeenCalledWith('123');
   });
 });
