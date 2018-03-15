@@ -30,10 +30,11 @@ export async function sendChannelList(userId, socket) {
     .find({
       user_ids: userId
     },
-    {
-      name: 1,
-      user_ids: 1,
-    })
+      {
+        name: 1,
+        user_ids: 1,
+      })
+    .sort({ _id: 1 })
     .lean();
 
   // Get all users in channels for their usernames etc.

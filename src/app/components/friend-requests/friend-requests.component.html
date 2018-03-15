@@ -1,6 +1,5 @@
 <div class="ui basic padded segment">
-  <h3 class="ui header"
-    [class.inverted]="settingsService.invertedTheme">
+  <h3 class="ui header" [class.inverted]="settingsService.invertedTheme">
     Friend Requests
   </h3>
 
@@ -22,8 +21,7 @@
           {{ friendRequest.type | uppercase }}
         </td>
         <td>
-          <button class="ui red icon button"
-            (click)="rejectFriendRequest(friendRequest.user_id)">
+          <button class="ui red icon button" (click)="rejectFriendRequest(friendRequest.user_id)">
             <i class="remove icon"></i>
           </button>
           <button *ngIf="friendRequest.type === 'incoming'"

@@ -108,26 +108,26 @@ describe('websocket channel/get-dm-channels', () => {
     await sendChannelList(user1._id, socket);
     await expect(socket.emit).to.have.been
       .calledWith('channel-list',
-      {
-        channels: [
-          {
-            _id: channel1._id,
-            name: 'chantest',
-            user_ids: [user1._id, user2._id]
+        {
+          channels: [
+            {
+              _id: channel1._id,
+              name: 'chantest',
+              user_ids: [user1._id, user2._id]
+            },
+            {
+              _id: channel2._id,
+              name: 'chantest2',
+              user_ids: [user1._id, user3._id]
+            },
+          ],
+          server_id: 'friends',
+          users: {
+            [user1._id]: { _id: user1._id, username: user1.username },
+            [user2._id]: { _id: user2._id, username: user2.username },
+            [user3._id]: { _id: user3._id, username: user3.username },
           },
-          {
-            _id: channel2._id,
-            name: 'chantest2',
-            user_ids: [user1._id, user3._id]
-          },
-        ],
-        server_id: 'friends',
-        users: {
-          [user1._id]: { _id: user1._id, username: user1.username },
-          [user2._id]: { _id: user2._id, username: user2.username },
-          [user3._id]: { _id: user3._id, username: user3.username },
-        },
-      }
+        }
       );
   });
   it('sends friends list', async () => {
@@ -143,20 +143,20 @@ describe('websocket channel/get-dm-channels', () => {
     await sendFriendsUserList(io, socket, user3);
     expect(socket.emit).to.have.been
       .calledWith('server-user-list',
-      {
-        server_id: 'friends',
-        users:
-          [{
-            _id: user1._id,
-            username: 'test-user1',
-            online: false
-          },
-          {
-            _id: user2._id,
-            username: 'test-user2',
-            online: false
-          }]
-      }
+        {
+          server_id: 'friends',
+          users:
+            [{
+              _id: user1._id,
+              username: 'test-user1',
+              online: false
+            },
+            {
+              _id: user2._id,
+              username: 'test-user2',
+              online: false
+            }]
+        }
       );
   });
 });

@@ -24,7 +24,7 @@ describe('friends/send-friends-list', async () => {
 
   beforeEach(async () => {
     user1 = await User.create({ username: 'user1', password: '123456' });
-    user2 = await User.create({ username: 'user2', password: '123456' });
+    user2 = await User.create({ username: 'user2', password: '123456', socket_id: 'socket1' });
     user3 = await User.create({
       username: 'user3',
       password: '123456',
@@ -47,8 +47,8 @@ describe('friends/send-friends-list', async () => {
     expect(socket.emit).to.have.been.calledWith('server-user-list', {
       server_id: 'friends',
       users: [
-        { _id: user1._id , username: 'user1', online: false },
-        { _id: user2._id , username: 'user2', online: true }
+        { _id: user1._id, username: 'user1', online: false },
+        { _id: user2._id, username: 'user2', online: true }
       ]
     });
   });
