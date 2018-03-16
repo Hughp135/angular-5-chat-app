@@ -61,6 +61,7 @@ describe('websocket channel/get-dm-channels', () => {
     const socket = {
       claim: { user_id: user1._id },
       emit: sandbox.spy(),
+      rooms: {},
     };
     const io = {
       of: () => ({

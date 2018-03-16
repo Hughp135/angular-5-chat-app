@@ -60,7 +60,7 @@ async function sendChannelList(socket, serverId) {
 export async function leaveOtherServers(socket) {
   const roomsUserIsIn = Object.keys(socket.rooms);
   for (const room of roomsUserIsIn) {
-    if (room.startsWith('server-') && room !== socket.id) {
+    if (room.startsWith('server-') || room.startsWith('dmchannel-') && room !== socket.id) {
       // Leave any other servers user is in.
       await socket.leave(room);
     }
