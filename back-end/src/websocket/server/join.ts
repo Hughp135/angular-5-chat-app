@@ -46,7 +46,7 @@ export function joinServer(io: any) {
 
 async function sendChannelList(socket, serverId) {
   const channels: any = await ChannelModel.find({
-    server_id: serverId
+    server_id: serverId,
   }).lean();
 
   const list = <ChannelList>{

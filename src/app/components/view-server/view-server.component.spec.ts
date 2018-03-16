@@ -30,8 +30,8 @@ describe('ViewServerComponent', () => {
       state: {
         channel: Observable.of(channel),
         server: Observable.of(server),
-      }
-    })
+      },
+    }),
   };
 
   beforeEach(async(() => {
@@ -42,7 +42,7 @@ describe('ViewServerComponent', () => {
         { provide: ActivatedRoute, useValue: route },
       ],
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })

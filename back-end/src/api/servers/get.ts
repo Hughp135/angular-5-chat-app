@@ -5,16 +5,16 @@ export async function getServers(req, res) {
   const user: any = await User.findOne({ '_id': req.claim.user_id });
   if (!user) {
     return res.status(401).json({
-      error: 'User not found.'
+      error: 'User not found.',
     });
   }
 
-  const serverIds = user.joinedServers;
+  const serverIds = user.joined_servers;
   const servers = await Server.find({
-    '_id': serverIds
+    '_id': serverIds,
   }).lean();
 
   res.status(200).json({
-    servers: servers
+    servers: servers,
   });
 }

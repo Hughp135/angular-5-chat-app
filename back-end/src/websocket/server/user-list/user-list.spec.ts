@@ -1,10 +1,6 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
-import * as mongoose from 'mongoose';
-import Channel from '../../../models/channel.model';
-import Server from '../../../models/server.model';
 import User from '../../../models/user.model';
 import { sendUserList } from './user-list';
 
@@ -17,8 +13,8 @@ const io = {
       'socket1': {
         claim: {
           user_id: 'userId1',
-        }
-      }
+        },
+      },
     },
   }),
 };
@@ -28,7 +24,7 @@ const socket = {
 };
 
 const server = {
-  '_id': 'serverId'
+  '_id': 'serverId',
 };
 
 describe('websocket channel/user-list', () => {
@@ -39,13 +35,13 @@ describe('websocket channel/user-list', () => {
       lean: () => ([
         {
           _id: 'userId1',
-          username: 'user1'
+          username: 'user1',
         },
         {
           _id: 'userId2',
-          username: 'user2'
-        }
-      ])
+          username: 'user2',
+        },
+      ]),
     }));
   });
   afterEach(async () => {
@@ -67,8 +63,8 @@ describe('websocket channel/user-list', () => {
           _id: 'userId2',
           username: 'user2',
           online: false,
-        }
-      ]
+        },
+      ],
     });
   });
 });

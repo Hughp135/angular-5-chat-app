@@ -11,7 +11,7 @@ export async function sendUserList(io: any, socket: any, server_id: string) {
     });
 
   const allServerUsers: any = await User.find({
-    joinedServers: server_id.toString()
+    joined_servers: server_id.toString(),
   }, {
       _id: 1,
       username: 1,
@@ -26,7 +26,7 @@ export async function sendUserList(io: any, socket: any, server_id: string) {
 
   const serverUserList: ServerUserList = {
     server_id: server_id,
-    users: serverUsers
+    users: serverUsers,
   };
 
   socket.emit('server-user-list', serverUserList);

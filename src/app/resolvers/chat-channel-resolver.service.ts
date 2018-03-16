@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   Resolve, RouterStateSnapshot,
-  ActivatedRouteSnapshot
+  ActivatedRouteSnapshot,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
@@ -18,7 +18,7 @@ export class ChatChannelResolver implements Resolve<any> {
     private store: Store<AppState>,
     private wsService: WebsocketService,
     private router: Router,
-    private errorService: ErrorService
+    private errorService: ErrorService,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot) {
@@ -40,17 +40,18 @@ export class ChatChannelResolver implements Resolve<any> {
 
     this.store.dispatch({
       type: LEAVE_CHANNEL,
-      payload: null
+      payload: null,
     });
 
     this.store.dispatch({
       type: JOIN_CHANNEL,
-      payload: channel
+      payload: channel,
     });
     this.wsService.socket.emit('join-channel', id);
 
     return {
       channel: this.store.select('currentChatChannel'),
+      server: this.store.select('currentServer'),
     };
   }
 

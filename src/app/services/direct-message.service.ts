@@ -9,7 +9,7 @@ export class DirectMessageService {
   constructor(
     private wsService: WebsocketService,
     private errorService: ErrorService,
-    private router: Router
+    private router: Router,
   ) { }
 
   async startPm(userId: string) {

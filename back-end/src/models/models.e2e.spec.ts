@@ -1,13 +1,11 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
-import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
 
 import User from './user.model';
-import Server, { IServerModel } from './server.model';
-import Channel, { IChannelModel } from './channel.model';
-import ChatMessage, { IChatMessageModel } from './chatmessage.model';
+import Server from './server.model';
+import Channel from './channel.model';
+import ChatMessage from './chatmessage.model';
 
 const expect = chai.expect;
 chai.use(sinonChai);

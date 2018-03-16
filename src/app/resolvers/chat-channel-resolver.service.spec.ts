@@ -11,6 +11,7 @@ import { JOIN_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ErrorService } from '../services/error.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 describe('ChatChannelResolverService', () => {
   let service: ChatChannelResolver;
@@ -19,22 +20,22 @@ describe('ChatChannelResolverService', () => {
 
   const fakeWebSocketService = {
     socket: {
-      emit: jasmine.createSpy()
-    }
+      emit: jasmine.createSpy(),
+    },
   };
   const route = {
     paramMap: {
-      get: () => 'asd'
+      get: () => 'asd',
     },
     parent: {
       url: [
-        { path: 'parentPath' }
-      ]
-    }
+        { path: 'parentPath' },
+      ],
+    },
   };
   const channelList: ChannelList = {
     server_id: '123',
-    channels: [{ _id: 'asd', server_id: '123', name: 'chan1', }]
+    channels: [{ _id: 'asd', server_id: '123', name: 'chan1' }],
   };
   const server = {
     name: 'server1',
@@ -43,8 +44,8 @@ describe('ChatChannelResolverService', () => {
   };
   const fakeErrorService = {
     errorMessage: {
-      next: jasmine.createSpy()
-    }
+      next: jasmine.createSpy(),
+    },
   };
 
   beforeEach(() => {
@@ -57,7 +58,7 @@ describe('ChatChannelResolverService', () => {
       imports: [
         StoreModule.forRoot(reducers),
         RouterTestingModule,
-      ]
+      ],
     });
     service = TestBed.get(ChatChannelResolver);
     store = TestBed.get(Store);
@@ -93,15 +94,19 @@ describe('ChatChannelResolverService', () => {
       .toHaveBeenCalledWith('join-channel', 'asd');
   });
   it('gets dm channels if parent path  === friends', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: { ...server, channelList: channelList },
+    });
     const friendsRoute = {
       paramMap: {
-        get: () => 'asd'
+        get: () => 'asd',
       },
       parent: {
         url: [
-          { path: 'friends' }
-        ]
-      }
+          { path: 'friends' },
+        ],
+      },
     };
 
     await service.resolve(<any>friendsRoute, null);
@@ -111,14 +116,17 @@ describe('ChatChannelResolverService', () => {
   it('redirects to correct path when path === friends', async () => {
     const friendsRoute = {
       paramMap: {
-        get: () => 'asd'
+        get: () => 'asd',
       },
       parent: {
         url: [
-          { path: 'friends' }
-        ]
-      }
+          { path: 'friends' },
+        ],
+      },
     };
+
+    // Throw error to speed up timeout process
+    spyOn(Observable.prototype, 'timeout').and.throwError('testerror');
 
     await service.resolve(<any>friendsRoute, null);
     expect(router.navigate).toHaveBeenCalledWith(['friends']);
@@ -131,10 +139,13 @@ describe('ChatChannelResolverService', () => {
     const routeWithInvalidId = {
       ...route,
       paramMap: {
-        get: () => 'wrong'
-      }
+        get: () => 'wrong',
+      },
     };
+    // Throw error to speed up timeout process
+    spyOn(Observable.prototype, 'timeout').and.throwError('testerror');
     spyOn(store, 'dispatch');
+
     await service.resolve(<any>routeWithInvalidId, null);
     expect(store.dispatch).not.toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalled();

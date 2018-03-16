@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-server-list',
   templateUrl: './server-list.component.html',
-  styleUrls: ['./server-list.component.scss']
+  styleUrls: ['./server-list.component.scss'],
 })
 export class ServerListComponent implements OnInit {
   public serverList: Observable<ChatServer[]>;

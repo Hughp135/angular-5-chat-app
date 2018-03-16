@@ -30,7 +30,7 @@ describe('RegisterComponent', () => {
       providers: [
         { provide: ApiService, useValue: apiServiceMock },
         ErrorService,
-      ]
+      ],
     })
       .compileComponents();
   }));
@@ -52,7 +52,7 @@ describe('RegisterComponent', () => {
     component.registerForm.patchValue({
       username: 'test',
       password: '123456',
-      password_confirm: '123456'
+      password_confirm: '123456',
     });
     expect(component.registerForm.valid).toEqual(true);
     fixture.detectChanges();
@@ -63,7 +63,7 @@ describe('RegisterComponent', () => {
     component.registerForm.patchValue({
       username: '',
       password: '1234567',
-      password_confirm: '1234567'
+      password_confirm: '1234567',
     });
     component.registerForm.controls['username'].updateValueAndValidity();
     expect(component.registerForm.valid).toEqual(false);
@@ -74,21 +74,21 @@ describe('RegisterComponent', () => {
     component.registerForm.patchValue({
       username: 'as',
       password: '1234567',
-      password_confirm: '1234567'
+      password_confirm: '1234567',
     });
 
     expect(component.registerForm.valid).toEqual(false);
     expect(component.registerForm.controls['username'].errors.minlength)
       .toEqual({
         requiredLength: 3,
-        actualLength: 2
+        actualLength: 2,
       });
   });
   it('form invalid with non matching pws', () => {
     component.registerForm.patchValue({
       username: 'test',
       password: '1234567',
-      password_confirm: '123456'
+      password_confirm: '123456',
     });
     expect(component.registerForm.valid).toEqual(false);
     expect(component.registerForm.errors).toEqual({ mismatch: true });
@@ -97,7 +97,7 @@ describe('RegisterComponent', () => {
     const formData = {
       username: 'coolname',
       password: '123456',
-      password_confirm: '123456'
+      password_confirm: '123456',
     };
 
     apiServiceMock.post.and.callFake((url: string, data) => {
@@ -112,7 +112,7 @@ describe('RegisterComponent', () => {
     expect(component.submitting).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'register',
-      formData
+      formData,
     );
     // After fake API response
     tick(150);
@@ -122,7 +122,7 @@ describe('RegisterComponent', () => {
     const formData = {
       username: 'badname',
       password: '123456',
-      password_confirm: '123456'
+      password_confirm: '123456',
     };
 
     apiServiceMock.post.and.callFake((url: string, data) => {
@@ -141,7 +141,7 @@ describe('RegisterComponent', () => {
     expect(component.submitting).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'register',
-      formData
+      formData,
     );
     // After fake API response
     tick(50);
@@ -152,7 +152,7 @@ describe('RegisterComponent', () => {
     const formData = {
       username: 'badname',
       password: '123456',
-      password_confirm: '123456'
+      password_confirm: '123456',
     };
 
     apiServiceMock.post.and.callFake((url: string, data) => {
@@ -171,7 +171,7 @@ describe('RegisterComponent', () => {
     expect(component.submitting).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'register',
-      formData
+      formData,
     );
     tick(50);
     // After fake API response

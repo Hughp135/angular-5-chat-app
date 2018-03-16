@@ -2,9 +2,7 @@ import { logInAuth } from './socket-auth';
 import { createJWT } from '../../api/auth/jwt';
 import User from '../../models/user.model';
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import * as sinonChai from 'sinon-chai';
 import * as config from 'config';
 
 const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
@@ -24,9 +22,8 @@ describe('websocket/socket-auth', () => {
     sandbox.stub(User, 'find').callsFake(() => ({
       lean: () => [user],
     }));
-    sandbox.stub(User, 'findById').callsFake(() => ({
-      lean: () => user,
-    }));
+    sandbox.stub(User, 'findById').callsFake(() => user);
+    sandbox.stub(User.prototype, 'save').callsFake(() => {});
   });
   afterEach(() => {
     sandbox.restore();
@@ -36,11 +33,11 @@ describe('websocket/socket-auth', () => {
       handshake: {
         query: {
           test: TEST_SECRET,
-        }
-      }
+        },
+      },
     };
 
-    const cb = result => {
+    const cb = (result) => {
       expect(result).to.be.undefined;
     };
 
@@ -51,9 +48,9 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-          cookie: `jwt_token=${validToken};`
-        }
-      }
+          cookie: `jwt_token=${validToken};`,
+        },
+      },
     };
 
     const cb = result => {
@@ -64,21 +61,19 @@ describe('websocket/socket-auth', () => {
   });
   it('fails if token valid but user doesnt exist', async () => {
     sandbox.restore();
-    sandbox.stub(User, 'findById').callsFake(() => ({
-      lean: () => null,
-    }));
+    sandbox.stub(User, 'findById').callsFake(() => null);
     const validToken = createJWT({ username: 'hi' }, '1s');
     const fakeSocket = {
       handshake: {
         headers: {
-          cookie: `jwt_token=${validToken};`
-        }
-      }
+          cookie: `jwt_token=${validToken};`,
+        },
+      },
     };
 
     const cb = result => {
       expect(User.findById).to.have.been.called;
-      expect(result.message).to.equal('Invalid token');
+      expect(result.message).to.equal('User not found');
     };
 
     await logInAuthFunction(fakeSocket, cb);
@@ -87,9 +82,9 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-          cookie: `jwt_token=12345;`
-        }
-      }
+          cookie: `jwt_token=12345;`,
+        },
+      },
     };
     const cb = result => {
       expect(result.message).to.equal('Invalid token');
@@ -101,8 +96,8 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-        }
-      }
+        },
+      },
     };
     const cb = result => {
       expect(result.message).to.equal('No token provided');
@@ -114,9 +109,9 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-          cookie: 'jwt_token='
-        }
-      }
+          cookie: 'jwt_token=',
+        },
+      },
     };
     const cb = result => {
       expect(result.message).to.equal('No token provided');

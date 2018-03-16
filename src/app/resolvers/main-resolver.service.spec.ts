@@ -19,8 +19,8 @@ describe('MainResolverService', () => {
   let router: Router;
   const fakeErrorService = {
     errorMessage: {
-      next: jasmine.createSpy()
-    }
+      next: jasmine.createSpy(),
+    },
   };
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('MainResolverService', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         StoreModule.forRoot(reducers),
-      ]
+      ],
     });
     service = TestBed.get(MainResolver);
     apiService = TestBed.get(ApiService);
@@ -43,6 +43,9 @@ describe('MainResolverService', () => {
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     spyOn(router, 'navigate');
+  });
+
+  afterEach(() => {
     fakeErrorService.errorMessage.next.calls.reset();
   });
 
@@ -51,7 +54,7 @@ describe('MainResolverService', () => {
   });
   it('gets server list and updates store', fakeAsync(() => {
     const mockResponse: { servers: ChatServer[] } = {
-      servers: [{ name: 'server1', _id: '123', owner_id: '345' }]
+      servers: [{ name: 'server1', _id: '123', owner_id: '345' }],
     };
     service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
@@ -62,6 +65,15 @@ describe('MainResolverService', () => {
       type: UPDATE_SERVER_LIST,
       payload: mockResponse.servers,
     });
+  }));
+  it('gets server list and updates store', fakeAsync(() => {
+    const mockResponse: { servers: ChatServer[] } = {
+      servers: [{ name: 'server1', _id: '123', owner_id: '345' }],
+    };
+    service.resolve(null, null);
+    const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
+    called.flush(mockResponse);
+    tick(1);
   }));
   it('fails to get server list and redirects to login on 401', fakeAsync(() => {
     service.resolve(null, null);

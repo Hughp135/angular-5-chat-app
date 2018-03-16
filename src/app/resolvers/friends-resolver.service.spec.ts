@@ -12,13 +12,13 @@ import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
 describe('FriendsResolverService', () => {
   const fakeErrorService = {
     errorMessage: {
-      next: jasmine.createSpy()
-    }
+      next: jasmine.createSpy(),
+    },
   };
   const fakeWebSocketService = {
     socket: {
-      emit: jasmine.createSpy()
-    }
+      emit: jasmine.createSpy(),
+    },
   };
 
   let store: Store<AppState>;
@@ -33,7 +33,7 @@ describe('FriendsResolverService', () => {
       ],
       imports: [
         StoreModule.forRoot(reducers),
-      ]
+      ],
     });
     service = TestBed.get(FriendsResolver);
     store = TestBed.get(Store);
@@ -53,16 +53,17 @@ describe('FriendsResolverService', () => {
     expect(store.dispatch).toHaveBeenCalledTimes(2);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: LEAVE_CHANNEL,
-      payload: null
+      payload: null,
     });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_CURRENT_SERVER,
       payload: {
         _id: 'friends',
         name: 'Direct Messages',
-      }
+      },
     });
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('get-dm-channels', undefined);
+    expect(fakeWebSocketService.socket.emit).toHaveBeenCalledWith('get-friend-requests');
   });
 });

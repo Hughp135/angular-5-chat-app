@@ -15,13 +15,13 @@ import { ChannelList } from '../../../shared-interfaces/channel.interface';
 import { ErrorService } from '../services/error.service';
 
 const serverList: ChatServer[] = [
-  { name: 'server1', _id: '123', owner_id: '345' }
+  { name: 'server1', _id: '123', owner_id: '345' },
 ];
 
 const fakeWebSocketService = {
   socket: {
-    emit: jasmine.createSpy()
-  }
+    emit: jasmine.createSpy(),
+  },
 };
 
 describe('ServerResolver.Service.TsService', () => {
@@ -36,7 +36,7 @@ describe('ServerResolver.Service.TsService', () => {
       providers: [
         ServerResolver,
         { provide: WebsocketService, useValue: fakeWebSocketService },
-        ErrorService
+        ErrorService,
       ],
       imports: [
         HttpClientTestingModule,
@@ -53,11 +53,11 @@ describe('ServerResolver.Service.TsService', () => {
     spyOn(errorService.errorMessage, 'next');
     store.dispatch({
       type: UPDATE_SERVER_LIST,
-      payload: serverList
+      payload: serverList,
     });
     route = {
       paramMap: {
-        get: () => '123'
+        get: () => '123',
       },
       children: [{}],
     };
@@ -95,8 +95,8 @@ describe('ServerResolver.Service.TsService', () => {
     const channelList: ChannelList = {
       server_id: serverList[0]._id,
       channels: [
-        { name: 'chan1', _id: 'sdf9', server_id: serverList[0]._id }
-      ]
+        { name: 'chan1', _id: 'sdf9', server_id: serverList[0]._id },
+      ],
     };
 
     service.resolve(<any>route, null);
@@ -114,7 +114,7 @@ describe('ServerResolver.Service.TsService', () => {
     route.children = [];
     const channelList: ChannelList = {
       server_id: serverList[0]._id,
-      channels: []
+      channels: [],
     };
 
     service.resolve(<any>route, null);
@@ -131,7 +131,7 @@ describe('ServerResolver.Service.TsService', () => {
   it('shows error & redirects to home if server not found', fakeAsync(() => {
     store.dispatch({
       type: UPDATE_SERVER_LIST,
-      payload: []
+      payload: [],
     });
     service.resolve(<any>route, null);
     tick(10);

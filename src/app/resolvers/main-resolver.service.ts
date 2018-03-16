@@ -15,7 +15,7 @@ export class MainResolver implements Resolve<any> {
     private apiService: ApiService,
     private store: Store<AppState>,
     private errorService: ErrorService,
-    private router: Router
+    private router: Router,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
@@ -38,7 +38,6 @@ export class MainResolver implements Resolve<any> {
           id: new Date().toUTCString(),
         });
       }
-
     }
   }
 }

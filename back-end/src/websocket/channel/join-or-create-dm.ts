@@ -21,12 +21,12 @@ export function joinDmChannel(io: any) {
 
       const [existingChannel]: any = await Channel.find({
         user_ids: {
-          $all: [socket.claim.user_id, userId]
-        }
+          $all: [socket.claim.user_id, userId],
+        },
       }).lean();
 
       const channel = existingChannel
-        || await createNewChannel([socket.claim.user_id, userId]); // or create existing
+        || await createNewChannel([socket.claim.user_id, userId]);
 
       socket.emit('got-dm-channel', channel._id);
     });

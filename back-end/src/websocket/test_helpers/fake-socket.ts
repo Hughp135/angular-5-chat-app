@@ -1,4 +1,7 @@
 /* istanbul ignore next */
+process.on('unhandledRejection', r => console.error(r));
+
+/* istanbul ignore next */
 export default function createFakeSocketEvent(
   eventName: string,
   data: any,
@@ -20,9 +23,10 @@ export default function createFakeSocketEvent(
       }
     },
     emit: result,
+    error: result,
     join: () => null,
     rooms: {
-      'server-123': true
+      'server-123': true,
     },
     leave: async () => null,
   };
@@ -32,7 +36,7 @@ export default function createFakeSocketEvent(
       callback(socket);
     },
     in: () => ({
-      emit: result
+      emit: result,
     }),
     of: () => ({
       connected: {

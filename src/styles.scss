@@ -17,6 +17,19 @@ input.ng-invalid.ng-dirty.ng-touched {
   margin-top: 20px;
 }
 
+.ui.button {
+  border-radius: 8px !important;
+  &.tertiary {
+    &:not(:hover) {
+      box-shadow: none !important;
+      background: none !important;
+    }
+    &.basic {
+      color: rgba(0, 0, 0, 0.8) !important;
+    }
+  }
+}
+
 .ui.message.error {
   text-align: center;
   box-shadow: 0 0 0 1px grey !important;
@@ -44,10 +57,8 @@ input.ng-invalid.ng-dirty.ng-touched {
   div {
     color: #dcdcdc !important;
   }
-
   &:hover {
     background: #1e1f21 !important;
-
     &.sh-menu-disabled {
       cursor: auto !important;
       background: initial !important;
@@ -55,9 +66,12 @@ input.ng-invalid.ng-dirty.ng-touched {
         color: #dcdcdc !important;
       }
     }
-
     div {
       color: #fff !important;
     }
   }
+}
+
+.text-danger {
+  color: rgb(223, 39, 39);
 }

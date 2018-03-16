@@ -6,7 +6,7 @@ describe('SettingsService', () => {
   let service: SettingsService;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SettingsService]
+      providers: [SettingsService],
     });
     service = TestBed.get(SettingsService);
   });

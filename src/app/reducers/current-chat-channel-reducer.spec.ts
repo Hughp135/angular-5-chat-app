@@ -3,7 +3,7 @@ import {
   JOIN_CHANNEL,
   NEW_CHAT_MESSAGE,
   CHAT_HISTORY,
-  LEAVE_CHANNEL
+  LEAVE_CHANNEL,
 } from './current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
@@ -16,7 +16,7 @@ describe('reducers/current-chat-channel', () => {
         name: 'new server here',
         _id: '123',
         server_id: '345',
-      }
+      },
     };
     const state = currentChatChannelReducer(undefined, action);
     expect(state).toEqual(action.payload);
@@ -39,7 +39,7 @@ describe('reducers/current-chat-channel', () => {
         user_id: '345',
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
+      },
     };
     const initialState: ChatChannel = {
       name: 'new server here',
@@ -61,8 +61,8 @@ describe('reducers/current-chat-channel', () => {
           user_id: '345',
           createdAt: new Date(),
           updatedAt: new Date(),
-        }]
-      }
+        }],
+      },
     };
     const initialState: ChatChannel = {
       name: 'new server here',
@@ -84,8 +84,8 @@ describe('reducers/current-chat-channel', () => {
           user_id: '345',
           createdAt: new Date(),
           updatedAt: new Date(),
-        }]
-      }
+        }],
+      },
     };
     const initialState: ChatChannel = {
       name: 'new server here',
@@ -122,14 +122,14 @@ describe('reducers/current-chat-channel', () => {
       type: CHAT_HISTORY,
       payload: {
         channel_id: '123',
-        messages: [secondMessage, fourthMessage]
-      }
+        messages: [secondMessage, fourthMessage],
+      },
     };
     const initialState: ChatChannel = {
       name: 'new server here',
       _id: '123',
       server_id: '345',
-      messages: [firstMessage, thirdMessage]
+      messages: [firstMessage, thirdMessage],
     };
     const state = currentChatChannelReducer(initialState, action);
     const resultMsgs = [fourthMessage, thirdMessage, secondMessage, firstMessage];

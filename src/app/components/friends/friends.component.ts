@@ -6,15 +6,17 @@ import { ChatChannel, ChannelList } from 'shared-interfaces/channel.interface';
 import ChatServer from 'shared-interfaces/server.interface';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { FriendsStore } from '../../reducers/friends-reducer';
 
 @Component({
   selector: 'app-friends',
   templateUrl: './friends.component.html',
-  styleUrls: ['./friends.component.scss', '../../styles/layout.scss']
+  styleUrls: ['./friends.component.scss', '../../styles/layout.scss'],
 })
 export class FriendsComponent implements OnInit, OnDestroy {
   public currentChatChannel: Observable<ChatChannel>;
   public currentServer: Observable<ChatServer>;
+  public friendsStore: Observable<FriendsStore>;
   private channelList: ChannelList;
   private subscriptions: Array<Subscription> = [];
 
@@ -27,12 +29,13 @@ export class FriendsComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.currentChatChannel = data.state.channel;
         this.currentServer = data.state.server;
+        this.friendsStore = data.state.friends;
         this.subscriptions.push(
           data.state.server
             .filter(server => server._id === 'friends')
             .subscribe(server => {
               this.channelList = server.channelList;
-            })
+            }),
         );
       });
   }

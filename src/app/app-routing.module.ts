@@ -13,6 +13,8 @@ import { ChatChannelComponent } from './components/chat-channel/chat-channel.com
 import { ChatChannelResolver } from './resolvers/chat-channel-resolver.service';
 import { FriendsComponent } from './components/friends/friends.component';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
+import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
+import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
 
 export const appRoutes: Routes = [
   {
@@ -27,13 +29,18 @@ export const appRoutes: Routes = [
         path: 'friends', component: FriendsComponent, resolve: { state: FriendsResolver },
         children: [
           {
+            path: '', component: FriendRequestsComponent,
+            resolve: { unused: FriendRequestsResolver },
+          },
+          {
             path: ':id', component: ChatChannelComponent,
             resolve: { state: ChatChannelResolver },
-          }
-        ]
+          },
+        ],
       },
       {
-        path: 'channels', redirectTo: '/', pathMatch: 'full'
+        // Unused route - no server selected
+        path: 'channels', redirectTo: '/', pathMatch: 'full',
       },
       {
         path: 'channels/:id', component: ViewServerComponent,
@@ -42,8 +49,8 @@ export const appRoutes: Routes = [
           {
             path: ':id', component: ChatChannelComponent,
             resolve: { state: ChatChannelResolver },
-          }
-        ]
+          },
+        ],
       },
 
     ],
@@ -57,7 +64,7 @@ export const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, { enableTracing: false }),
   ],
   exports: [
-    RouterModule
-  ]
+    RouterModule,
+  ],
 })
 export class AppRoutingModule { }

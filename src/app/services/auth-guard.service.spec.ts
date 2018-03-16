@@ -35,12 +35,12 @@ describe('AuthGuardService', () => {
         fakeWebSocketService.connect.and.callFake(() => ({
           toPromise: () => {
             return Promise.resolve(false);
-          }
+          },
         }));
         expect(await service.canActivate()).toBeFalsy();
         expect(router.navigate).toHaveBeenCalledTimes(1);
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
-      })
+      }),
   );
   it('should connect and proceed to route',
     inject(
@@ -50,11 +50,11 @@ describe('AuthGuardService', () => {
         fakeWebSocketService.connect.and.callFake(() => ({
           toPromise: () => {
             return Promise.resolve(true);
-          }
+          },
         }));
         expect(await service.canActivate()).toEqual(true);
         expect(router.navigate).not.toHaveBeenCalled();
-      })
+      }),
   );
   it('should allow access to / if connected',
     inject(
@@ -64,6 +64,6 @@ describe('AuthGuardService', () => {
         spyOn(router, 'navigate');
         expect(await service.canActivate()).toEqual(true);
         expect(router.navigate).not.toHaveBeenCalled();
-      })
+      }),
   );
 });

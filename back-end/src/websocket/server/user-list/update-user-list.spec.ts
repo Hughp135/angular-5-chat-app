@@ -1,5 +1,4 @@
 import { updateUserList } from './update-user-list';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
@@ -17,13 +16,13 @@ describe('websocket/server/update-user-list', () => {
     user = new User({
       _id: '123',
       username: 'test',
-      joinedServers: ['345', '678'],
+      joined_servers: ['345', '678'],
     });
     emit = sandbox.spy();
     io = {
       in: () => ({
         emit,
-      })
+      }),
     };
   });
   afterEach(() => {

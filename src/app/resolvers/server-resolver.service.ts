@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   Resolve, RouterStateSnapshot,
-  ActivatedRouteSnapshot
+  ActivatedRouteSnapshot,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
@@ -21,13 +21,12 @@ export class ServerResolver implements Resolve<ChatServer> {
     private store: Store<AppState>,
     private wsService: WebsocketService,
     private router: Router,
-    private errorService: ErrorService
+    private errorService: ErrorService,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     const id = route.paramMap.get('id');
     const currentServerStore = this.store.select('currentServer');
-
     try {
       await this.joinServer(id);
       if (route.children.length < 1) {

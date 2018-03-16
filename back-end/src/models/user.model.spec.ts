@@ -1,5 +1,4 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
@@ -15,7 +14,6 @@ describe('models/user', () => {
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
-    await User.remove({});
   });
   after(async () => {
     await mongoose.connection.close();
@@ -40,32 +38,46 @@ describe('models/user', () => {
   it('username must be unique', async () => {
     await User.create({
       username: 'test',
-      password: '123456'
+      password: '123456',
     });
     async function create2ndUser() {
       await User.create({
         username: 'test',
-        password: '123456'
+        password: '123456',
       });
     }
     try {
       await User.create({
         username: 'test',
-        password: '123456'
+        password: '123456',
       });
     } catch (e) {
       return expect(e.message).to.equal('duplicate username');
     }
     throw new Error('User create worked when it shouldn\'t have');
   });
-  it('creates with user with joinedServers / friends', async () => {
+  it('creates user with friend requests', async () => {
+    const objectId = mongoose.Types.ObjectId();
     const user = await User.create({
       username: 'test',
       password: '123456',
-      joinedServers: ['123', '456'],
+      friend_requests: [{
+        type: 'outgoing',
+        user_id: objectId,
+      }],
+    });
+
+    expect(user.friend_requests[0].type).to.equal('outgoing');
+    expect(user.friend_requests[0].user_id).to.equal(objectId);
+  });
+  it('creates with user with joined_servers / friends', async () => {
+    const user = await User.create({
+      username: 'test',
+      password: '123456',
+      joined_servers: ['123', '456'],
       friends: ['asd', 'fgh'],
     });
-    expect(user.joinedServers).to.deep.equal(['123', '456']);
+    expect(user.joined_servers).to.deep.equal(['123', '456']);
     expect(user.friends).to.deep.equal(['asd', 'fgh']);
   });
 });

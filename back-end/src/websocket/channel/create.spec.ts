@@ -1,10 +1,8 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
 import { createChannel } from './create';
-import { joinChannel } from './join';
 import Channel from '../../models/channel.model';
 import Server from '../../models/server.model';
 import createFakeSocketEvent from '../test_helpers/fake-socket';

@@ -35,6 +35,9 @@ import { FriendsComponent } from './components/friends/friends.component';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
 import { DirectMessageService } from './services/direct-message.service';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
+import { FriendRequestService } from './services/friend-request.service';
+import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
+import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
 
 @NgModule({
   declarations: [
@@ -53,6 +56,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
     HomeComponent,
     FriendsComponent,
     ImageCropperComponent,
+    FriendRequestsComponent,
   ],
   entryComponents: [
     CreateServerComponent,
@@ -66,7 +70,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
     HttpClientModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({
-      maxAge: 10
+      maxAge: 10,
     }),
     ShContextMenuModule,
   ],
@@ -81,8 +85,10 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
     MainResolver,
     ChatChannelResolver,
     FriendsResolver,
+    FriendRequestsResolver,
     DirectMessageService,
+    FriendRequestService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

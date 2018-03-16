@@ -21,8 +21,8 @@ describe('ChannelsListComponent', () => {
 
   const fakeWebSocketService = {
     socket: {
-      emit: jasmine.createSpy()
-    }
+      emit: jasmine.createSpy(),
+    },
   };
 
   const currentServer: ChatServer = {
@@ -76,7 +76,7 @@ describe('ChannelsListComponent', () => {
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('create-channel', {
         server_id: '123',
-        name: 'channel-name'
+        name: 'channel-name',
       });
   });
   it('should join a channel channel', () => {

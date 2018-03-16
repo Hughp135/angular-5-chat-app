@@ -9,11 +9,12 @@ import { IShContextMenuItem } from 'ng2-right-click-menu/sh-context-menu.models'
 import { WebsocketService } from '../../services/websocket.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { DirectMessageService } from '../../services/direct-message.service';
+import { FriendRequestService } from '../../services/friend-request.service';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   public subscriptions: Subscription[] = [];
@@ -26,6 +27,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     public wsService: WebsocketService,
     private ref: ChangeDetectorRef,
     private dmService: DirectMessageService,
+    private friendRequest: FriendRequestService,
   ) {
     this.addContextMenuItems();
   }
@@ -40,7 +42,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
         }),
       this.settingsService.invertedThemeSubj.subscribe(() => {
         this.ref.detectChanges();
-      })
+      }),
     );
   }
 
@@ -89,11 +91,26 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
         disabled: (ctx) => true,
       },
       {
-        label: '<i class=""></i>Send Message',
-        disabled: (ctx) => false,
+        label: 'Send Message',
         onClick: (ctx) => this.sendUserMessage(ctx.dataContext._id),
-      }
+      },
+      {
+        label: 'Add Friend',
+        onClick: (ctx) => this.addFriend(ctx.dataContext._id),
+      },
+      {
+        label: '<span class="text-danger">Remove Friend</span>',
+        onClick: (ctx) => this.removeFriend(ctx.dataContext._id),
+      },
     ];
+  }
+
+  addFriend(userId) {
+    this.friendRequest.sendFriendRequest(userId);
+  }
+
+  removeFriend(userId) {
+    this.friendRequest.removeFriend(userId);
   }
 
   sendUserMessage(userId) {

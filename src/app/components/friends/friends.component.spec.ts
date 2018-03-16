@@ -9,6 +9,7 @@ import ChatServer from 'shared-interfaces/server.interface';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { FriendsStore } from '../../reducers/friends-reducer';
 
 describe('FriendsComponent', () => {
   let component: FriendsComponent;
@@ -27,10 +28,15 @@ describe('FriendsComponent', () => {
     channelList: {
       server_id: 'friends',
       users: {
-        '345': { username: 'user345' }
+        '345': { username: 'user345' },
       },
-      channels: [channel]
-    }
+      channels: [channel],
+    },
+  };
+  const friends: FriendsStore = {
+    friendRequests: [
+      { type: 'incoming', user_id: 'ab1', _id: 'lo1' },
+    ],
   };
 
   const route = {
@@ -38,8 +44,9 @@ describe('FriendsComponent', () => {
       state: {
         channel: Observable.of(channel),
         server: Observable.of(server),
-      }
-    })
+        friends: Observable.of(friends),
+      },
+    }),
   };
 
   beforeEach(async(() => {
@@ -65,10 +72,11 @@ describe('FriendsComponent', () => {
     spyOn(router, 'navigate');
   });
 
-  it('should create', () => {
+  it('should create + initial state', () => {
     expect(component).toBeTruthy();
     expect(component.currentServer).toBeTruthy();
     expect(component.currentChatChannel).toBeTruthy();
+    expect(component.friendsStore).toBeTruthy();
   });
   it('join server should redirect', () => {
     component.joinChannel(channel);
@@ -81,7 +89,7 @@ describe('FriendsComponent', () => {
   it('getChannelName returns unknown if user id not found', () => {
     const channel1 = {
       ...channel,
-      user_ids: ['asd', 'bcd']
+      user_ids: ['asd', 'bcd'],
     };
     expect(component.getChannelName(channel1)).toEqual('Unknown');
   });

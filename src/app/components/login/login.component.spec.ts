@@ -30,7 +30,7 @@ describe('LoginComponent', () => {
       imports: [
         ReactiveFormsModule,
         RouterTestingModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       providers: [
         ApiService,
@@ -67,12 +67,12 @@ describe('LoginComponent', () => {
   it('successful login + successful socket connection', async (done) => {
     const formData = {
       username: 'coolname',
-      password: '123456'
+      password: '123456',
     };
     fakeWebSocketService.connect.and.callFake(() => ({
       toPromise: () => {
         return Promise.resolve(true);
-      }
+      },
     }));
     component.loginForm.patchValue(formData);
     component.submitForm();
@@ -90,12 +90,12 @@ describe('LoginComponent', () => {
   it('successful login successful + failed socket connection', async (done) => {
     const formData = {
       username: 'coolname',
-      password: '123456'
+      password: '123456',
     };
     fakeWebSocketService.connect.and.callFake(() => ({
       toPromise: () => {
         return Promise.resolve(false);
-      }
+      },
     }));
     spyOn(router, 'navigate');
     component.loginForm.patchValue(formData);
@@ -154,7 +154,7 @@ describe('LoginComponent', () => {
     fakeWebSocketService.connect.and.callFake(() => ({
       toPromise: () => {
         return Promise.resolve(true);
-      }
+      },
     }));
     const mockResponse = { error: 'Failed' };
     component.loginForm.patchValue(formData);

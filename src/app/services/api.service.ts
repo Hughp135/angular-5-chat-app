@@ -9,7 +9,7 @@ export interface HttpOptions {
 
 @Injectable()
 export class ApiService {
-  public BASE_URL = 'http://localhost:4200/api/';
+  public BASE_URL = '/api/';
 
   constructor(private http: HttpClient) { }
 

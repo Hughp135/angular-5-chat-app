@@ -9,7 +9,8 @@ import {
   CHAT_MESSAGE_HANDLER,
   JOINED_CHANNEL_HANDLER,
   SERVER_USERLIST_HANDLER,
-  SERVER_UPDATE_USERLIST_HANDLER
+  SERVER_UPDATE_USERLIST_HANDLER,
+  SET_FRIEND_REQUESTS_HANDLER,
 } from './websocket-events/websocket-events';
 
 import { StoreModule, Store } from '@ngrx/store';
@@ -22,6 +23,7 @@ import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
+import { SET_FRIEND_REQUESTS } from '../reducers/friends-reducer';
 
 // tslint:disable:no-unused-expression
 
@@ -43,7 +45,7 @@ describe('WebsocketService', () => {
       imports: [
         StoreModule.forRoot(reducers),
         RouterTestingModule,
-      ]
+      ],
     });
     injector = getTestBed();
     service = injector.get(WebsocketService);
@@ -88,7 +90,7 @@ describe('WebsocketService', () => {
           if (type === 'error') {
             callback('No token provided');
           }
-        }
+        },
       };
     });
     const connected = await service.connect().toPromise();
@@ -146,7 +148,7 @@ describe('WebsocketService', () => {
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback(message);
-      }
+      },
     };
     handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
@@ -166,7 +168,7 @@ describe('WebsocketService', () => {
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback(message);
-      }
+      },
     };
     handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
     expect(store.dispatch).not.toHaveBeenCalled();
@@ -175,7 +177,7 @@ describe('WebsocketService', () => {
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback('boo');
-      }
+      },
     };
     handlers[CHANNEL_LIST_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
@@ -187,7 +189,7 @@ describe('WebsocketService', () => {
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback({ 'messages': [] });
-      }
+      },
     };
     handlers[JOINED_CHANNEL_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
@@ -199,7 +201,7 @@ describe('WebsocketService', () => {
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback('hi');
-      }
+      },
     };
     handlers[SERVER_USERLIST_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
@@ -211,11 +213,23 @@ describe('WebsocketService', () => {
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback('hi');
-      }
+      },
     };
     handlers[SERVER_UPDATE_USERLIST_HANDLER](fakeSocket, store);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SERVER_UPDATE_USER_LIST,
+      payload: 'hi',
+    });
+  });
+  it('friend-requests handler', () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback('hi');
+      },
+    };
+    handlers[SET_FRIEND_REQUESTS_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_FRIEND_REQUESTS,
       payload: 'hi',
     });
   });

@@ -13,10 +13,10 @@ export function createChannel(io: any) {
         }
         await Channel.create({
           server_id: server._id,
-          name: data.name
+          name: data.name,
         });
         const channels = await Channel.find({
-          server_id: server._id
+          server_id: server._id,
         }).lean();
         socket.emit('channel-list', {
           server_id: server._id,

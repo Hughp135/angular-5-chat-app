@@ -1,5 +1,4 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
@@ -42,8 +41,8 @@ describe('websocket message/send', () => {
     });
     await userModel.findByIdAndUpdate(user._id, {
       $set: {
-        joinedServers: [server._id]
-      }
+        joined_servers: [server._id],
+      },
     });
     channel = await Channel.create({
       name: 'test-channel',
@@ -51,11 +50,11 @@ describe('websocket message/send', () => {
     });
     dmChannel = await Channel.create({
       name: 'dm-channel',
-      user_ids: [user._id]
+      user_ids: [user._id],
     });
     dmChannel2 = await Channel.create({
       name: 'dm-channel',
-      user_ids: []
+      user_ids: [],
     });
 
     channelId = channel._id;
@@ -184,7 +183,7 @@ describe('websocket message/send', () => {
     socket.handshake.query = { test: TEST_SECRET };
     sendMessage(io);
   });
-  it('does not send if user.joinedServers not includes server_id', (done) => {
+  it('does not send if user.joined_servers not includes server_id', (done) => {
     const messageRequest: SendMessageRequest = {
       message: 'hi thar',
       channel_id: channelId.toString(),
@@ -214,8 +213,8 @@ describe('websocket message/send', () => {
     }
     userModel.findByIdAndUpdate(user._id, {
       $set: {
-        joinedServers: []
-      }
+        joined_servers: [],
+      },
     }, () => {
       sendMessage(io);
     });

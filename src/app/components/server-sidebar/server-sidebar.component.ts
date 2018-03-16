@@ -6,7 +6,7 @@ import { AppStateService } from '../../services/app-state.service';
 @Component({
   selector: 'app-server-sidebar',
   templateUrl: './server-sidebar.component.html',
-  styleUrls: ['./server-sidebar.component.scss']
+  styleUrls: ['./server-sidebar.component.scss'],
 })
 export class ServerSidebarComponent implements OnInit {
 

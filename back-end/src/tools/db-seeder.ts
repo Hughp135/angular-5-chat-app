@@ -5,6 +5,8 @@ import User from '../models/user.model';
 import ChatMessage from '../models/chatmessage.model';
 import * as bcrypt from 'bcrypt';
 
+/* tslint:disable:no-unused-variable */
+
 console.warn('Warning! Wiping database in 5 seconds... Terminate the process now to abort.');
 setTimeout(seed, 5000);
 
@@ -20,8 +22,8 @@ async function seed() {
   const servers = await createServers(user._id);
   const serverIds = servers.map(srv => srv._id.toString());
 
-  // Set user.joinedServers and save
-  user.joinedServers = serverIds;
+  // Set user.joined_servers and save
+  user.joined_servers = serverIds;
   await user.save();
 
   console.warn('Creating channels...');
@@ -31,10 +33,10 @@ async function seed() {
   await createUsersInServers(serverIds);
 
   console.warn('Adding friends to main user');
-  await addFriendsToUser(user);
+  // await addFriendsToUser(user);
 
   console.warn('Creating DM channels');
-  await createDMChannels(user);
+  // await createDMChannels(user);
 
   console.warn('Finished!');
   await mongoose.disconnect();
@@ -50,14 +52,14 @@ async function createMainUser() {
 
 async function createUsersInServers(serverIds) {
   const pass = await bcrypt.hash('asdasd', 1);
-  const users = [...Array(1000)]
+  const users = [...Array(10)]
     .map((x, index) => {
       // const serverIdsSlice = Math.random() > 0.5
       // ? serverIds.slice(0, 3) : serverIds.slice(2, 4);
       return new User({
         username: `User ${index}`,
         password: pass,
-        joinedServers: serverIds
+        joined_servers: serverIds,
       });
     });
   return await User.insertMany(users);
@@ -82,8 +84,8 @@ async function createChannels(serverIds) {
         Channel.create({
           name: `Text Channel ${idx + 1}`,
           server_id: server_id,
-        })
-      )
+        }),
+      ),
     ).reduce((a, b) => a.concat(b));
 
   return await Promise.all(promises);
@@ -117,7 +119,7 @@ async function createDMChannels(user) {
   otherUsers.forEach(async usr => {
     promises.push(Channel.create({
       name: 'DMChannel @ ' + usr.username,
-      user_ids: [user._id, usr._id]
+      user_ids: [user._id, usr._id],
     }));
   });
   await Promise.all(promises);
