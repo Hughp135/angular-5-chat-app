@@ -14,7 +14,7 @@ import { FriendRequestService } from '../../services/friend-request.service';
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   public subscriptions: Subscription[] = [];
@@ -34,7 +34,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     this.subscriptions.push(
-      Observable.interval(5000)
+      Observable.interval(60000)
         .subscribe(() => {
           /* istanbul ignore next */
           // Long poll the user list
@@ -42,7 +42,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
         }),
       this.settingsService.invertedThemeSubj.subscribe(() => {
         this.ref.detectChanges();
-      })
+      }),
     );
   }
 
@@ -101,7 +101,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         label: '<span class="text-danger">Remove Friend</span>',
         onClick: (ctx) => this.removeFriend(ctx.dataContext._id),
-      }
+      },
     ];
   }
 

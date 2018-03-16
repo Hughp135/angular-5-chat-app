@@ -11,7 +11,7 @@ import ChatServer from '../../../../shared-interfaces/server.interface';
 @Component({
   selector: 'app-chat-channel',
   templateUrl: './chat-channel.component.html',
-  styleUrls: ['./chat-channel.component.scss']
+  styleUrls: ['./chat-channel.component.scss'],
 })
 export class ChatChannelComponent implements OnInit, OnDestroy {
   public chatMessage = '';

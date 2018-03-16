@@ -21,7 +21,7 @@ describe('websocket/friends/remove-friend', () => {
   beforeEach(async () => {
     user3 = await User.create({
       username: 'testuser3',
-      password: '123456'
+      password: '123456',
     });
     user1 = await User.create({
       username: 'testuser1',
@@ -52,17 +52,27 @@ describe('websocket/friends/remove-friend', () => {
   it('throws error if socket user not found', async () => {
     const io = {
       of: () => ({
-        connected: {}
+        connected: {},
       }),
     };
     socket.claim.user_id = new ObjectId();
     await handler(io, socket, user1._id.toString());
     expect(socket.error).to.have.been.calledWith('Invalid token');
   });
+  it('emits soft-error if userId is not a friend', async () => {
+    const io = {
+      of: () => ({
+        connected: {},
+      }),
+    };
+    socket.claim.user_id = user3._id;
+    await handler(io, socket, user1._id.toString());
+    expect(socket.emit).to.have.been.calledWith('soft-error', 'You are not friends with this user');
+  });
   it('should remove friend on fromUser', async () => {
     const io = {
       of: () => ({
-        connected: {}
+        connected: {},
       }),
     };
     await handler(io, socket, user1._id.toString());
@@ -74,7 +84,7 @@ describe('websocket/friends/remove-friend', () => {
     await user1.save();
     const io = {
       of: () => ({
-        connected: {}
+        connected: {},
       }),
     };
     await handler(io, socket, user1._id.toString());
@@ -84,14 +94,14 @@ describe('websocket/friends/remove-friend', () => {
   it('should emit friends list to calling user', async () => {
     const io = {
       of: () => ({
-        connected: {}
+        connected: {},
       }),
     };
     await handler(io, socket, user1._id.toString());
     await expect(socket.emit).to.have.been.calledOnce;
     expect(socket.emit).to.have.been.calledWith('server-user-list', {
       server_id: 'friends',
-      users: [{ _id: user3._id, online: false, username: 'testuser3' }]
+      users: [{ _id: user3._id, online: false, username: 'testuser3' }],
     });
   });
   it('should emit friends list to toUser if their socket is connected', async () => {
@@ -102,7 +112,7 @@ describe('websocket/friends/remove-friend', () => {
           [user1.socket_id]: {
             emit: toUserEmitSpy,
           },
-        }
+        },
       }),
     };
     await handler(io, socket, user1._id.toString());
@@ -110,11 +120,11 @@ describe('websocket/friends/remove-friend', () => {
     await expect(toUserEmitSpy).to.have.been.calledOnce;
     expect(socket.emit).to.have.been.calledWith('server-user-list', {
       server_id: 'friends',
-      users: [{ _id: user3._id, online: false, username: 'testuser3' }]
+      users: [{ _id: user3._id, online: false, username: 'testuser3' }],
     });
     expect(toUserEmitSpy).to.have.been.calledWith('server-user-list', {
       server_id: 'friends',
-      users: [{ _id: user3._id, online: false, username: 'testuser3' }]
+      users: [{ _id: user3._id, online: false, username: 'testuser3' }],
     });
   });
   it('should only call User.save once if toUser does not exist', async () => {
@@ -125,7 +135,7 @@ describe('websocket/friends/remove-friend', () => {
           [user1.socket_id]: {
             emit: toUserEmitSpy,
           },
-        }
+        },
       }),
     };
     sinon.spy(User.prototype, 'save');

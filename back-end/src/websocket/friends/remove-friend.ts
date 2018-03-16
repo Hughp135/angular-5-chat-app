@@ -21,6 +21,10 @@ export async function handler(io, socket, userId: string) {
     return socket.error('Invalid token');
   }
 
+  if (!user.friends.some(id => id === userId)) {
+    return socket.emit('soft-error', 'You are not friends with this user');
+  }
+
   user.friends = user.friends.filter(id => id !== userId);
   await user.save();
   await sendFriendsUserList(io, socket, user);
