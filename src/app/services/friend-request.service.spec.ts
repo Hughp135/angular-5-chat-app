@@ -12,14 +12,14 @@ describe('FriendRequestService', () => {
   beforeEach(() => {
     fakeWsService = {
       socket: {
-        emit: jasmine.createSpy()
+        emit: jasmine.createSpy(),
       },
       awaitNextEvent: jasmine.createSpy(),
     };
     fakeErrorService = {
       errorMessage: {
         next: jasmine.createSpy()
-      }
+      },
     };
     TestBed.configureTestingModule({
       providers: [
@@ -37,6 +37,10 @@ describe('FriendRequestService', () => {
   it('should emit "send-friend-requeset"', async () => {
     await (service.sendFriendRequest('123'));
     expect(fakeWsService.socket.emit).toHaveBeenCalledWith('send-friend-request', '123');
+  });
+  it('should emit "remove-friend"', async () => {
+    await (service.removeFriend('123'));
+    expect(fakeWsService.socket.emit).toHaveBeenCalledWith('remove-friend', '123');
   });
   it('should emit "reject-friend-requeset"', async () => {
     await (service.rejectFriendRequest('123'));

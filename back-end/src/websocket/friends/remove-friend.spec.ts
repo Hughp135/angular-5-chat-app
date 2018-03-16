@@ -128,18 +128,17 @@ describe('websocket/friends/remove-friend', () => {
     });
   });
   it('should only call User.save once if toUser does not exist', async () => {
-    const toUserEmitSpy = sinon.spy();
     const io = {
       of: () => ({
-        connected: {
-          [user1.socket_id]: {
-            emit: toUserEmitSpy,
-          },
-        },
+        connected: {},
       }),
     };
+    const objId = new ObjectId().toString();
+
+    user2.friends = [objId];
+    await user2.save();
     sinon.spy(User.prototype, 'save');
-    await handler(io, socket, new ObjectId().toString());
+    await handler(io, socket, objId);
     await expect(User.prototype.save).to.have.been.calledOnce;
   });
 });

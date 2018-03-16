@@ -30,11 +30,11 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
           data.state.channel
             .filter(chan => !!chan)
-            .subscribe(chan => this.currentChannel = chan)
+            .subscribe(chan => this.currentChannel = chan),
         );
         this.subscriptions.push(
           data.state.server
-            .subscribe(server => this.currentServer = server)
+            .subscribe(server => this.currentServer = server),
         );
       });
   }
@@ -95,7 +95,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
     const channelUsers = this.currentChannel.user_ids;
     const usernames = channelUsers.map((userId: string) => {
       const user = this.currentServer.channelList.users[userId];
-      return user ? user.username : 'Unknown';
+      return user.username;
     });
 
     return usernames.join(', ');
