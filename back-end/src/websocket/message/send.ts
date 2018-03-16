@@ -34,16 +34,18 @@ export function sendMessage(io: any) {
           socket.emit('soft-error', 'You are not allowed to send this message.');
           return;
         }
+
         await emitMessage(io, request.message, channel, user, null);
         return;
       }
 
       // NORMAL SERVER
-      const server = await Server.findById(channel.server_id).lean();
+      const server: any = await Server.findById(channel.server_id).lean();
       if (!server || !await canJoinServer(user, channel.server_id)) {
         socket.emit('soft-error', 'You don\'t have permission to send this message.');
         return;
       }
+
       await emitMessage(io, request.message, channel, user, server);
 
       return;

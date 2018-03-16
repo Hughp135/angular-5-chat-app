@@ -16,7 +16,8 @@ export class MainResolver implements Resolve<any> {
     private store: Store<AppState>,
     private errorService: ErrorService,
     private router: Router,
-  ) { }
+  ) {
+  }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     try {

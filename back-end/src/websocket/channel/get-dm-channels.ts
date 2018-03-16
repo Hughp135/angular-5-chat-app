@@ -2,6 +2,7 @@ import { ChannelList } from 'shared-interfaces/channel.interface';
 import Channel from '../../models/channel.model';
 import User from '../../models/user.model';
 import { sendFriendsUserList } from '../friends/send-friends-list';
+import { leaveOtherServers } from '../server/join';
 
 export function getDmChannels(io: any) {
   io.on('connection', socket => {
@@ -18,6 +19,7 @@ export function handler(io, socket) {
       socket.emit('soft-error', 'You are not logged in.');
       return;
     }
+    await leaveOtherServers(socket);
     await Promise.all([
       sendChannelList(user._id, socket),
       sendFriendsUserList(io, socket, user),

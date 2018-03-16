@@ -36,12 +36,13 @@ export async function joinChannel(io: any) {
         return;
       }
 
-      // FRIENDS CHANNEL (DM)
+      // FRIENDS DM CHANNEL
       if (channel.getChannelType() === DM_CHANNEL) {
         if (!channel.user_ids.toString().includes(user._id.toString())) {
           socket.emit('soft-error', 'You don\'t have permission to join this channel.');
           return;
         }
+
         socket.join(`dmchannel-${channel._id}`);
       }
 
