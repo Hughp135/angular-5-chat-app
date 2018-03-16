@@ -25,7 +25,7 @@ export function sendMessage(io: any) {
 
       const [user, channel]: Array<any> = await Promise.all([
         User.findById(socket.claim.user_id).lean(),
-        Channel.findById(request.channel_id)
+        Channel.findById(request.channel_id),
       ]);
 
       // FRIENDS SERVER (DM)
@@ -81,7 +81,7 @@ async function getTestUserObjects(socket, request) {
   const [server_id] = user.joined_servers;
   const server: any = await Server.findById(server_id).lean();
   const [channel]: any = await Channel.find({
-    server_id: server_id
+    server_id: server_id,
   }).lean();
   return [user, channel, server];
 }

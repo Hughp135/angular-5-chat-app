@@ -19,8 +19,8 @@ describe('MainResolverService', () => {
   let router: Router;
   const fakeErrorService = {
     errorMessage: {
-      next: jasmine.createSpy()
-    }
+      next: jasmine.createSpy(),
+    },
   };
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('MainResolverService', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         StoreModule.forRoot(reducers),
-      ]
+      ],
     });
     service = TestBed.get(MainResolver);
     apiService = TestBed.get(ApiService);
@@ -54,7 +54,7 @@ describe('MainResolverService', () => {
   });
   it('gets server list and updates store', fakeAsync(() => {
     const mockResponse: { servers: ChatServer[] } = {
-      servers: [{ name: 'server1', _id: '123', owner_id: '345' }]
+      servers: [{ name: 'server1', _id: '123', owner_id: '345' }],
     };
     service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
@@ -68,7 +68,7 @@ describe('MainResolverService', () => {
   }));
   it('gets server list and updates store', fakeAsync(() => {
     const mockResponse: { servers: ChatServer[] } = {
-      servers: [{ name: 'server1', _id: '123', owner_id: '345' }]
+      servers: [{ name: 'server1', _id: '123', owner_id: '345' }],
     };
     service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);

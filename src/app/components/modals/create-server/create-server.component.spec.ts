@@ -20,7 +20,7 @@ describe('CreateServerComponent', () => {
     post: jasmine.Spy,
   };
   const fakeModalService = {
-    approve: () => null
+    approve: () => null,
   };
   beforeEach(async(() => {
     apiServiceMock = {
@@ -36,9 +36,9 @@ describe('CreateServerComponent', () => {
       ],
       imports: [
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
     })
       .compileComponents();
   }));
@@ -88,7 +88,7 @@ describe('CreateServerComponent', () => {
   it('POSTS to /servers and succeeds', ((done) => {
     const formData = {
       name: 'createServer-test',
-      icon: null
+      icon: null,
     };
 
     apiServiceMock.post.and.callFake((url: string, data) => {
@@ -107,7 +107,7 @@ describe('CreateServerComponent', () => {
     expect(component.loading).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'servers',
-      formData
+      formData,
     );
   }));
   it('submitting form POST to /register fail with specific error message', (done) => {
@@ -136,7 +136,7 @@ describe('CreateServerComponent', () => {
     expect(component.loading).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'servers',
-      formData
+      formData,
     );
   });
   it('submitting form POST to /register fail with generic error msg', (done) => {
@@ -165,14 +165,14 @@ describe('CreateServerComponent', () => {
     expect(component.loading).toEqual(true);
     expect(apiServiceMock.post).toHaveBeenCalledWith(
       'servers',
-      formData
+      formData,
     );
   });
   it('selecting an image file', (done) => {
     expect(component.cropperImgSrc).toBeUndefined();
     const file = new File(['hi there'], 'filename');
     const event = {
-      target: { files: [file] }
+      target: { files: [file] },
     };
     component.onFileChange(event);
     setTimeout(() => {
@@ -184,7 +184,7 @@ describe('CreateServerComponent', () => {
   it('selecting no image file', (done) => {
     expect(component.cropperImgSrc).toBeUndefined();
     const event = {
-      target: { files: [] }
+      target: { files: [] },
     };
     component.onFileChange(event);
     setTimeout(() => {

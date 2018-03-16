@@ -8,7 +8,7 @@ import { SettingsService } from '../../services/settings.service';
 @Component({
   selector: 'app-friend-requests',
   templateUrl: './friend-requests.component.html',
-  styleUrls: ['./friend-requests.component.scss']
+  styleUrls: ['./friend-requests.component.scss'],
 })
 export class FriendRequestsComponent implements OnInit {
   public friendsStore: Observable<FriendsStore>;

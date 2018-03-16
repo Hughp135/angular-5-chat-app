@@ -14,7 +14,7 @@ export async function createServer(req, res) {
   const user = await User.findOne({ '_id': req.claim.user_id });
   if (!user) {
     return res.status(401).json({
-      error: 'User not found.'
+      error: 'User not found.',
     });
   }
 
@@ -28,7 +28,7 @@ export async function createServer(req, res) {
 
   if (await existingServerCount(user) >= 3) {
     return res.status(400).json({
-      error: 'You can only own a maximum of 3 servers. Please delete or edit an existing server before creating a new one'
+      error: 'You can only own a maximum of 3 servers. Please delete or edit an existing server before creating a new one',
     });
   }
 
@@ -47,17 +47,17 @@ export async function createServer(req, res) {
     await saveServerIcon(server, req.body.icon);
 
     res.status(200).json({
-      server
+      server,
     });
   } catch (e) {
     /* istanbul ignore else */
     if (e.code === 11000) {
       return res.status(400).json({
-        error: 'You already own a server with the same name. Please choose another name or edit your existing server.'
+        error: 'You already own a server with the same name. Please choose another name or edit your existing server.',
       });
     } else {
       return res.status(500).json({
-        error: 'A server error occured.'
+        error: 'A server error occured.',
       });
     }
   }
@@ -78,7 +78,7 @@ async function saveServerIcon(server, icon) {
         server.image_url = `img/server-icons/${server._id}.jpg`;
         await server.save();
         resolve(true);
-      }
+      },
     );
   });
 }

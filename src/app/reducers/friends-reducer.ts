@@ -11,7 +11,7 @@ export function friendsReducer(
   state: FriendsStore = {
     friendRequests: [],
   },
-  action
+  action,
 ) {
   switch (action.type) {
     case SET_FRIEND_REQUESTS:

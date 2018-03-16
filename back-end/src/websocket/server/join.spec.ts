@@ -1,5 +1,4 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
@@ -37,7 +36,7 @@ describe('websocket server/join', () => {
     });
     channel = await Channel.create({
       name: 'test-chan1',
-      server_id: server._id
+      server_id: server._id,
     });
   });
   afterEach(async () => {

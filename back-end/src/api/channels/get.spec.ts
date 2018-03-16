@@ -1,6 +1,4 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
-import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as supertest from 'supertest';
 import * as mongoose from 'mongoose';
@@ -33,7 +31,7 @@ describe('api/channels/get', () => {
     user3 = await User.create({
       username: 'test-user3',
       password: '123456',
-      friends: [user1._id, user2._id]
+      friends: [user1._id, user2._id],
     });
     token = createJWT({
       username: 'test-user',

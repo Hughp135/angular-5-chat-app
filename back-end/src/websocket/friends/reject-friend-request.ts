@@ -38,7 +38,7 @@ export async function handler(io, socket, userId) {
 async function getUsers(socket, userId: string) {
   const users: any = await User.find(
     {
-      _id: [socket.claim.user_id, userId]
+      _id: [socket.claim.user_id, userId],
     },
     {
       username: 1,

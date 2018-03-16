@@ -26,7 +26,7 @@ export default function createFakeSocketEvent(
     error: result,
     join: () => null,
     rooms: {
-      'server-123': true
+      'server-123': true,
     },
     leave: async () => null,
   };
@@ -36,7 +36,7 @@ export default function createFakeSocketEvent(
       callback(socket);
     },
     in: () => ({
-      emit: result
+      emit: result,
     }),
     of: () => ({
       connected: {

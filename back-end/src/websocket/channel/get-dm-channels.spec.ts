@@ -1,5 +1,4 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
@@ -28,7 +27,7 @@ describe('websocket channel/get-dm-channels', () => {
     user3 = await User.create({
       username: 'test-user3',
       password: '123456',
-      friends: [user1._id, user2._id]
+      friends: [user1._id, user2._id],
     });
     channel1 = await Channel.create({
       name: 'chantest',
@@ -61,7 +60,7 @@ describe('websocket channel/get-dm-channels', () => {
   it('getDmChannels emits channel-list and server-user-list', async () => {
     const socket = {
       claim: { user_id: user1._id },
-      emit: sandbox.spy()
+      emit: sandbox.spy(),
     };
     const io = {
       of: () => ({
@@ -75,7 +74,7 @@ describe('websocket channel/get-dm-channels', () => {
     expect(socket.emit).to.have.been
       .calledWith('server-user-list', {
         server_id: 'friends',
-        users: []
+        users: [],
       });
     expect(socket.emit).to.have.been
       .calledWith('channel-list', {
@@ -83,12 +82,12 @@ describe('websocket channel/get-dm-channels', () => {
           {
             _id: channel1._id,
             name: 'chantest',
-            user_ids: [user1._id, user2._id]
+            user_ids: [user1._id, user2._id],
           },
           {
             _id: channel2._id,
             name: 'chantest2',
-            user_ids: [user1._id, user3._id]
+            user_ids: [user1._id, user3._id],
           },
         ],
         server_id: 'friends',
@@ -103,7 +102,7 @@ describe('websocket channel/get-dm-channels', () => {
   });
   it('sendChannelList function sends channel list', async () => {
     const socket = {
-      emit: sandbox.spy()
+      emit: sandbox.spy(),
     };
     await sendChannelList(user1._id, socket);
     await expect(socket.emit).to.have.been
@@ -113,12 +112,12 @@ describe('websocket channel/get-dm-channels', () => {
             {
               _id: channel1._id,
               name: 'chantest',
-              user_ids: [user1._id, user2._id]
+              user_ids: [user1._id, user2._id],
             },
             {
               _id: channel2._id,
               name: 'chantest2',
-              user_ids: [user1._id, user3._id]
+              user_ids: [user1._id, user3._id],
             },
           ],
           server_id: 'friends',
@@ -127,7 +126,7 @@ describe('websocket channel/get-dm-channels', () => {
             [user2._id]: { _id: user2._id, username: user2.username },
             [user3._id]: { _id: user3._id, username: user3.username },
           },
-        }
+        },
       );
   });
   it('sends friends list', async () => {
@@ -138,7 +137,7 @@ describe('websocket channel/get-dm-channels', () => {
       }),
     };
     const socket = {
-      emit: sandbox.spy()
+      emit: sandbox.spy(),
     };
     await sendFriendsUserList(io, socket, user3);
     expect(socket.emit).to.have.been
@@ -149,14 +148,14 @@ describe('websocket channel/get-dm-channels', () => {
             [{
               _id: user1._id,
               username: 'test-user1',
-              online: false
+              online: false,
             },
             {
               _id: user2._id,
               username: 'test-user2',
-              online: false
-            }]
-        }
+              online: false,
+            }],
+        },
       );
   });
 });

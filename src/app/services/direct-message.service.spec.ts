@@ -15,14 +15,14 @@ describe('DirectMessageService', () => {
   beforeEach(() => {
     fakeWsService = {
       socket: {
-        emit: jasmine.createSpy()
+        emit: jasmine.createSpy(),
       },
       awaitNextEvent: jasmine.createSpy(),
     };
     fakeErrorService = {
       errorMessage: {
-        next: jasmine.createSpy()
-      }
+        next: jasmine.createSpy(),
+      },
     };
     TestBed.configureTestingModule({
       providers: [

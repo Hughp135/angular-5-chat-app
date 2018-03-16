@@ -35,12 +35,12 @@ export const appRoutes: Routes = [
           {
             path: ':id', component: ChatChannelComponent,
             resolve: { state: ChatChannelResolver },
-          }
-        ]
+          },
+        ],
       },
       {
         // Unused route - no server selected
-        path: 'channels', redirectTo: '/', pathMatch: 'full'
+        path: 'channels', redirectTo: '/', pathMatch: 'full',
       },
       {
         path: 'channels/:id', component: ViewServerComponent,
@@ -49,8 +49,8 @@ export const appRoutes: Routes = [
           {
             path: ':id', component: ChatChannelComponent,
             resolve: { state: ChatChannelResolver },
-          }
-        ]
+          },
+        ],
       },
 
     ],
@@ -64,7 +64,7 @@ export const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, { enableTracing: false }),
   ],
   exports: [
-    RouterModule
-  ]
+    RouterModule,
+  ],
 })
 export class AppRoutingModule { }

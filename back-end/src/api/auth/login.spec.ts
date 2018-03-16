@@ -1,12 +1,10 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as supertest from 'supertest';
 import * as setCookie from 'set-cookie-parser';
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import * as cookieParser from 'cookie-parser';
 
 import { app } from '../../api-server';
 import { verifyJWT } from './jwt';
@@ -45,7 +43,7 @@ describe('api/auth/login', () => {
       .post('/api/login')
       .send({
         username: {},
-        password: null
+        password: null,
       })
       .expect(400, {
         error: '"username" must be a string',
@@ -55,7 +53,7 @@ describe('api/auth/login', () => {
     return supertest(app.listen(null))
       .post('/api/login')
       .send({
-        password: 'hi'
+        password: 'hi',
       })
       .expect(400, {
         error: '"username" is required',

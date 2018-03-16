@@ -70,7 +70,7 @@ import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.ser
     HttpClientModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({
-      maxAge: 10
+      maxAge: 10,
     }),
     ShContextMenuModule,
   ],
@@ -89,6 +89,6 @@ import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.ser
     DirectMessageService,
     FriendRequestService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

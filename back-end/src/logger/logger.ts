@@ -9,8 +9,8 @@ import * as fs from 'fs';
   winston.configure({
     transports: [
       new (winston.transports.Console)(),
-      new (winston.transports.File)({ filename: 'logs/winston.log' })
-    ]
+      new (winston.transports.File)({ filename: 'logs/winston.log' }),
+    ],
   });
 
 })();

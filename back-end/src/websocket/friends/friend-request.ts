@@ -26,13 +26,13 @@ export async function handler(io, socket, userId: string) {
 
   if (await acceptFriendRequest(fromUser, toUser)) {
     promises.push(
-      sendFriendsUserList(io, socket, fromUser)
+      sendFriendsUserList(io, socket, fromUser),
     );
     const toUserSocket = io.of('/').connected[toUser.socket_id];
 
     if (toUserSocket) {
       promises.push(
-        sendFriendsUserList(io, toUserSocket, toUser)
+        sendFriendsUserList(io, toUserSocket, toUser),
       );
     }
   } else {

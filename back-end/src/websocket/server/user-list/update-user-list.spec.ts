@@ -1,5 +1,4 @@
 import { updateUserList } from './update-user-list';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
@@ -23,7 +22,7 @@ describe('websocket/server/update-user-list', () => {
     io = {
       in: () => ({
         emit,
-      })
+      }),
     };
   });
   afterEach(() => {

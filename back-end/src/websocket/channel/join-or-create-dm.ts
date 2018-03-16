@@ -21,8 +21,8 @@ export function joinDmChannel(io: any) {
 
       const [existingChannel]: any = await Channel.find({
         user_ids: {
-          $all: [socket.claim.user_id, userId]
-        }
+          $all: [socket.claim.user_id, userId],
+        },
       }).lean();
 
       const channel = existingChannel

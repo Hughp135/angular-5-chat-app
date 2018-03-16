@@ -5,7 +5,7 @@ import { ErrorService, ErrorNotification } from '../../services/error.service';
 @Component({
   selector: 'app-error-notification',
   templateUrl: './error-notification.component.html',
-  styleUrls: ['./error-notification.component.scss']
+  styleUrls: ['./error-notification.component.scss'],
 })
 export class ErrorNotificationComponent {
   public transitionController = new TransitionController();
@@ -35,7 +35,7 @@ export class ErrorNotificationComponent {
   public doAnimate(direction: TransitionDirection, cb?: () => void) {
     const transitionDuration = this.transitionDuration;
     this.transitionController.animate(
-      new Transition('fade up', transitionDuration, direction, cb)
+      new Transition('fade up', transitionDuration, direction, cb),
     );
   }
 }

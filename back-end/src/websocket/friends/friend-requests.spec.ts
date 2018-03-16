@@ -1,7 +1,6 @@
 import { sendFriendRequest, handler as sendFriendRequestHandler } from './friend-request';
 import { handler as getFriendRequests } from './get-friend-requests';
 import User from '../../models/user.model';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
@@ -25,7 +24,7 @@ describe('friends/', async () => {
     user1 = await User.create({
       username: 'testuser1',
       password: '123456',
-      socket_id: 'socketId1'
+      socket_id: 'socketId1',
     });
     user2 = await User.create({
       username: 'testuser2',
@@ -37,7 +36,7 @@ describe('friends/', async () => {
       password: '123456',
       friend_requests: [
         { type: 'incoming', user_id: user1._id },
-        { type: 'outgoing', user_id: user2._id }
+        { type: 'outgoing', user_id: user2._id },
       ],
       socket_id: 'offlineid',
     });
@@ -46,7 +45,7 @@ describe('friends/', async () => {
       of: () => ({
         connected: {
           socketId2: { emit: socketId2EmitSpy },
-        }
+        },
       }),
     };
   });
@@ -135,8 +134,8 @@ describe('friends/', async () => {
         sinon.match({
           type: 'incoming',
           user_id: user1._id.toString(),
-          username: 'testuser1'
-        })
+          username: 'testuser1',
+        }),
       ]);
     });
     it('sets toUser socket_id to null if user not online', async () => {
@@ -218,8 +217,8 @@ describe('friends/', async () => {
     expect(socket2.emit).to.have.been.calledWith('server-user-list', {
       server_id: 'friends',
       users: [
-        { _id: user1._id, online: false, username: user1.username }
-      ]
+        { _id: user1._id, online: false, username: user1.username },
+      ],
     });
   });
   it('after adding friends, send friends (server-user-lists) to toUser', async () => {
@@ -229,7 +228,7 @@ describe('friends/', async () => {
         connected: {
           socketId2: { emit: () => { } },
           socketId1: { emit: socketId1EmitSpy },
-        }
+        },
       }),
     };
     const socket1 = {
@@ -247,8 +246,8 @@ describe('friends/', async () => {
     expect(socketId1EmitSpy).to.have.been.calledWith('server-user-list', {
       server_id: 'friends',
       users: [
-        { _id: user2._id, online: true, username: user2.username }
-      ]
+        { _id: user2._id, online: true, username: user2.username },
+      ],
     });
   });
   it('if already friends do not create friend requests', async () => {

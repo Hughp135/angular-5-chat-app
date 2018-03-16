@@ -1,6 +1,6 @@
 import {
   currentServerReducer, SET_CURRENT_SERVER,
-  SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST
+  SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST,
 } from './current-server.reducer';
 import ChatServer, { ServerUserList, UserListUpdate } from 'shared-interfaces/server.interface';
 import { ChannelList } from '../../../shared-interfaces/channel.interface';
@@ -56,8 +56,8 @@ describe('reducers/current-server', () => {
           username: 'dsofa',
           _id: 'df0g9su23',
           online: true,
-        }]
-      }
+        }],
+      },
     };
     const state = currentServerReducer({ _id: '345', name: 'sdf1' }, action);
     expect(state).toEqual({ ...state, userList: action.payload.users });
@@ -71,8 +71,8 @@ describe('reducers/current-server', () => {
           username: 'dsofa',
           _id: 'df0g9su23',
           online: true,
-        }]
-      }
+        }],
+      },
     };
     const state = currentServerReducer({ _id: '345', name: 'sdf1' }, action);
     expect(state).toEqual(state);
@@ -82,12 +82,12 @@ describe('reducers/current-server', () => {
       type: SERVER_UPDATE_USER_LIST,
       payload: {
         server_id: 'sdf92j',
-        user: { username: 's93fj2', _id: 'dfgj2sog9', online: true }
-      }
+        user: { username: 's93fj2', _id: 'dfgj2sog9', online: true },
+      },
     };
     const state = currentServerReducer({ _id: 'sdf92j', name: 'df092' }, action);
     expect(state).toEqual({
-      ...state
+      ...state,
     });
   });
   it('SERVER_UPDATE_USER_LIST fails if currentServer id !== payload.server_id', () => {
@@ -95,16 +95,16 @@ describe('reducers/current-server', () => {
       type: SERVER_UPDATE_USER_LIST,
       payload: {
         server_id: 'sdf92j',
-        user: { username: 's93fj2', _id: 'dfgj2sog9', online: true }
-      }
+        user: { username: 's93fj2', _id: 'dfgj2sog9', online: true },
+      },
     };
     const state = currentServerReducer({
       _id: 'sg3g09',
       name: 'df092',
-      userList: [{ username: 's93fj2', _id: 'dfgj2sog9', online: false }]
+      userList: [{ username: 's93fj2', _id: 'dfgj2sog9', online: false }],
     }, action);
     expect(state).toEqual({
-      ...state
+      ...state,
     });
   });
   it('SERVER_UPDATE_USER_LIST succeeds with correct data', () => {
@@ -112,23 +112,23 @@ describe('reducers/current-server', () => {
       type: SERVER_UPDATE_USER_LIST,
       payload: {
         server_id: 'sdf92j',
-        user: { username: 's93fj2', _id: 'dfgj2sog9', online: true }
-      }
+        user: { username: 's93fj2', _id: 'dfgj2sog9', online: true },
+      },
     };
     const state = currentServerReducer({
       _id: 'sdf92j',
       name: 'df092',
       userList: [
         { username: 's93fj2', _id: 'dfgj2sog9', online: false },
-        { username: 'sgsfg3', _id: 'idfg092', online: false }
-      ]
+        { username: 'sgsfg3', _id: 'idfg092', online: false },
+      ],
     }, action);
     expect(state).toEqual({
       ...state,
       userList: [
         { username: 's93fj2', _id: 'dfgj2sog9', online: true },
-        { username: 'sgsfg3', _id: 'idfg092', online: false }
-      ]
+        { username: 'sgsfg3', _id: 'idfg092', online: false },
+      ],
     });
   });
 });

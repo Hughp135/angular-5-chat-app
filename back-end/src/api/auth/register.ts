@@ -9,8 +9,8 @@ const schema = Joi.object().keys({
     language: {
       any: {
         allowOnly: '!!Passwords do not match',
-      }
-    }
+      },
+    },
   }),
 });
 

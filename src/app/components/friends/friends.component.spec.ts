@@ -28,15 +28,15 @@ describe('FriendsComponent', () => {
     channelList: {
       server_id: 'friends',
       users: {
-        '345': { username: 'user345' }
+        '345': { username: 'user345' },
       },
-      channels: [channel]
-    }
+      channels: [channel],
+    },
   };
   const friends: FriendsStore = {
     friendRequests: [
-      { type: 'incoming', user_id: 'ab1', _id: 'lo1' }
-    ]
+      { type: 'incoming', user_id: 'ab1', _id: 'lo1' },
+    ],
   };
 
   const route = {
@@ -45,8 +45,8 @@ describe('FriendsComponent', () => {
         channel: Observable.of(channel),
         server: Observable.of(server),
         friends: Observable.of(friends),
-      }
-    })
+      },
+    }),
   };
 
   beforeEach(async(() => {
@@ -89,7 +89,7 @@ describe('FriendsComponent', () => {
   it('getChannelName returns unknown if user id not found', () => {
     const channel1 = {
       ...channel,
-      user_ids: ['asd', 'bcd']
+      user_ids: ['asd', 'bcd'],
     };
     expect(component.getChannelName(channel1)).toEqual('Unknown');
   });

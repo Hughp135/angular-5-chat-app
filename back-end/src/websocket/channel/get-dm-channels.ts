@@ -28,7 +28,7 @@ export function handler(io, socket) {
 export async function sendChannelList(userId, socket) {
   const channels: any = await Channel
     .find({
-      user_ids: userId
+      user_ids: userId,
     },
       {
         name: 1,
@@ -46,9 +46,9 @@ export async function sendChannelList(userId, socket) {
   const usersArray = Object.keys(usersObject);
   const users: any = await User.find(
     {
-      _id: usersArray
+      _id: usersArray,
     }, {
-      username: 1
+      username: 1,
     })
     .lean();
 
@@ -59,7 +59,7 @@ export async function sendChannelList(userId, socket) {
   const list = <ChannelList>{
     server_id: 'friends',
     channels: channels,
-    users: usersObject
+    users: usersObject,
   };
   socket.emit('channel-list', list);
 }

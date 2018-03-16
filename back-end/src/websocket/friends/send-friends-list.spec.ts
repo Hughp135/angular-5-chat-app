@@ -1,6 +1,5 @@
 import { sendFriendsUserList } from './send-friends-list';
 import User from '../../models/user.model';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';
@@ -33,12 +32,12 @@ describe('friends/send-friends-list', async () => {
     io = {
       of: () => ({
         connected: {
-          socket1: { claim: { user_id: user2._id } }
-        }
+          socket1: { claim: { user_id: user2._id } },
+        },
       }),
     };
     socket = {
-      emit: sinon.spy()
+      emit: sinon.spy(),
     };
   });
 
@@ -48,8 +47,8 @@ describe('friends/send-friends-list', async () => {
       server_id: 'friends',
       users: [
         { _id: user1._id, username: 'user1', online: false },
-        { _id: user2._id, username: 'user2', online: true }
-      ]
+        { _id: user2._id, username: 'user2', online: true },
+      ],
     });
   });
 

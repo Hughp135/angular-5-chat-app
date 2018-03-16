@@ -18,8 +18,8 @@ describe('FriendRequestsComponent', () => {
 
   const friends: FriendsStore = {
     friendRequests: [
-      { type: 'incoming', user_id: 'ab1', _id: 'lo1' }
-    ]
+      { type: 'incoming', user_id: 'ab1', _id: 'lo1' },
+    ],
   };
 
   const route = {
@@ -28,8 +28,8 @@ describe('FriendRequestsComponent', () => {
         channel: Observable.of({}),
         server: Observable.of({}),
         friends: Observable.of(friends),
-      }
-    })
+      },
+    }),
   };
 
   beforeEach(async(() => {

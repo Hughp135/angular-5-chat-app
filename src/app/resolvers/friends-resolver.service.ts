@@ -24,11 +24,11 @@ export class FriendsResolver implements Resolve<any> {
 
     this.store.dispatch({
       type: LEAVE_CHANNEL,
-      payload: null
+      payload: null,
     });
     this.store.dispatch({
       type: SET_CURRENT_SERVER,
-      payload: dmServer
+      payload: dmServer,
     });
 
     this.wsService.socket.emit('get-dm-channels', undefined);

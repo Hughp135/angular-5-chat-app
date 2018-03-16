@@ -20,7 +20,7 @@ export default async function (req, res) {
   }
 
   const user: any = await User.findOne({
-    username: req.body.username
+    username: req.body.username,
   }).lean();
 
   if (!user) {

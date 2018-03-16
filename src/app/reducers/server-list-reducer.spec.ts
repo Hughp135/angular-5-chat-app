@@ -11,14 +11,14 @@ describe('server list reducer', () => {
       {
         name: '2nd server',
         _id: 'dfg',
-      }
+      },
     ];
     const action: { type: string, payload: ChatServer } = {
       type: ADD_SERVER_TO_LIST,
       payload: {
         name: 'new server here',
         _id: '123',
-      }
+      },
     };
     const state = serverListReducer(initialList, action);
     expect(state).toEqual([

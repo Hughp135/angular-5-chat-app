@@ -29,7 +29,7 @@ export async function handler(socket) {
 export async function addUsernamesToFriendRequests(friend_requests) {
   const friendIds = friend_requests.map(req => req.user_id);
   const friends: any = await User.find({
-    _id: friendIds
+    _id: friendIds,
   }, {
       username: 1,
     }).lean();
@@ -46,7 +46,7 @@ export async function addUsernamesToFriendRequests(friend_requests) {
         type: req.type,
         user_id: req.user_id.toString(),
         _id: req._id.toString(),
-        username: matchingUser && matchingUser.username
+        username: matchingUser && matchingUser.username,
       };
 
       return withUsername;

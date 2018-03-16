@@ -1,6 +1,4 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
-import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as supertest from 'supertest';
 import * as mongoose from 'mongoose';
@@ -67,11 +65,11 @@ describe('api/servers/get', () => {
   it('returns servers that user has joined', async () => {
     const server = await Server.create({
       name: 'namehere',
-      owner_id: user._id
+      owner_id: user._id,
     });
     const server2 = await Server.create({
       name: 'namehere2',
-      owner_id: user._id
+      owner_id: user._id,
     });
     user.joined_servers = [ server._id, server2._id ];
     await user.save();

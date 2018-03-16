@@ -20,7 +20,7 @@ describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
   const fakeDmService = {
-    startPm: jasmine.createSpy()
+    startPm: jasmine.createSpy(),
   };
   const fakeFriendsService = {
     sendFriendRequest: jasmine.createSpy(),
@@ -37,8 +37,8 @@ describe('UserListComponent', () => {
         SettingsService,
         { provide: WebsocketService, useValue: fakeSocketService },
         { provide: DirectMessageService, useValue: fakeDmService },
-        { provide: FriendRequestService, useValue: fakeFriendsService }
-      ]
+        { provide: FriendRequestService, useValue: fakeFriendsService },
+      ],
     })
       .compileComponents();
   }));
@@ -53,7 +53,7 @@ describe('UserListComponent', () => {
       userList: [
         { username: 'someusr', _id: '1aad', online: true },
         { username: 'someusr2', _id: '2aad', online: false },
-      ]
+      ],
     };
     fixture.detectChanges();
   });

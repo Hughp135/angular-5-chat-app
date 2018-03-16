@@ -1,5 +1,4 @@
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
@@ -42,8 +41,8 @@ describe('websocket message/send', () => {
     });
     await userModel.findByIdAndUpdate(user._id, {
       $set: {
-        joined_servers: [server._id]
-      }
+        joined_servers: [server._id],
+      },
     });
     channel = await Channel.create({
       name: 'test-channel',
@@ -51,11 +50,11 @@ describe('websocket message/send', () => {
     });
     dmChannel = await Channel.create({
       name: 'dm-channel',
-      user_ids: [user._id]
+      user_ids: [user._id],
     });
     dmChannel2 = await Channel.create({
       name: 'dm-channel',
-      user_ids: []
+      user_ids: [],
     });
 
     channelId = channel._id;
@@ -214,8 +213,8 @@ describe('websocket message/send', () => {
     }
     userModel.findByIdAndUpdate(user._id, {
       $set: {
-        joined_servers: []
-      }
+        joined_servers: [],
+      },
     }, () => {
       sendMessage(io);
     });

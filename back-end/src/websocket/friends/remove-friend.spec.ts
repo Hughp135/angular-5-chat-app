@@ -1,5 +1,4 @@
 import { handler } from './remove-friend';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai';

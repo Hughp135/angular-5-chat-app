@@ -27,7 +27,7 @@ describe('ServerListComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         StoreModule.forRoot(reducers),
-        SuiModule
+        SuiModule,
       ],
     })
       .compileComponents();

@@ -59,7 +59,7 @@ async function createUsersInServers(serverIds) {
       return new User({
         username: `User ${index}`,
         password: pass,
-        joined_servers: serverIds
+        joined_servers: serverIds,
       });
     });
   return await User.insertMany(users);
@@ -84,8 +84,8 @@ async function createChannels(serverIds) {
         Channel.create({
           name: `Text Channel ${idx + 1}`,
           server_id: server_id,
-        })
-      )
+        }),
+      ),
     ).reduce((a, b) => a.concat(b));
 
   return await Promise.all(promises);
@@ -119,7 +119,7 @@ async function createDMChannels(user) {
   otherUsers.forEach(async usr => {
     promises.push(Channel.create({
       name: 'DMChannel @ ' + usr.username,
-      user_ids: [user._id, usr._id]
+      user_ids: [user._id, usr._id],
     }));
   });
   await Promise.all(promises);

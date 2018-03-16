@@ -16,7 +16,7 @@ describe('ServerSidebarComponent', () => {
         SuiComponentFactory,
         { provide: AppStateService, useValue: { currentServer: {} } },
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
     })
       .compileComponents();
   }));

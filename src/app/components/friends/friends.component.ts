@@ -11,7 +11,7 @@ import { FriendsStore } from '../../reducers/friends-reducer';
 @Component({
   selector: 'app-friends',
   templateUrl: './friends.component.html',
-  styleUrls: ['./friends.component.scss', '../../styles/layout.scss']
+  styleUrls: ['./friends.component.scss', '../../styles/layout.scss'],
 })
 export class FriendsComponent implements OnInit, OnDestroy {
   public currentChatChannel: Observable<ChatChannel>;
@@ -35,7 +35,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
             .filter(server => server._id === 'friends')
             .subscribe(server => {
               this.channelList = server.channelList;
-            })
+            }),
         );
       });
   }

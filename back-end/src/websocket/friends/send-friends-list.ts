@@ -24,7 +24,7 @@ export async function sendFriendsUserList(io: any, socket, user) {
 
   const serverUserList: ServerUserList = {
     server_id: 'friends',
-    users: usersWithStatuses
+    users: usersWithStatuses,
   };
 
   socket.emit('server-user-list', serverUserList);

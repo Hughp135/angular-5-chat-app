@@ -1,13 +1,13 @@
 import {
   Component, ViewChild, ElementRef, AfterViewInit,
-  OnDestroy, Input, EventEmitter, Output
+  OnDestroy, Input, EventEmitter, Output,
 } from '@angular/core';
 import Cropper from 'cropperjs';
 
 @Component({
   selector: 'app-image-cropper',
   templateUrl: './image-cropper.component.html',
-  styleUrls: ['./image-cropper.component.scss']
+  styleUrls: ['./image-cropper.component.scss'],
 })
 export class ImageCropperComponent implements AfterViewInit, OnDestroy {
   public cropper: Cropper;
@@ -52,7 +52,7 @@ export class ImageCropperComponent implements AfterViewInit, OnDestroy {
     };
 
     // hack because of TS error when setting imageSmoothingQuality value
-    const allOptions: any = { ...baseOptions, imageSmoothingQuality: 'high', };
+    const allOptions: any = { ...baseOptions, imageSmoothingQuality: 'high' };
     const canvasData = this.cropper.getCroppedCanvas(allOptions);
 
     const dataURL = canvasData.toDataURL('image/jpeg');

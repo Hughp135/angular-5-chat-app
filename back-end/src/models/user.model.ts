@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
         type: { type: String, enum: ['outgoing', 'incoming'], required: true },
         user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
       },
-    ], default: []
+    ], default: [],
   },
 });
 
@@ -31,7 +31,7 @@ UserSchema.pre('save', async function (next) {
   }
   const user = this;
   const existingUser = await this.constructor.findOne({
-    username: user.username
+    username: user.username,
   }).lean();
 
   if (existingUser) {

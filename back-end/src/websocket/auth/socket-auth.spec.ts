@@ -2,9 +2,7 @@ import { logInAuth } from './socket-auth';
 import { createJWT } from '../../api/auth/jwt';
 import User from '../../models/user.model';
 import * as chai from 'chai';
-import * as mocha from 'mocha';
 import * as sinon from 'sinon';
-import * as sinonChai from 'sinon-chai';
 import * as config from 'config';
 
 const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
@@ -35,8 +33,8 @@ describe('websocket/socket-auth', () => {
       handshake: {
         query: {
           test: TEST_SECRET,
-        }
-      }
+        },
+      },
     };
 
     const cb = (result) => {
@@ -50,9 +48,9 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-          cookie: `jwt_token=${validToken};`
-        }
-      }
+          cookie: `jwt_token=${validToken};`,
+        },
+      },
     };
 
     const cb = result => {
@@ -68,9 +66,9 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-          cookie: `jwt_token=${validToken};`
-        }
-      }
+          cookie: `jwt_token=${validToken};`,
+        },
+      },
     };
 
     const cb = result => {
@@ -84,9 +82,9 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-          cookie: `jwt_token=12345;`
-        }
-      }
+          cookie: `jwt_token=12345;`,
+        },
+      },
     };
     const cb = result => {
       expect(result.message).to.equal('Invalid token');
@@ -98,8 +96,8 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-        }
-      }
+        },
+      },
     };
     const cb = result => {
       expect(result.message).to.equal('No token provided');
@@ -111,9 +109,9 @@ describe('websocket/socket-auth', () => {
     const fakeSocket = {
       handshake: {
         headers: {
-          cookie: 'jwt_token='
-        }
-      }
+          cookie: 'jwt_token=',
+        },
+      },
     };
     const cb = result => {
       expect(result.message).to.equal('No token provided');

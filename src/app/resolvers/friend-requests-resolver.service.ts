@@ -9,13 +9,13 @@ import { LEAVE_CHANNEL } from '../reducers/current-chat-channel.reducer';
 export class FriendRequestsResolver implements Resolve<any> {
 
   constructor(
-    private store: Store<AppState>
+    private store: Store<AppState>,
   ) { }
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     this.store.dispatch({
       type: LEAVE_CHANNEL,
-      payload: null
+      payload: null,
     });
     return;
   }

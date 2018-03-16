@@ -25,7 +25,7 @@ describe('ChatChannelComponent', () => {
       createChatMsg('1'),
       createChatMsg('2'),
       createChatMsg('2'),
-    ]
+    ],
   };
   const server: ChatServer = {
     name: 'serv',
@@ -44,8 +44,8 @@ describe('ChatChannelComponent', () => {
         {
           channel: Observable.of(channel),
           server: Observable.of(server),
-        }
-    })
+        },
+    }),
   };
 
   beforeEach(async(() => {
@@ -106,10 +106,10 @@ describe('ChatChannelComponent', () => {
       channelList: {
         users: {
           '123': {
-            username: 'user123'
+            username: 'user123',
           },
           '456': {
-            username: 'user456'
+            username: 'user456',
           },
         },
       },

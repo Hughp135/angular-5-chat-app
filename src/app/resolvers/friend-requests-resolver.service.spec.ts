@@ -29,7 +29,7 @@ describe('FriendRequestsResolverService', () => {
     await service.resolve(null, null);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: LEAVE_CHANNEL,
-      payload: null
+      payload: null,
     });
   });
 });

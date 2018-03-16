@@ -5,7 +5,7 @@ export const ADD_SERVER_TO_LIST = 'ADD_SERVER_TO_LIST';
 
 export function serverListReducer(
   state: Server[] = [],
-  action
+  action,
 ) {
   switch (action.type) {
     case UPDATE_SERVER_LIST:
@@ -13,7 +13,7 @@ export function serverListReducer(
     case ADD_SERVER_TO_LIST:
       return [
         ...state,
-        action.payload
+        action.payload,
       ];
     default:
       return state;

@@ -18,7 +18,7 @@ describe('FriendRequestService', () => {
     };
     fakeErrorService = {
       errorMessage: {
-        next: jasmine.createSpy()
+        next: jasmine.createSpy(),
       },
     };
     TestBed.configureTestingModule({
