@@ -1,13 +1,12 @@
-<a class="item friends"
-  [routerLink]="'/friends'"
-  [class.active]="appState.currentServer && appState.currentServer._id === 'friends'">
+<a class="item friends" [routerLink]="'/friends'" [class.active]="appState.currentServer && appState.currentServer._id === 'friends'">
   <i class="violet large users icon"></i>
   <span>Friends</span>
 </a>
 
 <app-server-list></app-server-list>
 
-<a class="item add-server"
-  (click)="openCreateServerModal()">
+<a class="item add-server" (click)="openCreateServerModal()"
+  suiPopup popupText="Create a server" popupInverted popupTransitionDuration="50"
+  [popupPlacement]="'right'" [popupBasic]="true">
   <i class="yellow add circle large icon"></i>
 </a>

@@ -76,7 +76,7 @@
     <div class="item">
       <h4>Your Friends</h4>
     </div>
-    <div class="item" *ngIf="(currentServer | async).userList.length < 1">
+    <div class="item" *ngIf="(currentServer | async).userList && (currentServer | async).userList.length < 1">
       None yet :(
     </div>
     <app-user-list [currentServer]="(currentServer | async)"></app-user-list>

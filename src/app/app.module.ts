@@ -39,6 +39,7 @@ import { FriendRequestService } from './services/friend-request.service';
 import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
 import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
 import { AddFriendComponent } from './components/friend-requests/add-friend/add-friend.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { AddFriendComponent } from './components/friend-requests/add-friend/add-
     ImageCropperComponent,
     FriendRequestsComponent,
     AddFriendComponent,
+    AutofocusDirective,
   ],
   entryComponents: [
     CreateServerComponent,

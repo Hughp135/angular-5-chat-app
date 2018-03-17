@@ -1,16 +1,18 @@
 <div class="ui basic padded segment">
-  <button class="small ui green icon button"
-    (click)="openAddFriendModal()">
+  <button class="small ui green icon button" (click)="openAddFriendModal()">
     <i class="plus icon"></i>
     Add New Friend
   </button>
 
-  <h3 class="ui header"
-    [class.inverted]="settingsService.invertedTheme">
+  <h3 class="ui header" [class.inverted]="settingsService.invertedTheme">
     Friend Requests
   </h3>
 
-  <table class="ui teal celled padded table"
+  <div *ngIf="!(friendsStore | async).friendRequests.length">
+    <p><i>No pending friend requests at the moment!</i></p>
+  </div>
+
+  <table *ngIf="(friendsStore | async).friendRequests.length" class="ui teal celled padded table"
     [class.inverted]="settingsService.invertedTheme">
     <thead>
       <tr>
@@ -20,12 +22,6 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="!(friendsStore | async).friendRequests.length">
-        <td colspan="3"
-          class="center-aligned">
-          <i>No pending friend requests at the moment :(</i>
-        </td>
-      </tr>
       <tr *ngFor="let friendRequest of (friendsStore | async).friendRequests">
         <td>
           <b>{{ friendRequest.username }}</b>
@@ -34,12 +30,10 @@
           {{ friendRequest.type | uppercase }}
         </td>
         <td>
-          <button class="ui red icon button"
-            (click)="rejectFriendRequest(friendRequest.user_id)">
+          <button class="ui red icon button" (click)="rejectFriendRequest(friendRequest.user_id)">
             <i class="remove icon"></i>
           </button>
-          <button *ngIf="friendRequest.type === 'incoming'"
-            class="ui green icon button"
+          <button *ngIf="friendRequest.type === 'incoming'" class="ui green icon button"
             (click)="confirmAddFriend(friendRequest.user_id)">
             <i class="check icon"></i>
           </button>
