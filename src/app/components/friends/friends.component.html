@@ -74,7 +74,10 @@
   <div class="ui visible right vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
     <div class="item">
-      <h4>All Friends</h4>
+      <h4>Your Friends</h4>
+    </div>
+    <div class="item" *ngIf="(currentServer | async).userList.length < 1">
+      None yet :(
     </div>
     <app-user-list [currentServer]="(currentServer | async)"></app-user-list>
   </div>

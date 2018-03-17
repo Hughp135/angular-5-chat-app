@@ -1,0 +1,44 @@
+<div class="header">
+  Add Friend
+</div>
+<div class="content">
+  <p>Enter the username of the person you want to add:</p>
+  <form (submit)="searchForUser()"
+    [formGroup]="form">
+    <div class="ui fluid icon input"
+      [class.loading]="loading">
+      <input type="text"
+        autocomplete="off"
+        formControlName="username"
+        placeholder="Enter username...">
+      <i class="circular search link icon"
+        (click)="searchForUser()"></i>
+    </div>
+  </form>
+  <div *ngIf="error">
+    <h4 class="ui red header">
+      {{ error }}
+    </h4>
+  </div>
+  <div *ngIf="userToAdd"
+    class="user-display">
+    <h4>
+      Is this the user you want to add?
+    </h4>
+    <h3 align="center">
+      <span class="user-to-add">{{ userToAdd.username }}</span>
+    </h3>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="ui tiny basic tertiary button"
+    (click)="modal.deny(undefined)">
+    CANCEL
+  </button>
+  <button *ngIf="userToAdd"
+    class="ui tiny green button"
+    (click)="confirmAddFriend()">
+    Add Friend
+  </button>
+</div>

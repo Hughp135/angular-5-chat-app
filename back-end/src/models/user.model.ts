@@ -6,10 +6,12 @@ import { User } from 'shared-interfaces/user.interface';
 export interface IUserModel extends mongoose.Document, User {
   // private properties only
   password: string;
+  username_lowercase: string;
 }
 
 const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true, index: { unique: true } },
+  username: { type: String, required: true },
+  username_lowercase: { type: String },
   password: { type: String, required: true },
   socket_id: { type: String },
   joined_servers: { type: [String], default: [] },
@@ -24,6 +26,8 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+UserSchema.index({ username_lowercase: 'text' });
+
 UserSchema.pre('save', async function (next) {
   if (!this.isNew) {
     // Only hash password for newly created users
@@ -31,7 +35,7 @@ UserSchema.pre('save', async function (next) {
   }
   const user = this;
   const existingUser = await this.constructor.findOne({
-    username: user.username,
+    username_lowercase: user.username.toLowerCase(),
   }).lean();
 
   if (existingUser) {
@@ -39,6 +43,7 @@ UserSchema.pre('save', async function (next) {
     return next(error);
   }
 
+  user.username_lowercase = user.username.toLowerCase();
   user.password = await hashPassword(user.password);
   next();
 });

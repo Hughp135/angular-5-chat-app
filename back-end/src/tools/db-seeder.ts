@@ -60,6 +60,7 @@ async function createUsersInServers(serverIds) {
         username: `User ${index}`,
         password: pass,
         joined_servers: serverIds,
+        username_lowercase: `user ${index}`,
       });
     });
   return await User.insertMany(users);

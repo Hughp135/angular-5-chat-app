@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { FriendsStore } from '../../reducers/friends-reducer';
 import { FriendRequestService } from '../../services/friend-request.service';
 import { SettingsService } from '../../services/settings.service';
+import { AddFriendModal } from './add-friend/add-friend.component';
+import { SuiModalService } from 'ng2-semantic-ui';
 
 @Component({
   selector: 'app-friend-requests',
@@ -17,6 +19,7 @@ export class FriendRequestsComponent implements OnInit {
     private route: ActivatedRoute,
     private friendRequestService: FriendRequestService,
     public settingsService: SettingsService,
+    private modalService: SuiModalService,
   ) {
     this.route.data.subscribe(data => {
       this.friendsStore = data.state.friends;
@@ -26,7 +29,15 @@ export class FriendRequestsComponent implements OnInit {
   ngOnInit() {
   }
 
-  addFriend(userId: string) {
+  openAddFriendModal() {
+    this.modalService
+      .open(new AddFriendModal())
+      .onApprove((id: string) => {
+        this.confirmAddFriend(id);
+      });
+  }
+
+  confirmAddFriend(userId: string) {
     this.friendRequestService.sendFriendRequest(userId);
   }
 

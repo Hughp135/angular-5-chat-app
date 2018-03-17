@@ -1,9 +1,15 @@
-h3 {
-  margin-bottom: 35px !important;
+h3.ui.header {
+  margin-bottom: 30px;
 }
 
-.ui.icon.button {
-  padding: 0.53em;
+table {
+  .ui.icon.button {
+    padding: 0.53em;
+  }
+}
+
+.ui.green.button {
+  margin-bottom: 10px;
 }
 
 th {
@@ -16,4 +22,8 @@ td, th {
   border-top: none !important;
   border-right: none !important;
   border-left: none !important;
+}
+
+.center-aligned {
+  text-align: center !important;
 }

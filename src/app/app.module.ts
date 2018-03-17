@@ -38,6 +38,7 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
 import { FriendRequestService } from './services/friend-request.service';
 import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
 import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
+import { AddFriendComponent } from './components/friend-requests/add-friend/add-friend.component';
 
 @NgModule({
   declarations: [
@@ -57,9 +58,11 @@ import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.ser
     FriendsComponent,
     ImageCropperComponent,
     FriendRequestsComponent,
+    AddFriendComponent,
   ],
   entryComponents: [
     CreateServerComponent,
+    AddFriendComponent,
   ],
   imports: [
     SuiModule,

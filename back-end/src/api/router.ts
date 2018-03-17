@@ -5,6 +5,7 @@ import { authMiddleware } from './auth/router-middleware';
 import { createServer } from './servers/post';
 import { getServers } from './servers/get';
 import { getChannels } from './channels/get';
+import { getUser } from './users/get';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.post('/register', register);
 router.post('/servers', authMiddleware, createServer);
 router.get('/channels', authMiddleware, getChannels);
 router.get('/servers', authMiddleware, getServers);
+router.get('/users/:username', authMiddleware, getUser);
 
 export default router;

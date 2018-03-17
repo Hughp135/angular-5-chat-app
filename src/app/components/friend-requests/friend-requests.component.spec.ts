@@ -59,7 +59,7 @@ describe('FriendRequestsComponent', () => {
     expect(component).toBeTruthy();
   });
   it('should send friend request', () => {
-    component.addFriend('123');
+    component.confirmAddFriend('123');
     expect(fakeFriendsService.sendFriendRequest).toHaveBeenCalledTimes(1);
   });
   it('should reject friend request', () => {

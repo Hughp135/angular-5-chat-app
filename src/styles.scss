@@ -28,6 +28,9 @@ input.ng-invalid.ng-dirty.ng-touched {
       color: rgba(0, 0, 0, 0.8) !important;
     }
   }
+  &.small {
+    padding: 1.25em 1.25em 1em !important;
+  }
 }
 
 .ui.message.error {
