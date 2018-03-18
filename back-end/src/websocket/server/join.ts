@@ -51,6 +51,7 @@ async function sendChannelList(socket, serverId) {
     _id: 1,
     name: 1,
     server_id: 1,
+    last_message: 1,
   }).lean();
 
   const channelsFormatted = channelsToChannelListItems(channels);

@@ -4,6 +4,7 @@ export const SET_CURRENT_SERVER = 'SET_CURRENT_SERVER';
 export const SET_CHANNEL_LIST = 'SET_CHANNEL_LIST';
 export const SERVER_SET_USER_LIST = 'SERVER_SET_USER_LIST';
 export const SERVER_UPDATE_USER_LIST = 'SERVER_UPDATE_USER_LIST';
+export const SET_CHANNEL_HAS_UNREAD_MESSAGES = 'MARK_CHANNEL_UNREAD';
 
 export function currentServerReducer(state: ChatServer, action) {
   switch (action.type) {
@@ -11,10 +12,33 @@ export function currentServerReducer(state: ChatServer, action) {
       return <ChatServer>action.payload;
     case SET_CHANNEL_LIST:
       if (state && state._id === action.payload.server_id) {
-        return <ChatServer>{ ...state, channelList: action.payload };
+        const newState: ChatServer = { ...state, channelList: action.payload };
+        return newState;
       } else {
         return state;
       }
+    case SET_CHANNEL_HAS_UNREAD_MESSAGES:
+      if (state && state.channelList) {
+        const channel = state.channelList.channels.find(chan => chan._id === action.payload.id);
+        if (channel) {
+          const newChannels = state.channelList.channels.map(chan => {
+            if (chan._id === action.payload.id) {
+              return { ...chan, has_unread_messages: action.payload.hasUnread };
+            } else {
+              return chan;
+            }
+          });
+          const newState: ChatServer = {
+            ...state,
+            channelList: {
+              ...state.channelList,
+              channels: newChannels,
+            },
+          };
+          return newState;
+        }
+      }
+      return state;
     case SERVER_SET_USER_LIST:
       if (state._id === action.payload.server_id) {
         return <ChatServer>{

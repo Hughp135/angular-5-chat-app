@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   selector: 'app-channels-list',
   templateUrl: './channels-list.component.html',
   styleUrls: ['./channels-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChannelsListComponent implements OnInit {
   public newChannelName: string;
@@ -32,6 +33,14 @@ export class ChannelsListComponent implements OnInit {
 
   joinChannel(channel: ChannelListItem) {
     this.router.navigate([`channels/${channel.server_id}/${channel._id}`]);
+  }
+
+  channelHasUnreadMessages(channel: ChannelListItem) {
+    const now = new Date();
+    const messageDate = new Date(channel.last_message);
+    console.log('checking' , now, channel.last_message );
+    console.log('Is new?', channel.last_message > messageDate);
+    return channel.last_message > now;
   }
 
   createChannel() {

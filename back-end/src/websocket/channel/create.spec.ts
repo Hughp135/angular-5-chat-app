@@ -58,6 +58,7 @@ describe('websocket channel/create', () => {
           _id: channel._id.toString(),
           name: 'channel-name',
           server_id: serverId.toString(),
+          last_message: sinon.match((date) => (!!date && date <= new Date())),
         }],
       });
   });

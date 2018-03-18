@@ -25,6 +25,7 @@ export interface ChannelListItem {
   server_id?: string;
   has_unread_messages?: boolean;
   user_ids?: string[];
+  last_message: Date;
 }
 
 export interface JoinedChannelResponse {

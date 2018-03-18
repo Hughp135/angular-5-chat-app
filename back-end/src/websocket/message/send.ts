@@ -71,6 +71,9 @@ async function emitMessage(io, message: string, channel, user, server?) {
   }
 
   await saveMessage(chatMessage);
+  channel.last_message = now;
+  channel.message_count++;
+  await channel.save();
 }
 
 async function saveMessage(message) {
@@ -84,6 +87,6 @@ async function getTestUserObjects(socket, request) {
   const server: any = await Server.findById(server_id).lean();
   const [channel]: any = await Channel.find({
     server_id: server_id,
-  }).lean();
+  });
   return [user, channel, server];
 }

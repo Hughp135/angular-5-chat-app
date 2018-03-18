@@ -9,6 +9,13 @@ h5 {
     margin: 1px 0;
   }
 
+  .has-unread-messages {
+    color: #133d7c;
+    &.inverted {
+      color: #c3d6ed;
+    }
+  }
+
   a.item:hover, a.item.active {
     background: #d6d6d6 !important;
 

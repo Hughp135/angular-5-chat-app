@@ -29,17 +29,26 @@ export function handler(io, socket) {
 
 export async function sendChannelList(userId, socket) {
   const channels: any = await Channel
-    .find({
-      user_ids: userId,
-    },
+    .aggregate([
       {
-        _id: 1,
-        name: 1,
-        user_ids: 1,
-        server_id: 1,
-      })
-    .sort({ _id: 1 })
-    .lean();
+        $match: {
+          user_ids: userId,
+          $or: [
+            { message_count: { $gte: 1 } },
+            { 'user_ids.0': userId },
+          ],
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          user_ids: 1,
+          server_id: 1,
+          last_message: 1,
+        },
+      },
+    ]);
 
   const channelsFormatted = channelsToChannelListItems(channels);
 

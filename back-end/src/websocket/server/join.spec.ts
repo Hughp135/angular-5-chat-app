@@ -18,6 +18,7 @@ describe('websocket server/join', () => {
   let user;
   let channel;
   const sandbox = sinon.createSandbox();
+  const nowDate = new Date();
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -37,6 +38,7 @@ describe('websocket server/join', () => {
     channel = await Channel.create({
       name: 'test-chan1',
       server_id: server._id,
+      last_message: nowDate,
     });
   });
   afterEach(async () => {
@@ -103,6 +105,7 @@ describe('websocket server/join', () => {
               name: channel.name,
               server_id: server._id.toString(),
               _id: channel._id.toString(),
+              last_message: nowDate,
             }],
           });
         expect(socket.join).to.have.been

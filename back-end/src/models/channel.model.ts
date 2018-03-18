@@ -6,6 +6,8 @@ const channelSchema = new mongoose.Schema(
     name: { type: String, required: true },
     server_id: { type: mongoose.Schema.Types.ObjectId },
     user_ids: { type: [mongoose.Schema.Types.ObjectId], index: true },
+    last_message: { type: Date, default: Date.now() },
+    message_count: { type: Number, default: 0 },
   },
   {
     timestamps: true,
@@ -19,6 +21,7 @@ export interface IChannelModel extends mongoose.Document {
   name: string;
   server_id?: mongoose.Schema.Types.ObjectId;
   user_ids?: mongoose.Schema.Types.ObjectId[];
+  last_message?: Date;
 }
 
 channelSchema.pre('save', async function (next) {
@@ -62,6 +65,7 @@ export function channelsToChannelListItems(channels: any): ChannelListItem[] {
           _id: chan._id.toString(),
           name: chan.name,
           server_id: chan.server_id.toString(),
+          last_message: chan.last_message,
         };
       } else {
         // DM CHANNEL (FRIENDS)
@@ -69,6 +73,7 @@ export function channelsToChannelListItems(channels: any): ChannelListItem[] {
           _id: chan._id.toString(),
           name: chan.name,
           user_ids: chan.user_ids,
+          last_message: chan.last_message,
         };
       }
     });
