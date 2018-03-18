@@ -1,5 +1,5 @@
-import { ChannelList } from 'shared-interfaces/channel.interface';
-import Channel from '../../models/channel.model';
+import { ChannelList, ChannelListItem } from 'shared-interfaces/channel.interface';
+import Channel, { channelsToChannelListItems } from '../../models/channel.model';
 import User from '../../models/user.model';
 import { sendFriendsUserList } from '../friends/send-friends-list';
 import { leaveOtherServers } from '../server/join';
@@ -33,11 +33,15 @@ export async function sendChannelList(userId, socket) {
       user_ids: userId,
     },
       {
+        _id: 1,
         name: 1,
         user_ids: 1,
+        server_id: 1,
       })
     .sort({ _id: 1 })
     .lean();
+
+  const channelsFormatted = channelsToChannelListItems(channels);
 
   // Get all users in channels for their usernames etc.
   const usersObject = channels.reduce((acc, chan) => {
@@ -58,9 +62,9 @@ export async function sendChannelList(userId, socket) {
     usersObject[user._id] = user;
   });
 
-  const list = <ChannelList>{
+  const list: ChannelList = {
     server_id: 'friends',
-    channels: channels,
+    channels: channelsFormatted,
     users: usersObject,
   };
   socket.emit('channel-list', list);

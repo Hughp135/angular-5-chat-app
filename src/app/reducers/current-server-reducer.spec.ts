@@ -3,7 +3,7 @@ import {
   SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST,
 } from './current-server.reducer';
 import ChatServer, { ServerUserList, UserListUpdate } from 'shared-interfaces/server.interface';
-import { ChannelList } from '../../../shared-interfaces/channel.interface';
+import { ChannelList } from 'shared-interfaces/channel.interface';
 
 describe('reducers/current-server', () => {
   it('JOIN_SERVER', () => {

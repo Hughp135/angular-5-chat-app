@@ -99,11 +99,11 @@ describe('websocket server/join', () => {
         expect(result).to.have.been
           .calledWith('channel-list', {
             server_id: server._id,
-            channels: [sinon.match(item => ({
+            channels: [{
               name: channel.name,
               server_id: server._id,
               _id: channel._id,
-            }))],
+            }],
           });
         expect(socket.join).to.have.been
           .calledWith(`server-${server._id}`);
