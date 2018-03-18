@@ -1,6 +1,6 @@
 import Server from '../../models/server.model';
 import Channel, { channelsToChannelListItems } from '../../models/channel.model';
-import { CreateChannelRequest, ChannelList, ChannelListItem } from 'shared-interfaces/channel.interface';
+import { CreateChannelRequest, ChannelList } from 'shared-interfaces/channel.interface';
 import { log } from 'winston';
 
 export function createChannel(io: any) {

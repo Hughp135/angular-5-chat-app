@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { DmchannelListComponent } from './dmchannel-list.component';
-import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
+import { ChatChannel } from 'shared-interfaces/channel.interface';
 import ChatServer from 'shared-interfaces/server.interface';
 import { SettingsService } from '../../../services/settings.service';
 
@@ -26,7 +26,7 @@ describe('DmchannelListComponent', () => {
       users: {
         '345': { username: 'user345' },
       },
-      channels: [{ name: channel.name, _id: channel._id, server_id: channel.server_id }],
+      channels: [channel],
     },
   };
 

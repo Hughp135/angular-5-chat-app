@@ -8,9 +8,9 @@ export interface CreateChannelRequest {
 export interface ChatChannel {
   _id: string;
   name: string;
-  server_id?: string;
-  user_ids?: string[];
+  server_id?: string;  
   messages?: ChatMessage[];  
+  user_ids?: string[];
 }
 
 export interface ChannelList {

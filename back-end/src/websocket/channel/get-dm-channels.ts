@@ -1,4 +1,4 @@
-import { ChannelList, ChannelListItem } from 'shared-interfaces/channel.interface';
+import { ChannelList } from 'shared-interfaces/channel.interface';
 import Channel, { channelsToChannelListItems } from '../../models/channel.model';
 import User from '../../models/user.model';
 import { sendFriendsUserList } from '../friends/send-friends-list';

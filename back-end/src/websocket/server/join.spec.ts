@@ -101,8 +101,8 @@ describe('websocket server/join', () => {
             server_id: server._id,
             channels: [{
               name: channel.name,
-              server_id: server._id,
-              _id: channel._id,
+              server_id: server._id.toString(),
+              _id: channel._id.toString(),
             }],
           });
         expect(socket.join).to.have.been

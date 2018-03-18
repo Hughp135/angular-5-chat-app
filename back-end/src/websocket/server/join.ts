@@ -57,7 +57,7 @@ async function sendChannelList(socket, serverId) {
 
   const list: ChannelList = {
     server_id: serverId,
-    channels: channels,
+    channels: channelsFormatted,
   };
 
   socket.emit('channel-list', list);
