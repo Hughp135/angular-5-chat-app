@@ -83,10 +83,12 @@ describe('websocket channel/get-dm-channels', () => {
           {
             _id: channel1._id.toString(),
             name: 'chantest',
+            user_ids: [user1._id, user2._id],
           },
           {
             _id: channel2._id.toString(),
             name: 'chantest2',
+            user_ids: [user1._id, user3._id],
           },
         ],
         server_id: 'friends',
@@ -111,10 +113,12 @@ describe('websocket channel/get-dm-channels', () => {
             {
               _id: channel1._id.toString(),
               name: 'chantest',
+              user_ids: [user1._id, user2._id],
             },
             {
               _id: channel2._id.toString(),
               name: 'chantest2',
+              user_ids: [user1._id, user3._id],
             },
           ],
           server_id: 'friends',

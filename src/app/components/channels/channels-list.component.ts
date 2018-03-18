@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChatChannel } from 'shared-interfaces/channel.interface';
+import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 import ChatServer from '../../../../shared-interfaces/server.interface';
@@ -30,7 +30,7 @@ export class ChannelsListComponent implements OnInit {
     return this.currentServer.channelList;
   }
 
-  joinChannel(channel: ChatChannel) {
+  joinChannel(channel: ChannelListItem) {
     this.router.navigate([`channels/${channel.server_id}/${channel._id}`]);
   }
 

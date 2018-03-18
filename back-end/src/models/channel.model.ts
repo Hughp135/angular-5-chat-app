@@ -68,6 +68,7 @@ export function channelsToChannelListItems(channels: any): ChannelListItem[] {
         return {
           _id: chan._id.toString(),
           name: chan.name,
+          user_ids: chan.user_ids,
         };
       }
     });

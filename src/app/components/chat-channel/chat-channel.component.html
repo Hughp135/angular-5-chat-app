@@ -18,7 +18,7 @@
     <div *ngIf="!currentChannel.messages"
       class="ui active centered inline loader">
     </div>
-    <div *ngIf="currentChannel.messages && currentChannel.messages.length < 1"
+    <div *ngIf="currentChannel.messages && !currentChannel.messages.length"
       class="ui item">
       <p align="center">
         <i>No messages here yet!</i>
