@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FriendsComponent } from './friends.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import ChatServer from 'shared-interfaces/server.interface';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
 import { Observable } from 'rxjs/Observable';
