@@ -9,14 +9,22 @@ export interface ChatChannel {
   _id: string;
   name: string;
   server_id?: string;
-  user_ids?: string[];
   messages?: ChatMessage[];
+  user_ids?: string[];
 }
 
 export interface ChannelList {
   server_id: string;
-  channels: ChatChannel[];
+  channels: ChannelListItem[];
   users?: any;
+}
+
+export interface ChannelListItem {
+  _id: string;
+  name: string;
+  server_id?: string;
+  has_unread_messages?: boolean;
+  user_ids?: string[];
 }
 
 export interface JoinedChannelResponse {

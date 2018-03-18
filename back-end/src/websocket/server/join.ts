@@ -1,5 +1,5 @@
 import Server, { IServerModel } from '../../models/server.model';
-import ChannelModel from '../../models/channel.model';
+import ChannelModel, { channelsToChannelListItems } from '../../models/channel.model';
 import { ChannelList } from 'shared-interfaces/channel.interface';
 import canJoinServer from '../auth/can-join-server';
 import User from '../../models/user.model';
@@ -47,11 +47,17 @@ export function joinServer(io: any) {
 async function sendChannelList(socket, serverId) {
   const channels: any = await ChannelModel.find({
     server_id: serverId,
+  }, {
+    _id: 1,
+    name: 1,
+    server_id: 1,
   }).lean();
 
-  const list = <ChannelList>{
+  const channelsFormatted = channelsToChannelListItems(channels);
+
+  const list: ChannelList = {
     server_id: serverId,
-    channels: channels,
+    channels: channelsFormatted,
   };
 
   socket.emit('channel-list', list);

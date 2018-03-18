@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { ChannelListItem } from 'shared-interfaces/channel.interface';
 
 const channelSchema = new mongoose.Schema(
   {
@@ -51,3 +52,24 @@ channelSchema.methods.getChannelType = function (): ChannelType {
 const Channel: mongoose.Model<IChannelModel> = mongoose.model<IChannelModel>('Channel', channelSchema);
 
 export default Channel;
+
+export function channelsToChannelListItems(channels: any): ChannelListItem[] {
+  return channels
+    .map((chan): ChannelListItem => {
+      if (chan.server_id) {
+        // SERVER CHANNEL
+        return {
+          _id: chan._id.toString(),
+          name: chan.name,
+          server_id: chan.server_id.toString(),
+        };
+      } else {
+        // DM CHANNEL (FRIENDS)
+        return {
+          _id: chan._id.toString(),
+          name: chan.name,
+          user_ids: chan.user_ids,
+        };
+      }
+    });
+}

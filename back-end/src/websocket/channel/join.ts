@@ -24,7 +24,7 @@ export async function joinChannel(io: any) {
         return;
       }
 
-      const messages: ChatMessage[] = <ChatMessage[]> await ChatMessageModel
+      const messages: ChatMessage[] = <ChatMessage[]>await ChatMessageModel
         .find({ channel_id: channelId })
         .sort({ createdAt: -1 })
         .limit(50)
@@ -51,6 +51,7 @@ export async function joinChannel(io: any) {
         channel_id: channel._id,
         messages,
       };
+
       socket.emit('joined-channel', response);
     });
   });

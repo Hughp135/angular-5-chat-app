@@ -10,6 +10,7 @@ import { WebsocketService } from '../services/websocket.service';
 import { Router } from '@angular/router';
 import { ErrorService } from '../services/error.service';
 import 'rxjs/add/operator/map';
+import { ChatChannel, ChannelListItem } from '../../../shared-interfaces/channel.interface';
 
 @Injectable()
 export class ChatChannelResolver implements Resolve<any> {
@@ -29,14 +30,15 @@ export class ChatChannelResolver implements Resolve<any> {
       this.wsService.socket.emit('get-dm-channels', undefined);
     }
 
-    const channel = await this.getChannel(id)
-      .catch(e => {
-        return this.channelNotFound(isOnFriendsPage, route);
-      });
 
-    if (!channel) {
-      return;
+    let channelListItem: ChannelListItem;
+    try {
+      channelListItem = await this.getChannel(id);
+    } catch (e) {
+      return this.channelNotFound(isOnFriendsPage, route);
     }
+
+    const channel: ChatChannel = createChannel(channelListItem);
 
     this.store.dispatch({
       type: LEAVE_CHANNEL,
@@ -55,7 +57,9 @@ export class ChatChannelResolver implements Resolve<any> {
     };
   }
 
-  async getChannel(id: string) {
+
+
+  async getChannel(id: string): Promise<ChannelListItem> {
     const channels = await this.store.select('currentServer')
       .filter(srv => srv && !!srv.channelList)
       .map(srv => srv.channelList.channels)
@@ -63,6 +67,7 @@ export class ChatChannelResolver implements Resolve<any> {
       .timeout(2500)
       .take(1)
       .toPromise();
+
     return channels.find(chan => chan._id === id);
   }
 
@@ -78,5 +83,23 @@ export class ChatChannelResolver implements Resolve<any> {
       this.router.navigate([`../channels/${route.parent.url[1]}`]);
     }
     return false;
+  }
+}
+
+function createChannel(channelListItem): ChatChannel {
+  if (channelListItem.server_id) {
+    // Server channel
+    return {
+      _id: channelListItem._id,
+      name: channelListItem.name,
+      server_id: channelListItem.server_id,
+    };
+  } else {
+    // DM Channel
+    return {
+      _id: channelListItem._id,
+      name: channelListItem.name,
+      user_ids: channelListItem.user_ids,
+    };
   }
 }
