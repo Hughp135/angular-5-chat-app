@@ -1,58 +1,30 @@
 <!-- LEFT MAIN SIDEBAR -->
 <div id="sidebar-container">
-  <div id="sidebar-menu"
-    class="ui visible left vertical sidebar menu"
+  <div id="sidebar-menu" class="ui visible left vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-    <a class="item"
-      [routerLink]="['/friends']">
+    <a class="item" [routerLink]="['/friends']">
       <h5>Friend Requests</h5>
-      <i class="ui label"
-        [class.blue]="(friendsStore | async).friendRequests.length > 0">
-        {{ (friendsStore | async).friendRequests.length }}
+      <i class="ui label" [class.blue]="incomingFriendRequests.length > 0">
+        {{ friendRequests.length }}
       </i>
     </a>
     <div class="item">
       <h5>Direct Messages</h5>
-      <div class="item"
-        *ngIf="(currentServer | async).channelList && (currentServer | async).channelList.channels.length < 1">
-        <p>
-          No direct messages yet.
-        </p>
-      </div>
-      <div *ngIf="(currentServer | async).channelList && (currentServer | async).channelList.channels.length >= 1">
-        <div class="ui list dm-list"
-          [class.inverted]="settingsService.invertedTheme">
-
-          <a class="item channel"
-            *ngFor="let channel of (currentServer | async).channelList.channels"
-            [class.active]="(currentChatChannel | async) && (currentChatChannel | async)._id === channel._id"
-            (click)="joinChannel(channel)">
-            <img class="ui avatar image"
-              src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
-            <div class="content">
-              <div class="header">
-                {{ getChannelName(channel) }}
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
+      <app-dmchannel-list [currentServer]="currentServer | async"
+        [currentChatChannel]="currentChatChannel | async">
+      </app-dmchannel-list>
     </div>
 
 
   </div>
 
-  <div class="item"
-    id="bottom-attached-item">
-    <h4 class="ui header"
-      [class.inverted]="settingsService.invertedTheme"
+  <div class="item" id="bottom-attached-item">
+    <h4 class="ui header" [class.inverted]="settingsService.invertedTheme"
       align="">
       Inverted Theme &nbsp;&nbsp;
       <sui-checkbox name="invertedTheme"
-        ngDefaultControl
-        [(ngModel)]="settingsService.invertedTheme"
-        class="toggle"
-        style="float:right">
+        ngDefaultControl [(ngModel)]="settingsService.invertedTheme"
+        class="toggle" style="float:right">
       </sui-checkbox>
     </h4>
   </div>
@@ -61,8 +33,7 @@
 <!-- /LEFT MAIN SIDEBAR -->
 
 <!-- MAIN CONTENT SECTION -->
-<div id="main-content"
-  class="ui segment"
+<div id="main-content" class="ui segment"
   [class.inverted]="settingsService.invertedTheme">
 
   <router-outlet></router-outlet>
@@ -75,10 +46,7 @@
     [class.inverted]="settingsService.invertedTheme">
     <div class="item">
       <h4>Your Friends</h4>
-    </div>
-    <div class="item" *ngIf="(currentServer | async).userList && (currentServer | async).userList.length < 1">
-      None yet :(
-    </div>
+    </div>    
     <app-user-list [currentServer]="(currentServer | async)"></app-user-list>
   </div>
 </div>

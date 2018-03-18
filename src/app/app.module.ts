@@ -40,6 +40,7 @@ import { FriendRequestsComponent } from './components/friend-requests/friend-req
 import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
 import { AddFriendComponent } from './components/friend-requests/add-friend/add-friend.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { DmchannelListComponent } from './components/friends/dmchannel-list/dmchannel-list.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     FriendRequestsComponent,
     AddFriendComponent,
     AutofocusDirective,
+    DmchannelListComponent,
   ],
   entryComponents: [
     CreateServerComponent,

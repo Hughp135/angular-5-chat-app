@@ -10,10 +10,6 @@
   }
 }
 
-.dm-list {
-  padding: 0 !important;
-}
-
 a.item {
   overflow: hidden;
   &:hover {
@@ -27,26 +23,3 @@ a.item {
   }
 }
 
-.ui.list {
-  margin-top: 0;
-
-  .item {
-    padding: 5px 10px !important;
-
-    .header {
-      padding-top: 5px;
-    }
-
-    &:hover {
-      background: #d6d6d6;
-    }
-  }
-
-  &.inverted {
-    .item {
-      &:hover {
-        background: #424242;
-      }
-    }
-  }
-}

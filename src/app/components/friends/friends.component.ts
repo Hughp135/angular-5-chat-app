@@ -7,6 +7,7 @@ import ChatServer from 'shared-interfaces/server.interface';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { FriendsStore } from '../../reducers/friends-reducer';
+import { User } from 'shared-interfaces/user.interface';
 
 @Component({
   selector: 'app-friends',
@@ -16,27 +17,24 @@ import { FriendsStore } from '../../reducers/friends-reducer';
 export class FriendsComponent implements OnInit, OnDestroy {
   public currentChatChannel: Observable<ChatChannel>;
   public currentServer: Observable<ChatServer>;
-  public friendsStore: Observable<FriendsStore>;
-  private channelList: ChannelList;
+  public incomingFriendRequests: User['friend_requests'];
+  public friendRequests: User['friend_requests'];
   private subscriptions: Array<Subscription> = [];
 
   constructor(
     public settingsService: SettingsService,
     private route: ActivatedRoute,
-    private router: Router,
   ) {
     this.route.data
       .subscribe((data) => {
         this.currentChatChannel = data.state.channel;
         this.currentServer = data.state.server;
-        this.friendsStore = data.state.friends;
-        this.subscriptions.push(
-          data.state.server
-            .filter(server => server._id === 'friends')
-            .subscribe(server => {
-              this.channelList = server.channelList;
-            }),
-        );
+        const friendsSub = data.state.friends.subscribe((friendsStore: FriendsStore) => {
+          this.friendRequests = friendsStore.friendRequests;
+          this.incomingFriendRequests = friendsStore.friendRequests
+            .filter(friendRequest => friendRequest.type === 'incoming');
+        });
+        this.subscriptions = [friendsSub];
       });
   }
 
@@ -45,15 +43,5 @@ export class FriendsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-  }
-
-  joinChannel(channel: ChatChannel) {
-    this.router.navigate([`friends/${channel._id}`]);
-  }
-
-  getChannelName(channel: ChatChannel) {
-    const userId = channel.user_ids[1];
-    const user = this.channelList.users[userId];
-    return user ? user.username : 'Unknown';
   }
 }

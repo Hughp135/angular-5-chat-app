@@ -1,18 +1,20 @@
 <div class="ui basic padded segment">
-  <button class="small ui green icon button" (click)="openAddFriendModal()">
-    <i class="plus icon"></i>
-    Add New Friend
-  </button>
+ 
 
-  <h3 class="ui header" [class.inverted]="settingsService.invertedTheme">
+  <h3 class="left floated ui header" [class.inverted]="settingsService.invertedTheme">
     Friend Requests
   </h3>
 
-  <div *ngIf="!(friendsStore | async).friendRequests.length">
+  <button class="right floated small ui primary icon button" (click)="openAddFriendModal()">
+    <i class="plus icon"></i>
+    Add a friend
+  </button>
+
+  <div *ngIf="!friendRequests.length">
     <p><i>No pending friend requests at the moment!</i></p>
   </div>
 
-  <table *ngIf="(friendsStore | async).friendRequests.length" class="ui teal celled padded table"
+  <table *ngIf="friendRequests.length" class="ui teal celled padded table"
     [class.inverted]="settingsService.invertedTheme">
     <thead>
       <tr>
@@ -22,7 +24,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let friendRequest of (friendsStore | async).friendRequests">
+      <tr *ngFor="let friendRequest of friendRequests">
         <td>
           <b>{{ friendRequest.username }}</b>
         </td>
