@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 export interface HttpOptions {
   headers?: { [key: string]: string };
-  search?: { [key: string]: string };
+  query?: { [key: string]: string };
 }
 
 @Injectable()
@@ -22,7 +22,7 @@ export class ApiService {
   get(url: string, options: HttpOptions = {}): Observable<object> {
     return this.http.get(`${this.BASE_URL}${url}`, {
       headers: new HttpHeaders(options.headers),
-      params: new HttpParams({ fromObject: options.search }),
+      params: new HttpParams({ fromObject: options.query }),
     });
   }
 

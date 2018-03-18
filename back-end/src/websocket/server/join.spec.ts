@@ -123,4 +123,14 @@ describe('websocket server/join', () => {
     expect(socket.leave).to.have.been
       .calledWith('server-asd');
   });
+  it('leaves other dm-channels', () => {
+    const socket = {
+      id: '123',
+      rooms: { '123': true, 'dmchannel-asd': true },
+      leave: sandbox.spy(),
+    };
+    leaveOtherServers(socket);
+    expect(socket.leave).to.have.been
+      .calledWith('dmchannel-asd');
+  });
 });

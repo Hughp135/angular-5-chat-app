@@ -5,6 +5,9 @@
     *ngIf="!onlineUsers">
     <div class="ui active centered inline loader"></div>
   </div>
+  <div class="item" *ngIf="onlineUsers && offlineUsers && onlineUsers.length === 0 && offlineUsers.length === 0">
+    None yet :(
+  </div>
   <div *ngIf="onlineUsers && onlineUsers.length > 0"
     class="ui list online-users"
     [class.inverted]="settingsService.invertedTheme">

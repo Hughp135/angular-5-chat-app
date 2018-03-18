@@ -38,6 +38,9 @@ import { ImageCropperComponent } from './components/image-cropper/image-cropper.
 import { FriendRequestService } from './services/friend-request.service';
 import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
 import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
+import { AddFriendComponent } from './components/friend-requests/add-friend/add-friend.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
+import { DmchannelListComponent } from './components/friends/dmchannel-list/dmchannel-list.component';
 
 @NgModule({
   declarations: [
@@ -57,9 +60,13 @@ import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.ser
     FriendsComponent,
     ImageCropperComponent,
     FriendRequestsComponent,
+    AddFriendComponent,
+    AutofocusDirective,
+    DmchannelListComponent,
   ],
   entryComponents: [
     CreateServerComponent,
+    AddFriendComponent,
   ],
   imports: [
     SuiModule,

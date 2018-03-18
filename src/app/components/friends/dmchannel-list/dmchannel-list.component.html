@@ -1,0 +1,20 @@
+<div class="item" *ngIf="currentServer.channelList && currentServer.channelList.channels.length < 1">
+  <p>
+    No direct messages yet.
+  </p>
+</div>
+<div *ngIf="currentServer.channelList && currentServer.channelList.channels.length >= 1">
+  <div class="ui list dm-list" [class.inverted]="settingsService.invertedTheme">
+
+    <a class="item channel" *ngFor="let channel of currentServer.channelList.channels"
+      [class.active]="currentChatChannel && currentChatChannel._id === channel._id"
+      (click)="joinChannel(channel)">
+      <img class="ui avatar image" src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
+      <div class="content">
+        <div class="header">
+          {{ getChannelName(channel) }}
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

@@ -120,7 +120,35 @@ describe('ChatChannelComponent', () => {
     const result = component.getFriendChannelName();
     expect(result).toEqual('user123, user456');
   });
+  it('should focus chat input on keypress', (done) => {
+    expect(document.activeElement.tagName).toEqual('BODY');
+    pressKey('a');
+    setTimeout(() => {
+      expect(document.activeElement.tagName).toEqual('INPUT');
+      done();
+    }, 3);
+  });
+  it('should not focus chat input on ignored keycode', (done) => {
+    expect(document.activeElement.tagName).toEqual('BODY');
+    pressKey('Enter');
+    setTimeout(() => {
+      expect(document.activeElement.tagName).toEqual('BODY');
+      done();
+    }, 3);
+  });
 });
+
+function pressKey(keycode: number | string, target?: string) {
+  const event: any = document.createEvent('Event');
+  event.key = keycode;
+  event.initEvent('keydown');
+  if (target) {
+    const targetEl = document.body.getElementsByTagName('div')[0];
+    targetEl.dispatchEvent(event);
+  } else {
+    window.dispatchEvent(event);
+  }
+}
 
 function createChatMsg(username: string) {
   return <ChatMessage>{
