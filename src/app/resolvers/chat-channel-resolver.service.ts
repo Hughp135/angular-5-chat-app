@@ -38,12 +38,7 @@ export class ChatChannelResolver implements Resolve<any> {
       return this.channelNotFound(isOnFriendsPage, route);
     }
 
-    if (!channelListItem) {
-      return;
-    }
-
-    const channel: ChatChannel = channelListItem.server_id ? createServerChannel(channelListItem)
-      : createDmChannel(channelListItem);
+    const channel: ChatChannel = createChannel(channelListItem);
 
     this.store.dispatch({
       type: LEAVE_CHANNEL,
@@ -72,6 +67,7 @@ export class ChatChannelResolver implements Resolve<any> {
       .timeout(2500)
       .take(1)
       .toPromise();
+
     return channels.find(chan => chan._id === id);
   }
 
@@ -90,17 +86,20 @@ export class ChatChannelResolver implements Resolve<any> {
   }
 }
 
-function createServerChannel(channelListItem): ChatChannel {
-  return {
-    _id: channelListItem._id,
-    name: channelListItem.name,
-    server_id: channelListItem.server_id,
-  };
-}
-function createDmChannel(channelListItem): ChatChannel {
-  return {
-    _id: channelListItem._id,
-    name: channelListItem.name,
-    user_ids: channelListItem.user_ids,
-  };
+function createChannel(channelListItem): ChatChannel {
+  if (channelListItem.server_id) {
+    // Server channel
+    return {
+      _id: channelListItem._id,
+      name: channelListItem.name,
+      server_id: channelListItem.server_id,
+    };
+  } else {
+    // DM Channel
+    return {
+      _id: channelListItem._id,
+      name: channelListItem.name,
+      user_ids: channelListItem.user_ids,
+    };
+  }
 }

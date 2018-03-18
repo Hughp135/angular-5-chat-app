@@ -55,7 +55,7 @@ export default Channel;
 
 export function channelsToChannelListItems(channels: any): ChannelListItem[] {
   return channels
-    .map(chan => {
+    .map((chan): ChannelListItem => {
       if (chan.server_id) {
         // SERVER CHANNEL
         return {

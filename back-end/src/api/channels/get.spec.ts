@@ -77,19 +77,5 @@ describe('api/channels/get', () => {
         expect(response.body).to.have.property('channels');
         expect(response.body.channels).to.have.length(2);
       });
-    // {
-    //   channels: [
-    //     {
-    //       _id: channel1._id.toString(),
-    //       name: 'chantest',
-    //       user_ids: [user1._id.toString(), user2._id.toString()]
-    //     },
-    //     {
-    //       _id: channel2._id.toString(),
-    //       name: 'chantest2',
-    //       user_ids: [user1._id.toString(), user3._id.toString()]
-    //     },
-    //   ],
-    //   }
   });
 });

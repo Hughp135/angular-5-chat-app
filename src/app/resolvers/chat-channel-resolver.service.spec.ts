@@ -35,7 +35,10 @@ describe('ChatChannelResolverService', () => {
   };
   const channelList: ChannelList = {
     server_id: '123',
-    channels: [{ _id: 'asd', server_id: '123', name: 'chan1' }],
+    channels: [
+      { _id: 'asd', server_id: '123', name: 'chan1' },
+      { _id: 'dmchannel', name: 'dmchannelName', user_ids: [] },
+    ],
   };
   const server = {
     name: 'server1',
@@ -92,6 +95,29 @@ describe('ChatChannelResolverService', () => {
     });
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('join-channel', 'asd');
+  });
+  it('resolves with a dm channel', async () => {
+    route.paramMap = {
+      get: () => 'dmchannel',
+    },
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: { ...server, channelList: channelList },
+    });
+    spyOn(store, 'dispatch').and.callThrough();
+    await service.resolve(<any>route, null);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: JOIN_CHANNEL,
+      payload: channelList.channels.find(chan => chan._id === 'dmchannel'),
+    });
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('join-channel', 'dmchannel');
+    const currentChannel = await store.select('currentChatChannel')
+      .take(1)
+      .toPromise();
+    expect(currentChannel._id).toEqual('dmchannel');
+    expect(currentChannel.user_ids).toEqual([]);
+    expect(currentChannel.server_id).toBeUndefined();
   });
   it('gets dm channels if parent path  === friends', async () => {
     store.dispatch({
