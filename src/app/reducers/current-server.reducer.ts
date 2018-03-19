@@ -4,7 +4,7 @@ export const SET_CURRENT_SERVER = 'SET_CURRENT_SERVER';
 export const SET_CHANNEL_LIST = 'SET_CHANNEL_LIST';
 export const SERVER_SET_USER_LIST = 'SERVER_SET_USER_LIST';
 export const SERVER_UPDATE_USER_LIST = 'SERVER_UPDATE_USER_LIST';
-export const SET_CHANNEL_HAS_UNREAD_MESSAGES = 'MARK_CHANNEL_UNREAD';
+export const SET_CHANNEL_LAST_MESSAGE_DATE = 'SET_CHANNEL_LAST_MESSAGE_DATE';
 
 export function currentServerReducer(state: ChatServer, action) {
   switch (action.type) {
@@ -17,28 +17,53 @@ export function currentServerReducer(state: ChatServer, action) {
       } else {
         return state;
       }
-    case SET_CHANNEL_HAS_UNREAD_MESSAGES:
-      if (state && state.channelList) {
-        const channel = state.channelList.channels.find(chan => chan._id === action.payload.id);
-        if (channel) {
-          const newChannels = state.channelList.channels.map(chan => {
-            if (chan._id === action.payload.id) {
-              return { ...chan, has_unread_messages: action.payload.hasUnread };
-            } else {
-              return chan;
-            }
-          });
-          const newState: ChatServer = {
-            ...state,
-            channelList: {
-              ...state.channelList,
-              channels: newChannels,
-            },
-          };
-          return newState;
-        }
+    case SET_CHANNEL_LAST_MESSAGE_DATE:
+    if (state && state.channelList) {
+      console.log(action.payload);
+      const channel = state.channelList.channels.find(chan => chan._id === action.payload.id);
+      if (channel) {
+        console.log('updating channel');
+        const newChannels = state.channelList.channels.map(chan => {
+          if (chan._id === action.payload.id) {
+            return { ...chan, last_message: new Date() };
+          } else {
+            return chan;
+          }
+        });
+        console.log(newChannels);
+        const newState: ChatServer = {
+          ...state,
+          channelList: {
+            ...state.channelList,
+            channels: newChannels,
+          },
+        };
+        return newState;
       }
-      return state;
+    }
+    return state;
+    // case SET_CHANNEL_HAS_UNREAD_MESSAGES:
+    //   if (state && state.channelList) {
+    //     const channel = state.channelList.channels.find(chan => chan._id === action.payload.id);
+    //     if (channel) {
+    //       const newChannels = state.channelList.channels.map(chan => {
+    //         if (chan._id === action.payload.id) {
+    //           return { ...chan, has_unread_messages: action.payload.hasUnread };
+    //         } else {
+    //           return chan;
+    //         }
+    //       });
+    //       const newState: ChatServer = {
+    //         ...state,
+    //         channelList: {
+    //           ...state.channelList,
+    //           channels: newChannels,
+    //         },
+    //       };
+    //       return newState;
+    //     }
+    //   }
+    //   return state;
     case SERVER_SET_USER_LIST:
       if (state._id === action.payload.server_id) {
         return <ChatServer>{

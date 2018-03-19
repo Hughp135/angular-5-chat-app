@@ -11,6 +11,7 @@ export interface ChatChannel {
   server_id?: string;
   messages?: ChatMessage[];
   user_ids?: string[];
+  last_checked?: Date;
 }
 
 export interface ChannelList {

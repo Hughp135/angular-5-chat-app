@@ -1,7 +1,7 @@
 import { ChannelList, JoinedChannelResponse } from 'shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../../shared-interfaces/message.interface';
 import { SET_CHANNEL_LIST, SERVER_SET_USER_LIST,
-  SERVER_UPDATE_USER_LIST, SET_CHANNEL_HAS_UNREAD_MESSAGES } from '../../reducers/current-server.reducer';
+  SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE } from '../../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, CHAT_HISTORY } from '../../reducers/current-chat-channel.reducer';
 import 'rxjs/add/operator/take';
 import { ServerUserList, UserListUpdate } from '../../../../shared-interfaces/server.interface';
@@ -38,12 +38,12 @@ function chatMessage(socket, store) {
       }
     });
     if (!isCurrentServer) {
+      console.log('marking channel unread', message.channel_id);
       // Mark channel as having unread messages
       store.dispatch({
-        type: SET_CHANNEL_HAS_UNREAD_MESSAGES,
+        type: SET_CHANNEL_LAST_MESSAGE_DATE,
         payload: {
           id: message.channel_id,
-          hasUnread: true,
         },
       });
     }
@@ -52,7 +52,6 @@ function chatMessage(socket, store) {
 
 function channelList(socket, store) {
   socket.on(CHANNEL_LIST_HANDLER, (list: ChannelList) => {
-    console.log(list);
     store.dispatch({
       type: SET_CHANNEL_LIST,
       payload: list,

@@ -21,8 +21,7 @@ export class ChannelsListComponent implements OnInit {
     private wsService: WebsocketService,
     public settingsService: SettingsService,
     private router: Router,
-  ) {
-  }
+  ) { }
 
   ngOnInit() {
   }
@@ -36,11 +35,15 @@ export class ChannelsListComponent implements OnInit {
   }
 
   channelHasUnreadMessages(channel: ChannelListItem) {
-    const now = new Date();
-    const messageDate = new Date(channel.last_message);
-    console.log('checking' , now, channel.last_message );
-    console.log('Is new?', channel.last_message > messageDate);
-    return channel.last_message > now;
+    if (this.currentChatChannel && this.currentChatChannel._id === channel._id) {
+      return false;
+    }
+
+    const channelVisited = this.settingsService.channelsVisited[channel._id];
+    const lastCheckedTime = channelVisited ? new Date(channelVisited).getTime() : 0;
+    const messageDate = new Date(channel.last_message).getTime();
+
+    return messageDate > lastCheckedTime;
   }
 
   createChannel() {
