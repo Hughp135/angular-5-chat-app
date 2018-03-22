@@ -13,6 +13,7 @@ import { SettingsService } from '../../services/settings.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import ChatServer from '../../../../shared-interfaces/server.interface';
+import { ChannelSettingsService } from '../../services/channel-settings.service';
 
 const ignoredKeys = [
   'Enter',
@@ -40,12 +41,16 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     private wsService: WebsocketService,
     public settingsService: SettingsService,
     private route: ActivatedRoute,
+    channelSettings: ChannelSettingsService,
   ) {
     this.route.data.subscribe(data => {
       this.subscriptions.push(
         data.state.channel
           .filter(chan => !!chan)
-          .subscribe(chan => (this.currentChannel = chan)),
+          .subscribe((chan) => {
+            this.currentChannel = chan;
+            channelSettings.updateVisitedChannels();
+          }),
       );
       this.subscriptions.push(
         data.state.server.subscribe(server => (this.currentServer = server)),

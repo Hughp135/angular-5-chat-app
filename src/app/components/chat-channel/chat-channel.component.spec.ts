@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Store } from '@ngrx/store';
+import { ChannelSettingsService } from '../../services/channel-settings.service';
 
 describe('ChatChannelComponent', () => {
   let component: ChatChannelComponent;
@@ -53,7 +54,8 @@ describe('ChatChannelComponent', () => {
         { provide: ActivatedRoute, useValue: route },
         SettingsService,
         { provide: WebsocketService, useValue: { socket: { emit } } },
-        { provide: Store, useValue: { select: () => Observable.of(channel)} },
+        { provide: Store, useValue: { select: () => Observable.of(channel) } },
+        { provide: ChannelSettingsService, useValue: { updateVisitedChannels: () => { } } },
       ],
     })
       .compileComponents();

@@ -6,7 +6,7 @@ const channelSchema = new mongoose.Schema(
     name: { type: String, required: true },
     server_id: { type: mongoose.Schema.Types.ObjectId },
     user_ids: { type: [mongoose.Schema.Types.ObjectId], index: true },
-    last_message: { type: Date, default: Date.now() },
+    last_message: { type: Date },
     message_count: { type: Number, default: 0 },
   },
   {
