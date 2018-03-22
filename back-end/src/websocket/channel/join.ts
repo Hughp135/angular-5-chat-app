@@ -67,9 +67,7 @@ async function leaveOtherChannels(socket) {
   for (const room of roomsUserIsIn) {
     if (room.startsWith('channel-') || room.startsWith('dmchannel-')) {
       // Leave any other servers user is in.
-      console.log('leaving room', room);
       await socket.leave(room);
     }
   }
 }
-

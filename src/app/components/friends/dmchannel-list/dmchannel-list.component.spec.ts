@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { DmchannelListComponent } from './dmchannel-list.component';
-import { ChatChannel } from 'shared-interfaces/channel.interface';
+import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import ChatServer from 'shared-interfaces/server.interface';
 import { SettingsService } from '../../../services/settings.service';
 
@@ -26,7 +26,9 @@ describe('DmchannelListComponent', () => {
       users: {
         '345': { username: 'user345' },
       },
-      channels: [channel],
+      channels: [
+        { _id: channel._id, name: channel.name, last_message: new Date(), user_ids: ['123', '345'] },
+      ],
     },
   };
 
@@ -63,12 +65,14 @@ describe('DmchannelListComponent', () => {
   });
 
   it('getChannelName returns correct channel name', () => {
-    expect(component.getChannelName(channel)).toEqual('user345');
+    expect(component.getChannelName(server.channelList.channels[0])).toEqual('user345');
   });
   it('getChannelName returns unknown if user id not found', () => {
-    const channel1 = {
-      ...channel,
+    const channel1: ChannelListItem = {
+      _id: channel._id,
+      name: channel.name,
       user_ids: ['asd', 'bcd'],
+      last_message: new Date(),
     };
     expect(component.getChannelName(channel1)).toEqual('Unknown');
   });

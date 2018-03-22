@@ -6,7 +6,7 @@ import { AppState } from '../reducers/app.states';
 import { ChatChannelResolver } from './chat-channel-resolver.service';
 import { WebsocketService } from '../services/websocket.service';
 import { SET_CURRENT_SERVER } from '../reducers/current-server.reducer';
-import { ChannelList } from '../../../shared-interfaces/channel.interface';
+import { ChannelList, ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { JOIN_CHANNEL } from '../reducers/current-chat-channel.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ErrorService } from '../services/error.service';
@@ -36,8 +36,8 @@ describe('ChatChannelResolverService', () => {
   const channelList: ChannelList = {
     server_id: '123',
     channels: [
-      { _id: 'asd', server_id: '123', name: 'chan1' },
-      { _id: 'dmchannel', name: 'dmchannelName', user_ids: [] },
+      { _id: 'asd', server_id: '123', name: 'chan1', last_message: new Date() },
+      { _id: 'dmchannel', name: 'dmchannelName', user_ids: [], last_message: new Date() },
     ],
   };
   const server = {
@@ -89,9 +89,14 @@ describe('ChatChannelResolverService', () => {
     });
     spyOn(store, 'dispatch').and.callThrough();
     await service.resolve(<any>route, null);
+    const expectedCreatedChannel: ChatChannel = {
+      _id: channelList.channels[0]._id,
+      name: channelList.channels[0].name,
+      server_id: channelList.channels[0].server_id,
+    };
     expect(store.dispatch).toHaveBeenCalledWith({
       type: JOIN_CHANNEL,
-      payload: channelList.channels[0],
+      payload: expectedCreatedChannel,
     });
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('join-channel', 'asd');
@@ -106,9 +111,15 @@ describe('ChatChannelResolverService', () => {
     });
     spyOn(store, 'dispatch').and.callThrough();
     await service.resolve(<any>route, null);
+    const channelListItem = channelList.channels.find(chan => chan._id === 'dmchannel');
+    const expectedCreatedChannel: ChatChannel = {
+      _id: channelListItem._id,
+      name: channelListItem.name,
+      user_ids: channelListItem.user_ids,
+    };
     expect(store.dispatch).toHaveBeenCalledWith({
       type: JOIN_CHANNEL,
-      payload: channelList.channels.find(chan => chan._id === 'dmchannel'),
+      payload: expectedCreatedChannel,
     });
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('join-channel', 'dmchannel');

@@ -75,7 +75,7 @@ describe('websocket channel/join', () => {
       done();
     }
   });
-  it('joins the channel', (done) => {
+  it('joins a server channel', (done) => {
     user.joined_servers = [serverId.toString()];
     user.save().then(() => {
       const { io, socket } = createFakeSocketEvent('join-channel', channel._id,
@@ -87,6 +87,26 @@ describe('websocket channel/join', () => {
             channel_id: channel._id,
             messages: [],
           });
+        done();
+      }
+    });
+  });
+  it('joining server channel leaves other channels', (done) => {
+    user.joined_servers = [serverId.toString()];
+    user.save().then(() => {
+      const { io, socket } = createFakeSocketEvent('join-channel', channel._id,
+        { user_id: user._id }, onComplete, result);
+      socket.rooms = <any>{
+        'dmchannel-123': {},
+        'channel-123': {},
+        'dontleave': {},
+      };
+      sinon.spy(socket, 'leave');
+      joinChannel(io);
+      async function onComplete() {
+        await expect(socket.leave).to.have.been.calledTwice;
+        expect(socket.leave).to.have.been.calledWith('dmchannel-123');
+        expect(socket.leave).to.have.been.calledWith('channel-123');
         done();
       }
     });
@@ -110,7 +130,28 @@ describe('websocket channel/join', () => {
         done();
       }
     });
-});
+  });
+  it('joining DM channel leaves other channels', (done) => {
+    channel.user_ids = [user._id];
+    channel.server_id = undefined;
+    channel.save().then(() => {
+      const { io, socket } = createFakeSocketEvent('join-channel', channel._id,
+        { user_id: user._id }, onComplete, result);
+      socket.rooms = <any>{
+        'dmchannel-123': {},
+        'channel-123': {},
+        'dontleave': {},
+      };
+      sinon.spy(socket, 'leave');
+      joinChannel(io);
+      async function onComplete() {
+        await expect(socket.leave).to.have.been.calledTwice;
+        expect(socket.leave).to.have.been.calledWith('dmchannel-123');
+        expect(socket.leave).to.have.been.calledWith('channel-123');
+        done();
+      }
+    });
+  });
   it('does not join DM channel if user ID not in user_ids', (done) => {
     channel.user_ids = ['123456780987654323456789'];
     channel.server_id = undefined;

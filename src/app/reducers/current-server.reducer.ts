@@ -19,18 +19,14 @@ export function currentServerReducer(state: ChatServer, action) {
       }
     case SET_CHANNEL_LAST_MESSAGE_DATE:
     if (state && state.channelList) {
-      console.log(action.payload);
       const channel = state.channelList.channels.find(chan => chan._id === action.payload.id);
+
       if (channel) {
-        console.log('updating channel');
-        const newChannels = state.channelList.channels.map(chan => {
-          if (chan._id === action.payload.id) {
-            return { ...chan, last_message: new Date() };
-          } else {
-            return chan;
-          }
-        });
-        console.log(newChannels);
+        channel.last_message = new Date();
+        const newChannels = [
+          ...state.channelList.channels.filter(chan => chan._id !== channel._id),
+          channel,
+        ];
         const newState: ChatServer = {
           ...state,
           channelList: {
@@ -38,7 +34,9 @@ export function currentServerReducer(state: ChatServer, action) {
             channels: newChannels,
           },
         };
+
         return newState;
+      } else {
       }
     }
     return state;

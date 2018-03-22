@@ -52,7 +52,7 @@ async function createMainUser() {
 
 async function createUsersInServers(serverIds) {
   const pass = await bcrypt.hash('asdasd', 1);
-  const users = [...Array(1000)]
+  const users = [...Array(100)]
     .map((x, index) => {
       // const serverIdsSlice = Math.random() > 0.5
       // ? serverIds.slice(0, 3) : serverIds.slice(2, 4);

@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChatChannelComponent } from './chat-channel.component';
 import { FormsModule } from '@angular/forms';
-import { AppStateService } from '../../services/app-state.service';
 import { WebsocketService } from '../../services/websocket.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
@@ -10,6 +9,7 @@ import { ChatMessage } from '../../../../shared-interfaces/message.interface';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { Store } from '@ngrx/store';
 
 describe('ChatChannelComponent', () => {
   let component: ChatChannelComponent;
@@ -33,11 +33,6 @@ describe('ChatChannelComponent', () => {
     owner_id: 'abc',
   };
 
-  const fakeAppState = {
-    currentChannel: channel,
-    currentServer: server,
-  };
-
   const route = {
     data: Observable.of({
       state:
@@ -57,8 +52,8 @@ describe('ChatChannelComponent', () => {
       providers: [
         { provide: ActivatedRoute, useValue: route },
         SettingsService,
-        { provide: AppStateService, useValue: fakeAppState },
         { provide: WebsocketService, useValue: { socket: { emit } } },
+        { provide: Store, useValue: { select: () => Observable.of(channel)} },
       ],
     })
       .compileComponents();

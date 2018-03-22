@@ -1,3 +1,5 @@
+/* tslint:disable */
+
 import { handler } from '../back-end/src/websocket/message/send';
 import { ObjectId } from 'bson';
 import * as mongoose from 'mongoose';

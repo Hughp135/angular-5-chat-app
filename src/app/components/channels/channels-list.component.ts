@@ -5,6 +5,7 @@ import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 import ChatServer from '../../../../shared-interfaces/server.interface';
 import { SettingsService } from '../../services/settings.service';
 import { Router } from '@angular/router';
+import { ChannelSettingsService } from '../../services/channel-settings.service';
 
 @Component({
   selector: 'app-channels-list',
@@ -20,6 +21,7 @@ export class ChannelsListComponent implements OnInit {
   constructor(
     private wsService: WebsocketService,
     public settingsService: SettingsService,
+    private channelSettings: ChannelSettingsService,
     private router: Router,
   ) { }
 
@@ -39,7 +41,7 @@ export class ChannelsListComponent implements OnInit {
       return false;
     }
 
-    const channelVisited = this.settingsService.channelsVisited[channel._id];
+    const channelVisited = this.channelSettings.channelsVisited[channel._id];
     const lastCheckedTime = channelVisited ? new Date(channelVisited).getTime() : 0;
     const messageDate = new Date(channel.last_message).getTime();
 

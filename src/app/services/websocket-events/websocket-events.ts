@@ -38,7 +38,6 @@ function chatMessage(socket, store) {
       }
     });
     if (!isCurrentServer) {
-      console.log('marking channel unread', message.channel_id);
       // Mark channel as having unread messages
       store.dispatch({
         type: SET_CHANNEL_LAST_MESSAGE_DATE,

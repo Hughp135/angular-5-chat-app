@@ -41,6 +41,7 @@ import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.ser
 import { AddFriendComponent } from './components/friend-requests/add-friend/add-friend.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { DmchannelListComponent } from './components/friends/dmchannel-list/dmchannel-list.component';
+import { ChannelSettingsService } from './services/channel-settings.service';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { DmchannelListComponent } from './components/friends/dmchannel-list/dmch
   ],
   providers: [
     SettingsService,
+    ChannelSettingsService,
     AuthGuardService,
     ApiService,
     WebsocketService,
