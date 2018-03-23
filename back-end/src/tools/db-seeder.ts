@@ -67,7 +67,7 @@ async function createUsersInServers(serverIds) {
 }
 
 async function createServers(owner_id) {
-  const servers = [...Array(5)]
+  const servers = [...Array(25)]
     .map((x, index) => {
       return new Server({
         name: `Server ${index + 1}`,

@@ -5,7 +5,12 @@
   height: 100%;
 }
 
+::-webkit-scrollbar {
+  width: 2px;
+}
+
 #server-sidebar {
+  overflow-y: auto;
   width: 65px;
   margin: 0;
   border-radius: 0;

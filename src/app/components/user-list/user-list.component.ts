@@ -87,19 +87,25 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     /* istanbul ignore next */
     this.menuItems = [
       {
-        label: (ctx) => ctx._id,
+        label: (ctx) => ctx.username,
         disabled: (ctx) => true,
       },
       {
-        label: 'Send Message',
+        label: '<i class="icons"><i class="comment alternate icon"></i></i> Message',
         onClick: (ctx) => this.sendUserMessage(ctx.dataContext._id),
       },
       {
-        label: 'Add Friend',
+        label: `<i class="icons add-user">
+                  <i class="user icon"></i>
+                  <i class="inverted corner green add icon"></i>
+                </i> &nbsp;Add Friend`,
         onClick: (ctx) => this.addFriend(ctx.dataContext._id),
       },
       {
-        label: '<span class="text-danger">Remove Friend</span>',
+        label: `<i class="icons remove-user">
+                  <i class= "user icon"></i><i class= "large red dont icon"></i>
+                </i>
+                <span class="text-danger">Remove Friend</span>`,
         onClick: (ctx) => this.removeFriend(ctx.dataContext._id),
       },
     ];

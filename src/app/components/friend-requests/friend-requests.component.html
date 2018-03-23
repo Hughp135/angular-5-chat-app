@@ -28,7 +28,7 @@
       <tr>
         <th>Username</th>
         <th>Type</th>
-        <th>Accept/Reject</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -37,9 +37,8 @@
           <b>{{ friendRequest.username
             }}</b>
         </td>
-        <td>
-          {{ friendRequest.type | uppercase
-          }}
+        <td class="request-type">
+          {{ friendRequest.type | uppercase }}
         </td>
         <td>
           <button class="ui red icon button"
