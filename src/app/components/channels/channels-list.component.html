@@ -13,6 +13,7 @@
       *ngFor="let channel of channelList.channels"
       [class.inverted]="settingsService.invertedTheme"
       [class.active]="currentChatChannel && currentChatChannel._id === channel._id"
+      [class.has-unread-messages]="channelHasUnreadMessages(channel)"
       (click)="joinChannel(channel)">
       # {{ channel.name }}
     </a>

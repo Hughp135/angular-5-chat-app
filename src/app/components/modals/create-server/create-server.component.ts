@@ -89,5 +89,6 @@ export class CreateServerModal extends ComponentModalConfig<void, void, void> {
     super(CreateServerComponent);
     this.mustScroll = true;
     this.size = ModalSize.Small;
+    this.isClosable = false;
   }
 }

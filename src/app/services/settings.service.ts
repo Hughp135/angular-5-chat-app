@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class SettingsService {
   public invertedThemeSubj = new BehaviorSubject(false);
 
-  constructor() { }
+  constructor() {  }
 
   set invertedTheme(enabled: boolean) {
     this.invertedThemeSubj.next(enabled);

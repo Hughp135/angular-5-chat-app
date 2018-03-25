@@ -17,6 +17,7 @@ describe('websocket channel/get-dm-channels', () => {
   let user1, user2, user3;
   let channel1, channel2;
   const sandbox = sinon.createSandbox();
+  const nowDate = new Date();
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
@@ -32,10 +33,12 @@ describe('websocket channel/get-dm-channels', () => {
     channel1 = await Channel.create({
       name: 'chantest',
       user_ids: [user1._id, user2._id],
+      last_message: nowDate,
     });
     channel2 = await Channel.create({
       name: 'chantest2',
       user_ids: [user1._id, user3._id],
+      last_message: nowDate,
     });
   });
   after(async () => {
@@ -84,11 +87,13 @@ describe('websocket channel/get-dm-channels', () => {
             _id: channel1._id.toString(),
             name: 'chantest',
             user_ids: [user1._id, user2._id],
+            last_message: nowDate,
           },
           {
             _id: channel2._id.toString(),
             name: 'chantest2',
             user_ids: [user1._id, user3._id],
+            last_message: nowDate,
           },
         ],
         server_id: 'friends',
@@ -114,11 +119,13 @@ describe('websocket channel/get-dm-channels', () => {
               _id: channel1._id.toString(),
               name: 'chantest',
               user_ids: [user1._id, user2._id],
+              last_message: nowDate,
             },
             {
               _id: channel2._id.toString(),
               name: 'chantest2',
               user_ids: [user1._id, user3._id],
+              last_message: nowDate,
             },
           ],
           server_id: 'friends',

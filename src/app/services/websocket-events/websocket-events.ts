@@ -1,6 +1,7 @@
 import { ChannelList, JoinedChannelResponse } from 'shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../../shared-interfaces/message.interface';
-import { SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST } from '../../reducers/current-server.reducer';
+import { SET_CHANNEL_LIST, SERVER_SET_USER_LIST,
+  SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE } from '../../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, CHAT_HISTORY } from '../../reducers/current-chat-channel.reducer';
 import 'rxjs/add/operator/take';
 import { ServerUserList, UserListUpdate } from '../../../../shared-interfaces/server.interface';
@@ -25,15 +26,26 @@ export const handlers: { [key: string]: (socket, store) => void } = {
 
 function chatMessage(socket, store) {
   socket.on(CHAT_MESSAGE_HANDLER, (message: ChatMessage) => {
+    let isCurrentServer = false;
     store.select('currentChatChannel').take(1).subscribe(channel => {
       // Only add message if it applies to current channel.
       if (channel && message.channel_id === channel._id) {
+        isCurrentServer = true;
         store.dispatch({
           type: NEW_CHAT_MESSAGE,
           payload: message,
         });
       }
     });
+    if (!isCurrentServer) {
+      // Mark channel as having unread messages
+      store.dispatch({
+        type: SET_CHANNEL_LAST_MESSAGE_DATE,
+        payload: {
+          id: message.channel_id,
+        },
+      });
+    }
   });
 }
 

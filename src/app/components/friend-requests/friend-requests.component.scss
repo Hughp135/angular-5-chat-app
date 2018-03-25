@@ -1,3 +1,7 @@
+#header {
+  overflow: hidden;
+}
+
 h3.ui.header {
   margin-top: 8px;
   margin-bottom: 10px;
@@ -23,6 +27,10 @@ td, th {
   border-top: none !important;
   border-right: none !important;
   border-left: none !important;
+}
+
+td.request-type {
+  font-size: 0.8em;
 }
 
 .center-aligned {

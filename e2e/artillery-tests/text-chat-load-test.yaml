@@ -4,9 +4,7 @@ config:
   target: "http://127.0.0.1:7202"
   phases:
     - duration: 30
-      arrivalRate: 5
-    - duration: 60
-      arrivalRate: 2
+      arrivalRate: 10
   variables:
     greeting: ["hello", "goedemorgen", "добрый день", "guten tag", "bonjour", "hola"]
   socketio:
@@ -18,11 +16,13 @@ scenarios:
     weight: 10
     engine: "socketio"
     flow:
-      - emit:
-          channel: "send-message"
-          data:
-            channel_id: "5a8c2a3d1b387a4d78e910b7"
-            server_id: "5a8c2a3d1b387a4d78e910b2"
-            message: '2'
-        count: 1
+      - loop:
+        - emit:
+            channel: "send-message"
+            data:
+              channel_id: "5a8c2a3d1b387a4d78e910b7"
+              server_id: "5a8c2a3d1b387a4d78e910b2"
+              message: '{{ greeting }}'
+        - think: 0.05
+          count: 500
       - think: 240

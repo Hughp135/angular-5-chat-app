@@ -51,6 +51,7 @@ async function sendChannelList(socket, serverId) {
     _id: 1,
     name: 1,
     server_id: 1,
+    last_message: 1,
   }).lean();
 
   const channelsFormatted = channelsToChannelListItems(channels);
@@ -66,7 +67,7 @@ async function sendChannelList(socket, serverId) {
 export async function leaveOtherServers(socket) {
   const roomsUserIsIn = Object.keys(socket.rooms);
   for (const room of roomsUserIsIn) {
-    if (room.startsWith('server-') || room.startsWith('dmchannel-') && room !== socket.id) {
+    if (room.startsWith('server-') || room.startsWith('dmchannel-')) {
       // Leave any other servers user is in.
       await socket.leave(room);
     }

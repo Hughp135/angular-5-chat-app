@@ -14,7 +14,9 @@ describe('MainComponent', () => {
       ],
       imports: [
       ],
-      providers: [SettingsService],
+      providers: [
+        SettingsService,
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));

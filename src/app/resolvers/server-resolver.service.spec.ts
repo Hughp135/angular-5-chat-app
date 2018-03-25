@@ -95,7 +95,7 @@ describe('ServerResolver.Service.TsService', () => {
     const channelList: ChannelList = {
       server_id: serverList[0]._id,
       channels: [
-        { name: 'chan1', _id: 'sdf9', server_id: serverList[0]._id },
+        { name: 'chan1', _id: 'sdf9', server_id: serverList[0]._id, last_message: new Date() },
       ],
     };
 

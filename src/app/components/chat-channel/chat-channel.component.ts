@@ -9,11 +9,11 @@ import {
 import { ChatChannel } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { SendMessageRequest } from '../../../../shared-interfaces/message.interface';
-import { AppStateService } from '../../services/app-state.service';
 import { SettingsService } from '../../services/settings.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import ChatServer from '../../../../shared-interfaces/server.interface';
+import { ChannelSettingsService } from '../../services/channel-settings.service';
 
 const ignoredKeys = [
   'Enter',
@@ -39,15 +39,18 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private wsService: WebsocketService,
-    private appState: AppStateService,
     public settingsService: SettingsService,
     private route: ActivatedRoute,
+    channelSettings: ChannelSettingsService,
   ) {
     this.route.data.subscribe(data => {
       this.subscriptions.push(
         data.state.channel
           .filter(chan => !!chan)
-          .subscribe(chan => (this.currentChannel = chan)),
+          .subscribe((chan) => {
+            this.currentChannel = chan;
+            channelSettings.updateVisitedChannels();
+          }),
       );
       this.subscriptions.push(
         data.state.server.subscribe(server => (this.currentServer = server)),
@@ -103,8 +106,8 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     if (msg.length < 1) {
       return;
     }
-    const currentChannel = this.appState.currentChannel;
-    const currentServer = this.appState.currentServer;
+    const currentChannel = this.currentChannel;
+    const currentServer = this.currentServer;
     const message: SendMessageRequest = {
       message: msg,
       channel_id: currentChannel._id,

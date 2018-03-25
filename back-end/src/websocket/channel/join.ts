@@ -31,9 +31,12 @@ export async function joinChannel(io: any) {
         .lean();
 
       // NORMAL SERVER CHANNEL
-      if (channel.getChannelType() === SERVER_CHANNEL && !await canJoinServer(user, channel.server_id)) {
-        socket.emit('soft-error', 'You don\'t have permission to join this server.');
-        return;
+      if (channel.getChannelType() === SERVER_CHANNEL) {
+        if ( !await canJoinServer(user, channel.server_id)) {
+          return socket.emit('soft-error', 'You don\'t have permission to join this server.');
+        }
+        await leaveOtherChannels(socket);
+        socket.join(`channel-${channel._id}`);
       }
 
       // FRIENDS DM CHANNEL
@@ -43,6 +46,7 @@ export async function joinChannel(io: any) {
           return;
         }
 
+        await leaveOtherChannels(socket);
         socket.join(`dmchannel-${channel._id}`);
       }
 
@@ -55,4 +59,15 @@ export async function joinChannel(io: any) {
       socket.emit('joined-channel', response);
     });
   });
+}
+
+async function leaveOtherChannels(socket) {
+  const roomsUserIsIn = Object.keys(socket.rooms);
+
+  for (const room of roomsUserIsIn) {
+    if (room.startsWith('channel-') || room.startsWith('dmchannel-')) {
+      // Leave any other servers user is in.
+      await socket.leave(room);
+    }
+  }
 }

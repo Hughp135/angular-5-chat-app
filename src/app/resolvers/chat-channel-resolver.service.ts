@@ -73,8 +73,8 @@ export class ChatChannelResolver implements Resolve<any> {
 
   channelNotFound(isOnFriendsPage, route) {
     this.errorService.errorMessage.next({
-      message: 'Channel not found.',
-      duration: 5000,
+      message: 'Failed to join channel.',
+      duration: 2500,
       id: new Date().toUTCString(),
     });
     if (isOnFriendsPage) {

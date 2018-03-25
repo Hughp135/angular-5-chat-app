@@ -17,7 +17,8 @@ import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
 import ChatServer from '../../../shared-interfaces/server.interface';
-import { SET_CURRENT_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST } from '../reducers/current-server.reducer';
+import { SET_CURRENT_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST,
+  SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE } from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
@@ -156,7 +157,7 @@ describe('WebsocketService', () => {
       payload: message,
     });
   });
-  it('chat-message does not dispatch NEW_CHAT_MESSAGE if channel ID is different', () => {
+  it('chat-message does not dispatch NEW_CHAT_MESSAGE if channel ID is not current channel', () => {
     const message: ChatMessage = {
       message: 'hi thar',
       channel_id: '712361',
@@ -171,7 +172,32 @@ describe('WebsocketService', () => {
       },
     };
     handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
-    expect(store.dispatch).not.toHaveBeenCalled();
+    expect(store.dispatch).not.toHaveBeenCalledWith({
+      type: NEW_CHAT_MESSAGE,
+      payload: message,
+    });
+  });
+  it('chat-message dispatches SET_CHANNEL_LAST_MESSAGE_DATE if channel ID is not current channel', () => {
+    const message: ChatMessage = {
+      message: 'hi thar',
+      channel_id: '712361',
+      user_id: '123',
+      username: 'jake',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback(message);
+      },
+    };
+    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_CHANNEL_LAST_MESSAGE_DATE,
+      payload: {
+        id: message.channel_id,
+      },
+    });
   });
   it('channel-list', () => {
     const fakeSocket = {

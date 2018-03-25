@@ -1,11 +1,17 @@
 import {
   currentServerReducer, SET_CURRENT_SERVER,
-  SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST,
+  SET_CHANNEL_LIST, SERVER_SET_USER_LIST, SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE,
 } from './current-server.reducer';
 import ChatServer, { ServerUserList, UserListUpdate } from 'shared-interfaces/server.interface';
 import { ChannelList } from 'shared-interfaces/channel.interface';
 
 describe('reducers/current-server', () => {
+  beforeEach(() => {
+    jasmine.clock().install();
+  });
+  afterEach(() => {
+    jasmine.clock().uninstall();
+  });
   it('JOIN_SERVER', () => {
     const action: { type: string, payload: ChatServer } = {
       type: SET_CURRENT_SERVER,
@@ -130,5 +136,71 @@ describe('reducers/current-server', () => {
         { username: 'sgsfg3', _id: 'idfg092', online: false },
       ],
     });
+  });
+  it('SET_CHANNEL_LAST_MESSAGE_DATE sets last date of message channel', () => {
+    const action = {
+      type: SET_CHANNEL_LAST_MESSAGE_DATE,
+      payload: {
+        id: '123',
+      },
+    };
+    const oldDate = new Date();
+    oldDate.setFullYear(1990);
+    const state = {
+      name: 'serv',
+      _id: 'dfgw4',
+      channelList: {
+        server_id: 'serv',
+        channels: [
+          { _id: '123', name: 'chan1', last_message: oldDate },
+        ],
+      },
+    };
+    const newDate = new Date();
+    jasmine.clock().mockDate(newDate);
+    expect(currentServerReducer(state, action))
+      .toEqual({
+        ...state,
+        channelList: {
+          ...state.channelList,
+          channels: [
+            { _id: '123', name: 'chan1', last_message: newDate },
+          ],
+        },
+      });
+  });
+  it('SET_CHANNEL_LAST_MESSAGE_DATE returns original state if channel not found', () => {
+    const action = {
+      type: SET_CHANNEL_LAST_MESSAGE_DATE,
+      payload: {
+        id: 'notfound',
+      },
+    };
+    const oldDate = new Date();
+    oldDate.setFullYear(1990);
+    const state = {
+      name: 'serv',
+      _id: 'dfgw4',
+      channelList: {
+        server_id: 'serv',
+        channels: [
+          { _id: '123', name: 'chan1', last_message: oldDate },
+        ],
+      },
+    };
+    expect(currentServerReducer(state, action))
+      .toEqual(state);
+  });
+  it('SET_CHANNEL_LAST_MESSAGE_DATE returns undefined if currentServer is undefined', () => {
+    const action = {
+      type: SET_CHANNEL_LAST_MESSAGE_DATE,
+      payload: {
+        id: '123',
+      },
+    };
+    const oldDate = new Date();
+    oldDate.setFullYear(1990);
+    expect(currentServerReducer(undefined, action))
+      .toBeUndefined();
   });
 });

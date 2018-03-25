@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { ChatChannel } from 'shared-interfaces/channel.interface';
+import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import ChatServer from 'shared-interfaces/server.interface';
 import { SettingsService } from '../../../services/settings.service';
 import { Router } from '@angular/router';
@@ -22,8 +22,8 @@ export class DmchannelListComponent implements OnInit {
   ngOnInit() {
   }
 
-  getChannelName(channel: ChatChannel) {
-    const userId = channel.user_ids[1];
+  getChannelName(channel: ChannelListItem) {
+    const userId = channel.user_ids[channel.user_ids.length - 1];
     const user = this.currentServer.channelList.users[userId];
     return user ? user.username : 'Unknown';
   }

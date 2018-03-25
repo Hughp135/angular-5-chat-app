@@ -24,4 +24,5 @@ messageSchema.index({ channel_id: 1, createdAt: 1 });
 
 const ChatMessage: mongoose.Model<IChatMessageModel>
   = mongoose.model<IChatMessageModel>('ChatMessage', messageSchema);
+
 export default ChatMessage;

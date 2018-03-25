@@ -56,7 +56,30 @@ input.ng-invalid.ng-dirty.ng-touched {
   }
 }
 
+.sh-context--container {
+ min-width: 200px !important;
+}
+
+.sh-context--container ul {
+  padding: 7px !important;
+}
+
 .sh-menu-item {
+  .remove-user.icons {
+    margin-left: -3px !important;
+    margin-right: 3px !important;
+    .user {
+      margin-left: 3px !important;
+    }
+    span {
+      margin-left: 5px;
+    }
+  }
+  .add-user.icons {
+    .add {
+      font-size: 0.5em !important;
+    }
+  }
   div {
     color: #dcdcdc !important;
   }

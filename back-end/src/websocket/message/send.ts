@@ -17,8 +17,8 @@ export function sendMessage(io: any) {
 
       // TEST SOCKET ONLY
       if (socket.handshake.query && socket.handshake.query.test === TEST_SECRET) {
-        const [testUser, firstChannel, srv] = await getTestUserObjects(socket, request);
-        await emitMessage(io, request.message, firstChannel, testUser, srv);
+        const [testUser, firstChannel] = await getTestUserObjects(socket, request);
+        await emitMessage(io, request.message, firstChannel, testUser);
 
         return;
       }
@@ -35,7 +35,7 @@ export function sendMessage(io: any) {
           return;
         }
 
-        await emitMessage(io, request.message, channel, user, null);
+        await emitMessage(io, request.message, channel, user);
         return;
       }
 
@@ -70,11 +70,11 @@ async function emitMessage(io, message: string, channel, user, server?) {
     io.in(`dmchannel-${channel._id}`).emit('chat-message', chatMessage);
   }
 
-  await saveMessage(chatMessage);
-}
-
-async function saveMessage(message) {
-  await ChatMessageModel.create(message);
+  channel.last_message = now;
+  await Promise.all([
+    ChatMessageModel.create(chatMessage),
+    channel.save(),
+  ]);
 }
 
 async function getTestUserObjects(socket, request) {
@@ -84,6 +84,6 @@ async function getTestUserObjects(socket, request) {
   const server: any = await Server.findById(server_id).lean();
   const [channel]: any = await Channel.find({
     server_id: server_id,
-  }).lean();
+  });
   return [user, channel, server];
 }

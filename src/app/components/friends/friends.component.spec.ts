@@ -29,7 +29,14 @@ describe('FriendsComponent', () => {
       users: {
         '345': { username: 'user345' },
       },
-      channels: [{ name: channel.name, _id: channel._id, server_id: channel.server_id }],
+      channels: [
+        {
+          name: channel.name,
+          _id: channel._id,
+          server_id: channel.server_id,
+          last_message: new Date(),
+        },
+      ],
     },
   };
   const friends: FriendsStore = {
