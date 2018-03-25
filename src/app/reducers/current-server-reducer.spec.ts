@@ -6,6 +6,12 @@ import ChatServer, { ServerUserList, UserListUpdate } from 'shared-interfaces/se
 import { ChannelList } from 'shared-interfaces/channel.interface';
 
 describe('reducers/current-server', () => {
+  beforeEach(() => {
+    jasmine.clock().install();
+  });
+  afterEach(() => {
+    jasmine.clock().uninstall();
+  });
   it('JOIN_SERVER', () => {
     const action: { type: string, payload: ChatServer } = {
       type: SET_CURRENT_SERVER,
@@ -151,6 +157,7 @@ describe('reducers/current-server', () => {
       },
     };
     const newDate = new Date();
+    jasmine.clock().mockDate(newDate);
     expect(currentServerReducer(state, action))
       .toEqual({
         ...state,
