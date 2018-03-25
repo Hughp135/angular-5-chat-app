@@ -10,7 +10,8 @@
   <div class="right  floated six wide column"
     id="preview-container">
     <h5>Preview</h5>
-    <img *ngIf="previewSrc"
+    <img id="croppedPreview"
+      *ngIf="previewSrc"
       width="128"
       height="128"
       [src]="previewSrc" />
