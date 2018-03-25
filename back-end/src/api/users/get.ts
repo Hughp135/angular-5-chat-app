@@ -21,12 +21,6 @@ export async function getUser(req, res) {
 
 async function getMeUser(req, res) {
   const user: any = await getUserById(req.claim.user_id);
-
-  if (!user) {
-    return res.status(404).json({
-      error: 'User not found.',
-    });
-  }
   const meUser: Me = {
     _id: user._id,
     username: user.username,

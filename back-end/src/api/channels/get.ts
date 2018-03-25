@@ -1,4 +1,3 @@
-import User from '../../models/user.model';
 import Channel from '../../models/channel.model';
 
 // NOTE: Websocket route is currently used instead of this.

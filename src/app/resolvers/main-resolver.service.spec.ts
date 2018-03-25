@@ -10,6 +10,8 @@ import { ErrorService } from '../services/error.service';
 import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import ChatServer from '../../../shared-interfaces/server.interface';
 import { Router } from '@angular/router';
+import { Me } from 'shared-interfaces/user.interface';
+import { SET_ME } from '../reducers/me-reducer';
 
 describe('MainResolverService', () => {
   let apiService: ApiService;
@@ -52,13 +54,18 @@ describe('MainResolverService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  it('gets server list and updates store', fakeAsync(() => {
+  it('gets server list and updates server store', fakeAsync(() => {
     const mockResponse: { servers: ChatServer[] } = {
       servers: [{ name: 'server1', _id: '123', owner_id: '345' }],
+    };
+    const mockMeResponse: { user: Me } = {
+      user: { _id: '345', username: 'myname' },
     };
     service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush(mockResponse);
+    const mecall = httpMock.expectOne(`${apiService.BASE_URL}users/me`);
+    mecall.flush(mockMeResponse);
     httpMock.verify();
     tick(1);
     expect(store.dispatch).toHaveBeenCalledWith({
@@ -66,7 +73,25 @@ describe('MainResolverService', () => {
       payload: mockResponse.servers,
     });
   }));
-  it('gets server list and updates store', fakeAsync(() => {
+  it('gets server list and updates me store', fakeAsync(() => {
+    const mockResponse: { servers: ChatServer[] } = {
+      servers: [{ name: 'server1', _id: '123', owner_id: '345' }],
+    };
+    const mockMeResponse: { user: Me } = {
+      user: { _id: '345', username: 'myname' },
+    };
+    service.resolve(null, null);
+    const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
+    const mecall = httpMock.expectOne(`${apiService.BASE_URL}users/me`);
+    called.flush(mockResponse);
+    mecall.flush(mockMeResponse);
+    tick(1);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_ME,
+      payload: mockMeResponse.user,
+    });
+  }));
+  it('gets me user and updates store', fakeAsync(() => {
     const mockResponse: { servers: ChatServer[] } = {
       servers: [{ name: 'server1', _id: '123', owner_id: '345' }],
     };
@@ -79,6 +104,8 @@ describe('MainResolverService', () => {
     service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush('Error', { status: 401, statusText: 'Unauthorized' });
+    const mecall = httpMock.expectOne(`${apiService.BASE_URL}users/me`);
+    mecall.flush({ user: {} });
     httpMock.verify();
     tick(1);
     expect(store.dispatch).not.toHaveBeenCalled();
@@ -88,6 +115,11 @@ describe('MainResolverService', () => {
     service.resolve(null, null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush('Error', { status: 500, statusText: 'Unauthorized' });
+    const mockMeResponse: { user: Me } = {
+      user: { _id: '345', username: 'myname' },
+    };
+    const mecall = httpMock.expectOne(`${apiService.BASE_URL}users/me`);
+    mecall.flush(mockMeResponse);
     httpMock.verify();
     tick(1);
     expect(store.dispatch).not.toHaveBeenCalled();

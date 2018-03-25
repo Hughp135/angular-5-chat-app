@@ -7,6 +7,7 @@ import { UPDATE_SERVER_LIST } from '../reducers/server-list.reducer';
 import { ErrorService } from '../services/error.service';
 import { Router } from '@angular/router';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router/src/router_state';
+import { SET_ME } from '../reducers/me-reducer';
 
 @Injectable()
 export class MainResolver implements Resolve<any> {
@@ -21,13 +22,22 @@ export class MainResolver implements Resolve<any> {
 
   async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
     try {
-      const { servers }: any =
-        await this.apiService
-          .get('servers')
-          .toPromise();
+      const [{ servers }, { user }]: any =
+        await Promise.all([
+          this.apiService
+            .get('servers')
+            .toPromise(),
+          this.apiService
+            .get('users/me')
+            .toPromise(),
+        ]);
       this.store.dispatch({
         type: UPDATE_SERVER_LIST,
         payload: servers,
+      });
+      this.store.dispatch({
+        type: SET_ME,
+        payload: user,
       });
     } catch (e) {
       if (e.status === 401) {
