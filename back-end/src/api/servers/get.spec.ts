@@ -21,7 +21,7 @@ describe('api/servers/get', () => {
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
     invalidToken = createJWT({
-      username: 'test-user',
+      username: 'invalid-user',
       user_id: '123456781234567812345678',
     }, `5s`);
   });
@@ -50,9 +50,7 @@ describe('api/servers/get', () => {
     return supertest(app.listen(null))
       .get('/api/servers')
       .set('Cookie', `jwt_token=${invalidToken}`)
-      .expect(401, {
-        error: 'User not found.',
-      });
+      .expect(401);
   });
   it('returns empty server list if user has no servers', async () => {
     return supertest(app.listen(null))

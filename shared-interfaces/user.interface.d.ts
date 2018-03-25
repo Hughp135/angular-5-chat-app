@@ -20,3 +20,8 @@ export interface User {
   }[];
   socket_id: string;
 }
+
+export interface Me {
+  username: string;
+  _id: string;
+}

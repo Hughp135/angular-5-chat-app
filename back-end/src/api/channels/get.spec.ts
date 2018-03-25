@@ -48,6 +48,7 @@ describe('api/channels/get', () => {
   it('returns 401 if not logged in', async () => {
     return supertest(app.listen(null))
       .get('/api/channels')
+      .set('Cookie', `jwt_token=`)
       .expect(401, {
         error: 'You must be logged in.',
       });
@@ -56,9 +57,7 @@ describe('api/channels/get', () => {
     return supertest(app.listen(null))
       .get('/api/channels')
       .set('Cookie', `jwt_token=${invalidToken}`)
-      .expect(401, {
-        error: 'User not found.',
-      });
+      .expect(401);
   });
   it('returns channels', async () => {
     channel1 = await Channel.create({

@@ -21,7 +21,7 @@ describe('api/users/get', () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
     invalidToken = createJWT(
       {
-        username: 'test-user',
+        username: 'no-user',
         user_id: new ObjectId(),
       },
       `5s`,
@@ -31,7 +31,7 @@ describe('api/users/get', () => {
     user = await User.create({ username: 'test-user', password: '123456' });
     token = createJWT(
       {
-        username: 'test-user',
+        username: user.username,
         user_id: user._id,
       },
       `3s`,
@@ -51,10 +51,18 @@ describe('api/users/get', () => {
         error: 'You must be logged in.',
       });
   });
+  it('returns 401 if requesting user does not exist', async () => {
+    return supertest(app.listen(null))
+      .get('/api/users/randomstring')
+      .set('Cookie', `jwt_token=${invalidToken}`)
+      .expect(401, {
+        error: 'You must be logged in.',
+      });
+  });
   it('returns 404 if user not found', async () => {
     return supertest(app.listen(null))
       .get('/api/users/badname')
-      .set('Cookie', `jwt_token=${invalidToken}`)
+      .set('Cookie', `jwt_token=${token}`)
       .expect(404, {
         error: 'User not found.',
       });
@@ -62,7 +70,18 @@ describe('api/users/get', () => {
   it('returns user if username matches exactly', async () => {
     return supertest(app.listen(null))
       .get('/api/users/test-user')
-      .set('Cookie', `jwt_token=${invalidToken}`)
+      .set('Cookie', `jwt_token=${token}`)
+      .expect(200, {
+        user: {
+          _id: user._id.toString(),
+          username: 'test-user',
+        },
+      });
+  });
+  it('returns requesting user if paramter is "me"', async () => {
+    return supertest(app.listen(null))
+      .get('/api/users/me')
+      .set('Cookie', `jwt_token=${token}`)
       .expect(200, {
         user: {
           _id: user._id.toString(),

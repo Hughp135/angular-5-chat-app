@@ -12,12 +12,6 @@ const schema = Joi.object().keys({
 export async function createServer(req, res) {
 
   const user = await User.findOne({ '_id': req.claim.user_id });
-  if (!user) {
-    return res.status(401).json({
-      error: 'User not found.',
-    });
-  }
-
   const result = Joi.validate(req.body, schema);
 
   if (result.error) {
@@ -35,7 +29,6 @@ export async function createServer(req, res) {
 
 
   try {
-
     const server = await Server.create({
       name: req.body.name,
       owner_id: user._id,

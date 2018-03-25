@@ -56,9 +56,7 @@ describe('api/servers/post', () => {
       .post('/api/servers')
       .set('Cookie', `jwt_token=${invalidToken}`)
       .send({})
-      .expect(401, {
-        error: 'User not found.',
-      });
+      .expect(401);
   });
   it('returns 400 with invalid name', async () => {
     return supertest(app.listen(null))
