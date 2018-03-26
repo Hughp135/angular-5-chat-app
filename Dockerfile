@@ -10,4 +10,4 @@ RUN npm install
 # replace this with your application's default port
 EXPOSE 7202
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "compile:server"]
