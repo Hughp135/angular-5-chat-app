@@ -11,7 +11,11 @@ export const app = express();
 app.use(cookieParser());
 app.use(bodyParser.json());
 
+const distPath = path.join(__dirname + '../../../dist');
+
+app.use(express.static(distPath));
 app.use('/api', apiRouter);
+
 
 /* istanbul ignore next */
 app.get('/img/server-icons/:img', authMiddleware, (req, res) => {
