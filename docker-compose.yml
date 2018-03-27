@@ -8,8 +8,8 @@ services:
     volumes:
       - ./data:/data/db
   app:
-    container_name: chatapptest
-    restart: always
+    container_name: chatapp
+    restart: "no"
     build: .
     ports:
       - "7205:7202"
