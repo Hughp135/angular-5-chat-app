@@ -90,11 +90,12 @@
     "winston": "^2.4.0",
     "zone.js": "^0.8.19",
     "ng2-semantic-ui": "^0.9.6",
-    "ng2-right-click-menu": "file:vendor/ng2-right-click-menu-0.0.16.tgz"
+    "ng2-right-click-menu": "file:vendor/ng2-right-click-menu-0.0.16.tgz",
+    "@angular/compiler-cli": "^5.2.5",
+    "shared-interfaces": "file:shared-interfaces"
   },
   "devDependencies": {
     "@angular/cli": "1.6.6",
-    "@angular/compiler-cli": "^5.2.5",
     "@angular/language-service": "^5.2.5",
     "@ngrx/store-devtools": "^5.1.0",
     "@types/chai-as-promised": "^7.1.0",
@@ -121,7 +122,6 @@
     "nyc": "^11.5.0",
     "protractor": "~5.1.2",
     "semantic-ui-less": "^2.2.14",
-    "shared-interfaces": "file:shared-interfaces",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0",
     "supertest": "^3.0.0",
