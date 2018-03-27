@@ -3,9 +3,11 @@ FROM node:latest
 
 RUN git clone -b docker https://github.com/Hughp135/angular-5-chat-app.git
 
+COPY config/production.yml /angular-5-chat-app/config
+
 WORKDIR /angular-5-chat-app
 
-RUN npm install
+RUN npm install --production
 
 # replace this with your application's default port
 EXPOSE 7202

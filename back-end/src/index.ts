@@ -10,10 +10,13 @@ import * as fs from 'fs';
 process.on('unhandledRejection', r => console.error(r));
 
 const API_PORT = config.get('api.port');
+const MONGODB_URL = <string>config.get('mongodb.url');
+
+console.log('mongoDB url', MONGODB_URL);
 
 async function launch() {
   makePublicDirectory();
-  await mongoose.connect('mongodb://localhost/myapp');
+  await mongoose.connect(MONGODB_URL);
   const server = http.createServer(app);
   await startWs(server);
   await server.listen(API_PORT);

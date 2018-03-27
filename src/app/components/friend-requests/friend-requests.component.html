@@ -22,7 +22,8 @@
   </div>
 
   <table *ngIf="friendRequests.length"
-    class="ui teal celled padded table"
+    class="ui celled padded table"
+    [class.teal]="!settingsService.invertedTheme"
     [class.inverted]="settingsService.invertedTheme">
     <thead>
       <tr>

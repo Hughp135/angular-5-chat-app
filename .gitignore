@@ -3,6 +3,7 @@ logs
 
 #config
 config/local.yml
+config/production.yml
 
 # compiled output
 /back-end/dist
