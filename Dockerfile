@@ -12,4 +12,8 @@ RUN npm install --production
 # replace this with your application's default port
 EXPOSE 7202
 
-CMD ["npm", "run", "compile:server"]
+# Build front-end app
+CMD["npm", "run", "build"]
+
+# Build and start back-end app
+CMD ["npm", "run", "start:server"]

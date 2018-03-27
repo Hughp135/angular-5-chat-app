@@ -12,7 +12,8 @@ process.on('unhandledRejection', r => console.error(r));
 const API_PORT = config.get('api.port');
 const MONGODB_URL = <string>config.get('mongodb.url');
 
-console.log('mongoDB url', MONGODB_URL);
+winston.log('info', 'Server environment: ' + process.env.NODE_ENV);
+winston.log('info', 'mongoDB url ' + MONGODB_URL);
 
 async function launch() {
   makePublicDirectory();
