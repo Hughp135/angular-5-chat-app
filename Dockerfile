@@ -13,7 +13,7 @@ RUN npm install --production
 EXPOSE 7202
 
 # Build front-end app
-CMD["npm", "run", "build"]
+CMD ["npm", "run", "build"]
 
 # Build and start back-end app
 CMD ["npm", "run", "start:server"]
