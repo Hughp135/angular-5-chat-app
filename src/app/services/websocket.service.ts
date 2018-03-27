@@ -6,10 +6,11 @@ import { ErrorService, ErrorNotification } from './error.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class WebsocketService {
-  public url = 'http://localhost:7202';
+  public url = environment.socket_url;
   public socket: any;
   public connected = false;
 

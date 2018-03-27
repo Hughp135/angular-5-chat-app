@@ -26,6 +26,6 @@ app.get('/img/server-icons/:img', authMiddleware, (req, res) => {
 
 /* istanbul ignore next */
 // Resolve all app routes back to index.html
-app.get(['/friends', '/friends/*', '/channels', '/channels/*'], function (req, res) {
+app.get(['/friends', '/friends/*', '/channels', '/channels/*', '/login'], function (req, res) {
   res.sendFile(path.join(__dirname + '../../../dist/index.html'));
 });
