@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../../environments/environment';
 
 export interface HttpOptions {
   headers?: { [key: string]: string };
@@ -9,7 +10,7 @@ export interface HttpOptions {
 
 @Injectable()
 export class ApiService {
-  public BASE_URL = '/api/';
+  public BASE_URL = `${environment.api_url}/api/`;
 
   constructor(private http: HttpClient) { }
 

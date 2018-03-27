@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import ChatServer from 'shared-interfaces/server.interface';
 import { SettingsService } from '../../../services/settings.service';
@@ -17,9 +17,14 @@ export class DmchannelListComponent implements OnInit {
   constructor(
     public settingsService: SettingsService,
     private router: Router,
-  ) { }
+    private ref: ChangeDetectorRef,
+  ) {
+  }
 
   ngOnInit() {
+    this.settingsService.invertedThemeSubj.subscribe(() => {
+      this.ref.detectChanges();
+    });
   }
 
   getChannelName(channel: ChannelListItem) {

@@ -10,7 +10,7 @@ const url = `${fileUrl(distPath)}/`;
 
 console.log('Running Electron app with base URL', url);
 
-exec(`ng build --base-href ${url} && electron .`,
+exec(`ng build --prod --base-href ${url} && electron .`,
   (error, stdout, stderr) => {
     console.log(`${stdout}`);
     console.log(`${stderr}`);

@@ -91,7 +91,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
         disabled: (ctx) => true,
       },
       {
-        label: '<i class="icons"><i class="comment alternate icon"></i></i> Message',
+        label: '<i class="icons"><i class="comment alternate icon"></i></i> Send Message',
         onClick: (ctx) => this.sendUserMessage(ctx.dataContext._id),
       },
       {
