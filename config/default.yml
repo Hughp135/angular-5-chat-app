@@ -3,7 +3,7 @@ api:
   url: http://localhost
 
 mongodb:
-  url: mongodb://localhost/myapp
+  url: mongodb://localhost:27017/myapp
 
 JWT_SECRET: oijsdfogij02349sdpok
 TEST_SOCKET_SECRET: d0934i2*@!*%j4fehg0[]sdf,af2
