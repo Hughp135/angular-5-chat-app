@@ -8,7 +8,6 @@ config/production.yml
 # compiled output
 /back-end/dist
 /dist
-/dist-server
 /tmp
 /out-tsc
 /.nyc_output

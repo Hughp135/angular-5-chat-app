@@ -82,14 +82,15 @@
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^3.0.2",
     "mongoose": "^5.0.6",
-    "ng2-right-click-menu": "file:vendor/ng2-right-click-menu-0.0.16.tgz",
     "rxjs": "^5.5.6",
     "set-cookie-parser": "^2.0.0",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
     "typescript": "2.6.2",
     "winston": "^2.4.0",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
+    "ng2-semantic-ui": "^0.9.6",
+    "ng2-right-click-menu": "file:vendor/ng2-right-click-menu-0.0.16.tgz"
   },
   "devDependencies": {
     "@angular/cli": "1.6.6",
@@ -117,7 +118,6 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "mocha": "^4.0.1",
     "mock-socket": "^7.1.0",
-    "ng2-semantic-ui": "^0.9.6",
     "nyc": "^11.5.0",
     "protractor": "~5.1.2",
     "semantic-ui-less": "^2.2.14",
