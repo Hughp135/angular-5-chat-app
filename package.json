@@ -79,6 +79,7 @@
     "file-url": "^2.0.2",
     "hammerjs": "^2.0.8",
     "joi": "^13.1.2",
+    "js-yaml": "^3.11.0",
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^3.0.2",
     "mongoose": "^5.0.6",
