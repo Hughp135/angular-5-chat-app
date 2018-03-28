@@ -11,10 +11,11 @@ services:
       - ./data:/data/db
   app:
     container_name: chatapp
+    image: chatapp:test
     restart: "no"
     build: .
     ports:
-      - "7205:7202"
+      - "80:7205"
     links:
       - mongo
     environment:

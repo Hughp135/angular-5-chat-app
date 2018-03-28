@@ -11,7 +11,7 @@ WORKDIR /angular-5-chat-app
 RUN npm install --production
 
 # replace this with your application's default port
-EXPOSE 7202
+EXPOSE 7205
 EXPOSE 27017
 
 # Build front-end app
