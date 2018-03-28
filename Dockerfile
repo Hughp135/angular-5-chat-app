@@ -12,7 +12,6 @@ RUN npm install --production
 
 # replace this with your application's default port
 EXPOSE 7205
-EXPOSE 27017
 
 # Build front-end app
 RUN npm run build
