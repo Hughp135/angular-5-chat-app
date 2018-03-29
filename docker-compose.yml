@@ -6,10 +6,10 @@ services:
     expose:
       - "27017"
     volumes:
-      - ./data:/data/db
+      - C:/mongodb
   app:
     container_name: chatapp
-    image: chatapp:test
+    image: mongoose5/chatapp:travis
     restart: "no"
     build: .
     ports:

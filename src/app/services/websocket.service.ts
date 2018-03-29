@@ -47,6 +47,8 @@ export class WebsocketService {
     });
     this.socket.on('disconnect', (reason: string) => {
       // SOCKET CONNECTION LOST
+      this.errorService.errorMessage
+        .next(new ErrorNotification('Lost connection to server. Please refresh the page.', 60000));
       subj.next(false);
       subj.complete();
       this.connected = false;
