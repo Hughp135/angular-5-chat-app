@@ -5,8 +5,6 @@ services:
     image: mongo
     expose:
       - "27017"
-    ports:
-      - "27018:27017"
     volumes:
       - ./data:/data/db
   app:

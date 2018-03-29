@@ -40,6 +40,7 @@ config/production.yml
 npm-debug.log
 testem.log
 /typings
+data
 
 # e2e
 /e2e/*.js
