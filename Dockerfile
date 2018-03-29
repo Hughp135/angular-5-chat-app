@@ -14,6 +14,7 @@ COPY src src
 COPY vendor vendor
 COPY themes themes
 COPY config config
+COPY e2e e2e
 COPY package.json package-lock.json tsconfig.json tslint.json .angular-cli.json ./
 COPY shared-interfaces shared-interfaces
 
