@@ -9,13 +9,13 @@ before_install:
 sudo: required
 services:
   - mongodb
-  # - docker
+  - docker
 script:
   - npm run lint
   - npm test
 after_success: npm run coverage
-# deploy:
-#   provider: script
-#   script: bash docker_push
-#   on:
-#     branch: master
+deploy:
+  provider: script
+  script: bash docker_push
+  on:
+    branch: master
