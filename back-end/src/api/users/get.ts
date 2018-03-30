@@ -37,7 +37,7 @@ async function getUserById(id: string) {
 
 async function getUserByName(username: string) {
   return await User.findOne(
-    { $text: { $search: username } },
+    { username_lowercase: username.toLowerCase() },
     { username: 1 },
   ).lean();
 }

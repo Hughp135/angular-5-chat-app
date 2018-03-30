@@ -1,6 +1,5 @@
 api:
   port: 7205
-  url: http://localhost
 
 mongodb:
   url: mongodb://mongo:27017/chat-app

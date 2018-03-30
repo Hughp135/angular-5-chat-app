@@ -4,6 +4,7 @@ import Channel from '../models/channel.model';
 import User from '../models/user.model';
 import ChatMessage from '../models/chatmessage.model';
 import * as bcrypt from 'bcrypt';
+import * as config from 'config';
 
 /* tslint:disable:no-unused-variable */
 
@@ -12,7 +13,7 @@ setTimeout(seed, 5000);
 
 async function seed() {
   console.warn('Connecting to MongoDB...');
-  await mongoose.connect('mongodb://localhost/myapp');
+  await mongoose.connect(config.get('mongodb.url'));
   console.warn('Removing all collections...');
   await removeAllCollections();
   console.warn('Generating users...');
