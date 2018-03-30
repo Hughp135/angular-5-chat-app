@@ -9,7 +9,7 @@ services:
       - /data/db
   app:
     container_name: chatapp
-    image: mongoose5/chatapp:travis
+    image: mongoose5/chatapp:master
     restart: "no"
     build: .
     ports:

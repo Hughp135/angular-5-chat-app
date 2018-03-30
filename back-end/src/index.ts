@@ -17,10 +17,13 @@ winston.log('info', 'MongoDB url: ' + MONGODB_URL);
 
 async function launch() {
   makePublicDirectory();
+
   await mongoose.connect(MONGODB_URL);
+
   const server = http.createServer(app);
-  await startWs(server);
   await server.listen(API_PORT);
+
+  await startWs(server);
   winston.log('info', 'API Running on port ' + API_PORT);
 }
 
