@@ -128,12 +128,12 @@ describe('WebsocketService', () => {
     }, 20);
   });
   it('creates errorService message on soft-error', async (done) => {
-    errorService.errorMessage.subscribe((val) => {
-      expect(val.message).toEqual('test message 1');
-      done();
-    });
     mockServer.on('connection', server => {
       mockServer.emit('soft-error', 'test message 1');
+    });
+    errorService.errorMessage.take(1).subscribe((val) => {
+      expect(val.message).toEqual('test message 1');
+      done();
     });
     await service.connect().toPromise();
   });

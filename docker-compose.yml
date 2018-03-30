@@ -6,7 +6,7 @@ services:
     expose:
       - "27017"
     volumes:
-      - C:/mongodb
+      - /data/db
   app:
     container_name: chatapp
     image: mongoose5/chatapp:travis
