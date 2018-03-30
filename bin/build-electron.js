@@ -10,7 +10,9 @@ const url = `${fileUrl(distPath)}/`;
 
 console.log('Running Electron app with base URL', url);
 
-exec(`ng build --prod --base-href ${url} && electron .`,
+module.exports = function build(prod) {
+  console.log('In production mode?', prod);
+  exec(`ng build --env=${prod ? 'electron-prod' : 'electron-dev'} --base-href ${url} && electron .`,
   (error, stdout, stderr) => {
     console.log(`${stdout}`);
     console.log(`${stderr}`);
@@ -18,3 +20,5 @@ exec(`ng build --prod --base-href ${url} && electron .`,
       console.log(`exec error: ${error}`);
     }
   });
+}
+

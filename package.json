@@ -18,8 +18,8 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "ng lint && tslint -p back-end",
     "e2e": "ng e2e",
-    "electron": "node bin/build-electron",
-    "electron-aot": "ng build --prod && electron ."
+    "electron": "node bin/build-electron-dev",
+    "electron:prod": "node bin/build-electron-prod"
   },
   "main": "main.js",
   "private": true,
