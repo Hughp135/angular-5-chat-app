@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { Store } from '@ngrx/store';
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   selector: 'app-server-list',
   templateUrl: './server-list.component.html',
   styleUrls: ['./server-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServerListComponent implements OnInit {
   public serverList: Observable<ChatServer[]>;

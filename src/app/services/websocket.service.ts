@@ -6,10 +6,11 @@ import { ErrorService, ErrorNotification } from './error.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class WebsocketService {
-  public url = 'http://localhost:7202';
+  public url = environment.socket_url;
   public socket: any;
   public connected = false;
 
@@ -46,6 +47,8 @@ export class WebsocketService {
     });
     this.socket.on('disconnect', (reason: string) => {
       // SOCKET CONNECTION LOST
+      this.errorService.errorMessage
+        .next(new ErrorNotification('Lost connection to server. Please refresh the page.', 60000));
       subj.next(false);
       subj.complete();
       this.connected = false;

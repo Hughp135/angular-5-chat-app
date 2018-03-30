@@ -6,9 +6,16 @@ addons:
   chrome: stable
 before_install:
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+sudo: required
 services:
   - mongodb
+  - docker
 script:
   - npm run lint
   - npm test
 after_success: npm run coverage
+deploy:
+  provider: script
+  script: bash docker_push
+  on:
+    branch: master

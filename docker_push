@@ -1,0 +1,4 @@
+#!/bin/bash
+docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+docker build -t mongoose5/chatapp:master .
+docker push mongoose5/chatapp:master

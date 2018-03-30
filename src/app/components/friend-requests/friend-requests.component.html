@@ -1,4 +1,4 @@
-<div class="ui basic padded segment">
+<div class="ui basic padded segment" [class.inverted]="settingsService.invertedTheme">
 
   <div id="header">
     <h3 class="left floated ui header"
@@ -22,7 +22,8 @@
   </div>
 
   <table *ngIf="friendRequests.length"
-    class="ui teal celled padded table"
+    class="ui celled padded table"
+    [class.teal]="!settingsService.invertedTheme"
     [class.inverted]="settingsService.invertedTheme">
     <thead>
       <tr>

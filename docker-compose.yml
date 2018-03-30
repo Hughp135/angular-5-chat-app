@@ -1,0 +1,20 @@
+version: "2"
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    expose:
+      - "27017"
+    volumes:
+      - /data/db
+  app:
+    container_name: chatapp
+    image: mongoose5/chatapp:master
+    restart: "no"
+    build: .
+    ports:
+      - "80:7205"
+    links:
+      - mongo
+    environment:
+      - NODE_ENV=production

@@ -10,13 +10,20 @@ import * as fs from 'fs';
 process.on('unhandledRejection', r => console.error(r));
 
 const API_PORT = config.get('api.port');
+const MONGODB_URL = <string>config.get('mongodb.url');
+
+winston.log('info', 'Server environment: ' + process.env.NODE_ENV);
+winston.log('info', 'MongoDB url: ' + MONGODB_URL);
 
 async function launch() {
   makePublicDirectory();
-  await mongoose.connect('mongodb://localhost/myapp');
+
+  await mongoose.connect(MONGODB_URL);
+
   const server = http.createServer(app);
-  await startWs(server);
   await server.listen(API_PORT);
+
+  await startWs(server);
   winston.log('info', 'API Running on port ' + API_PORT);
 }
 
