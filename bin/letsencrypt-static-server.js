@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const fs = require('fs');
 
 if (!fs.existsSync('static')) {
   fs.mkdirSync('static');
