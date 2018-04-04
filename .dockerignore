@@ -1,5 +1,6 @@
 back-end/dist
 config/local.yml
+config/production.yml
 
 .nyc_output
 .vscode
