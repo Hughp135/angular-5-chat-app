@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 import * as winston from 'winston';
 import './logger/logger';
 import * as http from 'http';
+import * as https from 'https';
 import * as config from 'config';
 import * as fs from 'fs';
 
@@ -21,14 +22,29 @@ async function launch() {
 
   await mongoose.connect(MONGODB_URL);
 
-  const server = http.createServer(app);
-  await server.listen(API_PORT);
-
-  await startWs(server);
-  winston.log('info', 'API Running on port ' + API_PORT);
+  createServer(<string>config.get('https.enable'));
 }
 
 launch();
+
+async function createServer(enableHttps) {
+  if (enableHttps) {
+    const options = {
+      cert: fs.readFileSync(<string>config.get('https.cert')),
+      key: fs.readFileSync('https.cert'),
+    };
+    const server = https.createServer(options, app);
+    await startWs(server);
+    await server.listen(7443);
+    winston.log('info', 'API Running on HTTPS port 7443');
+    return;
+  }
+
+  const server = http.createServer(app);
+  await startWs(server);
+  await server.listen(API_PORT);
+  winston.log('info', 'API Running on HTTP port ' + API_PORT);
+}
 
 function makePublicDirectory() {
   if (!fs.existsSync('back-end/dist')) {

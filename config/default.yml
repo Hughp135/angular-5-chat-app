@@ -6,3 +6,8 @@ mongodb:
 
 JWT_SECRET: oijsdfogij02349sdpok
 TEST_SOCKET_SECRET: d0934i2*@!*%j4fehg0[]sdf,af2
+
+https:
+  enable: false
+  cert:
+  key:
