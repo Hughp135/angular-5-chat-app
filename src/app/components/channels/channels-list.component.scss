@@ -1,28 +1,44 @@
 h5 {
+  font-size: 0.8em;
+  text-transform: uppercase;
   margin-top: 15px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  color: grey;
 }
 
 #chat-channel-list {
   a.item.channel {
+    font-size: 0.94em;
+
+    &.inverted {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
     border-radius: 3px !important;
     margin: 1px 0;
   }
 
   .has-unread-messages {
-    color: #5587b9;
-    font-weight: 700;
+    font-weight: 400 !important;
+    color: rgba(0, 0, 0, 0.93);
+
     &.inverted {
-      color: #c3d6ed;
+      color: rgba(255, 255, 255, 0.801) !important;
     }
   }
 
   a.item:hover, a.item.active {
+    font-weight: 400 !important;
     background: #d6d6d6 !important;
 
     &.inverted {
       background: #666 !important;
+      color: rgba(255, 255, 255, 0.911) !important;
     }
+  }
+
+  a.item.active {
+    color: rgba(0, 0, 0, 0.5);
   }
 }
 

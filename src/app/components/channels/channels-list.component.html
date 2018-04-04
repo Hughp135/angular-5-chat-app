@@ -8,7 +8,9 @@
 
   <div *ngIf="channelList"
     id="chat-channel-list">
-
+    <div *ngIf="channelList.channels.length < 1" class="item">
+      No channels added yet.
+    </div>
     <a class="item channel"
       *ngFor="let channel of channelList.channels"
       [class.inverted]="settingsService.invertedTheme"
@@ -17,11 +19,11 @@
       (click)="joinChannel(channel)">
       # {{ channel.name }}
     </a>
-    <a class="item channel"
+    <!-- <a class="item channel"
       [class.inverted]="settingsService.invertedTheme"
       (click)="joinChannel({server_id: currentChatChannel.server_id, _id: '123456781234567812345678'})">
       # MISSING_CHANNEL
-    </a>
+    </a> -->
     <form action=""
       (submit)="createChannel()">
       <div class="ui small icon input">

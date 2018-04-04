@@ -145,4 +145,16 @@ describe('ChannelsListComponent', () => {
     expect(component.channelHasUnreadMessages(component.currentServer.channelList.channels[0]))
       .toEqual(false);
   });
+  it('has unread messages if channel has not been visited', () => {
+    const now = new Date();
+    now.setHours(now.getHours() + 1); // into the future for lols
+    component.currentServer.channelList = {
+      server_id: '123',
+      channels: [
+        { name: 'asd', _id: 'notvisited', last_message: now },
+      ],
+    };
+    expect(component.channelHasUnreadMessages(component.currentServer.channelList.channels[0]))
+      .toEqual(true);
+  });
 });

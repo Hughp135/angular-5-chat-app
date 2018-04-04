@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
@@ -23,9 +23,14 @@ export class ChannelsListComponent implements OnInit {
     public settingsService: SettingsService,
     private channelSettings: ChannelSettingsService,
     private router: Router,
-  ) { }
+    private ref: ChangeDetectorRef,
+  ) {
+  }
 
   ngOnInit() {
+    this.settingsService.invertedThemeSubj.subscribe(val => {
+      this.ref.detectChanges();
+    });
   }
 
   get channelList() {

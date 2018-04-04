@@ -1,13 +1,20 @@
 h5 {
   margin: 0 0 5px 0;
 }
+
 .ui.list {
   margin-top: 0;
+
   .item {
     padding: 5px 10px !important;
 
     .header {
       color: #4183C4;
+    }
+
+    .description {
+      font-size: 0.8em;
+      color: grey;
     }
 
     &:hover {
@@ -26,8 +33,14 @@ h5 {
 
 .offline-users {
   .item {
-    .header {
-      color: #999 !important;
+    &:not(.inverted) {
+      .header {
+        color: #999 !important;
+      }
+    }
+
+    &.inverted {
+      color: #6d6e71 !important;
     }
 
     &:not(:hover) {

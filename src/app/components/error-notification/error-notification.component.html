@@ -4,4 +4,5 @@
   *ngIf="errorNotification">
   <i class="warning circle icon"></i>
   {{ errorNotification.message }}
+  <i class="remove icon" (click)="hide(errorNotification)"></i>
 </sui-message>

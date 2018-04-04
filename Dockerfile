@@ -11,9 +11,9 @@ WORKDIR /chat-app
 
 COPY back-end back-end
 COPY src src
+COPY config config
 COPY vendor vendor
 COPY themes themes
-COPY config config
 COPY e2e e2e
 COPY package.json package-lock.json tsconfig.json tslint.json .angular-cli.json ./
 COPY shared-interfaces shared-interfaces
@@ -25,6 +25,7 @@ RUN npm run build
 
 # Expose API port
 EXPOSE 7205
+EXPOSE 7443
 
 # Compile and start back-end app
 CMD ["npm", "run", "start:server"]
