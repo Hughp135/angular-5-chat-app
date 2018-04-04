@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 import * as winston from 'winston';
 import './logger/logger';
 import * as http from 'http';
+import * as https from 'https';
 import * as config from 'config';
 import * as fs from 'fs';
 
@@ -11,8 +12,9 @@ process.on('unhandledRejection', r => console.error(r));
 
 const API_PORT = config.get('api.port');
 const MONGODB_URL = <string>config.get('mongodb.url');
+const ENVIRONMENT = process.env.NODE_ENV;
 
-winston.log('info', 'Server environment: ' + process.env.NODE_ENV);
+winston.log('info', 'Server environment: ' + ENVIRONMENT);
 winston.log('info', 'MongoDB url: ' + MONGODB_URL);
 
 async function launch() {

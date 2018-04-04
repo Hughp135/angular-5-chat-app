@@ -25,6 +25,7 @@ RUN npm run build
 
 # Expose API port
 EXPOSE 7205
+EXPOSE 7443
 
 # Compile and start back-end app
 CMD ["npm", "run", "start:server"]
