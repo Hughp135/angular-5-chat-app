@@ -4,6 +4,8 @@ logs
 #config
 config/local.yml
 config/production.yml
+config/fullchain.pem
+config/privkey.pem
 
 # compiled output
 /back-end/dist

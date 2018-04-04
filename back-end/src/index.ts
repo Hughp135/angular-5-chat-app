@@ -31,11 +31,11 @@ async function createServer(enableHttps) {
   if (enableHttps) {
     const options = {
       cert: fs.readFileSync(<string>config.get('https.cert')),
-      key: fs.readFileSync('https.cert'),
+      key: fs.readFileSync(<string>config.get('https.key')),
     };
-    const server = https.createServer(options, app);
-    await startWs(server);
-    await server.listen(7443);
+    const httpsServer = https.createServer(options, app);
+    await startWs(httpsServer);
+    await httpsServer.listen(7443);
     winston.log('info', 'API Running on HTTPS port 7443');
     return;
   }

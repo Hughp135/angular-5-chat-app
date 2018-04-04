@@ -19,3 +19,5 @@ services:
       - mongo
     environment:
       - NODE_ENV=production
+    volumes:
+      - "./config:/chat-app/config"
