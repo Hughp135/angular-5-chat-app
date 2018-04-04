@@ -4,7 +4,6 @@ import * as mongoose from 'mongoose';
 import * as winston from 'winston';
 import './logger/logger';
 import * as http from 'http';
-import * as https from 'https';
 import * as config from 'config';
 import * as fs from 'fs';
 
