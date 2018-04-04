@@ -5,6 +5,14 @@ if (!fs.existsSync('static')) {
   fs.mkdirSync('static');
 }
 
+if (!fs.existsSync('static/.well-known')) {
+  fs.mkdirSync('static/.well-known');
+}
+
+if (!fs.existsSync('static/.well-known/acme-challenge')) {
+  fs.mkdirSync('static/.well-known/acme-challenge');
+}
+
 app.use(express.static('static'));
 app.listen(80);
 
