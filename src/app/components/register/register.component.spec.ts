@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ApiService } from '../../services/api.service';
@@ -120,7 +120,7 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.valid).toEqual(false);
     expect(component.registerForm.errors).toEqual({ mismatch: true });
   });
-  it('POSTS to /register and succeeds', ((done) => {
+  it('POSTS to /register and succeeds', (done) => {
     const formData = {
       username: 'coolname',
       password: '123456',
@@ -139,8 +139,8 @@ describe('RegisterComponent', () => {
       expect(component.submitting).toEqual(false);
       done();
     }, 5);
-  }));
-  it('submitting form POST to /register fail', ((done) => {
+  });
+  it('submitting form POST to /register fail', (done) => {
     const formData = {
       username: 'badname',
       password: '123456',
@@ -171,8 +171,8 @@ describe('RegisterComponent', () => {
       expect(component.error).toEqual('Error thing');
       done();
     }, 5);
-  }));
-  it('submitting form POST to /register fail with no message', ((done) => {
+  });
+  it('submitting form POST to /register fail with no message', (done) => {
     const formData = {
       username: 'badname',
       password: '123456',
@@ -203,8 +203,8 @@ describe('RegisterComponent', () => {
       expect(component.error).toEqual('Sorry, a server error occured. Please try again.');
       done();
     }, 5);
-  }));
-  it('After successful registration, redirects to /', ((done) => {
+  });
+  it('After successful registration, redirects to /', (done) => {
     const formData = {
       username: 'coolname',
       password: '123456',
@@ -220,8 +220,8 @@ describe('RegisterComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/']);
       done();
     }, 5);
-  }));
-  it('After successful registration, and connecting fails, display error', ((done) => {
+  });
+  it('After successful registration, and connecting fails, display error', (done) => {
     fakeWebSocketService.connect.and.callFake(() => ({
       toPromise: () => {
         return Promise.resolve(false);
@@ -243,5 +243,5 @@ describe('RegisterComponent', () => {
       expect(router.navigate).not.toHaveBeenCalled();
       done();
     }, 5);
-  }));
+  });
 });
