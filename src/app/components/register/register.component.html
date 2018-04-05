@@ -2,17 +2,24 @@
 
   <div id="centered-segment"
     class="ui raised text container segment">
-    
+
     <h2>
-      <i class="large arrow circle left icon" [routerLink]="['/login']"></i>
+      <i class="large arrow circle left icon"
+        [routerLink]="['/login']"></i>
       Create a new account.</h2>
-    
+
+    <div *ngIf="success"
+      class="ui success message">
+      <div class="header">Account Created</div>
+      <p>Logging you in automatically in 3 seconds...</p>
+    </div>
     <div *ngIf="error"
       class="ui error message">
       <div class="header">Error</div>
       <p>{{ error }}</p>
     </div>
     <form [formGroup]="registerForm"
+      *ngIf="!success"
       class="ui form"
       [class.error]="error"
       [class.loading]="submitting"

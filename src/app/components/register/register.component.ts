@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
-import 'rxjs/add/operator/finally';
+import { WebsocketService } from '../../services/websocket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,8 +13,13 @@ export class RegisterComponent {
   public registerForm: FormGroup;
   public submitting = false;
   public error: string = null;
+  public success = false;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private apiService: ApiService,
+    private wsService: WebsocketService,
+    private router: Router,
+  ) {
     this.createForm();
   }
 
@@ -30,15 +36,36 @@ export class RegisterComponent {
     this.error = null;
     this.apiService
       .post('register', this.registerForm.value)
-      .finally(() => {
-        this.submitting = false;
-      })
-      .subscribe((data) => {
-      }, e => {
-        this.error = (e.error && e.error.error)
-          ? e.error.error
-          : 'Sorry, a server error occured. Please try again.';
-      });
+      .subscribe(async () => {
+        this.success = true;
+        const error = await this.connectToSocket();
+        this.onRequestComplete(error);
+      }, e => this.onRequestComplete(e));
+  }
+
+  onRequestComplete(e?) {
+    this.submitting = false;
+    if (e) {
+      this.error = (e.error && e.error.error)
+        ? e.error.error
+        : 'Sorry, a server error occured. Please try again.';
+      return;
+    }
+  }
+
+  async connectToSocket() {
+    // await new Promise(res => setTimeout(res, 2500));
+    const connected = await this.wsService.connect().toPromise();
+    if (connected) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    return {
+      error: {
+        error: 'Your account was created but logging in failed. Please try logging in manually.',
+      },
+    };
   }
 
   passwordsMatch(g: FormGroup) {

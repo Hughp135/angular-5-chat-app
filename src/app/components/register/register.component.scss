@@ -1,5 +1,6 @@
 #centered-segment {
   top: 20vh;
+
   // height: 30vh;
   min-height: 380px;
   min-width: 472px;
@@ -13,4 +14,8 @@
 .icon {
   margin-bottom: 5px;
   cursor: pointer;
+}
+
+.ui.message.success {
+  text-align: center;
 }

@@ -2,13 +2,14 @@ import User from '../../models/user.model';
 import * as bcrypt from 'bcrypt';
 import * as Joi from 'joi';
 import { createJWT } from './jwt';
+import * as config from 'config';
 
 const schema = Joi.object().keys({
   username: Joi.string().required(),
   password: Joi.string().required(),
 });
 
-const TOKEN_EXPIRY_MINS = 120;
+const TOKEN_EXPIRY_MINS = <number>config.get('auth.token_expires_in');
 
 export default async function (req, res) {
   const validation = Joi.validate(req.body, schema);
@@ -38,6 +39,10 @@ export default async function (req, res) {
     return;
   }
 
+  returnJWTTokenAsCookie(user, res);
+}
+
+export function returnJWTTokenAsCookie(user, res) {
   // Successful login
   const token = createJWT({
     username: user.username,
@@ -48,5 +53,4 @@ export default async function (req, res) {
     .status(204)
     .cookie('jwt_token', token, { maxAge: TOKEN_EXPIRY_MINS * 60 * 1000, httpOnly: true })
     .end();
-
 }

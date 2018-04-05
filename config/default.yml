@@ -11,3 +11,6 @@ https:
   enable: false
   cert:
   key:
+
+auth:
+  token_expires_in: 120
