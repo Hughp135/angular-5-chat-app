@@ -94,11 +94,11 @@
     "typescript": "2.6.2",
     "uglifyjs-webpack-plugin": "^1.2.0",
     "winston": "^2.4.0",
-    "zone.js": "^0.8.20"
+    "zone.js": "^0.8.20",
+    "@ngrx/store-devtools": "^5.1.0"
   },
   "devDependencies": {
     "@angular/language-service": "5.2.9",
-    "@ngrx/store-devtools": "^5.1.0",
     "@types/chai-as-promised": "^7.1.0",
     "@types/cropperjs": "^1.1.2",
     "@types/jasmine": "~2.8.3",

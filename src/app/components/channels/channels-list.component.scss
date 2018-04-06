@@ -23,7 +23,7 @@ h5 {
     color: rgba(0, 0, 0, 0.93);
 
     &.inverted {
-      color: rgba(255, 255, 255, 0.801) !important;
+      color: rgba(255, 255, 255, 0.85) !important;
     }
   }
 
@@ -33,12 +33,12 @@ h5 {
 
     &.inverted {
       background: #666 !important;
-      color: rgba(255, 255, 255, 0.911) !important;
+      color: rgba(255, 255, 255, 0.85) !important;
     }
   }
 
   a.item.active {
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.85);
   }
 }
 
