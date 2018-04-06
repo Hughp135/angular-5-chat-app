@@ -71,7 +71,7 @@ describe('api/servers/post', () => {
     return supertest(app.listen(null))
       .post('/api/servers')
       .set('Cookie', `jwt_token=${token}`)
-      .send({name: 'asd', icon: 'badicon'})
+      .send({ name: 'asd', icon: 'badicon' })
       .expect(400, {
         error: 'Uploaded Image is too large or in an invalid format.',
       });
@@ -155,5 +155,21 @@ describe('api/servers/post', () => {
       .expect(200);
     const server: any = await Server.findOne().lean();
     expect(server).to.exist;
+    expect(server.image_url).to.be.undefined;
+  });
+  it('save server image_url if image is saved', async () => {
+    sandbox.stub(fs, 'writeFile')
+      .callsArgWith(3, false);
+    await supertest(app.listen(null))
+      .post('/api/servers')
+      .set('Cookie', `jwt_token=${token}`)
+      .send({
+        name: 'Automated Test Server',
+        icon: 'someIconHere',
+      })
+      .expect(200);
+    const server: any = await Server.findOne().lean();
+    expect(server).to.exist;
+    expect(server.image_url).to.equal(`img/server-icons/${server._id}.jpg`);
   });
 });

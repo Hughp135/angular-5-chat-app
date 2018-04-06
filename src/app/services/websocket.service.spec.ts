@@ -2,7 +2,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 
 import { WebsocketService } from './websocket.service';
 import { SocketIO, Server } from 'mock-socket';
-import { ErrorService } from './error.service';
+import { ErrorService, ErrorNotification } from './error.service';
 import {
   handlers,
   CHANNEL_LIST_HANDLER,
@@ -121,54 +121,110 @@ describe('WebsocketService', () => {
       done();
     }, 20);
   });
-  it('on disconnection, set reconnecting to true', async (done) => {
-    store.dispatch({
-      type: SET_CURRENT_SERVER,
-      payload: currentServer,
-    });
-    store.dispatch({
-      type: JOIN_CHANNEL,
-      payload: currentChannel,
-    });
-    await service.connect().toPromise();
-    mockServer.close();
-    setTimeout(async () => {
-      expect(service.reconnecting).toEqual(true);
-      done();
-    }, 20);
-  });
-  it('on reconnection, should emit join server/channel if in one', async (done) => {
-    store.dispatch({
-      type: SET_CURRENT_SERVER,
-      payload: currentServer,
-    });
-    store.dispatch({
-      type: JOIN_CHANNEL,
-      payload: currentChannel,
-    });
-    await service.connect().toPromise();
-    mockServer.close();
-
-    let joinedServer = false;
-    let joinedChannel = false;
-
-    setTimeout(async () => {
-      mockServer = new Server('http://localhost:6145');
-      mockServer.on('join-server', (id) => {
-        joinedServer = id;
+  describe('reconnecting', () => {
+    it('on disconnection, set reconnecting to true', async (done) => {
+      store.dispatch({
+        type: SET_CURRENT_SERVER,
+        payload: currentServer,
       });
-      mockServer.on('join-channel', (id) => {
-        joinedChannel = id;
+      store.dispatch({
+        type: JOIN_CHANNEL,
+        payload: currentChannel,
       });
       await service.connect().toPromise();
-      setTimeout(() => {
+      mockServer.close();
+      setTimeout(async () => {
+        expect(service.reconnecting).toEqual(true);
+        done();
+      }, 20);
+    });
+    it('on reconnection, should emit join server/channel if in one', async (done) => {
+      store.dispatch({
+        type: SET_CURRENT_SERVER,
+        payload: currentServer,
+      });
+      store.dispatch({
+        type: JOIN_CHANNEL,
+        payload: currentChannel,
+      });
+      await service.connect().toPromise();
+      mockServer.close();
+
+      let joinedServer = null;
+      let joinedChannel = null;
+
+      setTimeout(async () => {
+        mockServer = new Server('http://localhost:6145');
+        mockServer.on('join-server', (id) => {
+          joinedServer = id;
+        });
+        mockServer.on('join-channel', (id) => {
+          joinedChannel = id;
+        });
+        await service.connect().toPromise();
+
+        // After reconnect
         expect(service.connected).toEqual(true);
         expect(service.reconnecting).toEqual(false);
         expect(joinedServer).toEqual('123');
         expect(joinedChannel).toEqual('345');
         done();
       }, 20);
-    }, 20);
+    });
+    it('on reconnection, should hide the error message if shown', async (done) => {
+      store.dispatch({
+        type: SET_CURRENT_SERVER,
+        payload: currentServer,
+      });
+      store.dispatch({
+        type: JOIN_CHANNEL,
+        payload: currentChannel,
+      });
+
+      await service.connect().toPromise();
+      mockServer.close();
+
+      setTimeout(async () => {
+        // After disconnect
+        expect(service.errorMessage).toBeDefined();
+        expect(service.errorMessage.id).toEqual('lost-connection');
+        mockServer = new Server('http://localhost:6145');
+
+        await service.connect().toPromise();
+
+        // After reconnect
+        expect(service.errorMessage).toBeUndefined();
+        done();
+      }, 20);
+    });
+    it('on reconnection, should not hide error message if different id shown', async (done) => {
+      store.dispatch({
+        type: SET_CURRENT_SERVER,
+        payload: currentServer,
+      });
+      store.dispatch({
+        type: JOIN_CHANNEL,
+        payload: currentChannel,
+      });
+
+      await service.connect().toPromise();
+      mockServer.close();
+
+      setTimeout(async () => {
+        // After disconnect
+        expect(service.errorMessage).toBeDefined();
+        expect(service.errorMessage.id).toEqual('lost-connection');
+        mockServer = new Server('http://localhost:6145');
+        service.errorMessage = new ErrorNotification('test', 100, 'test1');
+
+        await service.connect().toPromise();
+
+        // After reconnect
+        expect(service.errorMessage).toBeDefined();
+        expect(service.errorMessage.id).toEqual('test1');
+        done();
+      }, 20);
+    });
   });
   it('creates errorService message on soft-error', async (done) => {
     mockServer.on('connection', server => {

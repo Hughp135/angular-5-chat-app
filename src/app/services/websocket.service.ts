@@ -15,6 +15,7 @@ export class WebsocketService {
   public socket: any;
   public connected = false;
   public reconnecting = false;
+  public errorMessage: ErrorNotification;
 
   constructor(
     private errorService: ErrorService,
@@ -22,6 +23,9 @@ export class WebsocketService {
     private router: Router,
     private appState: AppStateService,
   ) {
+    errorService.errorMessage.subscribe(error => {
+      this.errorMessage = error;
+    });
   }
 
   public connect() {
@@ -43,8 +47,11 @@ export class WebsocketService {
   }
 
   private addSocketListeners(subj: AsyncSubject<boolean>) {
-    this.socket.on('connect', (data: Object) => {
+    this.socket.on('connect', async (data: Object) => {
       if (this.reconnecting) {
+        if (this.errorMessage && this.errorMessage.id === 'lost-connection') {
+          this.errorService.errorMessage.next(undefined);
+        }
         this.reconnectToChannels();
       }
       this.connected = true;
@@ -56,8 +63,9 @@ export class WebsocketService {
       // SOCKET CONNECTION LOST
       this.errorService.errorMessage
         .next(new ErrorNotification(
-          'Lost connection to server. Please refresh the page.',
+          'Lost connection to server. Attempting to reconnect.',
           60000,
+          'lost-connection',
         ));
       subj.next(false);
       subj.complete();

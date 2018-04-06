@@ -14,14 +14,17 @@ export class ErrorNotificationComponent {
 
   constructor(private errorService: ErrorService) {
     errorService.errorMessage
-      .filter(notification => !!notification)
       .subscribe((notification: ErrorNotification) => {
-      this.errorNotification = { ...notification }; // clone
-      this.doAnimate(TransitionDirection.In);
-      setTimeout(() => {
-        this.hide(notification);
-      }, notification.duration);
-    });
+        if (!notification) {
+          this.errorNotification = undefined;
+          return;
+        }
+        this.errorNotification = { ...notification }; // clone
+        this.doAnimate(TransitionDirection.In);
+        setTimeout(() => {
+          this.hide(notification);
+        }, notification.duration);
+      });
 
   }
 

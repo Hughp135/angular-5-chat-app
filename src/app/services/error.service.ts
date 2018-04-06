@@ -7,10 +7,10 @@ export class ErrorNotification {
   message: string;
   id: string;
 
-  constructor(message: string, duration: number) {
+  constructor(message: string, duration: number, id?: string) {
     this.duration = duration;
     this.message = message;
-    this.id = Date.now().toString();
+    this.id = id || Date.now().toString();
   }
 }
 
