@@ -8,6 +8,18 @@ import * as path from 'path';
 import * as compression from 'compression';
 
 export const app = express();
+
+// Redirect all non-secure requests to HTTPS
+/* istanbul ignore next */
+app.use((req, res, next) => {
+  if (!req.secure && process.env.NODE_ENV === 'production') {
+    const secureUrl = 'https://' + req.headers['host'] + req.url;
+    res.writeHead(301, { 'Location': secureUrl });
+    res.end();
+  }
+  next();
+});
+
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());

@@ -14,6 +14,8 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
+Run `docker built -t imagename .` to build docker image (production only)
+
 ## Running unit tests
 
 Run `npm test` to execute the unit tests (front & back-end)
@@ -24,3 +26,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Project To-Do list
 Trello board at [https://trello.com/b/b5DeyaVi/chat-app](https://trello.com/b/b5DeyaVi/chat-app)
+
+## Deploying
+Run `docker-compose pull` to pull latest image (currently image is private)
+Run `docker-compose up` to launch the app in production

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ApiService } from '../../services/api.service';
@@ -10,6 +10,8 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/throw';
 import { ErrorService } from '../../services/error.service';
+import { WebsocketService } from '../../services/websocket.service';
+import { Router } from '@angular/router';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -17,6 +19,10 @@ describe('RegisterComponent', () => {
   let apiServiceMock: {
     get: jasmine.Spy,
     post: jasmine.Spy,
+  };
+  let router: Router;
+  const fakeWebSocketService = {
+    connect: jasmine.createSpy(),
   };
 
   beforeEach(async(() => {
@@ -26,10 +32,14 @@ describe('RegisterComponent', () => {
     };
     TestBed.configureTestingModule({
       declarations: [RegisterComponent],
-      imports: [ReactiveFormsModule, RouterTestingModule],
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule,
+      ],
       providers: [
         { provide: ApiService, useValue: apiServiceMock },
         ErrorService,
+        { provide: WebsocketService, useValue: fakeWebSocketService },
       ],
     })
       .compileComponents();
@@ -39,6 +49,23 @@ describe('RegisterComponent', () => {
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    router = TestBed.get(Router);
+    fakeWebSocketService.connect.and.callFake(() => ({
+      toPromise: () => {
+        return Promise.resolve(true);
+      },
+    }));
+    apiServiceMock.post.and.callFake((url: string, data) => {
+      if (url === 'register') {
+        return Observable.of({ success: true }).delay(1);
+      }
+      throw new Error('Invalid API Route');
+    });
+    spyOn(router, 'navigate');
+  });
+
+  afterEach(() => {
+    fakeWebSocketService.connect.calls.reset();
   });
 
   it('should create component', () => {
@@ -93,19 +120,12 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.valid).toEqual(false);
     expect(component.registerForm.errors).toEqual({ mismatch: true });
   });
-  it('POSTS to /register and succeeds', fakeAsync(() => {
+  it('POSTS to /register and succeeds', (done) => {
     const formData = {
       username: 'coolname',
       password: '123456',
       password_confirm: '123456',
     };
-
-    apiServiceMock.post.and.callFake((url: string, data) => {
-      if (url === 'register') {
-        return Observable.of({ success: true }).delay(1);
-      }
-      throw new Error('Invalid API Route');
-    });
 
     component.registerForm.patchValue(formData);
     component.submitForm();
@@ -115,10 +135,12 @@ describe('RegisterComponent', () => {
       formData,
     );
     // After fake API response
-    tick(150);
-    expect(component.submitting).toEqual(false);
-  }));
-  it('submitting form POST to /register fail', fakeAsync(() => {
+    setTimeout(() => {
+      expect(component.submitting).toEqual(false);
+      done();
+    }, 5);
+  });
+  it('submitting form POST to /register fail', (done) => {
     const formData = {
       username: 'badname',
       password: '123456',
@@ -130,7 +152,7 @@ describe('RegisterComponent', () => {
         return new Observable(subscriber => {
           setTimeout(() => {
             subscriber.error({ error: { error: 'Error thing' } });
-          }, 5);
+          }, 1);
         });
       }
       throw new Error('Invalid API Route');
@@ -144,11 +166,13 @@ describe('RegisterComponent', () => {
       formData,
     );
     // After fake API response
-    tick(50);
-    expect(component.submitting).toEqual(false);
-    expect(component.error).toEqual('Error thing');
-  }));
-  it('submitting form POST to /register fail with no message', fakeAsync(() => {
+    setTimeout(() => {
+      expect(component.submitting).toEqual(false);
+      expect(component.error).toEqual('Error thing');
+      done();
+    }, 5);
+  });
+  it('submitting form POST to /register fail with no message', (done) => {
     const formData = {
       username: 'badname',
       password: '123456',
@@ -160,7 +184,7 @@ describe('RegisterComponent', () => {
         return new Observable(subscriber => {
           setTimeout(() => {
             subscriber.error(new Error());
-          }, 5);
+          }, 1);
         });
       }
       throw new Error('Invalid API Route');
@@ -173,9 +197,51 @@ describe('RegisterComponent', () => {
       'register',
       formData,
     );
-    tick(50);
     // After fake API response
-    expect(component.submitting).toEqual(false);
-    expect(component.error).toEqual('Sorry, a server error occured. Please try again.');
-  }));
+    setTimeout(() => {
+      expect(component.submitting).toEqual(false);
+      expect(component.error).toEqual('Sorry, a server error occured. Please try again.');
+      done();
+    }, 5);
+  });
+  it('After successful registration, redirects to /', (done) => {
+    const formData = {
+      username: 'coolname',
+      password: '123456',
+      password_confirm: '123456',
+    };
+
+    component.registerForm.patchValue(formData);
+    component.submitForm();
+    // After fake API response
+    setTimeout(() => {
+      expect(component.success).toEqual(true);
+      expect(component.submitting).toEqual(false);
+      expect(router.navigate).toHaveBeenCalledWith(['/']);
+      done();
+    }, 5);
+  });
+  it('After successful registration, and connecting fails, display error', (done) => {
+    fakeWebSocketService.connect.and.callFake(() => ({
+      toPromise: () => {
+        return Promise.resolve(false);
+      },
+    }));
+    const formData = {
+      username: 'coolname',
+      password: '123456',
+      password_confirm: '123456',
+    };
+
+    component.registerForm.patchValue(formData);
+    component.submitForm();
+    // After fake API response
+    setTimeout(() => {
+      expect(component.success).toEqual(true);
+      expect(component.error).toEqual('Your account was created but logging in failed. Please try logging in manually.');
+      expect(component.submitting).toEqual(false);
+      expect(router.navigate).not.toHaveBeenCalled();
+      done();
+    }, 5);
+  });
 });

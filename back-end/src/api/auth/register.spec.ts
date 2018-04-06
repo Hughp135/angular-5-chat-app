@@ -5,12 +5,14 @@ import * as supertest from 'supertest';
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import * as winston from 'winston';
+import * as setCookie from 'set-cookie-parser';
 
 import { app } from '../../api-server';
 
 import User from '../../models/user.model';
+import { verifyJWT } from './jwt';
 
-// Disable winston logging during test sin ce it's annoying.
+// Disable winston logging during test as it's annoying.
 winston.configure({ transports: [] });
 
 // tslint:disable:no-unused-expression
@@ -98,12 +100,28 @@ describe('api/auth/register', () => {
         password: '123456',
         password_confirm: '123456',
       })
-      .expect(200, { success: true });
+      .expect(204);
 
     const user: any = await User.findOne().lean();
     expect(user).to.exist;
     expect(user.username).to.equal('123');
     expect(user.password).not.to.be.empty; // password should be hashed
+  });
+  it('should return a token', async () => {
+    const result = await supertest(app.listen(null))
+      .post('/api/register')
+      .send({
+        username: '123',
+        password: '123456',
+        password_confirm: '123456',
+      })
+      .expect(204)
+      .then(async res => {
+        const cookies = setCookie.parse(res);
+        const jwtCookie = cookies.find((item) => item.name === 'jwt_token');
+        expect(jwtCookie).to.exist;
+        expect(jwtCookie.value).to.be.a('string').that.is.not.empty;
+      });
   });
   it('password should be hashed', async () => {
     const hashFunc = sandbox.spy(bcrypt, 'hash');
@@ -114,7 +132,7 @@ describe('api/auth/register', () => {
         password: '123456',
         password_confirm: '123456',
       })
-      .expect(200, { success: true });
+      .expect(204);
     expect(hashFunc).to.have.been.calledOnce;
 
     const user: any = await User.findOne().lean();
