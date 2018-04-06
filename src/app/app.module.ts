@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
-// import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ShContextMenuModule } from 'ng2-right-click-menu';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -77,9 +77,9 @@ import { ChannelSettingsService } from './services/channel-settings.service';
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(reducers),
-    // StoreDevtoolsModule.instrument({
-    //   maxAge: 10,
-    // }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 10,
+    }),
     ShContextMenuModule,
   ],
   providers: [

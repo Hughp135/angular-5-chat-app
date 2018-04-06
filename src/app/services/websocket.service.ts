@@ -7,17 +7,20 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { AppStateService } from './app-state.service';
 
 @Injectable()
 export class WebsocketService {
   public url = environment.socket_url;
   public socket: any;
   public connected = false;
+  public reconnecting = false;
 
   constructor(
     private errorService: ErrorService,
     private store: Store<AppState>,
     private router: Router,
+    private appState: AppStateService,
   ) {
   }
 
@@ -41,20 +44,27 @@ export class WebsocketService {
 
   private addSocketListeners(subj: AsyncSubject<boolean>) {
     this.socket.on('connect', (data: Object) => {
+      if (this.reconnecting) {
+        this.reconnectToChannels();
+      }
       this.connected = true;
+      this.reconnecting = false;
       subj.next(true);
       subj.complete();
     });
     this.socket.on('disconnect', (reason: string) => {
       // SOCKET CONNECTION LOST
       this.errorService.errorMessage
-        .next(new ErrorNotification('Lost connection to server. Please refresh the page.', 60000));
+        .next(new ErrorNotification(
+          'Lost connection to server. Please refresh the page.',
+          60000,
+        ));
       subj.next(false);
       subj.complete();
       this.connected = false;
+      this.reconnecting = true;
     });
     this.socket.on('error', (data: Object) => {
-      console.warn('Websocket Error', data);
       /* istanbul ignore next  */
       if (data === 'No token provided' || data === 'Invalid token' || data === 'User not found') {
         subj.next(false);
@@ -95,5 +105,14 @@ export class WebsocketService {
         }
       }, timeOut);
     });
+  }
+
+  private reconnectToChannels() {
+    if (this.appState.currentServer && this.appState.currentServer._id !== 'friends') {
+      this.socket.emit('join-server', this.appState.currentServer._id);
+    }
+    if (this.appState.currentChannel) {
+      this.socket.emit('join-channel', this.appState.currentChannel._id);
+    }
   }
 }

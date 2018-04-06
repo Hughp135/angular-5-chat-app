@@ -17,16 +17,17 @@ import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../reducers/reducers';
 import { AppState } from '../reducers/app.states';
 import ChatServer from '../../../shared-interfaces/server.interface';
-import { SET_CURRENT_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST,
-  SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE } from '../reducers/current-server.reducer';
+import {
+  SET_CURRENT_SERVER, SET_CHANNEL_LIST, SERVER_SET_USER_LIST,
+  SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE,
+} from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { SET_FRIEND_REQUESTS } from '../reducers/friends-reducer';
-
-// tslint:disable:no-unused-expression
+import { AppStateService } from './app-state.service';
 
 describe('WebsocketService', () => {
   let injector: TestBed;
@@ -36,12 +37,23 @@ describe('WebsocketService', () => {
   (window as any).MockSocketIo = SocketIO;
   let store: Store<AppState>;
   let router: Router;
+  const currentServer: ChatServer = {
+    _id: '123',
+    name: 'server',
+    owner_id: 'asd',
+  };
+  const currentChannel: ChatChannel = {
+    _id: '345',
+    name: 'channel',
+    server_id: '123',
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         WebsocketService,
         ErrorService,
+        AppStateService,
       ],
       imports: [
         StoreModule.forRoot(reducers),
@@ -54,24 +66,6 @@ describe('WebsocketService', () => {
     mockServer = new Server('http://localhost:6145');
     router = injector.get(Router);
     store = injector.get(Store);
-    const currentServer: ChatServer = {
-      _id: '123',
-      name: 'server',
-      owner_id: 'asd',
-    };
-    const currentChannel: ChatChannel = {
-      _id: '345',
-      name: 'channel',
-      server_id: '123',
-    };
-    store.dispatch({
-      type: SET_CURRENT_SERVER,
-      payload: currentServer,
-    });
-    store.dispatch({
-      type: JOIN_CHANNEL,
-      payload: currentChannel,
-    });
     spyOn(store, 'dispatch').and.callThrough();
   });
   afterEach(() => {
@@ -81,7 +75,7 @@ describe('WebsocketService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
     expect(service.connected).toEqual(false);
-    expect(service.socket).toBeUndefined;
+    expect(service.socket).toBeUndefined();
   });
   it('Websocket connection fails with no token error callback', async () => {
     spyOn(router, 'navigate');
@@ -127,17 +121,75 @@ describe('WebsocketService', () => {
       done();
     }, 20);
   });
+  it('on disconnection, set reconnecting to true', async (done) => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: currentServer,
+    });
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: currentChannel,
+    });
+    await service.connect().toPromise();
+    mockServer.close();
+    setTimeout(async () => {
+      expect(service.reconnecting).toEqual(true);
+      done();
+    }, 20);
+  });
+  it('on reconnection, should emit join server/channel if in one', async (done) => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: currentServer,
+    });
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: currentChannel,
+    });
+    await service.connect().toPromise();
+    mockServer.close();
+
+    let joinedServer = false;
+    let joinedChannel = false;
+
+    setTimeout(async () => {
+      mockServer = new Server('http://localhost:6145');
+      mockServer.on('join-server', (id) => {
+        joinedServer = id;
+      });
+      mockServer.on('join-channel', (id) => {
+        joinedChannel = id;
+      });
+      await service.connect().toPromise();
+      setTimeout(() => {
+        expect(service.connected).toEqual(true);
+        expect(service.reconnecting).toEqual(false);
+        expect(joinedServer).toEqual('123');
+        expect(joinedChannel).toEqual('345');
+        done();
+      }, 20);
+    }, 20);
+  });
   it('creates errorService message on soft-error', async (done) => {
     mockServer.on('connection', server => {
       mockServer.emit('soft-error', 'test message 1');
     });
     errorService.errorMessage.take(1).subscribe((val) => {
+      // After connection
       expect(val.message).toEqual('test message 1');
       done();
     });
     await service.connect().toPromise();
   });
   it('chat-message dispatches NEW_CHAT_MESSAGE if channel ID matches current channel', () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: currentServer,
+    });
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: currentChannel,
+    });
     const message: ChatMessage = {
       message: 'hi thar',
       channel_id: '345',
@@ -224,6 +276,14 @@ describe('WebsocketService', () => {
     });
   });
   it('server-user-list', () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: currentServer,
+    });
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: currentChannel,
+    });
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback('hi');
@@ -236,6 +296,14 @@ describe('WebsocketService', () => {
     });
   });
   it('update-user-list', () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: currentServer,
+    });
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: currentChannel,
+    });
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback('hi');
@@ -262,9 +330,10 @@ describe('WebsocketService', () => {
   it('awaitNextEvent', async () => {
     service.socket = {
       once: (eventName, cb) => cb('some response'),
+      removeListener: jasmine.createSpy(),
     };
     const result = await service.awaitNextEvent('test', 1);
-    expect(service.socket.removeListener).not.toHaveBeenCalled;
+    expect(service.socket.removeListener).not.toHaveBeenCalled();
     expect(result).toEqual('some response');
   });
   it('awaitNextEvent timesout if response not in time', async () => {
