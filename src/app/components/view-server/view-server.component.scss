@@ -12,7 +12,6 @@
   min-height: 50px;
   border-bottom: 1px solid rgb(196, 196, 196);
   padding: 15px 8px 10px 13px;
-  cursor: pointer;
 
   h3 {
     font-size: 15px;
@@ -20,9 +19,10 @@
     margin: 0;
   }
 
-  i {    
+  i {
     position: absolute;
     right: 3px;
     top: 15px;
+    cursor: pointer;
   }
 }

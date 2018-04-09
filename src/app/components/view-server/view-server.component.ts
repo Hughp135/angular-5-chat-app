@@ -11,7 +11,8 @@ import { ChatChannel } from 'shared-interfaces/channel.interface';
   styleUrls: ['./view-server.component.scss', '../../styles/layout.scss'],
 })
 export class ViewServerComponent implements OnInit {
-  public currentServer: Observable<ChatServer>;
+  public currentServerObs: Observable<ChatServer>;
+  public currentServer: ChatServer;
   public currentChatChannel: Observable<ChatChannel>;
 
   constructor(
@@ -20,8 +21,9 @@ export class ViewServerComponent implements OnInit {
   ) {
     this.route.data
       .subscribe((data) => {
-        this.currentServer = data.state.server;
+        this.currentServerObs = data.state.server;
         this.currentChatChannel = data.state.channel;
+        data.state.server.subscribe(server => { this.currentServer = server; });
       });
   }
 

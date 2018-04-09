@@ -57,7 +57,7 @@ describe('ViewServerComponent', () => {
 
   it('initial state', async () => {
     expect(component).toBeTruthy();
-    const servr = await component.currentServer
+    const servr = await component.currentServerObs
       .take(1)
       .toPromise();
     const chan = await component.currentChatChannel
