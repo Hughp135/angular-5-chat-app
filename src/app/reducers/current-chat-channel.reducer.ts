@@ -22,7 +22,7 @@ export function currentChatChannelReducer(state: ChatChannel, action) {
         messages: newMessages,
       };
     case CHAT_HISTORY:
-      if (action.payload.channel_id === state._id) {
+      if (state && action.payload.channel_id === state._id) {
         let messages: ChatMessage[] = action.payload.messages;
         if (state.messages) {
           messages = state.messages.concat(messages).sort((a, b) => {

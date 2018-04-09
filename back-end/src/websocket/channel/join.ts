@@ -32,7 +32,7 @@ export async function joinChannel(io: any) {
 
       // NORMAL SERVER CHANNEL
       if (channel.getChannelType() === SERVER_CHANNEL) {
-        if ( !await canJoinServer(user, channel.server_id)) {
+        if (!await canJoinServer(user, channel.server_id)) {
           return socket.emit('soft-error', 'You don\'t have permission to join this server.');
         }
         await leaveOtherChannels(socket);

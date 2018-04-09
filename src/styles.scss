@@ -64,10 +64,12 @@ input.ng-invalid.ng-dirty.ng-touched {
 }
 
 .sh-context--container ul {
-  padding: 7px !important;
+  padding: 7px 0 !important;
 }
 
 .sh-menu-item {
+  transition: none !important;
+
   .remove-user.icons {
     margin-left: -3px !important;
     margin-right: 3px !important;

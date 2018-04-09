@@ -68,7 +68,7 @@ async function saveServerIcon(server, icon) {
       async (e) => {
         if (e) {
           log('error', 'Error Writing Server Image File:', server, e);
-          resolve(false);
+          return resolve(false);
         }
         server.image_url = `img/server-icons/${server._id}.jpg`;
         await server.save();

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
-// import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ShContextMenuModule } from 'ng2-right-click-menu';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -42,6 +42,15 @@ import { AddFriendComponent } from './components/friend-requests/add-friend/add-
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { DmchannelListComponent } from './components/friends/dmchannel-list/dmchannel-list.component';
 import { ChannelSettingsService } from './services/channel-settings.service';
+import { environment } from '../environments/environment';
+
+
+const optionalImports = [];
+if (!environment.production) {
+  optionalImports.push(StoreDevtoolsModule.instrument({
+    maxAge: 10,
+  }));
+}
 
 @NgModule({
   declarations: [
@@ -77,10 +86,8 @@ import { ChannelSettingsService } from './services/channel-settings.service';
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(reducers),
-    // StoreDevtoolsModule.instrument({
-    //   maxAge: 10,
-    // }),
     ShContextMenuModule,
+    ...optionalImports,
   ],
   providers: [
     SettingsService,
