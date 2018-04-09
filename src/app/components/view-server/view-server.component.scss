@@ -6,6 +6,19 @@
   }
 }
 
+.ui.dropdown {
+  width: 100%;
+  .menu {
+    right: 10px;
+    left: 10px;
+    .item {
+      &.red {
+        color:#7e0606 !important;
+      }
+    }
+  }
+}
+
 .server-title {
   // margin: -15px -15px 20px -15px;
   overflow: hidden;

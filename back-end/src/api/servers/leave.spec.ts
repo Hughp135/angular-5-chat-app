@@ -39,14 +39,14 @@ describe('api/server/leave', () => {
   });
   it('returns 401 if not logged in', async () => {
     return supertest(app.listen(null))
-      .get('/api/leave-server/123')
+      .post('/api/leave-server/123')
       .expect(401, {
         error: 'You must be logged in.',
       });
   });
   it('returns 401 if user does not exist', async () => {
     return supertest(app.listen(null))
-      .get('/api/leave-server/123')
+      .post('/api/leave-server/123')
       .set('Cookie', `jwt_token=${invalidToken}`)
       .expect(401);
   });
@@ -62,7 +62,7 @@ describe('api/server/leave', () => {
     user.joined_servers = [server._id, server2._id];
     await user.save();
     return supertest(app.listen(null))
-      .get(`/api/leave-server/${server._id}`)
+      .post(`/api/leave-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
       .expect(204)
       .then(async () => {
@@ -82,7 +82,7 @@ describe('api/server/leave', () => {
     user.joined_servers = [server._id, server2._id];
     await user.save();
     return supertest(app.listen(null))
-      .get(`/api/leave-server/${server._id}`)
+      .post(`/api/leave-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
       .expect(400, {
         error: 'You cannot leave your own server.',

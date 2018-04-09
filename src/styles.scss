@@ -38,8 +38,9 @@ input.ng-invalid.ng-dirty.ng-touched {
 
 .ui.message.error {
   text-align: center;
-  box-shadow: 0 0 0 1px grey !important;
-  background-color: #750d0d !important;
+  box-shadow: none !important;
+  background-color: #bd3e3e !important;
+  border: none;
   border-radius: 0;
   padding: 10px 15px;
   color: rgba(255, 255, 255, 0.9) !important;

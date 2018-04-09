@@ -19,6 +19,6 @@ router.post('/servers', authMiddleware, createServer);
 router.get('/channels', authMiddleware, getChannels);
 router.get('/servers', authMiddleware, getServers);
 router.get('/users/:username', authMiddleware, getUser);
-router.get('/leave-server/:id', authMiddleware, leaveServer);
+router.post('/leave-server/:id', authMiddleware, leaveServer);
 
 export default router;

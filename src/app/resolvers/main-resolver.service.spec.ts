@@ -61,7 +61,7 @@ describe('MainResolverService', () => {
     const mockMeResponse: { user: Me } = {
       user: { _id: '345', username: 'myname' },
     };
-    service.resolve(null, null);
+    service.resolve(null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush(mockResponse);
     const mecall = httpMock.expectOne(`${apiService.BASE_URL}users/me`);
@@ -80,7 +80,7 @@ describe('MainResolverService', () => {
     const mockMeResponse: { user: Me } = {
       user: { _id: '345', username: 'myname' },
     };
-    service.resolve(null, null);
+    service.resolve(null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     const mecall = httpMock.expectOne(`${apiService.BASE_URL}users/me`);
     called.flush(mockResponse);
@@ -95,13 +95,13 @@ describe('MainResolverService', () => {
     const mockResponse: { servers: ChatServer[] } = {
       servers: [{ name: 'server1', _id: '123', owner_id: '345' }],
     };
-    service.resolve(null, null);
+    service.resolve(null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush(mockResponse);
     tick(1);
   }));
   it('fails to get server list and redirects to login on 401', fakeAsync(() => {
-    service.resolve(null, null);
+    service.resolve(null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush('Error', { status: 401, statusText: 'Unauthorized' });
     const mecall = httpMock.expectOne(`${apiService.BASE_URL}users/me`);
@@ -112,7 +112,7 @@ describe('MainResolverService', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   }));
   it('fails to get server list and shows error for any other code', fakeAsync(() => {
-    service.resolve(null, null);
+    service.resolve(null);
     const called = httpMock.expectOne(`${apiService.BASE_URL}servers`);
     called.flush('Error', { status: 500, statusText: 'Unauthorized' });
     const mockMeResponse: { user: Me } = {
