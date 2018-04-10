@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { Observable } from 'rxjs/Observable';
@@ -8,16 +8,19 @@ import { ApiService } from '../../services/api.service';
 import { ErrorService, ErrorNotification } from '../../services/error.service';
 import { Router } from '@angular/router';
 import { MainResolver } from '../../resolvers/main-resolver.service';
+import { Me } from 'shared-interfaces/user.interface';
 
 @Component({
   selector: 'app-view-server',
   templateUrl: './view-server.component.html',
   styleUrls: ['./view-server.component.scss', '../../styles/layout.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewServerComponent implements OnInit {
   public currentServerObs: Observable<ChatServer>;
   public currentServer: ChatServer;
   public currentChatChannel: Observable<ChatChannel>;
+  public me: Me;
 
   constructor(
     public settingsService: SettingsService,
@@ -32,6 +35,7 @@ export class ViewServerComponent implements OnInit {
         this.currentServerObs = data.state.server;
         this.currentChatChannel = data.state.channel;
         data.state.server.subscribe(server => { this.currentServer = server; });
+        data.state.me.subscribe(me => this.me = me);
       });
   }
 
@@ -48,5 +52,9 @@ export class ViewServerComponent implements OnInit {
         this.errorService.errorMessage
           .next(new ErrorNotification(error, 5000));
       });
+  }
+
+  get isOwner() {
+    return this.me._id === this.currentServer.owner_id;
   }
 }

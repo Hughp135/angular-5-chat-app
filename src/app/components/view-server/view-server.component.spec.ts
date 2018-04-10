@@ -36,6 +36,7 @@ describe('ViewServerComponent', () => {
       state: {
         channel: Observable.of(channel),
         server: Observable.of(server),
+        me: Observable.of({ _id: 'abc' }),
       },
     }),
   };
