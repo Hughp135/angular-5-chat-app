@@ -9,6 +9,7 @@
       [(isOpen)]="serverDropdownOpen">
 
       <div class="server-title"
+         (contextmenu)="onRightClickServerTitle($event)"
         [class.active]="serverDropdownOpen"
         *ngIf="currentServer">
         <h3 class="ui header"
@@ -22,13 +23,13 @@
         suiDropdownMenu>
         <div *ngIf="!isOwner"
           class="item red"
-          (click)="leaveServerConfirm()">
+          (click)="showLeaveServerConfirm()">
           <i class="minus icon"></i>
           Leave Server
         </div>
         <div *ngIf="isOwner"
           class="item red"
-          (click)="deleteServer()">
+          (click)="showDeleteServerConfirm()">
           <i class="trash icon"></i>
           Delete Server
         </div>

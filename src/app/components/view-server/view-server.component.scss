@@ -35,7 +35,6 @@
     right: 5px;
     top: 55px;
     left: 25px;
-    border-radius: 0;
 
     .item {
       &.red {
@@ -46,7 +45,6 @@
 }
 
 .server-title {
-  // margin: -15px -15px 20px -15px;
   overflow: hidden;
   min-height: 50px;
   border-bottom: 1px solid rgb(196, 196, 196);

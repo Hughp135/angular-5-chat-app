@@ -43,11 +43,11 @@ describe('ViewServerComponent', () => {
   };
 
   const apiServiceMock = {
-    post: jasmine.createSpy().and.callFake(url => {
-      if (url === 'leave-server/error-generic') {
+    post: jasmine.createSpy().and.callFake((url: string) => {
+      if (url.includes('error-generic')) {
         const error = { status: 500 };
         return Observable.throw(error);
-      } else if (url === 'leave-server/error-with-message') {
+      } else if (url.includes('error-with-message')) {
         const error = { status: 400, error: { error: 'test' } };
         return Observable.throw(error);
       }
@@ -109,6 +109,10 @@ describe('ViewServerComponent', () => {
     expect(servr).toEqual(server);
     expect(chan).toEqual(channel);
   });
+  it('onRightClickServer opens menu', () => {
+    component.onRightClickServerTitle(new Event('contextmenu'));
+    expect(component.serverDropdownOpen).toEqual(true);
+  });
   it('leaves the server and calls main resolver', async () => {
     component.leaveServer();
     expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
@@ -140,6 +144,42 @@ describe('ViewServerComponent', () => {
     component.leaveServer();
     expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
     expect(apiServiceMock.post).toHaveBeenCalledWith('leave-server/error-with-message', {});
+    await new Promise(res => setTimeout(res, 1));
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(resolveSpy).not.toHaveBeenCalled();
+    expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
+  });
+  it('deletes the server and calls main resolver', async () => {
+    component.deleteServer();
+    expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
+    expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/345', {});
+    await new Promise(res => setTimeout(res, 1));
+    expect(router.navigate).toHaveBeenCalledTimes(1);
+    expect(router.navigate).toHaveBeenCalledWith(['/']);
+    expect(resolveSpy).toHaveBeenCalledTimes(1);
+    expect(resolveSpy).toHaveBeenCalled();
+  });
+  it('delete server error with generic message', async () => {
+    component.currentServer = {
+      _id: 'error-generic',
+      name: 'test',
+    };
+    component.deleteServer();
+    expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
+    expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/error-generic', {});
+    await new Promise(res => setTimeout(res, 1));
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(resolveSpy).not.toHaveBeenCalled();
+    expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
+  });
+  it('delete server error with specific message', async () => {
+    component.currentServer = {
+      _id: 'error-with-message',
+      name: 'test',
+    };
+    component.deleteServer();
+    expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
+    expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/error-with-message', {});
     await new Promise(res => setTimeout(res, 1));
     expect(router.navigate).not.toHaveBeenCalled();
     expect(resolveSpy).not.toHaveBeenCalled();

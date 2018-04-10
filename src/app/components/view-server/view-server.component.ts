@@ -23,6 +23,7 @@ export class ViewServerComponent implements OnInit {
   public currentServer: ChatServer;
   public currentChatChannel: Observable<ChatChannel>;
   public me: Me;
+  public serverDropdownOpen = false;
 
   constructor(
     public settingsService: SettingsService,
@@ -45,8 +46,13 @@ export class ViewServerComponent implements OnInit {
   ngOnInit() {
   }
 
+  public onRightClickServerTitle(event) {
+    event.preventDefault();
+    this.serverDropdownOpen = true;
+  }
+
   /* istanbul ignore next */
-  leaveServerConfirm() {
+  showLeaveServerConfirm() {
     this.modalService
       .open(new ConfirmModal(
         'Leave Server',
@@ -65,6 +71,32 @@ export class ViewServerComponent implements OnInit {
         this.mainResolver.resolve(this.route.snapshot);
       }, response => {
         const error = response.error ? response.error.error : 'Unable to leave server.';
+        this.errorService.errorMessage
+          .next(new ErrorNotification(error, 5000));
+      });
+  }
+
+  /* istanbul ignore next */
+  showDeleteServerConfirm() {
+    this.modalService
+      .open(new ConfirmModal(
+        'Delete Server',
+        'Are you sure you want to delete this server? This is permanent.',
+        'red',
+        'Delete Server',
+      ))
+      .onApprove(() => this.deleteServer())
+      .onDeny(() => { });
+  }
+
+  deleteServer() {
+    this.apiService.post(`delete-server/${this.currentServer._id}`, {})
+      .subscribe((data) => {
+        this.router.navigate(['/']);
+        this.mainResolver.resolve(this.route.snapshot);
+      }, response => {
+        const error = response.error && response.error.error ? response.error.error
+          : 'Failed to delete server.';
         this.errorService.errorMessage
           .next(new ErrorNotification(error, 5000));
       });
