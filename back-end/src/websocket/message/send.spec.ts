@@ -10,6 +10,7 @@ import { SendMessageRequest } from '../../../../shared-interfaces/message.interf
 import serverModel from '../../models/server.model';
 import userModel from '../../models/user.model';
 import * as config from 'config';
+import { ObjectId } from 'bson';
 
 const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
 const expect = chai.expect;
@@ -231,6 +232,24 @@ describe('websocket message/send', () => {
     async function onComplete() {
       expect(result).to.have.been
         .calledWith('soft-error', 'Invalid message length');
+      done();
+    }
+    sendMessage(io);
+  });
+  it('do not send if channel does not exist', (done) => {
+    const messageRequest: SendMessageRequest = {
+      message: 'hi thar',
+      channel_id: new ObjectId().toString(),
+      server_id: 'friends',
+    };
+    const { io, socket } = createFakeSocketEvent('send-message', messageRequest,
+      { user_id: user._id, username: user.username },
+      onComplete, result);
+    sandbox.spy(ChatMessage, 'create');
+    async function onComplete() {
+      expect(result).to.have.been
+        .calledWith('soft-error',  'This channel no longer exists.');
+      await  expect(ChatMessage.create).to.not.have.been.called;
       done();
     }
     sendMessage(io);
