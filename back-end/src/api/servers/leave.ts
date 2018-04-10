@@ -2,6 +2,7 @@ import Server from '../../models/server.model';
 import User from '../../models/user.model';
 
 export async function leaveServer(req, res) {
+  const user: any = await User.findById(req.claim.user_id);
   const server: any = await Server.findById(req.params.id);
 
   if (server.owner_id.toString() === req.claim.user_id) {
