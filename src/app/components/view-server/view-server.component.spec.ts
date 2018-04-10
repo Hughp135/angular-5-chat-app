@@ -13,6 +13,7 @@ import { ApiService } from '../../services/api.service';
 import { ErrorService } from '../../services/error.service';
 import { MainResolver } from '../../resolvers/main-resolver.service';
 import { Router } from '@angular/router';
+import { SuiModalService, SuiComponentFactory } from 'ng2-semantic-ui/dist';
 
 describe('ViewServerComponent', () => {
   let component: ViewServerComponent;
@@ -56,12 +57,20 @@ describe('ViewServerComponent', () => {
 
   const resolveSpy = jasmine.createSpy();
 
+  const fakeModalService = {
+    open: () => ({
+      onApprove: (cb) => cb(),
+    }),
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ViewServerComponent],
       providers: [
         SettingsService,
         ErrorService,
+        { provide: SuiModalService, useValue: fakeModalService },
+        SuiComponentFactory,
         { provide: ActivatedRoute, useValue: fakeRoute },
         { provide: ApiService, useValue: apiServiceMock },
         { provide: MainResolver, useValue: { resolve: resolveSpy } },

@@ -1,0 +1,12 @@
+<div class="header">{{ modal.context.title }}</div>
+<div class="content">
+  <p>{{ modal.context.question }}</p>
+</div>
+<div class="actions">
+  <button class="ui basic tertiary button"
+    (click)="modal.deny(undefined)">Cancel</button>
+  <button class="ui button"
+    [ngClass]="modal.context.confirmButtonClass"
+    (click)="modal.approve(undefined)"
+    autofocus>{{ modal.context.confirmButtonText }}</button>
+</div>

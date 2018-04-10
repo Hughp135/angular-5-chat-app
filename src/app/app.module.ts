@@ -43,6 +43,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { DmchannelListComponent } from './components/friends/dmchannel-list/dmchannel-list.component';
 import { ChannelSettingsService } from './services/channel-settings.service';
 import { environment } from '../environments/environment';
+import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 
 
 const optionalImports = [];
@@ -73,10 +74,12 @@ if (!environment.production) {
     AddFriendComponent,
     AutofocusDirective,
     DmchannelListComponent,
+    ConfirmModalComponent,
   ],
   entryComponents: [
     CreateServerComponent,
     AddFriendComponent,
+    ConfirmModalComponent,
   ],
   imports: [
     SuiModule,

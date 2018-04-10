@@ -68,7 +68,7 @@ async function createUsersInServers(serverIds) {
 }
 
 async function createServers(owner_id) {
-  const servers = [...Array(5)]
+  const servers = [...Array(10)]
     .map((x, index) => {
       return new Server({
         name: `Server ${index + 1}`,
@@ -88,7 +88,7 @@ async function createChannels(serverIds) {
           server_id: server_id,
         }),
       ),
-    ).reduce((a, b) => a.concat(b));
+  ).reduce((a, b) => a.concat(b));
 
   return await Promise.all(promises);
 }

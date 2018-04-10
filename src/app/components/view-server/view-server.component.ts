@@ -9,6 +9,8 @@ import { ErrorService, ErrorNotification } from '../../services/error.service';
 import { Router } from '@angular/router';
 import { MainResolver } from '../../resolvers/main-resolver.service';
 import { Me } from 'shared-interfaces/user.interface';
+import { SuiModalService } from 'ng2-semantic-ui';
+import { ConfirmModal } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-view-server',
@@ -29,6 +31,7 @@ export class ViewServerComponent implements OnInit {
     private errorService: ErrorService,
     private router: Router,
     private mainResolver: MainResolver,
+    private modalService: SuiModalService,
   ) {
     this.route.data
       .subscribe((data) => {
@@ -40,6 +43,19 @@ export class ViewServerComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  /* istanbul ignore next */
+  leaveServerConfirm() {
+    this.modalService
+      .open(new ConfirmModal(
+        'Leave Server',
+        'Are you sure you want to leave this server?',
+        'red',
+        'Leave Server',
+      ))
+      .onApprove(() => this.leaveServer())
+      .onDeny(() => { });
   }
 
   leaveServer() {
