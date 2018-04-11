@@ -3,16 +3,43 @@
   <div id="sidebar-menu"
     class="ui visible left vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-    <div class="server-title">
-      <h3 class="ui header" [class.inverted]="settingsService.invertedTheme">
-        {{ (currentServer| async).name }}
-      </h3>
-      <i class="vertical ellipsis icon"></i>
+
+    <div class="ui dropdown"
+      suiDropdown
+      [(isOpen)]="serverDropdownOpen">
+
+      <div class="server-title"
+         (contextmenu)="onRightClickServerTitle($event)"
+        [class.active]="serverDropdownOpen"
+        *ngIf="currentServer">
+        <h3 class="ui header"
+          [class.inverted]="settingsService.invertedTheme">
+          {{ currentServer.name }}
+        </h3>
+        <i class="vertical ellipsis icon"></i>
+      </div>
+
+      <div class="menu"
+        suiDropdownMenu>
+        <div *ngIf="!isOwner"
+          class="item red"
+          (click)="showLeaveServerConfirm()">
+          <i class="minus icon"></i>
+          Leave Server
+        </div>
+        <div *ngIf="isOwner"
+          class="item red"
+          (click)="showDeleteServerConfirm()">
+          <i class="trash icon"></i>
+          Delete Server
+        </div>
+      </div>
     </div>
 
+
     <div class="item"
-      *ngIf="currentServer | async">
-      <app-channels-list [currentServer]="(currentServer | async)"
+      *ngIf="currentServer">
+      <app-channels-list [currentServer]="(currentServerObs | async)"
         [currentChatChannel]="(currentChatChannel | async)">
       </app-channels-list>
     </div>
@@ -34,6 +61,7 @@
   </div>
 
 </div>
+
 <!-- /LEFT MAIN SIDEBAR -->
 
 <!-- MAIN CONTENT SECTION -->
@@ -48,13 +76,13 @@
 
 <!-- RIGHT SIDEBAR -->
 <div id="sidebar-container"
-  *ngIf="currentServer | async">
+  *ngIf="currentServer">
   <div class="ui visible right vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
     <div class="item">
       <h4>Members</h4>
     </div>
-    <app-user-list [currentServer]="(currentServer | async)"></app-user-list>
+    <app-user-list [currentServer]="(currentServerObs | async)"></app-user-list>
   </div>
 </div>
 <!-- /RIGHT SIDEBAR -->

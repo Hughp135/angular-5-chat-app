@@ -68,7 +68,7 @@ async function createUsersInServers(serverIds) {
 }
 
 async function createServers(owner_id) {
-  const servers = [...Array(25)]
+  const servers = [...Array(10)]
     .map((x, index) => {
       return new Server({
         name: `Server ${index + 1}`,
@@ -76,6 +76,11 @@ async function createServers(owner_id) {
         image_url: index % 2 === 0 ? 'https://semantic-ui.com/images/avatar/small/elliot.jpg' : undefined,
       });
     });
+  await Server.create({
+    name: `Deleted Server`,
+    owner_id: owner_id,
+    deleted: true,
+  });
   return await Server.insertMany(servers);
 }
 
@@ -88,7 +93,7 @@ async function createChannels(serverIds) {
           server_id: server_id,
         }),
       ),
-    ).reduce((a, b) => a.concat(b));
+  ).reduce((a, b) => a.concat(b));
 
   return await Promise.all(promises);
 }

@@ -7,13 +7,12 @@ import { app } from '../../api-server';
 import { createJWT } from '../auth/jwt';
 import Server from '../../models/server.model';
 import User from '../../models/user.model';
-
-// tslint:disable:no-unused-expression
+import { ObjectId } from 'bson';
 
 const expect = chai.expect;
 chai.use(sinonChai);
 
-describe('api/servers/get', () => {
+describe('api/server/delete', () => {
   let token;
   let invalidToken;
   let user;
@@ -41,70 +40,54 @@ describe('api/servers/get', () => {
   });
   it('returns 401 if not logged in', async () => {
     return supertest(app.listen(null))
-      .get('/api/servers')
+      .post('/api/delete-server/123')
       .expect(401, {
         error: 'You must be logged in.',
       });
   });
   it('returns 401 if user does not exist', async () => {
     return supertest(app.listen(null))
-      .get('/api/servers')
+      .post('/api/delete-server/123')
       .set('Cookie', `jwt_token=${invalidToken}`)
       .expect(401);
   });
-  it('returns empty server list if user has no servers', async () => {
+  it('does not delete server if user is not owner', async () => {
+    const server = await Server.create({
+      name: 'namehere',
+      owner_id: new ObjectId(),
+    });
     return supertest(app.listen(null))
-      .get('/api/servers')
+      .post(`/api/delete-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
-      .expect(200, {
-        servers: [],
+      .expect(400, {
+        error: 'Only the owner can delete a server.',
       });
   });
-  it('returns servers that user has joined', async () => {
+  it('deletes server', async () => {
     const server = await Server.create({
       name: 'namehere',
       owner_id: user._id,
     });
-    const server2 = await Server.create({
-      name: 'namehere2',
-      owner_id: user._id,
-    });
-    user.joined_servers = [server._id, server2._id];
-    await user.save();
     return supertest(app.listen(null))
-      .get('/api/servers')
+      .post(`/api/delete-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
-      .expect(200, {
-        servers: [
-          JSON.parse(JSON.stringify(server)),
-          JSON.parse(JSON.stringify(server2)),
-        ],
+      .expect(204)
+      .then(async () => {
+        const deletedServer = await (Server as any).findOneWithDeleted({ _id: server._id });
+        await expect(deletedServer.deletedAt).not.to.be.null;
       });
   });
-  it('does not return deleted servers', async () => {
+  it('does not delete if server already deleted', async () => {
     const server = await Server.create({
       name: 'namehere',
-      owner_id: user._id,
-    });
-    const server2 = await Server.create({
-      name: 'namehere2',
-      owner_id: user._id,
-    });
-    const server3 = await Server.create({
-      name: 'namehere3',
       owner_id: user._id,
       deleted: true,
     });
-    user.joined_servers = [server._id, server2._id, server3._id];
-    await user.save();
     return supertest(app.listen(null))
-      .get('/api/servers')
+      .post(`/api/delete-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
-      .expect(200, {
-        servers: [
-          JSON.parse(JSON.stringify(server)),
-          JSON.parse(JSON.stringify(server2)),
-        ],
+      .expect(400, {
+        error: 'This server does not exist.',
       });
   });
 });

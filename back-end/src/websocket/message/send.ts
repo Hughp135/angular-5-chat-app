@@ -28,6 +28,10 @@ export function sendMessage(io: any) {
         Channel.findById(request.channel_id),
       ]);
 
+      if (!channel) {
+        return socket.emit('soft-error', 'This channel no longer exists.');
+      }
+
       // FRIENDS SERVER (DM)
       if (channel.getChannelType() === DM_CHANNEL) {
         if (!channel.user_ids.toString().includes(user._id.toString())) {

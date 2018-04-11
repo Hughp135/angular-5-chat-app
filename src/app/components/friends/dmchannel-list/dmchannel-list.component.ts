@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import ChatServer from 'shared-interfaces/server.interface';
 import { SettingsService } from '../../../services/settings.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-dmchannel-list',
@@ -10,7 +11,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./dmchannel-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DmchannelListComponent implements OnInit {
+export class DmchannelListComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
   @Input() currentChatChannel: ChatChannel;
   @Input() currentServer: ChatServer;
 
@@ -22,9 +24,15 @@ export class DmchannelListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.settingsService.invertedThemeSubj.subscribe(() => {
-      this.ref.detectChanges();
-    });
+    this.subscriptions.push(
+      this.settingsService.invertedThemeSubj.subscribe(() => {
+        this.ref.detectChanges();
+      }),
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   getChannelName(channel: ChannelListItem) {

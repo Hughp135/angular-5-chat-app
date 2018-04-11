@@ -1,9 +1,17 @@
 import * as mongoose from 'mongoose';
 
+const mongooseDelete = require('mongoose-delete');
+
 export interface IServerModel extends mongoose.Document {
   name: string;
   owner_id: mongoose.Schema.Types.ObjectId;
   image_url: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
+  deleted: boolean;
+
+  delete: () => {};
 }
 
 const serverSchema = new mongoose.Schema({
@@ -15,6 +23,8 @@ const serverSchema = new mongoose.Schema({
   });
 
 serverSchema.index({ name: 1, owner_id: 1 }, { unique: true });
+
+serverSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: 'all' });
 
 const Server: mongoose.Model<IServerModel> = mongoose.model<IServerModel>('Server', serverSchema);
 export default Server;

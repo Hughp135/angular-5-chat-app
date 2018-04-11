@@ -2,17 +2,53 @@
   &.inverted {
     .server-title {
       border-bottom: 1px solid rgb(63, 63, 63);
+
+      i {
+        color: rgb(218, 218, 218);
+      }
+
+      &.active {
+        background: #1d3069 !important;
+
+        i {
+          color: rgb(255, 187, 42);
+        }
+      }
+    }
+  }
+
+  .server-title {
+    &.active {
+      background: white !important;
+
+      i {
+        color: rgb(12, 103, 163);
+      }
+    }
+  }
+}
+
+.ui.dropdown {
+  width: 100%;
+
+  .menu {
+    right: 5px;
+    top: 55px;
+    left: 25px;
+
+    .item {
+      &.red {
+        color: #7e0606 !important;
+      }
     }
   }
 }
 
 .server-title {
-  // margin: -15px -15px 20px -15px;
   overflow: hidden;
   min-height: 50px;
   border-bottom: 1px solid rgb(196, 196, 196);
   padding: 15px 8px 10px 13px;
-  cursor: pointer;
 
   h3 {
     font-size: 15px;
@@ -20,9 +56,10 @@
     margin: 0;
   }
 
-  i {    
+  i {
     position: absolute;
     right: 3px;
     top: 15px;
+    cursor: pointer;
   }
 }
