@@ -71,6 +71,23 @@ describe('api/server/delete', () => {
     return supertest(app.listen(null))
       .post(`/api/delete-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
-      .expect(400);
+      .expect(204)
+      .then(async () => {
+        const deletedServer = await Server.findById(server._id);
+        await expect(deletedServer.deletedAt).not.to.be.null;
+      });
+  });
+  it('does not delete if server already deleted', async () => {
+    const server = await Server.create({
+      name: 'namehere',
+      owner_id: user._id,
+      deleted: true,
+    });
+    return supertest(app.listen(null))
+      .post(`/api/delete-server/${server._id}`)
+      .set('Cookie', `jwt_token=${token}`)
+      .expect(400, {
+        error: 'This server has already been deleted.',
+      });
   });
 });

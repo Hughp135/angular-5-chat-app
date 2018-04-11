@@ -69,7 +69,33 @@ describe('api/servers/get', () => {
       name: 'namehere2',
       owner_id: user._id,
     });
-    user.joined_servers = [ server._id, server2._id ];
+    user.joined_servers = [server._id, server2._id];
+    await user.save();
+    return supertest(app.listen(null))
+      .get('/api/servers')
+      .set('Cookie', `jwt_token=${token}`)
+      .expect(200, {
+        servers: [
+          JSON.parse(JSON.stringify(server)),
+          JSON.parse(JSON.stringify(server2)),
+        ],
+      });
+  });
+  it('does not return deleted servers', async () => {
+    const server = await Server.create({
+      name: 'namehere',
+      owner_id: user._id,
+    });
+    const server2 = await Server.create({
+      name: 'namehere2',
+      owner_id: user._id,
+    });
+    const server3 = await Server.create({
+      name: 'namehere3',
+      owner_id: user._id,
+      deleted: true,
+    });
+    user.joined_servers = [server._id, server2._id, server3._id];
     await user.save();
     return supertest(app.listen(null))
       .get('/api/servers')

@@ -50,9 +50,9 @@ export class ServerResolver implements Resolve<ChatServer> {
         duration: 2500,
         id: new Date().toUTCString(),
       });
-      setTimeout(() => {
-        this.router.navigate(['']);
-      }, 1);
+      // setTimeout(() => { // not sure why this timeout was added but removing it
+      this.router.navigate(['']);
+      // }, 1);
     }
     return {
       server: currentServerStore,

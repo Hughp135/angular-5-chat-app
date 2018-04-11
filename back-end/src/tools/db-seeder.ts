@@ -76,6 +76,11 @@ async function createServers(owner_id) {
         image_url: index % 2 === 0 ? 'https://semantic-ui.com/images/avatar/small/elliot.jpg' : undefined,
       });
     });
+  await Server.create({
+    name: `Deleted Server`,
+    owner_id: owner_id,
+    deleted: true,
+  });
   return await Server.insertMany(servers);
 }
 
