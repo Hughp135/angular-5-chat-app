@@ -117,7 +117,7 @@ describe('ViewServerComponent', () => {
     component.leaveServer();
     expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
     expect(apiServiceMock.post).toHaveBeenCalledWith('leave-server/345', {});
-    await new Promise(res => setTimeout(res, 1));
+    await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).toHaveBeenCalledTimes(1);
     expect(router.navigate).toHaveBeenCalledWith(['/']);
     expect(resolveSpy).toHaveBeenCalledTimes(1);
@@ -131,7 +131,7 @@ describe('ViewServerComponent', () => {
     component.leaveServer();
     expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
     expect(apiServiceMock.post).toHaveBeenCalledWith('leave-server/error-generic', {});
-    await new Promise(res => setTimeout(res, 1));
+    await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).not.toHaveBeenCalled();
     expect(resolveSpy).not.toHaveBeenCalled();
     expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
@@ -144,7 +144,7 @@ describe('ViewServerComponent', () => {
     component.leaveServer();
     expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
     expect(apiServiceMock.post).toHaveBeenCalledWith('leave-server/error-with-message', {});
-    await new Promise(res => setTimeout(res, 1));
+    await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).not.toHaveBeenCalled();
     expect(resolveSpy).not.toHaveBeenCalled();
     expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
@@ -153,7 +153,7 @@ describe('ViewServerComponent', () => {
     component.deleteServer();
     expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
     expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/345', {});
-    await new Promise(res => setTimeout(res, 1));
+    await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).toHaveBeenCalledTimes(1);
     expect(router.navigate).toHaveBeenCalledWith(['/']);
     expect(resolveSpy).toHaveBeenCalledTimes(1);
@@ -167,7 +167,7 @@ describe('ViewServerComponent', () => {
     component.deleteServer();
     expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
     expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/error-generic', {});
-    await new Promise(res => setTimeout(res, 1));
+    await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).not.toHaveBeenCalled();
     expect(resolveSpy).not.toHaveBeenCalled();
     expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
@@ -180,7 +180,7 @@ describe('ViewServerComponent', () => {
     component.deleteServer();
     expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
     expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/error-with-message', {});
-    await new Promise(res => setTimeout(res, 1));
+    await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).not.toHaveBeenCalled();
     expect(resolveSpy).not.toHaveBeenCalled();
     expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
