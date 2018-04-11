@@ -73,7 +73,7 @@ describe('api/server/delete', () => {
       .set('Cookie', `jwt_token=${token}`)
       .expect(204)
       .then(async () => {
-        const deletedServer = await Server.findById(server._id);
+        const deletedServer = await (Server as any).findOneWithDeleted({ _id: server._id });
         await expect(deletedServer.deletedAt).not.to.be.null;
       });
   });
@@ -87,7 +87,7 @@ describe('api/server/delete', () => {
       .post(`/api/delete-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
       .expect(400, {
-        error: 'This server has already been deleted.',
+        error: 'This server does not exist.',
       });
   });
 });

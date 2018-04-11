@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import { ObjectId } from 'bson';
 
 const mongooseDelete = require('mongoose-delete');
 

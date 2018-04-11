@@ -84,7 +84,7 @@
     "js-yaml": "^3.11.0",
     "jsonwebtoken": "^8.1.1",
     "mongodb": "^3.0.2",
-    "mongoose": "^5.0.6",
+    "mongoose": "^5.0.14",
     "mongoose-delete": "^0.4.0",
     "ng2-right-click-menu": "file:vendor/ng2-right-click-menu-0.0.16.tgz",
     "ng2-semantic-ui": "^0.9.6",
