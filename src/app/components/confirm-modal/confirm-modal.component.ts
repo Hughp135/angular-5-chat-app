@@ -36,7 +36,7 @@ export class ConfirmModal extends ComponentModalConfig<IConfirmModalContext, voi
       confirmButtonText,
     });
 
-    this.isClosable = false;
+    this.isClosable = true;
     this.transitionDuration = 200;
     this.size = size;
   }

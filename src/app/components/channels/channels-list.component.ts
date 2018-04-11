@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
@@ -6,6 +6,7 @@ import ChatServer from '../../../../shared-interfaces/server.interface';
 import { SettingsService } from '../../services/settings.service';
 import { Router } from '@angular/router';
 import { ChannelSettingsService } from '../../services/channel-settings.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-channels-list',
@@ -13,8 +14,9 @@ import { ChannelSettingsService } from '../../services/channel-settings.service'
   styleUrls: ['./channels-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChannelsListComponent implements OnInit {
+export class ChannelsListComponent implements OnInit, OnDestroy {
   public newChannelName: string;
+  private subscriptions: Subscription[] = [];
   @Input() currentChatChannel: ChatChannel;
   @Input() currentServer: ChatServer;
 
@@ -28,9 +30,15 @@ export class ChannelsListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.settingsService.invertedThemeSubj.subscribe(val => {
-      this.ref.detectChanges();
-    });
+    this.subscriptions.push(
+      this.settingsService.invertedThemeSubj.subscribe(val => {
+        this.ref.detectChanges();
+      }),
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   get channelList() {
