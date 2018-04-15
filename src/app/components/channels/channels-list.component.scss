@@ -6,37 +6,61 @@ h5 {
   color: grey;
 }
 
+.header {
+  overflow: hidden;
+  padding-top: 15px;
+  padding-bottom: 8px;
+  h5 {
+    float: left;
+    margin: 0;
+  }
+  i {
+    float: right;
+    color: grey;
+    &:hover {
+      color: #2eb731;
+    }
+  }
+}
+
 #chat-channel-list {
   a.item.channel {
     font-size: 0.94em;
-
+    padding: .5em 0.7em;
     &.inverted {
       color: rgba(255, 255, 255, 0.5);
     }
-
     border-radius: 3px !important;
     margin: 1px 0;
+    i {
+      float: right;
+      display: none;
+      &:hover {
+        color: red;        
+      }
+    }
+    &:hover {
+      i {
+        display: block;
+      }
+    }
   }
-
   .has-unread-messages {
     font-weight: 400 !important;
     color: rgba(0, 0, 0, 0.93);
-
     &.inverted {
       color: rgba(255, 255, 255, 0.85) !important;
     }
   }
-
-  a.item:hover, a.item.active {
+  a.item:hover,
+  a.item.active {
     font-weight: 400 !important;
     background: #d6d6d6 !important;
-
     &.inverted {
       background: #666 !important;
       color: rgba(255, 255, 255, 0.85) !important;
     }
   }
-
   a.item.active {
     color: rgba(0, 0, 0, 0.85);
   }

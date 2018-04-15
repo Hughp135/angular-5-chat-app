@@ -38,13 +38,14 @@ export function joinServer(io: any) {
       socket.join(`server-${server._id}`);
 
       // Send state
-      sendChannelList(socket, server._id);
+      const channelList = await getChannelList(server._id);
+      socket.emit('channel-list', channelList);
       sendUserList(io, socket, server._id);
     });
   });
 }
 
-async function sendChannelList(socket, serverId) {
+export async function getChannelList(serverId) {
   const channels: any = await ChannelModel.find({
     server_id: serverId,
   }, {
@@ -61,7 +62,7 @@ async function sendChannelList(socket, serverId) {
     channels: channelsFormatted,
   };
 
-  socket.emit('channel-list', list);
+  return list;
 }
 
 export async function leaveOtherServers(socket) {

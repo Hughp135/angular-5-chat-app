@@ -1,5 +1,8 @@
-import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
+import {
+  Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy, ChangeDetectorRef,
+  ViewChild, ElementRef,
+} from '@angular/core';
+import { ChatChannel, ChannelListItem, ChannelList } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 import ChatServer from '../../../../shared-interfaces/server.interface';
@@ -7,6 +10,11 @@ import { SettingsService } from '../../services/settings.service';
 import { Router } from '@angular/router';
 import { ChannelSettingsService } from '../../services/channel-settings.service';
 import { Subscription } from 'rxjs/Subscription';
+import { Me } from 'shared-interfaces/user.interface';
+import { ApiService } from '../../services/api.service';
+import { ErrorService, ErrorNotification } from '../../services/error.service';
+import { Store } from '@ngrx/store';
+import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
 
 @Component({
   selector: 'app-channels-list',
@@ -17,8 +25,13 @@ import { Subscription } from 'rxjs/Subscription';
 export class ChannelsListComponent implements OnInit, OnDestroy {
   public newChannelName: string;
   private subscriptions: Subscription[] = [];
+  public showNewChannelInput = false;
+
   @Input() currentChatChannel: ChatChannel;
   @Input() currentServer: ChatServer;
+  @Input() me: Me;
+
+  @ViewChild('textChannelInput') public textChannelInput: ElementRef;
 
   constructor(
     private wsService: WebsocketService,
@@ -26,6 +39,9 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     private channelSettings: ChannelSettingsService,
     private router: Router,
     private ref: ChangeDetectorRef,
+    private apiService: ApiService,
+    private errorService: ErrorService,
+    private store: Store<AppState>,
   ) {
   }
 
@@ -61,11 +77,43 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     return messageDate > lastCheckedTime;
   }
 
+  showCreateTextChannel() {
+    this.showNewChannelInput = true;
+    setTimeout(() => {
+      this.textChannelInput.nativeElement.focus();
+    }, 50);
+  }
+
   createChannel() {
     const channel: CreateChannelRequest = {
       server_id: this.currentServer._id,
       name: this.newChannelName,
     };
     this.wsService.socket.emit('create-channel', channel);
+    this.showNewChannelInput = false;
+  }
+
+  deleteChannel(id) {
+    this.apiService.delete(`delete-channel/${id}`)
+      .subscribe(({ channelList }: { channelList: ChannelList }) => {
+        this.store.dispatch({
+          type: SET_CHANNEL_LIST,
+          payload: channelList,
+        });
+        if (channelList.channels.length) {
+          // Join first channel in list
+          this.router.navigate([`channels/${this.currentServer._id}/${channelList.channels[0]._id}`]);
+        }
+      },
+      err => {
+        const errMessage = err.status === 401
+          ? 'You do not have permission to delete this channel'
+          : 'An error occured while trying to delete the channel';
+        this.errorService.errorMessage.next(new ErrorNotification(errMessage, 5000));
+      });
+  }
+
+  get isOwner() {
+    return this.me._id === this.currentServer.owner_id;
   }
 }

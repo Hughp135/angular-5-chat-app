@@ -40,7 +40,8 @@
     <div class="item"
       *ngIf="currentServer">
       <app-channels-list [currentServer]="(currentServerObs | async)"
-        [currentChatChannel]="(currentChatChannel | async)">
+        [currentChatChannel]="(currentChatChannel | async)"
+        [me]="me">
       </app-channels-list>
     </div>
   </div>

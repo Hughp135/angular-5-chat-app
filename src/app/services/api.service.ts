@@ -14,12 +14,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   *
-   * @param url
-   * @param {{}} options
-   * @returns {Observable<object>}
-   */
   get(url: string, options: HttpOptions = {}): Observable<object> {
     return this.http.get(`${this.BASE_URL}${url}`, {
       headers: new HttpHeaders(options.headers),
@@ -27,16 +21,16 @@ export class ApiService {
     });
   }
 
-  /**
-   *
-   * @param url
-   * @param data
-   * @param {{}} headers
-   * @returns {Observable<object>}
-   */
   post(url: string, data: any, options: HttpOptions = {}): Observable<object> {
     return this.http.post(`${this.BASE_URL}${url}`, data, {
       headers: new HttpHeaders(options.headers),
+    });
+  }
+
+  delete(url: string, options: HttpOptions = {}): Observable<object> {
+    return this.http.delete(`${this.BASE_URL}${url}`, {
+      headers: new HttpHeaders(options.headers),
+      params: new HttpParams({ fromObject: options.query }),
     });
   }
 }

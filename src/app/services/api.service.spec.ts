@@ -74,4 +74,28 @@ describe('ApiService', () => {
     expect(req.request.method).toBe('POST');
     req.flush(response, { status: 500, statusText: 'Error' });
   });
+  it('delete request succeeds', () => {
+    const response = { success: true };
+    service.delete('hi', { headers: { 'Authorization': 'someValue' } }).subscribe(result => {
+      expect(result).toEqual(response);
+    });
+    const called = httpMock.expectOne(`${service.BASE_URL}hi`);
+    expect(called.request.headers.has('Authorization')).toBeTruthy;
+    expect(called.request.headers.get('Authorization')).toEqual('someValue');
+    expect(called.request.method).toBe('DELETE');
+    called.flush(response, { status: 200, statusText: 'Success' });
+  });
+  it('delete error callback', () => {
+    const response = { success: true };
+    service.delete('hi').subscribe(result => {
+      throw new Error('Expected error event to be called, instead got result ' + result);
+    }, (e) => {
+      expect(e.status).toEqual(401);
+      expect(e.statusText).toEqual('Unauthorized');
+    });
+
+    const req = httpMock.expectOne(`${service.BASE_URL}hi`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush(response, { status: 401, statusText: 'Unauthorized' });
+  });
 });

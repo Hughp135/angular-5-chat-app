@@ -34,6 +34,7 @@ export async function sendChannelList(userId, socket) {
         $match: {
           user_ids: userId,
           $or: [
+            // Return channels that have at least 1 message - OR user is initiator
             { message_count: { $gte: 1 } },
             { 'user_ids.0': userId },
           ],
