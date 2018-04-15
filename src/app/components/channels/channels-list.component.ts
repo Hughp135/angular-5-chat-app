@@ -14,6 +14,7 @@ import { Me } from 'shared-interfaces/user.interface';
 import { ApiService } from '../../services/api.service';
 import { ErrorService, ErrorNotification } from '../../services/error.service';
 import { Store } from '@ngrx/store';
+import { AppState } from '../../reducers/app.states';
 import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
 
 @Component({
