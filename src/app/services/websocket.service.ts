@@ -64,7 +64,7 @@ export class WebsocketService {
       this.errorService.errorMessage
         .next(new ErrorNotification(
           'Lost connection to server. Attempting to reconnect.',
-          60000,
+          60000000,
           'lost-connection',
         ));
       subj.next(false);

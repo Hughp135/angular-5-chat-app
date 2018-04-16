@@ -7,9 +7,15 @@ export async function deleteChannel(req, res) {
     _id: req.params.id,
   });
 
+  if (!channel) {
+    return res.status(400).json({
+      error: 'This channel has already been deleted',
+    });
+  }
+
   const server: any = await serverModel.findOne({
     _id: channel.server_id,
-  }, { owner_id: 1 }).lean();
+  }).lean();
 
   if (server.owner_id.toString() !== req.claim.user_id) {
     return res.status(401).json({
@@ -21,7 +27,6 @@ export async function deleteChannel(req, res) {
 
   const channelList = await getChannelList(server._id);
 
-  res.status(200).json({
-    channelList,
-  });
+  res.status(200).json(channelList);
 }
+

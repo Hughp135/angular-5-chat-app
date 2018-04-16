@@ -31,13 +31,9 @@ describe('ChannelsListComponent', () => {
   const apiServiceMock = {
     delete: jasmine.createSpy().and.callFake(url => {
       if (url === 'delete-channel/123') {
-        return Observable.of({
-          channelList: { channels: [] },
-        });
+        return Observable.of({ channels: [] });
       } else if (url === 'delete-channel/withlist') {
-        return Observable.of({
-          channelList: { channels: [{ _id: '123' }] },
-        });
+        return Observable.of({ channels: [{ _id: '123' }] });
       } else if (url === 'delete-channel/401') {
         return Observable.throw({ status: 401 });
       } else if (url === 'delete-channel/500') {

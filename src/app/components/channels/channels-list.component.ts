@@ -96,7 +96,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
 
   deleteChannel(id) {
     this.apiService.delete(`delete-channel/${id}`)
-      .subscribe(({ channelList }: { channelList: ChannelList }) => {
+      .subscribe((channelList: ChannelList ) => {
         this.store.dispatch({
           type: SET_CHANNEL_LIST,
           payload: channelList,
