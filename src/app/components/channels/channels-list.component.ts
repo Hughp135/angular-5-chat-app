@@ -95,6 +95,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     };
     this.wsService.socket.emit('create-channel', channel);
     this.showNewChannelInput = false;
+    this.newChannelName = '';
   }
 
   /* istanbul ignore next */
