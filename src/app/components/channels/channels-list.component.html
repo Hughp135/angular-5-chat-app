@@ -20,19 +20,18 @@
       [class.has-unread-messages]="channelHasUnreadMessages(channel)"
       (click)="joinChannel(channel)">
       # {{ channel.name }}
-      <i class="trash link icon" (click)="deleteChannel(channel._id)"></i>
+      <i class="trash link icon" (click)="showDeleteChannelConfirm(channel._id)"></i>
     </a>
     <!-- <a class="item channel"
       [class.inverted]="settingsService.invertedTheme"
       (click)="joinChannel({server_id: currentChatChannel.server_id, _id: '123456781234567812345678'})">
       # MISSING_CHANNEL
     </a> -->
-    <form *ngIf="showNewChannelInput"
-      action="" (submit)="createChannel()">
+    <form *ngIf="showNewChannelInput" action=""
+      (submit)="createChannel()">
       <div class="ui small icon input">
-        <input type="text" #textChannelInput
-          name="channelName" placeholder="Add New Channel"
-          [(ngModel)]="newChannelName">
+        <input type="text" #textChannelInput name="channelName"
+          placeholder="Add New Channel" [(ngModel)]="newChannelName">
         <i class="inverted circular plus link icon"
           (click)="createChannel()"></i>
       </div>

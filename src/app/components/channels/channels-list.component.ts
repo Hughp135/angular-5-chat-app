@@ -16,6 +16,8 @@ import { ErrorService, ErrorNotification } from '../../services/error.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
 import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
+import { SuiModalService } from 'ng2-semantic-ui';
+import { ConfirmModal } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-channels-list',
@@ -43,6 +45,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private errorService: ErrorService,
     private store: Store<AppState>,
+    private modalService: SuiModalService,
   ) {
   }
 
@@ -94,9 +97,22 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     this.showNewChannelInput = false;
   }
 
+  /* istanbul ignore next */
+  showDeleteChannelConfirm(id) {
+    this.modalService
+      .open(new ConfirmModal(
+        'Delete Channel',
+        'Are you sure you want to delete this channel?',
+        'red',
+        'Delete Channel',
+      ))
+      .onApprove(() => this.deleteChannel(id))
+      .onDeny(() => { });
+  }
+
   deleteChannel(id) {
     this.apiService.delete(`delete-channel/${id}`)
-      .subscribe((channelList: ChannelList ) => {
+      .subscribe((channelList: ChannelList) => {
         this.store.dispatch({
           type: SET_CHANNEL_LIST,
           payload: channelList,

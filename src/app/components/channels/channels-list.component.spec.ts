@@ -14,6 +14,7 @@ import { ChannelSettingsService } from '../../services/channel-settings.service'
 import { Observable } from 'rxjs/Observable';
 import { ApiService } from '../../services/api.service';
 import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
+import { SuiModalService, SuiComponentFactory } from 'ng2-semantic-ui/dist';
 
 describe('ChannelsListComponent', () => {
   let component: ChannelsListComponent;
@@ -26,6 +27,12 @@ describe('ChannelsListComponent', () => {
     socket: {
       emit: jasmine.createSpy(),
     },
+  };
+
+  const fakeModalService = {
+    open: () => ({
+      onApprove: (cb) => cb(),
+    }),
   };
 
   const apiServiceMock = {
@@ -73,6 +80,8 @@ describe('ChannelsListComponent', () => {
         ErrorService,
         { provide: WebsocketService, useValue: fakeWebSocketService },
         { provide: ApiService, useValue: apiServiceMock },
+        { provide: SuiModalService, useValue: fakeModalService },
+        SuiComponentFactory,
       ],
     })
       .compileComponents();
