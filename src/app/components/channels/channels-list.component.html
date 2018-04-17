@@ -20,7 +20,7 @@
       [class.has-unread-messages]="channelHasUnreadMessages(channel)"
       (click)="joinChannel(channel)">
       # {{ channel.name }}
-      <i class="trash link icon" (click)="showDeleteChannelConfirm(channel._id)"></i>
+      <i class="trash link icon" (click)="showDeleteChannelConfirm(channel)"></i>
     </a>
     <!-- <a class="item channel"
       [class.inverted]="settingsService.invertedTheme"

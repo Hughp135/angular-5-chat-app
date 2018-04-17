@@ -98,15 +98,15 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
   }
 
   /* istanbul ignore next */
-  showDeleteChannelConfirm(id) {
+  showDeleteChannelConfirm(channel) {
     this.modalService
       .open(new ConfirmModal(
         'Delete Channel',
-        'Are you sure you want to delete this channel?',
+        `Are you sure you want to delete the channel ${channel.name}?`,
         'red',
         'Delete Channel',
       ))
-      .onApprove(() => this.deleteChannel(id))
+      .onApprove(() => this.deleteChannel(channel._id))
       .onDeny(() => { });
   }
 
