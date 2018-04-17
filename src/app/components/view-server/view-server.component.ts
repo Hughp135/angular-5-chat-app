@@ -90,7 +90,7 @@ export class ViewServerComponent implements OnInit {
   }
 
   deleteServer() {
-    this.apiService.post(`delete-server/${this.currentServer._id}`, {})
+    this.apiService.delete(`delete-server/${this.currentServer._id}`, {})
       .subscribe((data) => {
         this.router.navigate(['/']);
         this.mainResolver.resolve(this.route.snapshot);
