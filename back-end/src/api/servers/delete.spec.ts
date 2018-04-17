@@ -40,14 +40,14 @@ describe('api/server/delete', () => {
   });
   it('returns 401 if not logged in', async () => {
     return supertest(app.listen(null))
-      .post('/api/delete-server/123')
+      .delete('/api/delete-server/123')
       .expect(401, {
         error: 'You must be logged in.',
       });
   });
   it('returns 401 if user does not exist', async () => {
     return supertest(app.listen(null))
-      .post('/api/delete-server/123')
+      .delete('/api/delete-server/123')
       .set('Cookie', `jwt_token=${invalidToken}`)
       .expect(401);
   });
@@ -57,7 +57,7 @@ describe('api/server/delete', () => {
       owner_id: new ObjectId(),
     });
     return supertest(app.listen(null))
-      .post(`/api/delete-server/${server._id}`)
+      .delete(`/api/delete-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
       .expect(400, {
         error: 'Only the owner can delete a server.',
@@ -69,7 +69,7 @@ describe('api/server/delete', () => {
       owner_id: user._id,
     });
     return supertest(app.listen(null))
-      .post(`/api/delete-server/${server._id}`)
+      .delete(`/api/delete-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
       .expect(204)
       .then(async () => {
@@ -84,7 +84,7 @@ describe('api/server/delete', () => {
       deleted: true,
     });
     return supertest(app.listen(null))
-      .post(`/api/delete-server/${server._id}`)
+      .delete(`/api/delete-server/${server._id}`)
       .set('Cookie', `jwt_token=${token}`)
       .expect(400, {
         error: 'This server does not exist.',

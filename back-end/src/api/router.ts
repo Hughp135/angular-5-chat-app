@@ -23,7 +23,7 @@ router.get('/servers', authMiddleware, getServers);
 router.get('/users/:username', authMiddleware, getUser);
 // Servers
 router.post('/leave-server/:id', authMiddleware, leaveServer);
-router.post('/delete-server/:id', authMiddleware, deleteServer);
+router.delete('/delete-server/:id', authMiddleware, deleteServer);
 // Channels
 router.delete('/delete-channel/:id', authMiddleware, deleteChannel);
 

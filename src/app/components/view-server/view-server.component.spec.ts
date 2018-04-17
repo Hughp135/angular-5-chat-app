@@ -53,6 +53,16 @@ describe('ViewServerComponent', () => {
       }
       return Observable.of({}).delay(1);
     }),
+    delete: jasmine.createSpy().and.callFake((url: string) => {
+      if (url.includes('error-generic')) {
+        const error = { status: 500 };
+        return Observable.throw(error);
+      } else if (url.includes('error-with-message')) {
+        const error = { status: 400, error: { error: 'test' } };
+        return Observable.throw(error);
+      }
+      return Observable.of({}).delay(1);
+    }),
   };
 
   const resolveSpy = jasmine.createSpy();
@@ -94,6 +104,7 @@ describe('ViewServerComponent', () => {
   });
 
   afterEach(() => {
+    apiServiceMock.delete.calls.reset();
     apiServiceMock.post.calls.reset();
     resolveSpy.calls.reset();
   });
@@ -151,8 +162,8 @@ describe('ViewServerComponent', () => {
   });
   it('deletes the server and calls main resolver', async () => {
     component.deleteServer();
-    expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
-    expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/345', {});
+    expect(apiServiceMock.delete).toHaveBeenCalledTimes(1);
+    expect(apiServiceMock.delete).toHaveBeenCalledWith('delete-server/345', {});
     await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).toHaveBeenCalledTimes(1);
     expect(router.navigate).toHaveBeenCalledWith(['/']);
@@ -165,8 +176,8 @@ describe('ViewServerComponent', () => {
       name: 'test',
     };
     component.deleteServer();
-    expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
-    expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/error-generic', {});
+    expect(apiServiceMock.delete).toHaveBeenCalledTimes(1);
+    expect(apiServiceMock.delete).toHaveBeenCalledWith('delete-server/error-generic', {});
     await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).not.toHaveBeenCalled();
     expect(resolveSpy).not.toHaveBeenCalled();
@@ -178,8 +189,8 @@ describe('ViewServerComponent', () => {
       name: 'test',
     };
     component.deleteServer();
-    expect(apiServiceMock.post).toHaveBeenCalledTimes(1);
-    expect(apiServiceMock.post).toHaveBeenCalledWith('delete-server/error-with-message', {});
+    expect(apiServiceMock.delete).toHaveBeenCalledTimes(1);
+    expect(apiServiceMock.delete).toHaveBeenCalledWith('delete-server/error-with-message', {});
     await new Promise(res => setTimeout(res, 5));
     expect(router.navigate).not.toHaveBeenCalled();
     expect(resolveSpy).not.toHaveBeenCalled();
