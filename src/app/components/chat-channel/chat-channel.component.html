@@ -8,6 +8,7 @@
       [class.inverted]="settingsService.invertedTheme">
       @ {{ getFriendChannelName() }}
     </h4>
+    {{ checkIfDuplicates() }}
   </div>
   <div class="ui middle aligned divided very relaxed list"
     [class.inverted]="settingsService.invertedTheme"

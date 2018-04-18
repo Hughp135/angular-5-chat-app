@@ -16,7 +16,6 @@ export const JOINED_CHANNEL_HANDLER = 'joined-channel';
 export const SERVER_USERLIST_HANDLER = 'server-user-list';
 export const SERVER_UPDATE_USERLIST_HANDLER = 'update-user-list';
 export const SET_FRIEND_REQUESTS_HANDLER = 'friend-requests';
-export const MORE_MESSAGES_HANDLER = 'got-chat-messages';
 
 export const handlers: { [key: string]: (socket, store) => void } = {
   [CHAT_MESSAGE_HANDLER]: chatMessage,
@@ -25,7 +24,6 @@ export const handlers: { [key: string]: (socket, store) => void } = {
   [SERVER_USERLIST_HANDLER]: serverUserList,
   [SERVER_UPDATE_USERLIST_HANDLER]: updateUserList,
   [SET_FRIEND_REQUESTS_HANDLER]: setFriendRequests,
-  [MORE_MESSAGES_HANDLER]: moreChatMessages,
 };
 
 function chatMessage(socket, store) {
@@ -50,26 +48,6 @@ function chatMessage(socket, store) {
         },
       });
     }
-  });
-}
-
-function moreChatMessages(socket, store) {
-  socket.on(MORE_MESSAGES_HANDLER, (messages: ChatMessage[]) => {
-    store.select('currentChatChannel').take(1).subscribe(channel => {
-      // Only add if channel exists and there are new message
-      if (channel && messages.length) {
-        const messageExists = channel.messages
-          .some(msg => msg._id === messages[0]._id);
-        // Only add if messages are new
-        if (!messageExists) {
-          return;
-        }
-        store.dispatch({
-          type: APPEND_CHAT_MESSAGES,
-          payload: messages,
-        });
-      }
-    });
   });
 }
 

@@ -93,7 +93,7 @@ export class WebsocketService {
     return await new Promise((resolve, reject) => {
       let resolved = false;
       let error = false;
-      const onComplete = (data) => {
+      const onComplete = (data: any) => {
         resolved = true;
         return resolve(data);
       };

@@ -160,8 +160,8 @@ describe('websocket message/send', () => {
     sandbox.spy(ChatMessage, 'create');
     async function onComplete() {
       expect(result).to.have.been
-        .calledWith('soft-error',  'You are not allowed to send this message.');
-      await  expect(ChatMessage.create).to.not.have.been.called;
+        .calledWith('soft-error', 'You are not allowed to send this message.');
+      await expect(ChatMessage.create).to.not.have.been.called;
       done();
     }
     sendMessage(io);
@@ -172,13 +172,13 @@ describe('websocket message/send', () => {
       channel_id: channelId.toString(),
       server_id: server._id.toString(),
     };
-    sandbox.spy(Channel, 'find');
     sandbox.spy(Channel, 'findById');
+    sandbox.spy(serverModel, 'findById');
     const { io, socket } = createFakeSocketEvent('send-message', messageRequest,
       { user_id: user._id, username: user.username },
       async () => {
-        await expect(Channel.find).to.have.been.calledOnce;
-        await expect(Channel.findById).not.to.have.been.called;
+        await expect(Channel.findById).to.have.been.calledOnce;
+        await expect(serverModel.findById).to.have.been.calledOnce;
         done();
       }, result);
     socket.handshake.query = { test: TEST_SECRET };
@@ -248,8 +248,8 @@ describe('websocket message/send', () => {
     sandbox.spy(ChatMessage, 'create');
     async function onComplete() {
       expect(result).to.have.been
-        .calledWith('soft-error',  'This channel no longer exists.');
-      await  expect(ChatMessage.create).to.not.have.been.called;
+        .calledWith('soft-error', 'This channel no longer exists.');
+      await expect(ChatMessage.create).to.not.have.been.called;
       done();
     }
     sendMessage(io);

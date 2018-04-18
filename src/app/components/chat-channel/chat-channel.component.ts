@@ -8,12 +8,16 @@ import {
 } from '@angular/core';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
-import { SendMessageRequest } from '../../../../shared-interfaces/message.interface';
+import { SendMessageRequest, ChatMessage } from '../../../../shared-interfaces/message.interface';
 import { SettingsService } from '../../services/settings.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import ChatServer from '../../../../shared-interfaces/server.interface';
+import ChatServer from 'shared-interfaces/server.interface';
 import { ChannelSettingsService } from '../../services/channel-settings.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../reducers/app.states';
+import { APPEND_CHAT_MESSAGES } from '../../reducers/current-chat-channel.reducer';
+import { ErrorService, ErrorNotification } from '../../services/error.service';
 
 const ignoredKeys = [
   'Enter',
@@ -44,6 +48,8 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     public settingsService: SettingsService,
     private route: ActivatedRoute,
     channelSettings: ChannelSettingsService,
+    private store: Store<AppState>,
+    private errorService: ErrorService,
   ) {
     this.route.data.subscribe(data => {
       this.subscriptions.push(
@@ -148,12 +154,12 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     if (event.target.scrollTop < 130
       && !this.loadingMoreMessages
       && this.currentChannel.messages) {
-      this.loadingMoreMessages = true;
       this.getMoreMessages();
     }
   }
 
   async getMoreMessages() {
+    this.loadingMoreMessages = true;
     const channel = this.currentChannel;
     const oldestMessage = channel
       .messages[channel.messages.length - 1];
@@ -163,6 +169,47 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
       before: oldestMessage.createdAt,
     });
 
-    setTimeout(() => { this.loadingMoreMessages = false; }, 2500);
+    const messages: ChatMessage[] = <ChatMessage[]>await this.wsService
+      .awaitNextEvent('got-chat-messages', 2500)
+      .catch(err => {
+        this.errorService.errorMessage.next(new ErrorNotification(
+          'Failed to load chat messages',
+          2500,
+        ));
+      });
+
+    // Only add if channel exists and there are new message
+    if (channel && messages.length) {
+
+      // return if message channel ID not current channel ID
+      if (messages[0].channel_id !== channel._id) {
+        return;
+      }
+
+      // Return if message with same ID already exists
+      if (channel.messages.some(msg => msg._id === messages[0]._id)) {
+        return;
+      }
+
+      this.store.dispatch({
+        type: APPEND_CHAT_MESSAGES,
+        payload: messages,
+      });
+    }
+
+    setTimeout(() => {
+      this.loadingMoreMessages = false;
+    }, 250);
+  }
+
+  public checkIfDuplicates() {
+    if (!this.currentChannel.messages) {
+      return;
+    }
+    const seen = new Set();
+    const hasDuplicates = this.currentChannel.messages.some(function (currentObject) {
+      return seen.size === seen.add(currentObject._id).size;
+    });
+    return hasDuplicates;
   }
 }
