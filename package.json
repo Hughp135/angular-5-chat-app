@@ -15,6 +15,7 @@
     "test:server:dev": "mocha --exit  -t 10000 -r ts-node/register \"back-end/src/**/*.spec.ts\"",
     "test:app": "ng test --code-coverage --watch=false",
     "test:server": "./node_modules/.bin/nyc --report-dir coverage mocha --exit -t 10000 -r ts-node/register \"back-end/src/**/*.spec.ts\"",
+    "artillery:test": "artillery run e2e/artillery-tests/text-chat-load-test.yaml",
     "compile:theme": "lessc --clean-css ./node_modules/semantic-ui-less/semantic.less src/assets/semantic.min.css",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "ng lint && tslint -p back-end",

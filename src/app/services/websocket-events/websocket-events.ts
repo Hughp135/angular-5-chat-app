@@ -4,7 +4,7 @@ import {
   SET_CHANNEL_LIST, SERVER_SET_USER_LIST,
   SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE,
 } from '../../reducers/current-server.reducer';
-import { NEW_CHAT_MESSAGE, CHAT_HISTORY, APPEND_CHAT_MESSAGES } from '../../reducers/current-chat-channel.reducer';
+import { NEW_CHAT_MESSAGE, CHAT_HISTORY } from '../../reducers/current-chat-channel.reducer';
 import 'rxjs/add/operator/take';
 import { ServerUserList, UserListUpdate } from '../../../../shared-interfaces/server.interface';
 import { User } from '../../../../shared-interfaces/user.interface';

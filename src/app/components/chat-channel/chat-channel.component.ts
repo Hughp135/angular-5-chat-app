@@ -121,7 +121,6 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
       channel_id: currentChannel._id,
       server_id: currentServer._id,
     };
-
     this.wsService.socket.emit('send-message', message);
     this.chatMessage = '';
   }
@@ -150,17 +149,20 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onMessagesScroll(event) {
+  async onMessagesScroll(event) {
     if (event.target.scrollTop < 130
-      && !this.loadingMoreMessages
-      && this.currentChannel.messages) {
-      this.getMoreMessages();
+      && !this.loadingMoreMessages) {
+      await this.getMoreMessages();
     }
   }
 
   async getMoreMessages() {
-    this.loadingMoreMessages = true;
     const channel = this.currentChannel;
+    if (!channel || !channel.messages || !channel.messages.length) {
+      this.loadingMoreMessages = false;
+      return;
+    }
+
     const oldestMessage = channel
       .messages[channel.messages.length - 1];
 
@@ -178,30 +180,33 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
         ));
       });
 
-    // Only add if channel exists and there are new message
-    if (channel && messages.length) {
-
-      // return if message channel ID not current channel ID
-      if (messages[0].channel_id !== channel._id) {
-        return;
-      }
-
-      // Return if message with same ID already exists
-      if (channel.messages.some(msg => msg._id === messages[0]._id)) {
-        return;
-      }
-
-      this.store.dispatch({
-        type: APPEND_CHAT_MESSAGES,
-        payload: messages,
-      });
+    // Only add if there are new messages
+    if (!messages || !messages.length) {
+      this.loadingMoreMessages = false;
+      return;
     }
 
-    setTimeout(() => {
+    // return if message channel ID not current channel ID
+    if (messages[0].channel_id !== channel._id) {
       this.loadingMoreMessages = false;
-    }, 250);
+      return;
+    }
+
+    // Return if message with same ID already exists
+    if (channel.messages.some(msg => msg._id === messages[0]._id)) {
+      this.loadingMoreMessages = false;
+      return;
+    }
+
+    this.store.dispatch({
+      type: APPEND_CHAT_MESSAGES,
+      payload: messages,
+    });
+
+    this.loadingMoreMessages = false;
   }
 
+  /* istanbul ignore next */
   public checkIfDuplicates() {
     if (!this.currentChannel.messages) {
       return;

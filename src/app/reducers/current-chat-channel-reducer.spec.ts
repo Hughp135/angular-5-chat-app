@@ -4,6 +4,7 @@ import {
   NEW_CHAT_MESSAGE,
   CHAT_HISTORY,
   LEAVE_CHANNEL,
+  APPEND_CHAT_MESSAGES,
 } from './current-chat-channel.reducer';
 import { ChatChannel } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
@@ -49,6 +50,34 @@ describe('reducers/current-chat-channel', () => {
     };
     const state = currentChatChannelReducer(initialState, action);
     expect(state).toEqual({ ...initialState, messages: [action.payload] });
+  });
+  it('APPEND_CHAT_MESSAGE - appends messages to current', () => {
+    const newMessages: ChatMessage[] = [{
+      _id: 'asd345',
+      username: 'test',
+      message: 'hi',
+      channel_id: '123',
+      user_id: '345',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }];
+    const initialState: ChatChannel = {
+      name: 'new server here',
+      _id: '123',
+      server_id: '345',
+      messages: [{
+        _id: 'asd123',
+        message: 'new msg here',
+        channel_id: '123',
+        username: 'john',
+        user_id: '345',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }],
+    };
+    const action = { type: APPEND_CHAT_MESSAGES, payload: newMessages };
+    const state = currentChatChannelReducer(initialState, action);
+    expect(state.messages.length).toEqual(2);
   });
   it('CHAT_HISTORY - added with correct channel_id', () => {
     const action: { type: string, payload: { messages: ChatMessage[], channel_id: string } } = {

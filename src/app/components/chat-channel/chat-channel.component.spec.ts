@@ -11,11 +11,12 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Store } from '@ngrx/store';
 import { ChannelSettingsService } from '../../services/channel-settings.service';
+import { ErrorService } from '../../services/error.service';
+import { APPEND_CHAT_MESSAGES } from '../../reducers/current-chat-channel.reducer';
 
 describe('ChatChannelComponent', () => {
   let component: ChatChannelComponent;
   let fixture: ComponentFixture<ChatChannelComponent>;
-  const emit = jasmine.createSpy();
 
   const channel: ChatChannel = {
     name: 'name',
@@ -44,6 +45,24 @@ describe('ChatChannelComponent', () => {
     }),
   };
 
+  const fakeWsService = {
+    socket: {
+      emit: jasmine.createSpy(),
+    },
+    awaitNextEvent: jasmine.createSpy().and.callFake(() => Promise.resolve([])),
+  };
+
+  const fakeStore = {
+    select: () => Observable.of(channel),
+    dispatch: jasmine.createSpy(),
+  };
+
+  const fakeErrorService = {
+    errorMessage: {
+      next: jasmine.createSpy(),
+    },
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ChatChannelComponent],
@@ -53,9 +72,10 @@ describe('ChatChannelComponent', () => {
       providers: [
         { provide: ActivatedRoute, useValue: route },
         SettingsService,
-        { provide: WebsocketService, useValue: { socket: { emit } } },
-        { provide: Store, useValue: { select: () => Observable.of(channel) } },
+        { provide: WebsocketService, useValue: fakeWsService },
+        { provide: Store, useValue: fakeStore },
         { provide: ChannelSettingsService, useValue: { updateVisitedChannels: () => { } } },
+        { provide: ErrorService, useValue: fakeErrorService },
       ],
     })
       .compileComponents();
@@ -68,7 +88,10 @@ describe('ChatChannelComponent', () => {
   });
 
   afterEach(() => {
-    emit.calls.reset();
+    fakeWsService.awaitNextEvent.calls.reset();
+    fakeWsService.socket.emit.calls.reset();
+    fakeStore.dispatch.calls.reset();
+    fakeErrorService.errorMessage.next.calls.reset();
   });
 
   it('initial state', () => {
@@ -76,7 +99,7 @@ describe('ChatChannelComponent', () => {
   });
   it('send message emits message', () => {
     component.sendMessage('a message');
-    expect(emit).toHaveBeenCalledWith('send-message', {
+    expect(fakeWsService.socket.emit).toHaveBeenCalledWith('send-message', {
       message: 'a message',
       channel_id: channel._id,
       server_id: server._id,
@@ -84,7 +107,7 @@ describe('ChatChannelComponent', () => {
   });
   it('doesnt emit if message is too short', () => {
     component.sendMessage('');
-    expect(emit).not.toHaveBeenCalled();
+    expect(fakeWsService.socket.emit).not.toHaveBeenCalled();
   });
   it('is follow up message', () => {
     expect(component.isFollowUpMsg(0)).toEqual(true);
@@ -133,6 +156,103 @@ describe('ChatChannelComponent', () => {
       done();
     }, 3);
   });
+  it('scrolling to top does not fetch if scroll > 130', async () => {
+    const event = {
+      target: {
+        scrollTop: 200,
+      },
+    };
+    await component.onMessagesScroll(event);
+    expect(fakeWsService.awaitNextEvent).not.toHaveBeenCalled();
+  });
+  it('scrolling to top does not fetch if loadingMoreMessages == true', async () => {
+    const event = {
+      target: {
+        scrollTop: 100,
+      },
+    };
+    component.loadingMoreMessages = true;
+    await component.onMessagesScroll(event);
+    expect(fakeWsService.awaitNextEvent).not.toHaveBeenCalled();
+  });
+  it('scrolling to top does not fetch if no messages in channel', async () => {
+    const event = {
+      target: {
+        scrollTop: 100,
+      },
+    };
+    component.currentChannel = { ...component.currentChannel, messages: [] };
+    await component.onMessagesScroll(event);
+    expect(fakeWsService.awaitNextEvent).not.toHaveBeenCalled();
+  });
+  it('scrolling to top calls wsService if conditions are met', async () => {
+    const event = {
+      target: {
+        scrollTop: 100,
+      },
+    };
+    await component.onMessagesScroll(event);
+    expect(fakeWsService.awaitNextEvent).toHaveBeenCalled();
+  });
+  it('getMoreMessages does not append msgs if empty array', async () => {
+    fakeWsService.awaitNextEvent.and.callFake(async (): Promise<ChatMessage[]> => []);
+    const beforeMessages = [...component.currentChannel.messages];
+    await component.getMoreMessages();
+    expect(fakeWsService.awaitNextEvent).toHaveBeenCalled();
+    expect(fakeStore.dispatch).not.toHaveBeenCalled();
+    expect(component.currentChannel.messages).toEqual(beforeMessages);
+  });
+  it('getMoreMessages shows error if wsService throws', async () => {
+    fakeWsService.awaitNextEvent.and.callFake(async () => { throw new Error('hi'); });
+    const beforeMessages = [...component.currentChannel.messages];
+    await component.getMoreMessages();
+    expect(fakeWsService.awaitNextEvent).toHaveBeenCalled();
+    expect(fakeStore.dispatch).not.toHaveBeenCalled();
+    expect(component.currentChannel.messages).toEqual(beforeMessages);
+    expect(fakeErrorService.errorMessage.next).toHaveBeenCalled();
+  });
+  it('getMoreMessages does not append msgs messages channel id doesnt match channel id', async () => {
+    fakeWsService.awaitNextEvent.and.callFake(async (): Promise<ChatMessage[]> => [
+      {
+        _id: '234', username: 'test', message: 'new', channel_id: '456', user_id: 'asd123',
+        createdAt: new Date(), updatedAt: new Date(),
+      },
+    ]);
+    const beforeMessages = [...component.currentChannel.messages];
+    await component.getMoreMessages();
+    expect(fakeWsService.awaitNextEvent).toHaveBeenCalled();
+    expect(component.currentChannel.messages).toEqual(beforeMessages);
+    expect(fakeStore.dispatch).not.toHaveBeenCalled();
+  });
+  it('getMoreMessages does not append msgsif msg with same id exists', async () => {
+    fakeWsService.awaitNextEvent.and.callFake(async (): Promise<ChatMessage[]> => [
+      {
+        _id: '123', username: 'test', message: 'new', channel_id: '123', user_id: 'asd123',
+        createdAt: new Date(), updatedAt: new Date(),
+      },
+    ]);
+    const beforeMessages = [...component.currentChannel.messages];
+    await component.getMoreMessages();
+    expect(fakeWsService.awaitNextEvent).toHaveBeenCalled();
+    expect(component.currentChannel.messages).toEqual(beforeMessages);
+    expect(fakeStore.dispatch).not.toHaveBeenCalled();
+  });
+  it('getMoreMessages dispatches APPEND_CHAT_MESSAGES', async () => {
+    const newMessages = [
+      {
+        _id: 'sdf2342', username: 'test', message: 'new', channel_id: '123', user_id: 'asd123',
+        createdAt: new Date(), updatedAt: new Date(),
+      },
+    ];
+    fakeWsService.awaitNextEvent.and
+      .callFake(async (): Promise<ChatMessage[]> => newMessages);
+    await component.getMoreMessages();
+    expect(fakeStore.dispatch).toHaveBeenCalledTimes(1);
+    expect(fakeStore.dispatch).toHaveBeenCalledWith({
+      type: APPEND_CHAT_MESSAGES,
+      payload: newMessages,
+    });
+  });
 });
 
 function pressKey(keycode: number | string, target?: string) {
@@ -147,8 +267,9 @@ function pressKey(keycode: number | string, target?: string) {
   }
 }
 
-function createChatMsg(username: string) {
-  return <ChatMessage>{
+function createChatMsg(username: string): ChatMessage {
+  return {
+    _id: '123',
     message: 'string;',
     channel_id: '123',
     user_id: 'string;',
