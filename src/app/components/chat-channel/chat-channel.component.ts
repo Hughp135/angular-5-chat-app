@@ -35,7 +35,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentChannel: ChatChannel;
   public currentServer: ChatServer;
   private subscriptions: Subscription[] = [];
-  private loadingMoreMessages = false;
+  public loadingMoreMessages = false;
 
   @ViewChild('chatInput') private chatInput: ElementRef;
 
