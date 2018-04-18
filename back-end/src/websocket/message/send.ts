@@ -91,7 +91,7 @@ async function getTestUserObjects(socket, request) {
   } else {
     const [server_id] = user.joined_servers;
     const server: any = await Server.findById(server_id).lean();
-    const [channel]: any = await Channel.find({
+    const channel: any = await Channel.findOne({
       server_id: server_id,
     });
     return [user, channel, server];

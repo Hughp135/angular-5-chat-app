@@ -184,6 +184,24 @@ describe('websocket message/send', () => {
     socket.handshake.query = { test: TEST_SECRET };
     sendMessage(io);
   });
+  it('succeeds if test socket and channel id is null', (done) => {
+    const messageRequest: SendMessageRequest = {
+      message: 'hi thar',
+      channel_id: null,
+      server_id: null,
+    };
+    sandbox.spy(Channel, 'findOne');
+    sandbox.spy(serverModel, 'findById');
+    const { io, socket } = createFakeSocketEvent('send-message', messageRequest,
+      { user_id: user._id, username: user.username },
+      async () => {
+        await expect(Channel.findOne).to.have.been.calledOnce;
+        await expect(serverModel.findById).to.have.been.calledOnce;
+        done();
+      }, result);
+    socket.handshake.query = { test: TEST_SECRET };
+    sendMessage(io);
+  });
   it('does not send if user.joined_servers not includes server_id', (done) => {
     const messageRequest: SendMessageRequest = {
       message: 'hi thar',
