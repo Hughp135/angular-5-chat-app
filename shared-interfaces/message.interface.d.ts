@@ -5,6 +5,7 @@ export interface SendMessageRequest {
 }
 
 export interface ChatMessage {
+  _id: string;
   message: string;
   channel_id: string;
   user_id: string;

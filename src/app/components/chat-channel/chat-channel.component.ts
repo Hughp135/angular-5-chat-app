@@ -35,6 +35,8 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentChannel: ChatChannel;
   public currentServer: ChatServer;
   private subscriptions: Subscription[] = [];
+  private loadingMoreMessages = false;
+
   @ViewChild('chatInput') private chatInput: ElementRef;
 
   constructor(
@@ -140,5 +142,27 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     ) {
       this.focusChatInput();
     }
+  }
+
+  onMessagesScroll(event) {
+    if (event.target.scrollTop < 130
+      && !this.loadingMoreMessages
+      && this.currentChannel.messages) {
+      this.loadingMoreMessages = true;
+      this.getMoreMessages();
+    }
+  }
+
+  async getMoreMessages() {
+    const channel = this.currentChannel;
+    const oldestMessage = channel
+      .messages[channel.messages.length - 1];
+
+    this.wsService.socket.emit('get-chat-messages', {
+      channel_id: channel._id,
+      before: oldestMessage.createdAt,
+    });
+
+    setTimeout(() => { this.loadingMoreMessages = false; }, 2500);
   }
 }

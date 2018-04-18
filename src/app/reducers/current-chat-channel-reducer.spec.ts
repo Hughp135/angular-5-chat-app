@@ -33,6 +33,7 @@ describe('reducers/current-chat-channel', () => {
     const action: { type: string, payload: ChatMessage } = {
       type: NEW_CHAT_MESSAGE,
       payload: {
+        _id: '123',
         message: 'new msg here',
         channel_id: '123',
         username: 'john',
@@ -55,6 +56,7 @@ describe('reducers/current-chat-channel', () => {
       payload: {
         channel_id: '123',
         messages: [{
+          _id: 'asd123',
           message: 'new msg here',
           channel_id: '123',
           username: 'john',
@@ -78,6 +80,7 @@ describe('reducers/current-chat-channel', () => {
       payload: {
         channel_id: '345',
         messages: [{
+          _id: 'asd123',
           message: 'new msg here',
           channel_id: '123',
           username: 'john',
@@ -105,6 +108,7 @@ describe('reducers/current-chat-channel', () => {
     fourth.setMinutes(first.getMinutes() + 30);
 
     const createMessage = (date: Date) => ({
+      _id: date.toTimeString(),
       message: 'msg here from minute ' + date.getMinutes(),
       channel_id: '123',
       username: 'asda',
