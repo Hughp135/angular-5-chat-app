@@ -10,7 +10,7 @@
     </h4>
     {{ checkIfDuplicates() }}
   </div>
-  <div class="ui middle aligned divided very relaxed list"
+  <div #messageContainer class="ui middle aligned divided very relaxed list"
     [class.inverted]="settingsService.invertedTheme"
     id="message-container" (scroll)="onMessagesScroll($event)">
     <div *ngIf="!currentChannel.messages" class="ui active centered inline loader">
@@ -33,7 +33,7 @@
           </a>
           <span class="messageDate" *ngIf="!isToday(msg.createdAt)">
             {{ msg.createdAt | date }} at {{ msg.createdAt
-            | date:'shortTime' }}
+            }}
           </span>
           <span class="messageDate" *ngIf="isToday(msg.createdAt)">
             Today at {{ msg.createdAt }}

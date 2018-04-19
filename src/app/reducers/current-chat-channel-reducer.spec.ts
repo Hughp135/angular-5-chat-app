@@ -51,6 +51,38 @@ describe('reducers/current-chat-channel', () => {
     const state = currentChatChannelReducer(initialState, action);
     expect(state).toEqual({ ...initialState, messages: [action.payload] });
   });
+  it('NEW_CHAT_MESSAGE - message added if current messages exist', () => {
+    const action: { type: string, payload: ChatMessage } = {
+      type: NEW_CHAT_MESSAGE,
+      payload: {
+        _id: '123',
+        message: 'new msg here',
+        channel_id: '123',
+        username: 'john',
+        user_id: '345',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    };
+    const initialState: ChatChannel = {
+      name: 'new server here',
+      _id: '123',
+      server_id: '345',
+      messages: [
+        {
+          _id: 'asd123',
+          message: 'old msg here',
+          channel_id: '123',
+          username: 'john',
+          user_id: '345',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+    };
+    const state = currentChatChannelReducer(initialState, action);
+    expect(state).toEqual({ ...initialState, messages: [action.payload] });
+  });
   it('APPEND_CHAT_MESSAGE - appends messages to current', () => {
     const newMessages: ChatMessage[] = [{
       _id: 'asd345',

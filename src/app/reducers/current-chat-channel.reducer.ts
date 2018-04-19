@@ -15,9 +15,9 @@ export function currentChatChannelReducer(state: ChatChannel, action) {
       return undefined;
     case NEW_CHAT_MESSAGE:
       const message: ChatMessage = action.payload;
-      const newMessages = [message]
-        .concat(state.messages || [])
-        .slice(0, 100);
+      const newMessages = state.messages ? [...state.messages] : [];
+      newMessages.pop();
+      newMessages.unshift(message);
       return <ChatChannel>{
         ...state,
         messages: newMessages,

@@ -202,6 +202,25 @@ describe('ChatChannelComponent', () => {
     expect(fakeStore.dispatch).not.toHaveBeenCalled();
     expect(component.currentChannel.messages).toEqual(beforeMessages);
   });
+  it('getMoreMessages does not send request if already over 300 msgs in component', async () => {
+    const newMessages = [
+      {
+        _id: 'sdf2342', username: 'test', message: 'new', channel_id: '123', user_id: 'asd123',
+        createdAt: new Date(), updatedAt: new Date(),
+      },
+    ];
+    fakeWsService.awaitNextEvent.and
+      .callFake(async (): Promise<ChatMessage[]> => newMessages);
+    const beforeMessages = [...component.currentChannel.messages];
+    const afterMessages = new Array(301).fill(null)
+      .map(item => beforeMessages[0]);
+    component.currentChannel.messages = afterMessages;
+    await component.getMoreMessages();
+    expect(fakeWsService.awaitNextEvent).not.toHaveBeenCalled();
+    expect(fakeStore.dispatch).not.toHaveBeenCalled();
+    expect(component.currentChannel.messages).toEqual(afterMessages);
+    component.currentChannel.messages = beforeMessages;
+  });
   it('getMoreMessages shows error if wsService throws', async () => {
     fakeWsService.awaitNextEvent.and.callFake(async () => { throw new Error('hi'); });
     const beforeMessages = [...component.currentChannel.messages];

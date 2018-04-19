@@ -1,8 +1,7 @@
 <div class="ui basic padded segment" [class.inverted]="settingsService.invertedTheme">
 
   <div id="header">
-    <h3 class="left floated ui header"
-      [class.inverted]="settingsService.invertedTheme">
+    <h3 class="left floated ui header" [class.inverted]="settingsService.invertedTheme">
       Friend Requests
     </h3>
 
@@ -16,13 +15,11 @@
 
   <div *ngIf="!friendRequests.length">
     <p>
-      <i>No pending friend requests
-        at the moment!</i>
+      <i>No pending friend requests at the moment!</i>
     </p>
   </div>
 
-  <table *ngIf="friendRequests.length"
-    class="ui celled padded table"
+  <table *ngIf="friendRequests.length" class="ui celled padded table"
     [class.teal]="!settingsService.invertedTheme"
     [class.inverted]="settingsService.invertedTheme">
     <thead>
@@ -35,20 +32,18 @@
     <tbody>
       <tr *ngFor="let friendRequest of friendRequests">
         <td>
-          <b>{{ friendRequest.username
-            }}</b>
+          <b>{{ friendRequest.username }}
+          </b>
         </td>
         <td class="request-type">
           {{ friendRequest.type | uppercase }}
         </td>
         <td>
-          <button class="ui red icon button"
-            (click)="rejectFriendRequest(friendRequest.user_id)">
+          <button class="ui red icon button" (click)="rejectFriendRequest(friendRequest.user_id)">
             <i class="remove icon"></i>
           </button>
           <button *ngIf="friendRequest.type === 'incoming'"
-            class="ui green icon button"
-            (click)="confirmAddFriend(friendRequest.user_id)">
+            class="ui green icon button" (click)="confirmAddFriend(friendRequest.user_id)">
             <i class="check icon"></i>
           </button>
         </td>

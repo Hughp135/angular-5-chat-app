@@ -42,6 +42,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   public loadingMoreMessages = false;
 
   @ViewChild('chatInput') private chatInput: ElementRef;
+  @ViewChild('messageContainer') private messageContainer: ElementRef;
 
   constructor(
     private wsService: WebsocketService,
@@ -123,6 +124,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     this.wsService.socket.emit('send-message', message);
     this.chatMessage = '';
+    this.scrollChatToBottom();
   }
 
   getFriendChannelName(): string {
@@ -152,13 +154,14 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   async onMessagesScroll(event) {
     if (event.target.scrollTop < 130
       && !this.loadingMoreMessages) {
-      await this.getMoreMessages();
+      this.getMoreMessages();
     }
   }
 
   async getMoreMessages() {
     const channel = this.currentChannel;
-    if (!channel || !channel.messages || !channel.messages.length) {
+    if (!channel || !channel.messages || !channel.messages.length
+      || channel.messages.length >= 300) {
       this.loadingMoreMessages = false;
       return;
     }
@@ -204,6 +207,11 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.loadingMoreMessages = false;
+  }
+
+  /* istanbul ignore next */
+  scrollChatToBottom() {
+    this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
   }
 
   /* istanbul ignore next */
