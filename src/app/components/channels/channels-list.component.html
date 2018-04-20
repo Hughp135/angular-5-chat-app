@@ -31,8 +31,9 @@
       (submit)="createChannel()">
       <div class="ui small icon input">
         <input type="text" #textChannelInput name="channelName"
-          placeholder="Add New Channel" [(ngModel)]="newChannelName">
-        <i class="inverted circular plus link icon"
+          autocomplete="off" placeholder="Add New Channel"
+          [(ngModel)]="newChannelName">
+        <i class="green circular plus link icon"
           (click)="createChannel()"></i>
       </div>
     </form>

@@ -1,10 +1,10 @@
 
 # run with `artillery run artillery.yaml`
 config:
-  target: "http://127.0.0.1:7202"
+  target: "http://127.0.0.1:7203"
   phases:
-    - duration: 30
-      arrivalRate: 10
+    - duration: 10
+      arrivalRate: 1
   variables:
     greeting: ["hello", "goedemorgen", "добрый день", "guten tag", "bonjour", "hola"]
   socketio:
@@ -20,9 +20,9 @@ scenarios:
         - emit:
             channel: "send-message"
             data:
-              channel_id: "5a8c2a3d1b387a4d78e910b7"
-              server_id: "5a8c2a3d1b387a4d78e910b2"
+              channel_id: "5ace3eac3f26c021df9e40fb"
+              server_id: "5ace3eac3f26c021df9e40ed"
               message: '{{ greeting }}'
         - think: 0.05
-          count: 500
+          count: 1
       - think: 240

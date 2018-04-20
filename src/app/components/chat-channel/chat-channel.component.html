@@ -1,22 +1,18 @@
 <div id="chat-wrapper">
-  <div id="header"
-    [class.inverted]="settingsService.invertedTheme">
-    <h4 class="ui header"
-      *ngIf="currentChannel.server_id"
+  <div id="header" [class.inverted]="settingsService.invertedTheme">
+    <h4 class="ui header" *ngIf="currentChannel.server_id"
       [class.inverted]="settingsService.invertedTheme">
       # {{ currentChannel.name }}
     </h4>
-    <h4 class="ui header"
-      *ngIf="currentServer.channelList && !currentChannel.server_id"
+    <h4 class="ui header" *ngIf="currentServer.channelList && !currentChannel.server_id"
       [class.inverted]="settingsService.invertedTheme">
       @ {{ getFriendChannelName() }}
     </h4>
   </div>
-  <div class="ui middle aligned divided very relaxed list"
+  <div #messageContainer class="ui middle aligned divided very relaxed list"
     [class.inverted]="settingsService.invertedTheme"
-    id="message-container">
-    <div *ngIf="!currentChannel.messages"
-      class="ui active centered inline loader">
+    id="message-container" (scroll)="onMessagesScroll($event)">
+    <div *ngIf="!currentChannel.messages" class="ui active centered inline loader">
     </div>
     <div *ngIf="currentChannel.messages && !currentChannel.messages.length"
       class="ui item">
@@ -24,30 +20,36 @@
         <i>No messages here yet!</i>
       </p>
     </div>
-    <div class="item"
-      *ngFor="let msg of currentChannel.messages; let i = index;"
+    <div class="item" *ngFor="let msg of currentChannel.messages; let i = index;"
       [class.follow-up]="isFollowUpMsg(i)"
       [class.has-follow-up]="hasFollowUpMsg(i)">
-      <img *ngIf="!isFollowUpMsg(i)"
-        class="ui avatar image"
+      <img *ngIf="!isFollowUpMsg(i)" class="ui avatar image"
         src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
       <div class="content">
-        <div class="header"
-          *ngIf="!isFollowUpMsg(i)">
+        <div class="header" *ngIf="!isFollowUpMsg(i)">
           <a class="username">
             {{ msg.username }}
           </a>
-          <span class="messageDate"
-            *ngIf="!isToday(msg.createdAt)">
-            {{ msg.createdAt | date }} at {{ msg.createdAt | date:'shortTime' }}
+          <span class="messageDate" *ngIf="!isToday(msg.createdAt)">
+            {{ msg.createdAt | date }} at {{ msg.createdAt
+            }}
           </span>
-          <span class="messageDate"
-            *ngIf="isToday(msg.createdAt)">
-            Today at {{ msg.createdAt | date:'shortTime' }}
+          <span class="messageDate" *ngIf="isToday(msg.createdAt)">
+            Today at {{ msg.createdAt }}
           </span>
         </div>
         <p>{{ msg.message }}</p>
       </div>
+    </div>
+    <div class="item" *ngIf="loadingMoreMessages">
+      <div class="ui segment basic padded">
+        <div class="ui active loader blue"></div>
+      </div>
+    </div>
+    <div class="item" *ngIf="currentChannel.messages && currentChannel.messages.length >= 300">
+      <p align="center">
+        <i>Unable to load any older messages</i>
+      </p>
     </div>
   </div>
 
@@ -56,16 +58,12 @@
       [class.inverted]="settingsService.invertedTheme"
       class="ui form">
       <div class="ui fluid small input">
-        <input #chatInput          
-          type="text"
-          autocomplete="off"
+        <input #chatInput type="text" autocomplete="off"
           placeholder="Chat in #{{ currentChannel.name }}..."
-          name="chatMessage"
-          [(ngModel)]="chatMessage"
+          name="chatMessage" [(ngModel)]="chatMessage"
           (window:keydown)="onWindowKeydown($event)">
       </div>
-
     </form>
-
   </div>
+
 </div>

@@ -247,6 +247,7 @@ describe('WebsocketService', () => {
       payload: currentChannel,
     });
     const message: ChatMessage = {
+      _id: 'asd123',
       message: 'hi thar',
       channel_id: '345',
       user_id: '123',
@@ -267,6 +268,7 @@ describe('WebsocketService', () => {
   });
   it('chat-message does not dispatch NEW_CHAT_MESSAGE if channel ID is not current channel', () => {
     const message: ChatMessage = {
+      _id: 'asd123',
       message: 'hi thar',
       channel_id: '712361',
       user_id: '123',
@@ -287,6 +289,7 @@ describe('WebsocketService', () => {
   });
   it('chat-message dispatches SET_CHANNEL_LAST_MESSAGE_DATE if channel ID is not current channel', () => {
     const message: ChatMessage = {
+      _id: 'asd123',
       message: 'hi thar',
       channel_id: '712361',
       user_id: '123',

@@ -84,10 +84,16 @@ async function emitMessage(io, message: string, channel, user, server?) {
 async function getTestUserObjects(socket, request) {
   // TEST USERS ONLY
   const user: any = await User.findById(socket.claim.user_id).lean();
-  const [server_id] = user.joined_servers;
-  const server: any = await Server.findById(server_id).lean();
-  const [channel]: any = await Channel.find({
-    server_id: server_id,
-  });
-  return [user, channel, server];
+  if (request.channel_id) {
+    const server: any = await Server.findById(request.server_id).lean();
+    const channel: any = await Channel.findById(request.channel_id);
+    return [user, channel, server];
+  } else {
+    const [server_id] = user.joined_servers;
+    const server: any = await Server.findById(server_id).lean();
+    const channel: any = await Channel.findOne({
+      server_id: server_id,
+    });
+    return [user, channel, server];
+  }
 }
