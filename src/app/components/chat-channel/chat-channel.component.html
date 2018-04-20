@@ -8,7 +8,6 @@
       [class.inverted]="settingsService.invertedTheme">
       @ {{ getFriendChannelName() }}
     </h4>
-    {{ checkIfDuplicates() }}
   </div>
   <div #messageContainer class="ui middle aligned divided very relaxed list"
     [class.inverted]="settingsService.invertedTheme"
@@ -46,6 +45,11 @@
       <div class="ui segment basic padded">
         <div class="ui active loader blue"></div>
       </div>
+    </div>
+    <div class="item" *ngIf="currentChannel.messages && currentChannel.messages.length >= 300">
+      <p align="center">
+        <i>Unable to load any older messages</i>
+      </p>
     </div>
   </div>
 

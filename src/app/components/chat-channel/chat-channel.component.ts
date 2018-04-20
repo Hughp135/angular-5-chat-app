@@ -214,15 +214,4 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
   }
 
-  /* istanbul ignore next */
-  public checkIfDuplicates() {
-    if (!this.currentChannel.messages) {
-      return;
-    }
-    const seen = new Set();
-    const hasDuplicates = this.currentChannel.messages.some(function (currentObject) {
-      return seen.size === seen.add(currentObject._id).size;
-    });
-    return hasDuplicates;
-  }
 }
