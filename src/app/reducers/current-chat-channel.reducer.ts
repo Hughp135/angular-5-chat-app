@@ -16,8 +16,11 @@ export function currentChatChannelReducer(state: ChatChannel, action) {
     case NEW_CHAT_MESSAGE:
       const message: ChatMessage = action.payload;
       const newMessages = state.messages ? [...state.messages] : [];
-      newMessages.pop();
-      newMessages.unshift(message);
+      if (newMessages.length >= 50) {
+        // Remove oldest message if messages length >= 50
+        newMessages.pop();
+      }
+      newMessages.unshift(message); // add to beginning of array
       return <ChatChannel>{
         ...state,
         messages: newMessages,

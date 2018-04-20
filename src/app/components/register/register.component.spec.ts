@@ -138,7 +138,7 @@ describe('RegisterComponent', () => {
     setTimeout(() => {
       expect(component.submitting).toEqual(false);
       done();
-    }, 5);
+    }, 10);
   });
   it('submitting form POST to /register fail', (done) => {
     const formData = {

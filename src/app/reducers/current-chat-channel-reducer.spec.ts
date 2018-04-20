@@ -51,7 +51,7 @@ describe('reducers/current-chat-channel', () => {
     const state = currentChatChannelReducer(initialState, action);
     expect(state).toEqual({ ...initialState, messages: [action.payload] });
   });
-  it('NEW_CHAT_MESSAGE - message added if current messages exist', () => {
+  it('NEW_CHAT_MESSAGE - message added to existing message', () => {
     const action: { type: string, payload: ChatMessage } = {
       type: NEW_CHAT_MESSAGE,
       payload: {
@@ -81,7 +81,32 @@ describe('reducers/current-chat-channel', () => {
       ],
     };
     const state = currentChatChannelReducer(initialState, action);
-    expect(state).toEqual({ ...initialState, messages: [action.payload] });
+    expect(state).toEqual({ ...initialState, messages: [action.payload, ...initialState.messages] });
+  });
+  it('NEW_CHAT_MESSAGE - messages length unchanged if over 50 messages', () => {
+    const initialState: ChatChannel = {
+      name: 'new server here',
+      _id: '123',
+      server_id: '345',
+      messages: getLotsOfMessages('123'),
+    };
+    const action: { type: string, payload: ChatMessage } = {
+      type: NEW_CHAT_MESSAGE,
+      payload: {
+        _id: '123',
+        message: 'new msg here',
+        channel_id: '123',
+        username: 'john',
+        user_id: '345',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    };
+
+    const state = currentChatChannelReducer(initialState, action);
+    const state2 = currentChatChannelReducer(state, action);
+
+    expect(state2.messages.length).toEqual(initialState.messages.length);
   });
   it('APPEND_CHAT_MESSAGE - appends messages to current', () => {
     const newMessages: ChatMessage[] = [{
@@ -201,3 +226,19 @@ describe('reducers/current-chat-channel', () => {
     expect(state).toEqual({ ...initialState, messages: resultMsgs });
   });
 });
+
+function getLotsOfMessages(channelId) {
+  const messages = [];
+  for (let i = 0; i < 50; i++) {
+    messages.push({
+      _id: `msg-${i}`,
+      message: `msg ${i} here`,
+      channel_id: channelId,
+      username: 'john',
+      user_id: '345',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+  return messages;
+}
