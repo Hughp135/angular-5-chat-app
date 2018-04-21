@@ -81,7 +81,7 @@ describe('ServerInviteResolverService', () => {
     const result = await promise;
     expect(result).toEqual({
       server: undefined,
-      error: 'Unable to join this server. Please try again later.',
+      error: 'We were unable to join this server for you. Please try again later.',
     });
     expect(router.navigate).not.toHaveBeenCalledWith();
   });

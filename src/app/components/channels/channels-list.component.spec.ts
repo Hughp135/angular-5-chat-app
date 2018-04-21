@@ -233,4 +233,13 @@ describe('ChannelsListComponent', () => {
     expect(component.textChannelInput.nativeElement.focus).toHaveBeenCalled();
     done();
   });
+  it('pressing escape key on input resets input and hides', () => {
+    component.showNewChannelInput = true;
+    component.newChannelName = 'testname';
+    component.newChannelInputKeypress({
+      key: 'Escape'
+    });
+    expect(component.showNewChannelInput).toEqual(false);
+    expect(component.newChannelName).toEqual('');
+  });
 });

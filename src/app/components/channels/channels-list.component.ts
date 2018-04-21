@@ -131,6 +131,13 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
       });
   }
 
+  newChannelInputKeypress(event) {
+    if (event.key === 'Escape') {
+      this.showNewChannelInput = false;
+      this.newChannelName = '';
+    }
+  }
+
   get isOwner() {
     return this.me._id === this.currentServer.owner_id;
   }

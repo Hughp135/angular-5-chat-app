@@ -10,13 +10,14 @@
       <h3>Do you want to join "
         <span class="server-name">{{ server.name }}</span>"?
       </h3>
-      <button class="ui basic button">Nevermind</button>
+      <button class="ui basic button">No thanks</button>
       <button class="ui green button">Join Server</button>
     </div>
   </div>
   <div *ngIf="error" class="ten wide centered column">
     <div class="ui very padded segment">
-      <h3>
+      <h3 class="ui center aligned header">
+        <i class="red exclamation triangle icon"></i>
         Whoops, something went wrong.
       </h3>
       <p>{{error}}</p>

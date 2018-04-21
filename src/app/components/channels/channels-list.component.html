@@ -32,6 +32,7 @@
       <div class="ui small icon input">
         <input type="text" #textChannelInput name="channelName"
           autocomplete="off" placeholder="Add New Channel"
+          (keydown)="newChannelInputKeypress($event)"
           [(ngModel)]="newChannelName">
         <i class="green circular plus link icon"
           (click)="createChannel()"></i>
