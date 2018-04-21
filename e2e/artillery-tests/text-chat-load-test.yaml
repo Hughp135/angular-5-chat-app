@@ -20,9 +20,9 @@ scenarios:
         - emit:
             channel: "send-message"
             data:
-              channel_id: "5ace3eac3f26c021df9e40fb"
-              server_id: "5ace3eac3f26c021df9e40ed"
+              server_id: "5ada5c98d89838316c432221"
+              channel_id: "5ada5c98d89838316c432237"
               message: '{{ greeting }}'
-        - think: 0.05
-          count: 1
+        - think: 0.2
+          count: 50
       - think: 240

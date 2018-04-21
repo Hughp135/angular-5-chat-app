@@ -17,8 +17,8 @@ export function sendMessage(io: any) {
 
       // TEST SOCKET ONLY
       if (socket.handshake.query && socket.handshake.query.test === TEST_SECRET) {
-        const [testUser, firstChannel] = await getTestUserObjects(socket, request);
-        await emitMessage(io, request.message, firstChannel, testUser);
+        const [testUser, firstChannel, testSrv] = await getTestUserObjects(socket, request);
+        await emitMessage(io, request.message, firstChannel, testUser, testSrv);
 
         return;
       }

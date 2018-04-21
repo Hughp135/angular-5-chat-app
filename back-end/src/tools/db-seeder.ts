@@ -17,7 +17,7 @@ async function seed() {
   console.warn('Removing all collections...');
   await removeAllCollections();
   console.warn('Generating users...');
-  const user: any = await createMainUser();
+  const user: any = await createMainUsers();
 
   console.warn('Generating servers...');
   const servers = await createServers(user._id);
@@ -44,7 +44,11 @@ async function seed() {
   process.exit();
 }
 
-async function createMainUser() {
+async function createMainUsers() {
+  await User.create({
+    username: 'noservers',
+    password: 'asdasd',
+  });
   return await User.create({
     username: 'asd',
     password: 'asdasd',
