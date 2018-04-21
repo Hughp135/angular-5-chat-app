@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { WebsocketService } from '../../services/websocket.service';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +14,19 @@ export class LoginComponent {
   public submitting = false;
   public loginForm: FormGroup;
   public error: string;
+  redirectTo: string;
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private apiService: ApiService,
     private wsService: WebsocketService,
-    private router: Router) {
+    private router: Router,
+    route: ActivatedRoute,
+  ) {
     this.createForm();
+    route.params.subscribe(params => {
+      this.redirectTo = params.redirect;
+    });
   }
 
   createForm() {
@@ -42,7 +50,11 @@ export class LoginComponent {
   async connectToSocket() {
     const connected = await this.wsService.connect().toPromise();
     if (connected) {
-      this.router.navigate(['/']);
+      if (this.redirectTo) {
+        await this.router.navigate([this.redirectTo]);
+      } else {
+        await this.router.navigate(['/']);
+      }
     }
     return !connected && {
       error: {

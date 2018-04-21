@@ -22,6 +22,9 @@ import { Error404Component } from './components/error-pages/error-404/error-404.
 export const appRoutes: Routes = [
   {
     path: 'login', component: LoginComponent,
+    children: [
+      { path: ':redirect', component: LoginComponent },
+    ],
   },
   {
     path: 'register', component: RegisterComponent,
@@ -76,6 +79,10 @@ export const appRoutes: Routes = [
         resolve: { state: ServerInviteResolver },
       },
     ],
+  },
+  {
+    path: '**',
+    component: Error404Component,
   },
 ];
 

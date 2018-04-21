@@ -12,7 +12,11 @@ describe('AuthGuardService', () => {
     connect: jasmine.createSpy(),
   };
 
-  beforeEach(() => {
+  const fakeStateSnapshot: any = {
+    url: undefined,
+  };
+
+  beforeEach (() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       providers: [
@@ -37,9 +41,9 @@ describe('AuthGuardService', () => {
             return Promise.resolve(false);
           },
         }));
-        expect(await service.canActivate()).toBeFalsy();
+        expect(await service.canActivate(undefined, fakeStateSnapshot)).toBeFalsy();
         expect(router.navigate).toHaveBeenCalledTimes(1);
-        expect(router.navigate).toHaveBeenCalledWith(['/login']);
+        expect(router.navigate).toHaveBeenCalledWith(['/login', { redirect: undefined }]);
       }),
   );
   it('should connect and proceed to route',
@@ -52,7 +56,7 @@ describe('AuthGuardService', () => {
             return Promise.resolve(true);
           },
         }));
-        expect(await service.canActivate()).toEqual(true);
+        expect(await service.canActivate(undefined, fakeStateSnapshot)).toEqual(true);
         expect(router.navigate).not.toHaveBeenCalled();
       }),
   );
@@ -62,7 +66,7 @@ describe('AuthGuardService', () => {
       async (service: AuthGuardService, router, wsService) => {
         wsService.connected = true;
         spyOn(router, 'navigate');
-        expect(await service.canActivate()).toEqual(true);
+        expect(await service.canActivate(undefined, fakeStateSnapshot)).toEqual(true);
         expect(router.navigate).not.toHaveBeenCalled();
       }),
   );

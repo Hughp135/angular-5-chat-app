@@ -57,7 +57,7 @@ export class RegisterComponent {
     // await new Promise(res => setTimeout(res, 2500));
     const connected = await this.wsService.connect().toPromise();
     if (connected) {
-      this.router.navigate(['/']);
+      await this.router.navigate(['/']);
       return;
     }
 
