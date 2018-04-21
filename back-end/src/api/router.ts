@@ -9,6 +9,7 @@ import { getUser } from './users/get';
 import { leaveServer } from './servers/leave';
 import { deleteServer } from './servers/delete';
 import { deleteChannel } from './channels/delete';
+import { getServerInvite } from './servers/invites/get';
 
 const router = Router();
 
@@ -19,11 +20,12 @@ router.post('/register', register);
 // Authenticated routes
 router.post('/servers', authMiddleware, createServer);
 router.get('/channels', authMiddleware, getChannels);
-router.get('/servers', authMiddleware, getServers);
 router.get('/users/:username', authMiddleware, getUser);
 // Servers
+router.get('/servers', authMiddleware, getServers);
 router.post('/leave-server/:id', authMiddleware, leaveServer);
 router.delete('/delete-server/:id', authMiddleware, deleteServer);
+router.get('/servers/invites/:id', authMiddleware, getServerInvite);
 // Channels
 router.delete('/delete-channel/:id', authMiddleware, deleteChannel);
 

@@ -33,17 +33,20 @@ import { MainResolver } from './resolvers/main-resolver.service';
 import { ChatChannelResolver } from './resolvers/chat-channel-resolver.service';
 import { FriendsComponent } from './components/friends/friends.component';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
+import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
 import { DirectMessageService } from './services/direct-message.service';
 import { ImageCropperComponent } from './components/image-cropper/image-cropper.component';
 import { FriendRequestService } from './services/friend-request.service';
 import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
-import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
 import { AddFriendComponent } from './components/friend-requests/add-friend/add-friend.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { DmchannelListComponent } from './components/friends/dmchannel-list/dmchannel-list.component';
 import { ChannelSettingsService } from './services/channel-settings.service';
 import { environment } from '../environments/environment';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
+import { ServerInviteComponent } from './components/server-invite/server-invite.component';
+import { ServerInviteResolver } from './resolvers/server-invite-resolver.service';
+import { Error404Component } from './components/error-pages/error-404/error-404.component';
 
 
 const optionalImports = [];
@@ -75,6 +78,8 @@ if (!environment.production) {
     AutofocusDirective,
     DmchannelListComponent,
     ConfirmModalComponent,
+    ServerInviteComponent,
+    Error404Component,
   ],
   entryComponents: [
     CreateServerComponent,
@@ -105,6 +110,7 @@ if (!environment.production) {
     ChatChannelResolver,
     FriendsResolver,
     FriendRequestsResolver,
+    ServerInviteResolver,
     DirectMessageService,
     FriendRequestService,
   ],

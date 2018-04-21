@@ -6,6 +6,8 @@ export interface IServerModel extends mongoose.Document {
   name: string;
   owner_id: mongoose.Schema.Types.ObjectId;
   image_url: string;
+  invite_id: string;
+
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -18,6 +20,7 @@ const serverSchema = new mongoose.Schema({
   name: { type: String, required: true, maxLength: 40, minLength: 3 },
   owner_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   image_url: { type: String },
+  invite_id: { type: String, index: true },
 }, {
     timestamps: true,
   });

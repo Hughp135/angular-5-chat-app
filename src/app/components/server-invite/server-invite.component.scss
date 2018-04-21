@@ -1,0 +1,26 @@
+#centered-container {
+  height: 100%;
+  display: flex;  
+  margin: 0;
+  background: #495660;
+}
+
+.segment.very.padded {
+  border-radius: 8px;
+}
+
+#invite-segment {
+  h3 {
+    margin-bottom: 25px;
+  }
+}
+
+.button.basic {
+  color: rgba(0, 0, 0, 0.87)!important;
+  margin-right: 10px;
+  text-transform: uppercase;
+}
+
+.server-name {
+  color: #0587b7;
+}

@@ -78,6 +78,7 @@ async function createServers(owner_id) {
         name: `Server ${index + 1}`,
         owner_id: owner_id,
         image_url: index % 2 === 0 ? 'https://semantic-ui.com/images/avatar/small/elliot.jpg' : undefined,
+        invite_id: `server${index + 1}`,
       });
     });
   await Server.create({

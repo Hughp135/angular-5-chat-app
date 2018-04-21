@@ -1,4 +1,4 @@
-<div class="header">
+<div class="header" (window:keydown)="handleWindowKeypress($event)">
   Create Server  
 </div>
 <div class="content">
@@ -36,7 +36,7 @@
         id="upload-field">
         <label for="">Upload an Icon for your server (Optional)</label>
         <label for="file"
-          class="ui labeled icon primary button">
+          class="ui labeled icon basic blue button">
           <i class="large image icon"></i>
           Select an Image
         </label>
@@ -61,11 +61,11 @@
 </div>
 
 <div class="actions">
-  <button class="ui tiny basic tertiary button"
+  <button class="ui basic tertiary button"
     (click)="modal.deny(undefined)">
     CANCEL
   </button>
-  <button class="ui tiny green button"
+  <button class="ui green button"
     [disabled]="!form.valid"
     (click)="createServer()"
     autofocus>
