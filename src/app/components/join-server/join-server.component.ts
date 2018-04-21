@@ -6,11 +6,11 @@ import { MainResolver } from '../../resolvers/main-resolver.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-server-invite',
-  templateUrl: './server-invite.component.html',
-  styleUrls: ['./server-invite.component.scss'],
+  selector: 'app-join-server',
+  templateUrl: './join-server.component.html',
+  styleUrls: ['./join-server.component.scss'],
 })
-export class ServerInviteComponent implements OnInit {
+export class JoinServerComponent implements OnInit {
   server: ChatServer;
   inviteExists = false;
   error: string;

@@ -15,7 +15,7 @@ import { FriendsComponent } from './components/friends/friends.component';
 import { FriendsResolver } from './resolvers/friends-resolver.service';
 import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
 import { FriendRequestsResolver } from './resolvers/friend-requests-resolver.service';
-import { ServerInviteComponent } from './components/server-invite/server-invite.component';
+import { JoinServerComponent } from './components/join-server/join-server.component';
 import { ServerInviteResolver } from './resolvers/server-invite-resolver.service';
 import { Error404Component } from './components/error-pages/error-404/error-404.component';
 
@@ -75,7 +75,7 @@ export const appRoutes: Routes = [
       },
       {
         path: ':id',
-        component: ServerInviteComponent,
+        component: JoinServerComponent,
         resolve: { state: ServerInviteResolver },
       },
     ],

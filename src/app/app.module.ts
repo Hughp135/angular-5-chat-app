@@ -43,10 +43,11 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { DmchannelListComponent } from './components/friends/dmchannel-list/dmchannel-list.component';
 import { ChannelSettingsService } from './services/channel-settings.service';
 import { environment } from '../environments/environment';
-import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
-import { ServerInviteComponent } from './components/server-invite/server-invite.component';
+import { ConfirmModalComponent } from './components/modals/confirm-modal/confirm-modal.component';
+import { JoinServerComponent } from './components/join-server/join-server.component';
 import { ServerInviteResolver } from './resolvers/server-invite-resolver.service';
 import { Error404Component } from './components/error-pages/error-404/error-404.component';
+import { ServerInviteComponent } from './components/modals/server-invite/server-invite.component';
 
 
 const optionalImports = [];
@@ -78,6 +79,7 @@ if (!environment.production) {
     AutofocusDirective,
     DmchannelListComponent,
     ConfirmModalComponent,
+    JoinServerComponent,
     ServerInviteComponent,
     Error404Component,
   ],
@@ -85,6 +87,7 @@ if (!environment.production) {
     CreateServerComponent,
     AddFriendComponent,
     ConfirmModalComponent,
+    ServerInviteComponent,
   ],
   imports: [
     SuiModule,

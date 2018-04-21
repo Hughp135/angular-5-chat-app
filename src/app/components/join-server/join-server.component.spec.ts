@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ServerInviteComponent } from './server-invite.component';
+import { JoinServerComponent } from './join-server.component';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -8,9 +8,9 @@ import { ApiService } from '../../services/api.service';
 import { MainResolver } from '../../resolvers/main-resolver.service';
 import { Router } from '@angular/router';
 
-describe('ServerInviteComponent', () => {
-  let component: ServerInviteComponent;
-  let fixture: ComponentFixture<ServerInviteComponent>;
+describe('JoinServerComponent', () => {
+  let component: JoinServerComponent;
+  let fixture: ComponentFixture<JoinServerComponent>;
 
   const server = {
     name: 'testServer',
@@ -39,7 +39,7 @@ describe('ServerInviteComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ServerInviteComponent],
+      declarations: [JoinServerComponent],
       providers: [
         { provide: ActivatedRoute, useValue: fakeRoute },
         { provide: ApiService, useValue: apiServiceMock },
@@ -51,7 +51,7 @@ describe('ServerInviteComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ServerInviteComponent);
+    fixture = TestBed.createComponent(JoinServerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     router = TestBed.get(Router);

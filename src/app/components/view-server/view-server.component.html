@@ -27,6 +27,10 @@
           <i class="minus icon"></i>
           Leave Server
         </div>
+        <div class="item" (click)="openServerInviteModal()">
+            <i class="user plus icon"></i>
+            Invite People
+        </div>
         <div *ngIf="isOwner"
           class="item red"
           (click)="showDeleteServerConfirm()">
