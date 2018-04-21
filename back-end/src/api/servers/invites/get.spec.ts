@@ -69,6 +69,7 @@ describe('api/servers/invites/get', () => {
       .expect(200, {
         _id: server._id.toString(),
         name: 'test',
+        invite_id: '123',
       });
   });
 });

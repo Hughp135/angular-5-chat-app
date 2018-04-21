@@ -69,7 +69,7 @@ export class ServerResolver implements Resolve<ChatServer> {
       .toPromise();
     const server = serverList.find(srv => srv._id === id);
     if (!server) {
-      throw new Error();
+      throw new Error('Server not in servers list');
     }
 
     this.store.dispatch({

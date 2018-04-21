@@ -6,6 +6,7 @@ export async function getServerInvite(req, res) {
     invite_id: req.params.id,
   }, {
     name: 1,
+    invite_id: 1,
   }).lean();
 
   if (!server) {

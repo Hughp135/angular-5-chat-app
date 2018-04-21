@@ -237,9 +237,18 @@ describe('ChannelsListComponent', () => {
     component.showNewChannelInput = true;
     component.newChannelName = 'testname';
     component.newChannelInputKeypress({
-      key: 'Escape'
+      key: 'Escape',
     });
     expect(component.showNewChannelInput).toEqual(false);
     expect(component.newChannelName).toEqual('');
+  });
+  it('pressing any other key on input does nothing', () => {
+    component.showNewChannelInput = true;
+    component.newChannelName = 'testname';
+    component.newChannelInputKeypress({
+      key: 'something',
+    });
+    expect(component.showNewChannelInput).toEqual(true);
+    expect(component.newChannelName).toEqual('testname');
   });
 });

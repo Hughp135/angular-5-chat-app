@@ -1,17 +1,16 @@
 <div id="centered-container" class="ui middle aligned center aligned grid">
-  <div *ngIf="false" class="ui active inverted dimmer">
-    <div class="ui text large loader">
-      <h3>Joining Server...</h3>
-    </div>
-  </div>
-
   <div *ngIf="!error && server" class="ten wide centered column">
     <div id="invite-segment" class="ui very padded segment">
       <h3>Do you want to join "
         <span class="server-name">{{ server.name }}</span>"?
       </h3>
-      <button class="ui basic button">No thanks</button>
-      <button class="ui green button">Join Server</button>
+      <button class="ui basic button" [routerLink]="['/']">No thanks</button>
+      <button class="ui green button" (click)="joinServer()">Join Server</button>
+    </div>
+    <div *ngIf="loading" class="ui active dimmer">
+      <div class="ui text large loader">
+        <h3>Joining Server...</h3>
+      </div>
     </div>
   </div>
   <div *ngIf="error" class="ten wide centered column">
