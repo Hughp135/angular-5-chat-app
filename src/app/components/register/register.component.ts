@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { WebsocketService } from '../../services/websocket.service';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -14,13 +15,18 @@ export class RegisterComponent {
   public submitting = false;
   public error: string = null;
   public success = false;
+  public redirectTo: string;
 
   constructor(
     private apiService: ApiService,
     private wsService: WebsocketService,
     private router: Router,
+    route: ActivatedRoute,
   ) {
     this.createForm();
+    route.params.subscribe(params => {
+      this.redirectTo = params.redirect;
+    });
   }
 
   createForm() {
@@ -57,7 +63,7 @@ export class RegisterComponent {
     // await new Promise(res => setTimeout(res, 2500));
     const connected = await this.wsService.connect().toPromise();
     if (connected) {
-      this.router.navigate(['/']);
+      await this.router.navigate([this.redirectTo || '/']);
       return;
     }
 

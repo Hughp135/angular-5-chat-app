@@ -81,6 +81,13 @@ export class CreateServerComponent implements OnInit {
     }
   }
 
+  /* istanbul ignore next */
+  handleWindowKeypress(event) {
+    if (event.key === 'Escape') {
+      this.modal.deny(undefined);
+    }
+  }
+
 }
 
 /* istanbul ignore next */

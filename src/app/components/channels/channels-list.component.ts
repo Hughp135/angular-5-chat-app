@@ -17,7 +17,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
 import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
 import { SuiModalService } from 'ng2-semantic-ui';
-import { ConfirmModal } from '../confirm-modal/confirm-modal.component';
+import { ConfirmModal } from '../modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-channels-list',
@@ -129,6 +129,13 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
           : 'An error occured while trying to delete the channel';
         this.errorService.errorMessage.next(new ErrorNotification(errMessage, 5000));
       });
+  }
+
+  newChannelInputKeypress(event) {
+    if (event.key === 'Escape') {
+      this.showNewChannelInput = false;
+      this.newChannelName = '';
+    }
   }
 
   get isOwner() {

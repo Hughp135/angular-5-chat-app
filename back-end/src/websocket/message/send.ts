@@ -17,8 +17,8 @@ export function sendMessage(io: any) {
 
       // TEST SOCKET ONLY
       if (socket.handshake.query && socket.handshake.query.test === TEST_SECRET) {
-        const [testUser, firstChannel] = await getTestUserObjects(socket, request);
-        await emitMessage(io, request.message, firstChannel, testUser);
+        const [testUser, firstChannel, testSrv] = await getTestUserObjects(socket, request);
+        await emitMessage(io, request.message, firstChannel, testUser, testSrv);
 
         return;
       }
@@ -74,6 +74,7 @@ async function emitMessage(io, message: string, channel, user, server?) {
     io.in(`dmchannel-${channel._id}`).emit('chat-message', chatMessage);
   }
 
+  channel.message_count++;
   channel.last_message = now;
   await Promise.all([
     ChatMessageModel.create(chatMessage),

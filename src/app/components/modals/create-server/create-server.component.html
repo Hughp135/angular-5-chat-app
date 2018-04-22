@@ -1,24 +1,21 @@
-<div class="header">
-  Create Server  
+<div class="header" (window:keydown)="handleWindowKeypress($event)">
+  Create Server
 </div>
 <div class="content">
-  <div *ngIf="loading"
-    class="ui active inverted dimmer">
+  <div *ngIf="loading" class="ui active inverted dimmer">
     <div class="ui text loader">Submitting...</div>
   </div>
   <div class="">
     <p>
-      Make your own server to feel all cool and stuff!
+      Make your own server to feel all cool and
+      stuff!
     </p>
-    <div *ngIf="error"
-      class="ui error message">
+    <div *ngIf="error" class="ui error message">
       <h3>Failed to create server.</h3>
       <p>{{ error }}</p>
     </div>
-    <form [formGroup]="form"
-      (submit)="createServer()"
-      action=""
-      class="ui form">
+    <form [formGroup]="form" (submit)="createServer()"
+      action="" class="ui form">
       <div class="field">
         <label>
           Server Name
@@ -27,26 +24,18 @@
             Must be at least 3 characters long
           </span>
         </label>
-        <input class="ui small input"
-          formControlName="name"
-          type="text"
-          placeholder="Enter a name for your server...">
+        <input class="ui small input" formControlName="name"
+          type="text" placeholder="Enter a name for your server...">
       </div>
-      <div class="field"
-        id="upload-field">
-        <label for="">Upload an Icon for your server (Optional)</label>
-        <label for="file"
-          class="ui labeled icon primary button">
+      <div class="field" id="upload-field">
+        <label for="">Server Icon (Optional)</label>
+        <label for="file" class="ui labeled icon basic blue button">
           <i class="large image icon"></i>
-          Select an Image
+          Upload an Image
         </label>
-        <input type="file"
-          id="file"
-          (change)="onFileChange($event)"
-          style="display:none"
-          accept="image/*">
-        <div class="ui tiny red button"
-          *ngIf="cropperImgSrc"
+        <input type="file" id="file" (change)="onFileChange($event)"
+          style="display:none" accept="image/*">
+        <div class="ui tiny red button" *ngIf="cropperImgSrc"
           (click)="cropperImgSrc = null">
           <i class="remove icon"></i>
           Remove image
@@ -54,21 +43,18 @@
       </div>
     </form>
     <app-image-cropper *ngIf="cropperImgSrc"
-      [imgSrc]="cropperImgSrc"
-      (croppedImgSrc)="setIconField($event)">
+      [imgSrc]="cropperImgSrc" (croppedImgSrc)="setIconField($event)">
     </app-image-cropper>
   </div>
 </div>
 
 <div class="actions">
-  <button class="ui tiny basic tertiary button"
+  <button class="ui basic tertiary button"
     (click)="modal.deny(undefined)">
     CANCEL
   </button>
-  <button class="ui tiny green button"
-    [disabled]="!form.valid"
-    (click)="createServer()"
-    autofocus>
+  <button class="ui green button" [disabled]="!form.valid"
+    (click)="createServer()" autofocus>
     Create Server
   </button>
 </div>

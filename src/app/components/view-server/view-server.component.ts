@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 import { MainResolver } from '../../resolvers/main-resolver.service';
 import { Me } from 'shared-interfaces/user.interface';
 import { SuiModalService } from 'ng2-semantic-ui';
-import { ConfirmModal } from '../confirm-modal/confirm-modal.component';
+import { ConfirmModal } from '../modals/confirm-modal/confirm-modal.component';
+import { ServerInviteModal } from '../modals/server-invite/server-invite.component';
 
 @Component({
   selector: 'app-view-server',
@@ -99,6 +100,18 @@ export class ViewServerComponent implements OnInit {
           : 'Failed to delete server.';
         this.errorService.errorMessage
           .next(new ErrorNotification(error, 5000));
+      });
+  }
+
+  /* istanbul ignore next */
+  openServerInviteModal() {
+    this.modalService.open(new ServerInviteModal(
+      this.currentServer.name,
+      this.currentServer.invite_id,
+    ))
+      .onApprove(() => {
+      })
+      .onDeny(() => {
       });
   }
 

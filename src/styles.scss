@@ -21,9 +21,14 @@ input.ng-invalid.ng-dirty.ng-touched {
   border-radius: 8px !important;
 
   &.tertiary {
+    background: none !important;
     &:not(:hover) {
       box-shadow: none !important;
-      background: none !important;
+    }
+
+    &:hover {
+      border: none;
+      box-shadow: 0px 0px 1px grey;
     }
 
     &.basic {
@@ -33,6 +38,10 @@ input.ng-invalid.ng-dirty.ng-touched {
 
   &.small {
     padding: 1.25em 1.25em 1em !important;
+  }
+
+  &.basic {
+    box-shadow: 0 0 0 1px rgba(34, 36, 38, 0.27) !important;
   }
 }
 

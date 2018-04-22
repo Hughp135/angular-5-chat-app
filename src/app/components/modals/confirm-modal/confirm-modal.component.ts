@@ -28,7 +28,8 @@ export class ConfirmModal extends ComponentModalConfig<IConfirmModalContext, voi
     question: string,
     confirmButtonClass: string,
     confirmButtonText: string,
-    size = ModalSize.Small) {
+    size = ModalSize.Small,
+  ) {
     super(ConfirmModalComponent, {
       title,
       question,
