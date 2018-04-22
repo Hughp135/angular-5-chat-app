@@ -14,7 +14,7 @@ export class LoginComponent {
   public submitting = false;
   public loginForm: FormGroup;
   public error: string;
-  redirectTo: string;
+  public redirectTo: string;
 
   constructor(
     private fb: FormBuilder,
@@ -50,11 +50,7 @@ export class LoginComponent {
   async connectToSocket() {
     const connected = await this.wsService.connect().toPromise();
     if (connected) {
-      if (this.redirectTo) {
-        await this.router.navigate([this.redirectTo]);
-      } else {
-        await this.router.navigate(['/']);
-      }
+      await this.router.navigate([this.redirectTo || '/']);
     }
     return !connected && {
       error: {

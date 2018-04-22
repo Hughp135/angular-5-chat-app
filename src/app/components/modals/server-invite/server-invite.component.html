@@ -3,10 +3,13 @@
 </div>
 <div class="content">
   <p>Send people this link to join the server:</p>
-  <div class="ui fluid action input">
-    <input type="text" readonly [value]="inviteLink">
-    <div class="ui primary button">
-      Copy
+  <div class="ui large action input" (window:click)="popup.close()">
+    <input type="text" readonly [value]="inviteLink"
+      (click)="$event.target.select()" #urlInput>
+    <div class="ui primary icon button" [ngxClipboard]="urlInput"
+      suiPopup popupText="Copied" popupTrigger="click"
+      #popup="suiPopup" popupInverted="true">
+      <i class=" copy icon "></i>
     </div>
   </div>
 </div>

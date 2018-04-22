@@ -48,6 +48,7 @@ import { JoinServerComponent } from './components/join-server/join-server.compon
 import { ServerInviteResolver } from './resolvers/server-invite-resolver.service';
 import { Error404Component } from './components/error-pages/error-404/error-404.component';
 import { ServerInviteComponent } from './components/modals/server-invite/server-invite.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 
 const optionalImports = [];
@@ -98,6 +99,7 @@ if (!environment.production) {
     HttpClientModule,
     StoreModule.forRoot(reducers),
     ShContextMenuModule,
+    ClipboardModule,
     ...optionalImports,
   ],
   providers: [

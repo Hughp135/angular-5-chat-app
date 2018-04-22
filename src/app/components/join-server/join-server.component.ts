@@ -39,7 +39,7 @@ export class JoinServerComponent implements OnInit {
         .post(`join-server/${this.server.invite_id}`, {})
         .toPromise();
       await this.mainResolver.resolve(this.route.snapshot);
-      this.router.navigate([`/channels/${this.server._id}`]);
+      await this.router.navigate([`/channels/${this.server._id}`]);
       this.loading = false;
     } catch (err) {
       this.loading = false;

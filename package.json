@@ -91,6 +91,7 @@
     "mongoose-delete": "^0.4.0",
     "ng2-right-click-menu": "file:vendor/ng2-right-click-menu-0.0.16.tgz",
     "ng2-semantic-ui": "^0.9.6",
+    "ngx-clipboard": "^10.0.0",
     "rxjs": "^5.5.8",
     "set-cookie-parser": "^2.0.0",
     "shared-interfaces": "file:shared-interfaces",

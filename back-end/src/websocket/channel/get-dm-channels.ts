@@ -50,7 +50,6 @@ export async function sendChannelList(userId, socket) {
         },
       },
     ]);
-
   const channelsFormatted = channelsToChannelListItems(channels);
 
   // Get all users in channels for their usernames etc.

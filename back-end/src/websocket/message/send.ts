@@ -74,6 +74,7 @@ async function emitMessage(io, message: string, channel, user, server?) {
     io.in(`dmchannel-${channel._id}`).emit('chat-message', chatMessage);
   }
 
+  channel.message_count++;
   channel.last_message = now;
   await Promise.all([
     ChatMessageModel.create(chatMessage),

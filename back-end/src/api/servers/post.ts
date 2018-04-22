@@ -3,6 +3,7 @@ import User from '../../models/user.model';
 import * as Joi from 'joi';
 import { log } from 'winston';
 import * as fs from 'fs';
+import * as shortid from 'shortid';
 
 const schema = Joi.object().keys({
   name: Joi.string().min(3).max(30).required(),
@@ -32,6 +33,7 @@ export async function createServer(req, res) {
     const server = await Server.create({
       name: req.body.name,
       owner_id: user._id,
+      invite_id: shortid.generate(),
     });
 
     (user as any).joined_servers.push(server._id);
