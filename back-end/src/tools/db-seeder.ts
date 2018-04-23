@@ -5,6 +5,7 @@ import User from '../models/user.model';
 import ChatMessage from '../models/chatmessage.model';
 import * as bcrypt from 'bcrypt';
 import * as config from 'config';
+import voiceChannelModel from '../models/voice-channel.model';
 
 /* tslint:disable:no-unused-variable */
 
@@ -90,15 +91,19 @@ async function createServers(owner_id) {
 }
 
 async function createChannels(serverIds) {
-  const promises = serverIds
-    .map((server_id) =>
-      [...Array(3)].map((x, idx) =>
-        Channel.create({
-          name: `Text Channel ${idx + 1}`,
-          server_id: server_id,
-        }),
-      ),
-  ).reduce((a, b) => a.concat(b));
+  const promises = [];
+  serverIds.forEach(serverId => {
+    [...Array(3)].forEach((x, idx) => {
+      promises.push(Channel.create({
+        name: `Text Channel ${idx + 1}`,
+        server_id: serverId,
+      }));
+    });
+    promises.push(voiceChannelModel.create({
+      name: `Voice Channel`,
+      server_id: serverId,
+    }));
+  });
 
   return await Promise.all(promises);
 }

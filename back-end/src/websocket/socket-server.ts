@@ -13,18 +13,21 @@ import { getFriendRequests } from './friends/get-friend-requests';
 import { rejectFriendRequest } from './friends/reject-friend-request';
 import { removeFriend } from './friends/remove-friend';
 import { getChatMessages } from './channel/get-chat-messages';
+import { signal } from './webrtc/signal';
+import { joinVoiceChannel } from './voice-channel/join';
 
 export async function startWs(server) {
   const io = socketIo(server);
   io.use(logInAuth(io));
   io.on('connection', async socket => {
-    log('info', 'User connected ' + socket.id);
+    log('info', `User connected: ${socket.id}, ${socket.claim.username} ${socket.claim.user_id}`);
   });
   io.setMaxListeners(50);
   // Add event handlers
   joinServer(io);
   createChannel(io);
   joinChannel(io);
+  joinVoiceChannel(io);
   sendMessage(io);
   getUserList(io);
   getDmChannels(io);
@@ -34,6 +37,7 @@ export async function startWs(server) {
   getFriendRequests(io);
   rejectFriendRequest(io);
   removeFriend(io);
+  signal(io);
   return io;
 }
 

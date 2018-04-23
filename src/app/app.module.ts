@@ -49,14 +49,16 @@ import { ServerInviteResolver } from './resolvers/server-invite-resolver.service
 import { Error404Component } from './components/error-pages/error-404/error-404.component';
 import { ServerInviteComponent } from './components/modals/server-invite/server-invite.component';
 import { ClipboardModule } from 'ngx-clipboard';
+import { VoiceChannelComponent } from './components/voice-channel/voice-channel.component';
+import { WebRTCService } from './services/webrtc.service';
+import { AudioDeviceService } from './services/audio-device.service';
 
 
-const optionalImports = [];
-if (!environment.production) {
-  optionalImports.push(StoreDevtoolsModule.instrument({
+const optionalImports = environment.production ? [] : [
+  StoreDevtoolsModule.instrument({
     maxAge: 10,
-  }));
-}
+  }),
+];
 
 @NgModule({
   declarations: [
@@ -83,6 +85,7 @@ if (!environment.production) {
     JoinServerComponent,
     ServerInviteComponent,
     Error404Component,
+    VoiceChannelComponent,
   ],
   entryComponents: [
     CreateServerComponent,
@@ -118,6 +121,8 @@ if (!environment.production) {
     ServerInviteResolver,
     DirectMessageService,
     FriendRequestService,
+    WebRTCService,
+    AudioDeviceService,
   ],
   bootstrap: [AppComponent],
 })

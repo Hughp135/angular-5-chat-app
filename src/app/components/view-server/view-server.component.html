@@ -34,8 +34,13 @@
     <div class="item" *ngIf="currentServer">
       <app-channels-list [currentServer]="(currentServerObs | async)"
         [currentChatChannel]="(currentChatChannel | async)"
+        [currentVoiceChannel]="(currentVoiceChannel | async)"
         [me]="me">
       </app-channels-list>
+    </div>
+    <div class="item" *ngIf="(currentVoiceChannel | async)">
+      <app-voice-channel [currentVoiceChannel]="(currentVoiceChannel | async)">
+      </app-voice-channel>
     </div>
   </div>
 

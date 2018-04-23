@@ -18,6 +18,8 @@ import { AppState } from '../../reducers/app.states';
 import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
 import { SuiModalService } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../modals/confirm-modal/confirm-modal.component';
+import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interface';
+import { JOIN_VOICE_CHANNEL } from '../../reducers/current-voice-channel-reducer';
 
 @Component({
   selector: 'app-channels-list',
@@ -31,6 +33,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
   public showNewChannelInput = false;
 
   @Input() currentChatChannel: ChatChannel;
+  @Input() currentVoiceChannel: VoiceChannel;
   @Input() currentServer: ChatServer;
   @Input() me: Me;
 
@@ -67,6 +70,30 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
 
   joinChannel(channel: ChannelListItem) {
     this.router.navigate([`channels/${channel.server_id}/${channel._id}`]);
+  }
+
+  async joinVoiceChannel(channel: VoiceChannel) {
+    this.wsService.socket.emit('join-voice-channel', channel._id);
+    // this.store.dispatch({
+    //   type: JOIN_VOICE_CHANNEL,
+    //   payload: channel,
+    // });
+    // try {
+    //   const joinedChannel: any = await this.wsService
+    //     .awaitNextEvent('joined-voice-channel', 2500);
+
+    //   if (joinedChannel._id !== channel._id) {
+    //     throw new Error();
+    //   }
+
+
+    // } catch (e) {
+    //   console.error(e);
+    //   this.errorService.errorMessage.next(new ErrorNotification(
+    //     'Failed to join voice channel',
+    //     2500,
+    //   ));
+    // }
   }
 
   channelHasUnreadMessages(channel: ChannelListItem) {

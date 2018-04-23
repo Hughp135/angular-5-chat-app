@@ -1,4 +1,5 @@
 import { ChatMessage } from "./message.interface";
+import { VoiceChannel } from "./voice-channel.interface";
 
 export interface CreateChannelRequest {
   name: string;
@@ -18,6 +19,7 @@ export interface ChannelList {
   server_id: string;
   channels: ChannelListItem[];
   users?: any;
+  voiceChannels: VoiceChannel[];
 }
 
 export interface ChannelListItem {

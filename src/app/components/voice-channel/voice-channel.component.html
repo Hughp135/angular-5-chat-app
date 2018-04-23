@@ -1,0 +1,8 @@
+<h3>
+  {{ currentVoiceChannel.name }}
+</h3>
+<p *ngFor="let user of currentVoiceChannel.users">
+  {{ user.username }}
+  <audio *ngIf="user._id !== me._id" class="rtc-audio-element"
+    id="userAudio-{{user._id}}"></audio>
+</p>

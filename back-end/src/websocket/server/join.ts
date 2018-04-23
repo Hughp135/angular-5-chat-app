@@ -5,6 +5,7 @@ import canJoinServer from '../auth/can-join-server';
 import User from '../../models/user.model';
 import * as mongoose from 'mongoose';
 import { sendUserList } from './user-list/user-list';
+import voiceChannelModel from '../../models/voice-channel.model';
 
 export function joinServer(io: any) {
 
@@ -56,10 +57,17 @@ export async function getChannelList(serverId) {
     }).lean();
 
   const channelsFormatted = channelsToChannelListItems(channels);
+  const voiceChannels: any = await voiceChannelModel.find({
+    server_id: serverId,
+  }, {
+      _id: 1,
+      name: 1,
+    }).lean();
 
   const list: ChannelList = {
     server_id: serverId,
     channels: channelsFormatted,
+    voiceChannels,
   };
 
   return list;

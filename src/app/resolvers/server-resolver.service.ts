@@ -57,6 +57,7 @@ export class ServerResolver implements Resolve<ChatServer> {
     return {
       server: currentServerStore,
       channel: this.store.select('currentChatChannel'),
+      voiceChannel: this.store.select('currentVoiceChannel'),
       me: this.store.select('me'),
     };
   }

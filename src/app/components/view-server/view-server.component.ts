@@ -12,6 +12,7 @@ import { Me } from 'shared-interfaces/user.interface';
 import { SuiModalService } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../modals/confirm-modal/confirm-modal.component';
 import { ServerInviteModal } from '../modals/server-invite/server-invite.component';
+import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interface';
 
 @Component({
   selector: 'app-view-server',
@@ -23,6 +24,7 @@ export class ViewServerComponent implements OnInit {
   public currentServerObs: Observable<ChatServer>;
   public currentServer: ChatServer;
   public currentChatChannel: Observable<ChatChannel>;
+  public currentVoiceChannel: Observable<VoiceChannel>;
   public me: Me;
   public serverDropdownOpen = false;
 
@@ -39,6 +41,7 @@ export class ViewServerComponent implements OnInit {
       .subscribe((data) => {
         this.currentServerObs = data.state.server;
         this.currentChatChannel = data.state.channel;
+        this.currentVoiceChannel = data.state.voiceChannel;
         data.state.server.subscribe(server => { this.currentServer = server; });
         data.state.me.subscribe(me => this.me = me);
       });
