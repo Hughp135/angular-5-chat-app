@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { WebRTCService } from '../../services/webrtc.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
 import { VoiceChannel } from 'shared-interfaces/voice-channel.interface';
@@ -17,7 +16,6 @@ export class VoiceChannelComponent implements OnInit {
   @Input() currentVoiceChannel: VoiceChannel;
 
   constructor(
-    private webRtcService: WebRTCService,
     private store: Store<AppState>,
   ) {
     store.select('me').subscribe(me => this.me = me);

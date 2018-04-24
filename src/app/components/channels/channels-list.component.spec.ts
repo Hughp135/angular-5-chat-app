@@ -142,6 +142,7 @@ describe('ChannelsListComponent', () => {
       channels: [
         { name: 'asd', _id: 'visitedYesterday', last_message: now },
       ],
+      voiceChannels: [],
     };
     expect(component.channelHasUnreadMessages(component.currentServer.channelList.channels[0]))
       .toEqual(true);
@@ -156,6 +157,7 @@ describe('ChannelsListComponent', () => {
       channels: [
         { name: 'asd', _id: 'visitedYesterday', last_message: now },
       ],
+      voiceChannels: [],
     };
     component.currentChatChannel = { name: 'asd', _id: 'visitedYesterday' };
 
@@ -172,6 +174,7 @@ describe('ChannelsListComponent', () => {
       channels: [
         { name: 'asd', _id: 'visitedTomorrow', last_message: now },
       ],
+      voiceChannels: [],
     };
     expect(component.channelHasUnreadMessages(component.currentServer.channelList.channels[0]))
       .toEqual(false);
@@ -184,6 +187,7 @@ describe('ChannelsListComponent', () => {
       channels: [
         { name: 'asd', _id: 'notvisited', last_message: now },
       ],
+      voiceChannels: [],
     };
     expect(component.channelHasUnreadMessages(component.currentServer.channelList.channels[0]))
       .toEqual(true);
@@ -250,5 +254,10 @@ describe('ChannelsListComponent', () => {
     });
     expect(component.showNewChannelInput).toEqual(true);
     expect(component.newChannelName).toEqual('testname');
+  });
+  it('joining voice channel emits join-voice-channel', () => {
+    component.joinVoiceChannel({ _id: '123', name: 'chan1', users: [] });
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('join-voice-channel', '123');
   });
 });

@@ -11,6 +11,8 @@ import {
   SERVER_USERLIST_HANDLER,
   SERVER_UPDATE_USERLIST_HANDLER,
   SET_FRIEND_REQUESTS_HANDLER,
+  VOICE_CHANNEL_USERS,
+  JOINED_VOICE_CHANNEL_HANDLER,
 } from './websocket-events/websocket-events';
 
 import { StoreModule, Store } from '@ngrx/store';
@@ -22,12 +24,14 @@ import {
   SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE,
 } from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
-import { ChatChannel } from '../../../shared-interfaces/channel.interface';
+import { ChatChannel, ChannelList } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { SET_FRIEND_REQUESTS } from '../reducers/friends-reducer';
 import { AppStateService } from './app-state.service';
+import { SET_VOICE_CHANNEL_USERS, JOIN_VOICE_CHANNEL } from '../reducers/current-voice-channel-reducer';
+import { VoiceChannel } from '../../../shared-interfaces/voice-channel.interface';
 
 describe('WebsocketService', () => {
   let injector: TestBed;
@@ -46,6 +50,11 @@ describe('WebsocketService', () => {
     _id: '345',
     name: 'channel',
     server_id: '123',
+  };
+  const currentVoiceChannel: VoiceChannel = {
+    _id: 'voice123',
+    name: 'voicechan1',
+    users: [],
   };
 
   beforeEach(() => {
@@ -406,5 +415,75 @@ describe('WebsocketService', () => {
     } catch (e) {
       expect(e.message).toEqual('Request timed out');
     }
+  });
+  it('JOINED_VOICE_CHANNEL handler if channel not found', async () => {
+    spyOn(store, 'select').and.throwError('fake timeout');
+    const fakeSocket = {
+      on: async (msg: string, callback: any) => {
+        await callback({ channelId: 'not-found_id', users: 'hi' })
+          .catch(e => { if (e.message !== 'fake timeout') { throw (e); } });
+      },
+    };
+    (store.dispatch as jasmine.Spy).calls.reset();
+    handlers[JOINED_VOICE_CHANNEL_HANDLER](fakeSocket, store);
+    await new Promise(res => setTimeout(res, 5));
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+  it('JOINED_VOICE_CHANNEL when channel is found', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: currentServer,
+    });
+    const channels: ChannelList = {
+      server_id: currentServer._id,
+      channels: [],
+      voiceChannels: [
+        currentVoiceChannel,
+      ],
+    };
+    store.dispatch({
+      type: SET_CHANNEL_LIST,
+      payload: channels,
+    });
+    const fakeSocket = {
+      on: async (msg: string, callback: any) => {
+        await callback({ channelId: currentVoiceChannel._id, users: 'hi' });
+      },
+    };
+    (store.dispatch as jasmine.Spy).calls.reset();
+    handlers[JOINED_VOICE_CHANNEL_HANDLER](fakeSocket, store);
+    await new Promise(res => setTimeout(res, 5));
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: JOIN_VOICE_CHANNEL,
+      payload: { ...currentVoiceChannel, users: 'hi' },
+    });
+  });
+  it('VOICE_CHANNEL_USERS handler if channel not found', async () => {
+    const fakeSocket = {
+      on: (msg: string, callback: any) => {
+        callback({ channelId: 'not-found_id', users: 'hi' });
+      },
+    };
+    handlers[VOICE_CHANNEL_USERS](fakeSocket, store);
+    await new Promise(res => setTimeout(res, 5));
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+  it('VOICE_CHANNEL_USERS handler sets voice channel users', async () => {
+    const fakeSocket = {
+      on: async (msg: string, callback: any) => {
+        await callback({ channelId: 'voice123', users: 'hi' });
+      },
+    };
+    store.dispatch({
+      type: JOIN_VOICE_CHANNEL,
+      payload: currentVoiceChannel,
+    });
+    (<jasmine.Spy>store.dispatch).calls.reset();
+    handlers[VOICE_CHANNEL_USERS](fakeSocket, store);
+    await new Promise(res => setTimeout(res, 5));
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_VOICE_CHANNEL_USERS,
+      payload: 'hi',
+    });
   });
 });

@@ -72,7 +72,6 @@ export class ServerResolver implements Resolve<ChatServer> {
     if (!server) {
       throw new Error('Server not in servers list');
     }
-
     this.store.dispatch({
       type: LEAVE_CHANNEL,
       payload: null,

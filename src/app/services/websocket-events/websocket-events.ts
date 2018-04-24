@@ -83,8 +83,13 @@ function joinedVoiceChannel(socket, store) {
       .map(srv => srv.channelList.voiceChannels)
       .filter(chans => chans.some(chan => chan._id === channelId))
       .take(1)
-      .toPromise();
+      .timeout(1000)
+      .toPromise()
+      .catch(err => { });
 
+    if (!channels) {
+      return;
+    }
     const channel = channels.find(chan => chan._id === channelId);
     store.dispatch({
       type: JOIN_VOICE_CHANNEL,
@@ -99,7 +104,10 @@ function voiceChannelUsers(socket, store) {
     const channel = await store.select('currentVoiceChannel')
       .filter((chan: VoiceChannel) => (!!chan && chan._id === channelId))
       .take(1)
-      .toPromise();
+      .timeout(1000)
+      .toPromise()
+      .catch(err => { });
+
     if (!channel) {
       return;
     }
