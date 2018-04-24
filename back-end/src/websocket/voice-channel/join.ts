@@ -2,14 +2,12 @@ import voiceChannelModel from '../../models/voice-channel.model';
 import canJoinServer from '../auth/can-join-server';
 import userModel from '../../models/user.model';
 
+/* istanbul ignore next */
 export function joinVoiceChannel(io: any) {
-
   io.on('connection', async socket => {
-
     socket.on('join-voice-channel', async channelId => {
       await handler(io, socket, channelId);
     });
-
   });
 }
 

@@ -19,7 +19,7 @@ export interface ChannelList {
   server_id: string;
   channels: ChannelListItem[];
   users?: any;
-  voiceChannels: VoiceChannel[];
+  voiceChannels?: VoiceChannel[];
 }
 
 export interface ChannelListItem {
