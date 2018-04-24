@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import { ChannelListItem } from 'shared-interfaces/channel.interface';
 
 const voiceChannelSchema = new mongoose.Schema(
   {

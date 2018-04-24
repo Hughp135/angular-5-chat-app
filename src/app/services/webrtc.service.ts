@@ -5,7 +5,7 @@ import { AppState } from '../reducers/app.states';
 import { Me } from '../../../shared-interfaces/user.interface';
 import * as SimplePeer from 'simple-peer';
 import { AudioDeviceService } from './audio-device.service';
-import { VoiceChannel, VoiceChannelUser } from '../../../shared-interfaces/voice-channel.interface';
+import { VoiceChannel } from '../../../shared-interfaces/voice-channel.interface';
 import { ErrorService, ErrorNotification } from './error.service';
 
 @Injectable()
@@ -20,17 +20,17 @@ export class WebRTCService {
 
   constructor(
     private wsService: WebsocketService,
-    private store: Store<AppState>,
-    private audioDeviceService: AudioDeviceService,
+    store: Store<AppState>,
+    public audioDeviceService: AudioDeviceService,
     private errorService: ErrorService,
   ) {
     store.select('me').subscribe(me => {
       this.me = me;
     });
     store.select('currentVoiceChannel').subscribe(channel => {
+      console.warn('channel changed', channel);
       const prevChannel = this.currentChannel ? { ...this.currentChannel } : null;
       this.currentChannel = channel;
-      console.warn('channel changed', channel);
       this.onChannelJoined(prevChannel);
     });
     // Audio device changes
@@ -47,6 +47,7 @@ export class WebRTCService {
 
     // Subscribe to signal data
     wsService.socket.on('signal', (signal) => {
+      console.warn('got signal');
       if (signal && this.peers && this.peers[signal.socketId]) {
         const peer = this.peers[signal.socketId];
         peer.signal(signal.signalData);
@@ -63,6 +64,7 @@ export class WebRTCService {
         console.error('awaiting media stream');
         await this.addMediaStream();
       } catch (e) {
+        this.noMicDetected = true;
         console.error('unable to get stream', e);
       }
     }
@@ -105,10 +107,7 @@ export class WebRTCService {
   }
 
   connectToUser(socket_id: string, isInitiator: boolean) {
-    if (this.peers[socket_id] && this.peers[socket_id].connected) {
-      console.warn('Peer already connected, not reconnecting', socket_id);
-      return;
-    }
+    console.warn('Connecting to user ' + socket_id, 'intiator?', isInitiator);
     // TODO: idea to trickle - collect all signal events, emit once per second.
     const p = new SimplePeer({
       initiator: isInitiator,
@@ -171,13 +170,14 @@ export class WebRTCService {
     }
   }
 
-  async reconnectToAllPeers() {
+  reconnectToAllPeers() {
     console.warn('reconnecting to voice');
     // Destroy all peer connections
     const socketIds = Object.keys(this.peers);
 
     socketIds.forEach(socket_id => {
       if (this.peers[socket_id].connected) {
+        console.error('Destroying connection');
         this.peers[socket_id].send('destroy-connection');
       }
       this.peers[socket_id].destroy();

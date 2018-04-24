@@ -5,7 +5,7 @@ import { AudioDeviceService } from './audio-device.service';
 describe('AudioDeviceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AudioDeviceService]
+      providers: [AudioDeviceService],
     });
   });
 

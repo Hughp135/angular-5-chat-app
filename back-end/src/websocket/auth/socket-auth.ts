@@ -8,6 +8,13 @@ export { logInAuth };
 
 const TEST_SECRET = config.get('TEST_SOCKET_SECRET');
 
+export interface SocketCustom extends SocketIO.Socket {
+  claim: {
+    user_id: string;
+    username: string;
+  };
+}
+
 function logInAuth(io) {
   return async (socket, next) => {
     if (socket.handshake.query && socket.handshake.query.test === TEST_SECRET) {

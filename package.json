@@ -113,6 +113,7 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/sinon": "^4.1.2",
     "@types/sinon-chai": "^2.7.29",
+    "@types/socket.io": "^1.4.33",
     "@types/supertest": "^2.0.4",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",

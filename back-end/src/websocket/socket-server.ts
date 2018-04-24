@@ -22,7 +22,7 @@ export async function startWs(server) {
   io.on('connection', async socket => {
     log('info', `User connected: ${socket.id}, ${socket.claim.username} ${socket.claim.user_id}`);
   });
-  io.setMaxListeners(50);
+  (<any>io).setMaxListeners(50);
   // Add event handlers
   joinServer(io);
   createChannel(io);

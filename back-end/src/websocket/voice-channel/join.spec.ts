@@ -59,11 +59,12 @@ describe('websocket/voice-channel/join', () => {
     io = {
       of: () => ({
         in: () => ({
-          connected: {
-            1: anotherSocket,
-            2: socket,
-          },
+          clients: (callback) => callback(null, [socket.id, anotherSocket.id]),
         }),
+        connected: {
+          [anotherSocket.id]: anotherSocket,
+          [socket.id]: socket,
+        },
       }),
     };
   });
@@ -100,12 +101,12 @@ describe('websocket/voice-channel/join', () => {
     expect(anotherSocketEmit).to.have.been.calledWith('voice-channel-users', {
       channelId: channel._id.toString(),
       users: [
+        { _id: user._id.toString(), socket_id: '123', username: 'user1' },
         {
           _id: 'anotherSocketId',
           socket_id: 'anotherSocket',
           username: 'anotherSocketName',
         },
-        { _id: user._id.toString(), socket_id: '123', username: 'user1' },
       ],
     });
   });
@@ -114,12 +115,12 @@ describe('websocket/voice-channel/join', () => {
     expect(socketEmit).calledWith('joined-voice-channel', {
       channelId: channel._id.toString(),
       users: [
+        { _id: user._id.toString(), socket_id: '123', username: 'user1' },
         {
           _id: 'anotherSocketId',
           socket_id: 'anotherSocket',
           username: 'anotherSocketName',
         },
-        { _id: user._id.toString(), socket_id: '123', username: 'user1' },
       ],
     });
   });

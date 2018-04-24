@@ -13,8 +13,6 @@ export class AudioDeviceService {
     = new BehaviorSubject(undefined);
   public savedOutputDevice: string;
   public savedInputDevice: string;
-  private noMicDetected: boolean;
-  private stream: MediaStream;
 
   constructor() {
     this.savedInputDevice = localStorage.getItem('inputDevice');

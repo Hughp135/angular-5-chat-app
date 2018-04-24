@@ -1,14 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VoiceChannelComponent } from './voice-channel.component';
-import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from '../../reducers/app.states';
+import { StoreModule } from '@ngrx/store';
 import { reducers } from '../../reducers/reducers';
+import { WebRTCService } from '../../services/webrtc.service';
 
 describe('VoiceChannelComponent', () => {
   let component: VoiceChannelComponent;
   let fixture: ComponentFixture<VoiceChannelComponent>;
-  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -17,6 +16,7 @@ describe('VoiceChannelComponent', () => {
       ],
       declarations: [VoiceChannelComponent],
       providers: [
+        { provide: WebRTCService, useValue: {} },
       ],
     })
       .compileComponents();
@@ -24,7 +24,6 @@ describe('VoiceChannelComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(VoiceChannelComponent);
-    store = TestBed.get(Store);
     component = fixture.componentInstance;
     component.currentVoiceChannel = {
       _id: '123',

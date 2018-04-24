@@ -19,7 +19,6 @@ import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
 import { SuiModalService } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../modals/confirm-modal/confirm-modal.component';
 import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interface';
-import { JOIN_VOICE_CHANNEL } from '../../reducers/current-voice-channel-reducer';
 
 @Component({
   selector: 'app-channels-list',
@@ -74,26 +73,6 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
 
   async joinVoiceChannel(channel: VoiceChannel) {
     this.wsService.socket.emit('join-voice-channel', channel._id);
-    // this.store.dispatch({
-    //   type: JOIN_VOICE_CHANNEL,
-    //   payload: channel,
-    // });
-    // try {
-    //   const joinedChannel: any = await this.wsService
-    //     .awaitNextEvent('joined-voice-channel', 2500);
-
-    //   if (joinedChannel._id !== channel._id) {
-    //     throw new Error();
-    //   }
-
-
-    // } catch (e) {
-    //   console.error(e);
-    //   this.errorService.errorMessage.next(new ErrorNotification(
-    //     'Failed to join voice channel',
-    //     2500,
-    //   ));
-    // }
   }
 
   channelHasUnreadMessages(channel: ChannelListItem) {
