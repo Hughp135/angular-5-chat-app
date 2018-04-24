@@ -1,4 +1,6 @@
 import voiceChannelModel from '../../models/voice-channel.model';
+import canJoinServer from '../auth/can-join-server';
+import userModel from '../../models/user.model';
 
 export function joinVoiceChannel(io: any) {
 
@@ -12,14 +14,23 @@ export function joinVoiceChannel(io: any) {
 }
 
 export async function handler(io, socket, channelId) {
-  console.log('user joinin channel', socket.id, channelId);
-  // Todo: checks here
-  const channel = await voiceChannelModel.findOne({
+  const user = await userModel
+    .findOne({
+      _id: socket.claim.user_id,
+    }, {
+      joined_servers: 1,
+    }).lean();
+  const channel: any = await voiceChannelModel.findOne({
     _id: channelId,
   }).lean();
   if (!channel) {
     return socket.emit('soft-error', 'This voice channel no longer exists');
   }
+
+  if (!await canJoinServer(user, channel.server_id)) {
+    return socket.emit('soft-error', 'You don\'t have permission to join this server.');
+  }
+
   socket.join(`voicechannel-${channelId}`);
 
   const sockets = Object.values(io.of('/').in(`voicechannel-${channelId}`).connected);
@@ -34,10 +45,6 @@ export async function handler(io, socket, channelId) {
       users,
     });
   });
-  // io.of('/').in(`voicechannel-${channelId}`).emit('voice-channel-users', {
-  //   channelId,
-  //   users,
-  // });
   socket.emit('joined-voice-channel', {
     channelId,
     users,

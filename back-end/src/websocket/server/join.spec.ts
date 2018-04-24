@@ -7,6 +7,7 @@ import Server from '../../models/server.model';
 import User from '../../models/user.model';
 import createFakeSocketEvent from '../test_helpers/fake-socket';
 import { joinServer, leaveOtherServers } from './join';
+import voiceChannelModel from '../../models/voice-channel.model';
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -17,6 +18,7 @@ describe('websocket server/join', () => {
   let server;
   let user;
   let channel;
+  let voiceChannel;
   const sandbox = sinon.createSandbox();
   const nowDate = new Date();
 
@@ -39,6 +41,10 @@ describe('websocket server/join', () => {
       name: 'test-chan1',
       server_id: server._id,
       last_message: nowDate,
+    });
+    voiceChannel = await voiceChannelModel.create({
+      name: 'test-chan1',
+      server_id: server._id,
     });
   });
   afterEach(async () => {
@@ -106,6 +112,10 @@ describe('websocket server/join', () => {
               server_id: server._id.toString(),
               _id: channel._id.toString(),
               last_message: nowDate,
+            }],
+            voiceChannels: [{
+              name: voiceChannel.name,
+              _id: voiceChannel._id,
             }],
           });
         expect(socket.join).to.have.been

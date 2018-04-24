@@ -4,7 +4,7 @@ import { ChannelListItem } from 'shared-interfaces/channel.interface';
 const voiceChannelSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    server_id: { type: mongoose.Schema.Types.ObjectId },
+    server_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   },
   {
     timestamps: true,

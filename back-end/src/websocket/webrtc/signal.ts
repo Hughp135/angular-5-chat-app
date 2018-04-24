@@ -9,8 +9,7 @@ export function signal(io: any) {
   });
 }
 
-export function handler(socket, data: any) {
-  console.log('sending signal to', data.socketId);
+export function handler(socket, data: { socketId: string, signalData: any }) {
   socket.to(data.socketId).emit('signal', {
     socketId: socket.id,
     signalData: data.signalData,

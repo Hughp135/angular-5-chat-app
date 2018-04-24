@@ -100,7 +100,6 @@ function voiceChannelUsers(socket, store) {
       .filter((chan: VoiceChannel) => (!!chan && chan._id === channelId))
       .take(1)
       .toPromise();
-    console.log(channel);
     if (!channel) {
       return;
     }
