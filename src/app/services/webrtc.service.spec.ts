@@ -51,6 +51,7 @@ describe('WebRTCService', () => {
         { provide: ErrorService, useValue: fakeErrorService },
       ],
     });
+
     service = TestBed.get(WebRTCService);
     store = TestBed.get(Store);
     store.dispatch({
