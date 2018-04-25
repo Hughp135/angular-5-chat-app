@@ -2,14 +2,14 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as mongoose from 'mongoose';
-import { createChannel, handler as createChannelHandler } from './create';
-import Channel from '../../models/channel.model';
+import { handler } from './create';
 import Server from '../../models/server.model';
+import voiceChannelModel from '../../models/voice-channel.model';
 
 const expect = chai.expect;
 chai.use(sinonChai);
 
-describe('websocket channel/create', () => {
+describe('websocket voice-channel/create', () => {
   const result = sinon.spy();
   let serverId;
   const sandbox = sinon.createSandbox();
@@ -46,34 +46,32 @@ describe('websocket channel/create', () => {
   });
   afterEach(async () => {
     await Server.remove({});
-    await Channel.remove({});
+    await voiceChannelModel.remove({});
     result.resetHistory();
     sandbox.restore();
   });
-  it('channel/create success', async () => {
+  it('creates a voice channel and emits channel-list', async () => {
     const emit = sandbox.spy();
-    await createChannelHandler(io, socket, {
+    await handler(io, socket, {
       name: 'channel-name',
       server_id: serverId,
     });
-    const channel: any = await Channel.findOne({}).lean();
+    const channel: any = await voiceChannelModel.findOne({}).lean();
 
     expect(channel).not.to.equal(null);
     expect(channel.name).to.equal('channel-name');
     expect(ioEmit).to.have.been
       .calledWith('channel-list', {
         server_id: serverId,
-        channels: [{
-          _id: channel._id.toString(),
+        channels: [],
+        voiceChannels: [{
+          _id: channel._id,
           name: 'channel-name',
-          server_id: serverId.toString(),
-          last_message: undefined,
         }],
-        voiceChannels: [],
       });
   });
   it('channel/create fails if no server_id given', async () => {
-    await createChannelHandler(io, socket, {
+    await handler(io, socket, {
       name: 'channel-name',
       server_id: undefined,
     });
@@ -83,7 +81,7 @@ describe('websocket channel/create', () => {
   });
   it('channel/create fails if server.owner_id does not match socket.claim.user_id', async () => {
     socket.claim.user_id = '999996781234567812345678';
-    await createChannelHandler(io, socket, {
+    await handler(io, socket, {
       name: 'channel-name',
       server_id: serverId,
     });
@@ -92,13 +90,13 @@ describe('websocket channel/create', () => {
       .calledWith('soft-error', 'You do not have permission to add a channel.');
   });
   it('does not allow two channels to be created with same name', async () => {
-    const channel: any = await Channel.create({
+    const channel: any = await voiceChannelModel.create({
       name: 'channel-name',
       server_id: serverId,
     });
 
     const emit = sandbox.spy();
-    await createChannelHandler(io, socket, {
+    await handler(io, socket, {
       name: 'channel-name',
       server_id: serverId,
     });
@@ -107,14 +105,14 @@ describe('websocket channel/create', () => {
       .calledWith('soft-error', 'Channel name must be unique.');
   });
   it('emits soft error if channel create fails', async () => {
-    sandbox.stub(Channel, 'create').callsFake(() => {
+    sandbox.stub(voiceChannelModel, 'create').callsFake(() => {
       return Promise.reject(new Error('test err'));
     });
 
     const emit = sandbox.spy();
 
     try {
-      await createChannelHandler(io, socket, {
+      await handler(io, socket, {
         name: 'channel-name',
         server_id: serverId,
       });

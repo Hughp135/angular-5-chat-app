@@ -6,6 +6,7 @@ import User from './user.model';
 import Server from './server.model';
 import Channel from './channel.model';
 import ChatMessage from './chatmessage.model';
+import voiceChannelModel from './voice-channel.model';
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -68,6 +69,21 @@ describe('models e2e', () => {
         server_id: '123456781234567812345678',
       });
       throw new Error('2nd Channel created when it shouldn\'t have');
+    } catch (e) {
+      expect(e.message).to.equal('Channel/server must be unique');
+    }
+  });
+  it('will not allow 2 voice channels with same name in server', async () => {
+    const channel = await voiceChannelModel.create({
+      name: 'channel1',
+      server_id: '123456781234567812345678',
+    });
+    try {
+      const channel2 = await voiceChannelModel.create({
+        name: 'channel1',
+        server_id: '123456781234567812345678',
+      });
+      throw new Error('2nd Voice Channel created when it shouldn\'t have');
     } catch (e) {
       expect(e.message).to.equal('Channel/server must be unique');
     }

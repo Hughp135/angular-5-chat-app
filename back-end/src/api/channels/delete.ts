@@ -2,6 +2,7 @@ import Channel from '../../models/channel.model';
 import serverModel from '../../models/server.model';
 import { getChannelList } from '../../websocket/server/join';
 
+// Note: websocket endpoint currently used instead of this
 export async function deleteChannel(req, res) {
   const channel: any = await Channel.findOne({
     _id: req.params.id,
@@ -29,4 +30,3 @@ export async function deleteChannel(req, res) {
 
   res.status(200).json(channelList);
 }
-

@@ -270,7 +270,7 @@ describe('WebsocketService', () => {
         callback(message);
       },
     };
-    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    handlers[CHAT_MESSAGE_HANDLER](<any>{ socket: fakeSocket, store: store });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: NEW_CHAT_MESSAGE,
       payload: message,
@@ -291,7 +291,7 @@ describe('WebsocketService', () => {
         callback(message);
       },
     };
-    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    handlers[CHAT_MESSAGE_HANDLER](<any>{ socket: fakeSocket, store: store });
     expect(store.dispatch).not.toHaveBeenCalledWith({
       type: NEW_CHAT_MESSAGE,
       payload: message,
@@ -312,7 +312,7 @@ describe('WebsocketService', () => {
         callback(message);
       },
     };
-    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    handlers[CHAT_MESSAGE_HANDLER](<any>{ socket: fakeSocket, store: store });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_CHANNEL_LAST_MESSAGE_DATE,
       payload: {
@@ -326,7 +326,7 @@ describe('WebsocketService', () => {
         callback('boo');
       },
     };
-    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store);
+    handlers[CHANNEL_LIST_HANDLER](<any>{ socket: fakeSocket, store: store });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_CHANNEL_LIST,
       payload: 'boo',
@@ -338,7 +338,7 @@ describe('WebsocketService', () => {
         callback({ 'messages': [] });
       },
     };
-    handlers[JOINED_CHANNEL_HANDLER](fakeSocket, store);
+    handlers[JOINED_CHANNEL_HANDLER](<any>{ socket: fakeSocket, store: store });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: CHAT_HISTORY,
       payload: { 'messages': [] },
@@ -358,7 +358,7 @@ describe('WebsocketService', () => {
         callback('hi');
       },
     };
-    handlers[SERVER_USERLIST_HANDLER](fakeSocket, store);
+    handlers[SERVER_USERLIST_HANDLER](<any>{ socket: fakeSocket, store: store });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SERVER_SET_USER_LIST,
       payload: 'hi',
@@ -378,7 +378,7 @@ describe('WebsocketService', () => {
         callback('hi');
       },
     };
-    handlers[SERVER_UPDATE_USERLIST_HANDLER](fakeSocket, store);
+    handlers[SERVER_UPDATE_USERLIST_HANDLER](<any>{ socket: fakeSocket, store: store });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SERVER_UPDATE_USER_LIST,
       payload: 'hi',
@@ -390,7 +390,7 @@ describe('WebsocketService', () => {
         callback('hi');
       },
     };
-    handlers[SET_FRIEND_REQUESTS_HANDLER](fakeSocket, store);
+    handlers[SET_FRIEND_REQUESTS_HANDLER](<any>{ socket: fakeSocket, store: store });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_FRIEND_REQUESTS,
       payload: 'hi',
@@ -428,7 +428,7 @@ describe('WebsocketService', () => {
     spyOn(store, 'select').and.callFake(() => {
       return Observable.throw(new Error('test observable error'));
     });
-    handlers[JOINED_VOICE_CHANNEL_HANDLER](fakeSocket, store);
+    handlers[JOINED_VOICE_CHANNEL_HANDLER](<any>{ socket: fakeSocket, store: store });
     await new Promise(res => setTimeout(res, 5));
     expect(store.select).toHaveBeenCalled();
     expect(store.dispatch).not.toHaveBeenCalled();
@@ -455,7 +455,7 @@ describe('WebsocketService', () => {
       },
     };
     (store.dispatch as jasmine.Spy).calls.reset();
-    handlers[JOINED_VOICE_CHANNEL_HANDLER](fakeSocket, store);
+    handlers[JOINED_VOICE_CHANNEL_HANDLER](<any>{ socket: fakeSocket, store: store });
     await new Promise(res => setTimeout(res, 5));
     expect(store.dispatch).toHaveBeenCalledWith({
       type: JOIN_VOICE_CHANNEL,
@@ -471,7 +471,7 @@ describe('WebsocketService', () => {
         callback({ channelId: 'not-found_id', users: 'hi' });
       },
     };
-    handlers[VOICE_CHANNEL_USERS](fakeSocket, store);
+    handlers[VOICE_CHANNEL_USERS](<any>{ socket: fakeSocket, store: store });
     await new Promise(res => setTimeout(res, 5));
     expect(store.select).toHaveBeenCalled();
     expect(store.dispatch).not.toHaveBeenCalled();
@@ -487,7 +487,7 @@ describe('WebsocketService', () => {
       payload: currentVoiceChannel,
     });
     (<jasmine.Spy>store.dispatch).calls.reset();
-    handlers[VOICE_CHANNEL_USERS](fakeSocket, store);
+    handlers[VOICE_CHANNEL_USERS](<any>{ socket: fakeSocket, store: store });
     await new Promise(res => setTimeout(res, 5));
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_VOICE_CHANNEL_USERS,

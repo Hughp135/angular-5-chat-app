@@ -2,7 +2,7 @@ import {
   Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy, ChangeDetectorRef,
   ViewChild, ElementRef,
 } from '@angular/core';
-import { ChatChannel, ChannelListItem, ChannelList } from 'shared-interfaces/channel.interface';
+import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
 import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 import ChatServer from '../../../../shared-interfaces/server.interface';
@@ -11,11 +11,6 @@ import { Router } from '@angular/router';
 import { ChannelSettingsService } from '../../services/channel-settings.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Me } from 'shared-interfaces/user.interface';
-import { ApiService } from '../../services/api.service';
-import { ErrorService, ErrorNotification } from '../../services/error.service';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../reducers/app.states';
-import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
 import { SuiModalService } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../modals/confirm-modal/confirm-modal.component';
 import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interface';
@@ -44,9 +39,6 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     private channelSettings: ChannelSettingsService,
     private router: Router,
     private ref: ChangeDetectorRef,
-    private apiService: ApiService,
-    private errorService: ErrorService,
-    private store: Store<AppState>,
     private modalService: SuiModalService,
   ) {
   }
@@ -118,23 +110,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
   }
 
   deleteChannel(id) {
-    this.apiService.delete(`delete-channel/${id}`)
-      .subscribe((channelList: ChannelList) => {
-        this.store.dispatch({
-          type: SET_CHANNEL_LIST,
-          payload: channelList,
-        });
-        if (channelList.channels.length) {
-          // Join first channel in list
-          this.router.navigate([`channels/${this.currentServer._id}/${channelList.channels[0]._id}`]);
-        }
-      },
-      err => {
-        const errMessage = err.status === 401
-          ? 'You do not have permission to delete this channel'
-          : 'An error occured while trying to delete the channel';
-        this.errorService.errorMessage.next(new ErrorNotification(errMessage, 5000));
-      });
+    this.wsService.socket.emit('delete-channel', id);
   }
 
   newChannelInputKeypress(event) {

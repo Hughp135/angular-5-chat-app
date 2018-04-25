@@ -1,5 +1,5 @@
 import * as socketIo from 'socket.io';
-import { logInAuth } from './auth/socket-auth';
+import { logInAuth, SocketCustom } from './auth/socket-auth';
 import { log } from 'winston';
 import { joinServer } from './server/join';
 import { createChannel } from './channel/create';
@@ -15,17 +15,25 @@ import { removeFriend } from './friends/remove-friend';
 import { getChatMessages } from './channel/get-chat-messages';
 import { signal } from './webrtc/signal';
 import { joinVoiceChannel } from './voice-channel/join';
+import { deleteChannel } from './channel/delete';
+
+let ioServer = null;
+
+export function getIoServer() {
+  return ioServer;
+}
 
 export async function startWs(server) {
   const io = socketIo(server);
   io.use(logInAuth(io));
-  io.on('connection', async socket => {
+  io.on('connection', async (socket: SocketCustom) => {
     log('info', `User connected: ${socket.id}, ${socket.claim.username} ${socket.claim.user_id}`);
   });
   (<any>io).setMaxListeners(50);
   // Add event handlers
   joinServer(io);
   createChannel(io);
+  deleteChannel(io);
   joinChannel(io);
   joinVoiceChannel(io);
   sendMessage(io);
@@ -38,7 +46,8 @@ export async function startWs(server) {
   rejectFriendRequest(io);
   removeFriend(io);
   signal(io);
-  return io;
+
+  ioServer = io;
 }
 
 setInterval(() => {

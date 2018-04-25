@@ -92,17 +92,19 @@ async function createServers(owner_id) {
 
 async function createChannels(serverIds) {
   const promises = [];
-  serverIds.forEach(serverId => {
+  serverIds.forEach((serverId, index) => {
     [...Array(3)].forEach((x, idx) => {
       promises.push(Channel.create({
         name: `Text Channel ${idx + 1}`,
         server_id: serverId,
       }));
     });
-    promises.push(voiceChannelModel.create({
-      name: `Voice Channel`,
-      server_id: serverId,
-    }));
+    if (index % 2 === 0) {
+      promises.push(voiceChannelModel.create({
+        name: `Voice Channel`,
+        server_id: serverId,
+      }));
+    }
   });
 
   return await Promise.all(promises);

@@ -50,6 +50,7 @@ describe('websocket server/join', () => {
   afterEach(async () => {
     await Server.remove({});
     await Channel.remove({});
+    await voiceChannelModel.remove({});
     await User.remove({});
     result.resetHistory();
     sandbox.restore();

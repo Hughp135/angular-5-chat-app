@@ -18,9 +18,9 @@ export class WebsocketService {
   public errorMessage: ErrorNotification;
 
   constructor(
-    private errorService: ErrorService,
-    private store: Store<AppState>,
-    private router: Router,
+    public errorService: ErrorService,
+    public store: Store<AppState>,
+    public router: Router,
     private appState: AppStateService,
   ) {
     errorService.errorMessage.subscribe(error => {
@@ -85,7 +85,7 @@ export class WebsocketService {
         .next(new ErrorNotification(message, 5000));
     });
     for (const addHandler of Object.values(handlers)) {
-      addHandler(this.socket, this.store);
+      addHandler(this);
     }
   }
 

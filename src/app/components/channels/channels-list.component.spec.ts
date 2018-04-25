@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
 import { ChannelSettingsService } from '../../services/channel-settings.service';
 import { Observable } from 'rxjs/Observable';
 import { ApiService } from '../../services/api.service';
-import { SET_CHANNEL_LIST } from '../../reducers/current-server.reducer';
 import { SuiModalService, SuiComponentFactory } from 'ng2-semantic-ui/dist';
 
 describe('ChannelsListComponent', () => {
@@ -192,22 +191,10 @@ describe('ChannelsListComponent', () => {
     expect(component.channelHasUnreadMessages(component.currentServer.channelList.channels[0]))
       .toEqual(true);
   });
-  it('deletes channel success sets channel list store', async (done) => {
+  it('delete channel emits delete-channel', () => {
     component.deleteChannel('123');
-    await new Promise(res => setTimeout(res, 5));
-    expect(store.dispatch).toHaveBeenCalledTimes(1);
-    expect(store.dispatch).toHaveBeenCalledWith({
-      type: SET_CHANNEL_LIST,
-      payload: { channels: [] },
-    });
-    done();
-  });
-  it('deletes channel success navigates to first channel in list', async (done) => {
-    component.deleteChannel('withlist');
-    await new Promise(res => setTimeout(res, 5));
-    expect(router.navigate).toHaveBeenCalledTimes(1);
-    expect(router.navigate).toHaveBeenCalledWith([`channels/${currentServer._id}/123`]);
-    done();
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('delete-channel', '123');
   });
   it('deletes channel shows permission error if 401', async (done) => {
     component.deleteChannel('401');

@@ -1,25 +1,21 @@
-import Server from '../../models/server.model';
-import Channel from '../../models/channel.model';
-import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
+import { CreateVoiceChannelRequest } from 'shared-interfaces/voice-channel.interface';
+import serverModel from '../../models/server.model';
 import { log } from 'winston';
+import voiceChannelModel from '../../models/voice-channel.model';
 import { getChannelList } from '../server/join';
 
 /* istanbul ignore next */
-export function createChannel(io: any) {
+export function createVoiceChannel(io: any) {
+
   io.on('connection', socket => {
-    socket.on('create-channel', async (channelData: CreateChannelRequest) => {
-      try {
-        await handler(io, socket, channelData);
-      } catch (e) {
-        log('Error creating server:', e.message);
-        socket.emit('soft-error', 'Failed to create channel.');
-      }
+    socket.on('create-channel', async (channelData: CreateVoiceChannelRequest) => {
+      await handler(io, socket, channelData);
     });
   });
 }
 
 export async function handler(io, socket, channelData) {
-  const server = await Server.findById(channelData.server_id);
+  const server = await serverModel.findById(channelData.server_id);
   if (!server) {
     return socket.emit('soft-error', 'Server not found.');
   }
@@ -31,7 +27,7 @@ export async function handler(io, socket, channelData) {
   }
 
   try {
-    await Channel.create({
+    await voiceChannelModel.create({
       server_id: server._id,
       name: channelData.name,
     });

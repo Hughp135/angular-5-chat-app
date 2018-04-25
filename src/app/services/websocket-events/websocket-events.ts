@@ -11,6 +11,8 @@ import { User } from '../../../../shared-interfaces/user.interface';
 import { SET_FRIEND_REQUESTS } from '../../reducers/friends-reducer';
 import { JOIN_VOICE_CHANNEL, SET_VOICE_CHANNEL_USERS } from '../../reducers/current-voice-channel-reducer';
 import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interface';
+import { WebsocketService } from '../websocket.service';
+import { ErrorNotification } from '../error.service';
 
 export const CHAT_MESSAGE_HANDLER = 'chat-message';
 export const CHANNEL_LIST_HANDLER = 'channel-list';
@@ -21,7 +23,7 @@ export const SET_FRIEND_REQUESTS_HANDLER = 'friend-requests';
 export const JOINED_VOICE_CHANNEL_HANDLER = 'joined-voice-channel';
 export const VOICE_CHANNEL_USERS = 'voice-channel-users';
 
-export const handlers: { [key: string]: (socket, store) => void } = {
+export const handlers: { [key: string]: (wsService: WebsocketService) => void } = {
   [CHAT_MESSAGE_HANDLER]: chatMessage,
   [CHANNEL_LIST_HANDLER]: channelList,
   [JOINED_CHANNEL_HANDLER]: joinedChannel,
@@ -32,14 +34,14 @@ export const handlers: { [key: string]: (socket, store) => void } = {
   [VOICE_CHANNEL_USERS]: voiceChannelUsers,
 };
 
-function chatMessage(socket, store) {
-  socket.on(CHAT_MESSAGE_HANDLER, (message: ChatMessage) => {
+function chatMessage(wsService: WebsocketService) {
+  wsService.socket.on(CHAT_MESSAGE_HANDLER, (message: ChatMessage) => {
     let isCurrentServer = false;
-    store.select('currentChatChannel').take(1).subscribe(channel => {
+    wsService.store.select('currentChatChannel').take(1).subscribe(channel => {
       // Only add message if it applies to current channel.
       if (channel && message.channel_id === channel._id) {
         isCurrentServer = true;
-        store.dispatch({
+        wsService.store.dispatch({
           type: NEW_CHAT_MESSAGE,
           payload: message,
         });
@@ -47,7 +49,7 @@ function chatMessage(socket, store) {
     });
     if (!isCurrentServer) {
       // Mark channel as having unread messages
-      store.dispatch({
+      wsService.store.dispatch({
         type: SET_CHANNEL_LAST_MESSAGE_DATE,
         payload: {
           id: message.channel_id,
@@ -57,28 +59,42 @@ function chatMessage(socket, store) {
   });
 }
 
-function channelList(socket, store) {
-  socket.on(CHANNEL_LIST_HANDLER, (list: ChannelList) => {
-    store.dispatch({
+function channelList(wsService: WebsocketService) {
+  wsService.socket.on(CHANNEL_LIST_HANDLER, async (list: ChannelList) => {
+    wsService.store.dispatch({
       type: SET_CHANNEL_LIST,
       payload: list,
     });
+    const channel = await wsService.store
+      .select('currentChatChannel')
+      .take(1)
+      .toPromise();
+    if (channel && !list.channels.some(chan => chan._id === channel._id)) {
+      wsService.errorService.errorMessage.next(
+        new ErrorNotification('The channel you were in has been deleted.', 2500),
+      );
+      if (list.channels.length) {
+        wsService.router.navigate([`/channels/${list.server_id}/${list.channels[0]._id}`]);
+      } else {
+        wsService.router.navigate([`/channels/${list.server_id}`]);
+      }
+    }
   });
 }
 
-function joinedChannel(socket, store) {
-  socket.on(JOINED_CHANNEL_HANDLER, (response: JoinedChannelResponse) => {
-    store.dispatch({
+function joinedChannel(wsService: WebsocketService) {
+  wsService.socket.on(JOINED_CHANNEL_HANDLER, (response: JoinedChannelResponse) => {
+    wsService.store.dispatch({
       type: CHAT_HISTORY,
       payload: response,
     });
   });
 }
 
-function joinedVoiceChannel(socket, store) {
-  socket.on(JOINED_VOICE_CHANNEL_HANDLER, async (response) => {
+function joinedVoiceChannel(wsService: WebsocketService) {
+  wsService.socket.on(JOINED_VOICE_CHANNEL_HANDLER, async (response) => {
     const { channelId, users } = response;
-    const channels = await store.select('currentServer')
+    const channels = await wsService.store.select('currentServer')
       .filter(srv => srv && !!srv.channelList)
       .map(srv => srv.channelList.voiceChannels)
       .filter(chans => chans.some(chan => chan._id === channelId))
@@ -91,17 +107,17 @@ function joinedVoiceChannel(socket, store) {
       return;
     }
     const channel = channels.find(chan => chan._id === channelId);
-    store.dispatch({
+    wsService.store.dispatch({
       type: JOIN_VOICE_CHANNEL,
       payload: { ...channel, users },
     });
   });
 }
 
-function voiceChannelUsers(socket, store) {
-  socket.on(VOICE_CHANNEL_USERS, async (response) => {
+function voiceChannelUsers(wsService: WebsocketService) {
+  wsService.socket.on(VOICE_CHANNEL_USERS, async (response) => {
     const { channelId, users } = response;
-    const channel = await store.select('currentVoiceChannel')
+    const channel = await wsService.store.select('currentVoiceChannel')
       .filter((chan: VoiceChannel) => (!!chan && chan._id === channelId))
       .take(1)
       .timeout(1000)
@@ -111,34 +127,34 @@ function voiceChannelUsers(socket, store) {
     if (!channel) {
       return;
     }
-    store.dispatch({
+    wsService.store.dispatch({
       type: SET_VOICE_CHANNEL_USERS,
       payload: users,
     });
   });
 }
 
-function serverUserList(socket, store) {
-  socket.on(SERVER_USERLIST_HANDLER, (response: ServerUserList) => {
-    store.dispatch({
+function serverUserList(wsService: WebsocketService) {
+  wsService.socket.on(SERVER_USERLIST_HANDLER, (response: ServerUserList) => {
+    wsService.store.dispatch({
       type: SERVER_SET_USER_LIST,
       payload: response,
     });
   });
 }
 
-function updateUserList(socket, store) {
-  socket.on(SERVER_UPDATE_USERLIST_HANDLER, (response: UserListUpdate) => {
-    store.dispatch({
+function updateUserList(wsService: WebsocketService) {
+  wsService.socket.on(SERVER_UPDATE_USERLIST_HANDLER, (response: UserListUpdate) => {
+    wsService.store.dispatch({
       type: SERVER_UPDATE_USER_LIST,
       payload: response,
     });
   });
 }
 
-function setFriendRequests(socket, store) {
-  socket.on(SET_FRIEND_REQUESTS_HANDLER, (friend_requests: User['friend_requests']) => {
-    store.dispatch({
+function setFriendRequests(wsService: WebsocketService) {
+  wsService.socket.on(SET_FRIEND_REQUESTS_HANDLER, (friend_requests: User['friend_requests']) => {
+    wsService.store.dispatch({
       type: SET_FRIEND_REQUESTS,
       payload: friend_requests,
     });

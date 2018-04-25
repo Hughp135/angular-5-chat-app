@@ -9,3 +9,8 @@ export interface VoiceChannelUser {
   _id: string;
   username: string;
 }
+
+export interface CreateVoiceChannelRequest {
+  name: string;
+  server_id: string;
+}
