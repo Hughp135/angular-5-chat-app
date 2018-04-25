@@ -179,7 +179,7 @@ describe('CreateServerComponent', () => {
       expect(component.cropperImgSrc).toBeDefined();
       expect(component.cropperImgSrc).not.toEqual(null);
       done();
-    }, 10);
+    }, 20);
   });
   it('selecting no image file', (done) => {
     expect(component.cropperImgSrc).toBeUndefined();

@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class AudioDeviceService {
+  public loadedDevices = false;
   public inputDevices: BehaviorSubject<Array<MediaDeviceInfo>>
     = new BehaviorSubject(undefined);
   public outputDevices: BehaviorSubject<Array<MediaDeviceInfo>>
@@ -20,37 +21,38 @@ export class AudioDeviceService {
     this.getDevices();
   }
 
-  public async getDevices() {
-    const deviceInfos = <MediaDeviceInfo[]>await navigator.mediaDevices
-      .enumerateDevices()
-      .catch((e: any) => {
-        console.error(e);
-        return;
-      });
-    const inputDevices = [];
-    const outputDevices = [];
+  async getDevices() {
+    const devices = <MediaDeviceInfo[]>await navigator.mediaDevices
+      .enumerateDevices();
 
-    for (const deviceInfo of deviceInfos) {
-      if (deviceInfo.kind === 'audioinput') {
-        if (this.savedInputDevice === deviceInfo.deviceId) {
-          this.selectedInputDevice.next(deviceInfo.deviceId);
-        }
-        inputDevices.push({
-          ...JSON.parse(JSON.stringify(deviceInfo)),
-          label: this.getDeviceLabel(deviceInfo.label, deviceInfo.kind),
-        });
-      } else if (deviceInfo.kind === 'audiooutput') {
-        if (this.savedOutputDevice === deviceInfo.deviceId) {
-          this.selectedOutputDevice.next(deviceInfo.deviceId);
-        }
-        outputDevices.push({
-          ...JSON.parse(JSON.stringify(deviceInfo)),
-          label: this.getDeviceLabel(deviceInfo.label, deviceInfo.kind),
-        });
-      }
-    }
+    const inputDevices = devices
+      .filter(device => device.kind === 'audioinput')
+      .map(device => ({
+        ...JSON.parse(JSON.stringify(device)),
+        label: this.getDeviceLabel(device.label, device.kind),
+      }));
+
+    const outputDevices = devices
+      .filter(device => device.kind === 'audiooutput')
+      .map(device => ({
+        ...JSON.parse(JSON.stringify(device)),
+        label: this.getDeviceLabel(device.label, device.kind),
+      }));
+
     this.inputDevices.next(inputDevices);
     this.outputDevices.next(outputDevices);
+
+    const inputDeviceSaved = inputDevices.find(device => device.deviceId === this.savedInputDevice);
+    if (inputDeviceSaved) {
+      this.selectedInputDevice.next(inputDeviceSaved.deviceId);
+    }
+
+    const outputDeviceSaved = outputDevices.find(device => device.deviceId === this.savedOutputDevice);
+    if (outputDeviceSaved) {
+      this.selectedOutputDevice.next(outputDeviceSaved.deviceId);
+    }
+
+    this.loadedDevices = true;
   }
 
   private getDeviceLabel(label: string, kind: string): string {

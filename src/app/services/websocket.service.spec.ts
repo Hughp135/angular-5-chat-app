@@ -32,6 +32,7 @@ import { SET_FRIEND_REQUESTS } from '../reducers/friends-reducer';
 import { AppStateService } from './app-state.service';
 import { SET_VOICE_CHANNEL_USERS, JOIN_VOICE_CHANNEL } from '../reducers/current-voice-channel-reducer';
 import { VoiceChannel } from '../../../shared-interfaces/voice-channel.interface';
+import { Observable } from 'rxjs/Observable';
 
 describe('WebsocketService', () => {
   let injector: TestBed;
@@ -417,7 +418,6 @@ describe('WebsocketService', () => {
     }
   });
   it('JOINED_VOICE_CHANNEL handler if channel not found', async () => {
-    spyOn(store, 'select').and.throwError('fake timeout');
     const fakeSocket = {
       on: async (msg: string, callback: any) => {
         await callback({ channelId: 'not-found_id', users: 'hi' })
@@ -425,11 +425,15 @@ describe('WebsocketService', () => {
       },
     };
     (store.dispatch as jasmine.Spy).calls.reset();
+    spyOn(store, 'select').and.callFake(() => {
+      return Observable.throw(new Error('test observable error'));
+    });
     handlers[JOINED_VOICE_CHANNEL_HANDLER](fakeSocket, store);
     await new Promise(res => setTimeout(res, 5));
+    expect(store.select).toHaveBeenCalled();
     expect(store.dispatch).not.toHaveBeenCalled();
   });
-  it('JOINED_VOICE_CHANNEL when channel is found', async () => {
+  it('joinedVoiceChannel dispatches JOIN_VOICE_CHANNEL when channel is found', async () => {
     store.dispatch({
       type: SET_CURRENT_SERVER,
       payload: currentServer,
@@ -459,6 +463,9 @@ describe('WebsocketService', () => {
     });
   });
   it('VOICE_CHANNEL_USERS handler if channel not found', async () => {
+    spyOn(store, 'select').and.callFake(() => {
+      return Observable.throw(new Error('test observable error'));
+    });
     const fakeSocket = {
       on: (msg: string, callback: any) => {
         callback({ channelId: 'not-found_id', users: 'hi' });
@@ -466,6 +473,7 @@ describe('WebsocketService', () => {
     };
     handlers[VOICE_CHANNEL_USERS](fakeSocket, store);
     await new Promise(res => setTimeout(res, 5));
+    expect(store.select).toHaveBeenCalled();
     expect(store.dispatch).not.toHaveBeenCalled();
   });
   it('VOICE_CHANNEL_USERS handler sets voice channel users', async () => {
