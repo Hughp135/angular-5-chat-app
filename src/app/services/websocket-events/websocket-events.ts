@@ -61,14 +61,25 @@ function chatMessage(wsService: WebsocketService) {
 
 function channelList(wsService: WebsocketService) {
   wsService.socket.on(CHANNEL_LIST_HANDLER, async (list: ChannelList) => {
+    const currentServer = await wsService.store
+      .select('currentServer')
+      .take(1)
+      .toPromise();
+
+    if (!currentServer || (list.server_id !== currentServer._id)) {
+      return;
+    }
+
     wsService.store.dispatch({
       type: SET_CHANNEL_LIST,
       payload: list,
     });
+
     const channel = await wsService.store
       .select('currentChatChannel')
       .take(1)
       .toPromise();
+
     if (channel && !list.channels.some(chan => chan._id === channel._id)) {
       wsService.errorService.errorMessage.next(
         new ErrorNotification('The channel you were in has been deleted.', 2500),
