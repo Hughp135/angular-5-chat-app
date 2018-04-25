@@ -242,7 +242,7 @@ describe('WebRTCService', () => {
     testPeer.on('signal', (data) => peer.signal(data));
     await awaitPeerConnection(peer).catch((e) => { throw new Error('peerconnect1'); });
 
-    // Reconnect. New peer should be created as initiator
+    // Reconnect. Service will create a new peer as initiator
     service.reconnectToAllPeers();
     // await new Promise(res => setTimeout(res, 50));
     const peerNew = service.peers['socketId'];
@@ -255,6 +255,62 @@ describe('WebRTCService', () => {
     testPeer2.on('signal', (data) => peerNew.signal(data));
     await awaitPeerConnection(peerNew).catch((e) => { throw new Error('peerconnect2'); });
     expect(peerNew.connected).toEqual(true);
+  });
+  it('on receiving peer stream, sets objectSrc of audio element and plays', async () => {
+    const stream = getMediaStream();
+    const fakeElement = {
+      play: jasmine.createSpy(),
+    };
+    spyOn(document, 'getElementById').and.returnValue(fakeElement);
+
+    // Create a peer object
+    service.stream = stream;
+    service.connectToUser('socketId', false);
+    await new Promise(res => setTimeout(res, 5));
+    const peer = service.peers['socketId'];
+    expect(peer).toBeDefined();
+
+    // Create a test peer to connect to
+    const testPeer = new SimplePeer({
+      initiator: true, stream: stream,
+      constraints: { OfferToReceiveAudio: true, OfferToReceiveVideo: false },
+    });
+    peer.on('signal', (data) => testPeer.signal(data));
+    testPeer.on('signal', (data) => peer.signal(data));
+    await awaitPeerConnection(peer).catch((e) => { throw new Error('peerconnect1'); });
+
+    expect((fakeElement as any).srcObject).toBeDefined();
+    expect(fakeElement.play).toHaveBeenCalled();
+  });
+  it('on receiving peer stream, if output device selected sets sinkId of element', async () => {
+    const stream = getMediaStream();
+    const fakeElement = {
+      setSinkId: jasmine.createSpy(),
+      play: jasmine.createSpy(),
+      sinkId: 'test',
+    };
+    spyOn(document, 'getElementById').and.returnValue(fakeElement);
+
+    // Create a peer object
+    service.stream = stream;
+    service.audioDeviceService.selectedOutputDevice.next('testDevice');
+    await new Promise(res => setTimeout(res, 5));
+    service.connectToUser('socketId', false);
+    await new Promise(res => setTimeout(res, 5));
+    const peer = service.peers['socketId'];
+    expect(peer).toBeDefined();
+
+    // Create a test peer to connect to
+    const testPeer = new SimplePeer({
+      initiator: true, stream: stream,
+      constraints: { OfferToReceiveAudio: true, OfferToReceiveVideo: false },
+    });
+    peer.on('signal', (data) => testPeer.signal(data));
+    testPeer.on('signal', (data) => peer.signal(data));
+    await awaitPeerConnection(peer).catch((e) => { throw new Error('peerconnect1'); });
+
+    expect(fakeElement.setSinkId).toHaveBeenCalledWith('testDevice');
+    expect(fakeElement.play).toHaveBeenCalled();
   });
   it('changing input device reconnects to all users', async () => {
     const channel: VoiceChannel = {
@@ -308,17 +364,14 @@ describe('WebRTCService', () => {
     audio1.className = 'rtc-audio-element';
     const audio2 = document.createElement('audio');
     audio2.className = 'rtc-audio-element';
+    spyOn((<any>HTMLMediaElement.prototype), 'setSinkId');
     spyOn(document, 'getElementsByClassName').and.returnValue([
       audio1, audio2,
     ]);
-    expect((audio1 as any).sinkId).toEqual('');
-    expect((audio2 as any).sinkId).toEqual('');
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const audioDevices = devices.filter(device => device.kind === 'audiooutput');
-    service.audioDeviceService.selectedOutputDevice.next(audioDevices[0].deviceId);
-    await service.onOutputDeviceChanged(audioDevices[0].deviceId);
-    expect((audio1 as any).sinkId).toEqual(audioDevices[0].deviceId);
-    expect((audio2 as any).sinkId).toEqual(audioDevices[0].deviceId);
+    service.audioDeviceService.selectedOutputDevice.next('deviceId');
+    expect((audio1 as any).setSinkId).toHaveBeenCalled();
+    expect((audio2 as any).setSinkId).toHaveBeenCalled();
+    expect(fakeErrorService.errorMessage.next).not.toHaveBeenCalled();
   });
   it('changing output device shows errorMessage if setSinkId throws', async () => {
     spyOn(document, 'getElementsByClassName').and.returnValue([
@@ -341,4 +394,21 @@ function awaitPeerConnection(peer) {
       reject('Peer failed to connect within the test timeout');
     }, 4000);
   });
+}
+
+function getMediaStream() {
+  const audioContext = new ((<any>window).AudioContext || (<any>window).webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const dst = audioContext.createMediaStreamDestination();
+  oscillator.connect(dst);
+  oscillator.start();
+
+  const oscillator2 = audioContext.createOscillator();
+  const dst2 = audioContext.createMediaStreamDestination();
+  oscillator2.connect(dst2);
+  oscillator2.start();
+
+  const track = dst2.stream.getTracks()[0];
+  dst.stream.addTrack(track);
+  return dst.stream;
 }

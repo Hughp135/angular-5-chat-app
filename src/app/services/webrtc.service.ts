@@ -107,7 +107,7 @@ export class WebRTCService {
   }
 
   connectToUser(socket_id: string, isInitiator: boolean) {
-    console.warn('Connecting to user ' + socket_id, 'intiator?', isInitiator);
+    console.warn('Connecting to user ' + socket_id, 'intiator?', isInitiator, 'stream:', this.stream);
     // TODO: idea to trickle - collect all signal events, emit once per second.
     const p = new SimplePeer({
       initiator: isInitiator,
