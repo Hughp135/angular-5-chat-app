@@ -4,10 +4,21 @@ import { VoiceChannelComponent } from './voice-channel.component';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from '../../reducers/reducers';
 import { WebRTCService } from '../../services/webrtc.service';
+import { WebsocketService } from '../../services/websocket.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../reducers/app.states';
+import { LEAVE_VOICE_CHANNEL } from '../../reducers/current-voice-channel-reducer';
 
 describe('VoiceChannelComponent', () => {
   let component: VoiceChannelComponent;
   let fixture: ComponentFixture<VoiceChannelComponent>;
+  let store: Store<AppState>;
+
+  const fakeWsService = {
+    socket: {
+      emit: jasmine.createSpy(),
+    },
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -17,9 +28,11 @@ describe('VoiceChannelComponent', () => {
       declarations: [VoiceChannelComponent],
       providers: [
         { provide: WebRTCService, useValue: {} },
+        { provide: WebsocketService, useValue: fakeWsService },
       ],
     })
       .compileComponents();
+    store = TestBed.get(Store);
   }));
 
   beforeEach(() => {
@@ -35,5 +48,14 @@ describe('VoiceChannelComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should leave channel', () => {
+    spyOn(store, 'dispatch');
+    component.currentVoiceChannel = <any>{ _id: 'chan1' };
+    component.leaveChannel();
+    expect(fakeWsService.socket.emit).toHaveBeenCalledWith('leave-voice-channel', 'chan1');
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: LEAVE_VOICE_CHANNEL,
+    });
   });
 });

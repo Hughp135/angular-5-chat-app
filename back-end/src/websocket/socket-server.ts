@@ -16,6 +16,7 @@ import { getChatMessages } from './channel/get-chat-messages';
 import { signal } from './webrtc/signal';
 import { joinVoiceChannel } from './voice-channel/join';
 import { deleteChannel } from './channel/delete';
+import { leaveVoiceChannel } from './voice-channel/leave';
 
 let ioServer = null;
 
@@ -36,6 +37,7 @@ export async function startWs(server) {
   deleteChannel(io);
   joinChannel(io);
   joinVoiceChannel(io);
+  leaveVoiceChannel(io);
   sendMessage(io);
   getUserList(io);
   getDmChannels(io);

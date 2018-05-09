@@ -43,7 +43,6 @@ export async function handler(
       socket_id: sock.id,
       _id: sock.claim.user_id,
       username: sock.claim.username,
-
     };
   });
 
@@ -63,7 +62,7 @@ export async function handler(
   });
 }
 
-function getSocketsInRoom(io: SocketIO.Server, room: string): Promise<SocketCustom[]> {
+export function getSocketsInRoom(io: SocketIO.Server, room: string): Promise<SocketCustom[]> {
   return new Promise((resolve, reject) => {
     io.of('/').in(room).clients((error, clients) => {
       /* istanbul ignore next */

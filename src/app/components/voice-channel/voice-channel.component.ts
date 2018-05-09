@@ -4,6 +4,8 @@ import { AppState } from '../../reducers/app.states';
 import { VoiceChannel } from 'shared-interfaces/voice-channel.interface';
 import { Me } from 'shared-interfaces/user.interface';
 import { WebRTCService } from '../../services/webrtc.service';
+import { LEAVE_VOICE_CHANNEL } from '../../reducers/current-voice-channel-reducer';
+import { WebsocketService } from '../../services/websocket.service';
 
 
 @Component({
@@ -17,12 +19,20 @@ export class VoiceChannelComponent implements OnInit {
   @Input() currentVoiceChannel: VoiceChannel;
 
   constructor(
-    store: Store<AppState>,
+    private store: Store<AppState>,
     webRtcService: WebRTCService,
+    private wsService: WebsocketService,
   ) {
     store.select('me').subscribe(me => this.me = me);
   }
 
   ngOnInit() {
+  }
+
+  leaveChannel() {
+    this.wsService.socket.emit('leave-voice-channel', this.currentVoiceChannel._id);
+    this.store.dispatch({
+      type: LEAVE_VOICE_CHANNEL,
+    });
   }
 }

@@ -4,5 +4,8 @@
 <p *ngFor="let user of currentVoiceChannel.users">
   {{ user.username }}
   <audio *ngIf="user._id !== me._id" class="rtc-audio-element"
-    id="userAudio-{{user.socket_id}}"></audio>
+    id="userAudio-{{user.socket_id}}">
+  </audio>
 </p>
+
+<button class="ui button" (click)="leaveChannel()">Leave</button>
