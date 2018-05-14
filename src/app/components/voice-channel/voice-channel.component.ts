@@ -6,6 +6,7 @@ import { Me } from 'shared-interfaces/user.interface';
 import { WebRTCService } from '../../services/webrtc.service';
 import { LEAVE_VOICE_CHANNEL } from '../../reducers/current-voice-channel-reducer';
 import { WebsocketService } from '../../services/websocket.service';
+import { SettingsService } from '../../services/settings.service';
 
 
 @Component({
@@ -20,8 +21,9 @@ export class VoiceChannelComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    webRtcService: WebRTCService,
     private wsService: WebsocketService,
+    public webRtcService: WebRTCService,
+    public settingsService: SettingsService,
   ) {
     store.select('me').subscribe(me => this.me = me);
   }
@@ -34,5 +36,9 @@ export class VoiceChannelComponent implements OnInit {
     this.store.dispatch({
       type: LEAVE_VOICE_CHANNEL,
     });
+  }
+
+  toggleMuteMicrophone() {
+    this.webRtcService.toggleMuteMicrophone();
   }
 }

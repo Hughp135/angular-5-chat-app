@@ -8,6 +8,7 @@ import { WebsocketService } from '../../services/websocket.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
 import { LEAVE_VOICE_CHANNEL } from '../../reducers/current-voice-channel-reducer';
+import { SettingsService } from '../../services/settings.service';
 
 describe('VoiceChannelComponent', () => {
   let component: VoiceChannelComponent;
@@ -19,6 +20,9 @@ describe('VoiceChannelComponent', () => {
       emit: jasmine.createSpy(),
     },
   };
+  const fakeWebRtcService = {
+    toggleMuteMicrophone: () => { },
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -27,8 +31,9 @@ describe('VoiceChannelComponent', () => {
       ],
       declarations: [VoiceChannelComponent],
       providers: [
-        { provide: WebRTCService, useValue: {} },
+        { provide: WebRTCService, useValue: fakeWebRtcService },
         { provide: WebsocketService, useValue: fakeWsService },
+        SettingsService,
       ],
     })
       .compileComponents();
@@ -57,5 +62,8 @@ describe('VoiceChannelComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith({
       type: LEAVE_VOICE_CHANNEL,
     });
+  });
+  it('should toggle mute mic and not throw', () => {
+    component.toggleMuteMicrophone();
   });
 });

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserListComponent } from './user-list.component';
+import { ChannelUserListComponent } from './channel-user-list.component';
 import { SettingsService } from '../../services/settings.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { WebsocketService } from '../../services/websocket.service';
@@ -16,9 +16,9 @@ const fakeSocketService = {
   socket: fakeSocket,
 };
 
-describe('UserListComponent', () => {
-  let component: UserListComponent;
-  let fixture: ComponentFixture<UserListComponent>;
+describe('ChannelUserListComponent', () => {
+  let component: ChannelUserListComponent;
+  let fixture: ComponentFixture<ChannelUserListComponent>;
   const fakeDmService = {
     startPm: jasmine.createSpy(),
   };
@@ -29,7 +29,7 @@ describe('UserListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UserListComponent],
+      declarations: [ChannelUserListComponent],
       imports: [
         ShContextMenuModule,
       ],
@@ -44,7 +44,7 @@ describe('UserListComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserListComponent);
+    fixture = TestBed.createComponent(ChannelUserListComponent);
     component = fixture.componentInstance;
     component.currentServer = {
       _id: '123',

@@ -23,7 +23,7 @@ import { ErrorNotificationComponent } from './components/error-notification/erro
 import { ErrorService } from './services/error.service';
 import { ChatChannelComponent } from './components/chat-channel/chat-channel.component';
 import { reducers } from './reducers/reducers';
-import { UserListComponent } from './components/user-list/user-list.component';
+import { ChannelUserListComponent } from './components/channel-user-list/channel-user-list.component';
 import { ServerSidebarComponent } from './components/server-sidebar/server-sidebar.component';
 import { CreateServerComponent } from './components/modals/create-server/create-server.component';
 import { ViewServerComponent } from './components/view-server/view-server.component';
@@ -70,7 +70,7 @@ const optionalImports = environment.production ? [] : [
     ChannelsListComponent,
     ErrorNotificationComponent,
     ChatChannelComponent,
-    UserListComponent,
+    ChannelUserListComponent,
     ServerSidebarComponent,
     CreateServerComponent,
     ViewServerComponent,

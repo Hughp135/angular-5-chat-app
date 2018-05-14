@@ -10,13 +10,14 @@ import { WebsocketService } from '../../services/websocket.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { DirectMessageService } from '../../services/direct-message.service';
 import { FriendRequestService } from '../../services/friend-request.service';
+
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss'],
+  selector: 'app-channel-user-list',
+  templateUrl: './channel-user-list.component.html',
+  styleUrls: ['./channel-user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ChannelUserListComponent implements OnInit, OnDestroy, AfterViewInit {
   public subscriptions: Subscription[] = [];
   public preventListUpdate = false;
   public menuItems: IShContextMenuItem[];

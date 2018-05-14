@@ -17,6 +17,7 @@ export class WebRTCService {
   public noMicDetected = false;
   public currentChannel: VoiceChannel;
   public me: Me;
+  public micMuted = false;
 
   constructor(
     private wsService: WebsocketService,
@@ -99,7 +100,7 @@ export class WebRTCService {
         });
       this.noMicDetected = false;
       this.stream = stream;
-      console.warn('got stream', stream);
+      this.micMuted = false;
     } catch (err) {
       this.noMicDetected = true;
       throw (err);
@@ -211,5 +212,16 @@ export class WebRTCService {
       throw new Error('Browser does not support sinkId');
     }
     await element.setSinkId(id);
+  }
+
+
+  public toggleMuteMicrophone() {
+    if (!this.stream) {
+      this.micMuted = true;
+      return;
+    }
+    const track = this.stream.getAudioTracks()[0];
+    track.enabled = !track.enabled;
+    this.micMuted = !track.enabled;
   }
 }

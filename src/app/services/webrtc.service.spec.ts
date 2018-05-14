@@ -380,6 +380,28 @@ describe('WebRTCService', () => {
     await service.onOutputDeviceChanged('badid');
     expect(fakeErrorService.errorMessage.next).toHaveBeenCalledTimes(1);
   });
+  it('toggleMuteMicrophone disables audio track', () => {
+    const track = { enabled: true };
+    service.stream = <any>{
+      getAudioTracks: () => [track],
+    };
+    service.toggleMuteMicrophone();
+    expect(track.enabled).toEqual(false);
+    expect(service.micMuted).toEqual(true);
+  });
+  it('toggleMuteMicrophone enables audio track if disabled', () => {
+    const track = { enabled: false };
+    service.stream = <any>{
+      getAudioTracks: () => [track],
+    };
+    service.toggleMuteMicrophone();
+    expect(track.enabled).toEqual(true);
+    expect(service.micMuted).toEqual(false);
+  });
+  it('toggleMuteMicrophone does not cause error if no track exists', () => {
+    service.toggleMuteMicrophone();
+    expect(service.micMuted).toEqual(true);
+  });
 });
 
 function awaitPeerConnection(peer) {
