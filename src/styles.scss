@@ -19,7 +19,7 @@ input.ng-invalid.ng-dirty.ng-touched {
 
 .ui.button {
   &:not(.circular) {
-    border-radius: 8px !important;
+    border-radius: 4px !important;
   }
   &.tertiary {
     background: none !important;
@@ -129,4 +129,8 @@ input.ng-invalid.ng-dirty.ng-touched {
   &.inverted {
     color: rgba(255, 255, 255, 0.8) !important;
   }
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.4);
 }

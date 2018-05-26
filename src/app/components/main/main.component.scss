@@ -16,7 +16,6 @@
   border-radius: 0;
   border-right: 1px solid #343434;
   background: #121b24;
-
   &.light {
     background: #2e404f;
   }
@@ -25,4 +24,5 @@
 #main-wrapper {
   position: relative;
   flex: 2;
+  background: rgb(230, 230, 230);
 }

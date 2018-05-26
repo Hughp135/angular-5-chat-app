@@ -1,16 +1,25 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
+import { StoreModule, Store } from '@ngrx/store';
+import { reducers } from '../../reducers/reducers';
+import { AppState } from '../../reducers/app.states';
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
+  let injector: TestBed;
   let fixture: ComponentFixture<HomeComponent>;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomeComponent ],
+      declarations: [HomeComponent],
+      imports: [
+        StoreModule.forRoot(reducers),
+      ],
     })
-    .compileComponents();
+      .compileComponents();
+    injector = getTestBed();
+    store = injector.get(Store);
   }));
 
   beforeEach(() => {

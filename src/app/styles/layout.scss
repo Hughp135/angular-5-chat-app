@@ -14,11 +14,10 @@
   border-radius: 0;
   border: none;
   overflow: auto;
-
+  background: #c9cbcc14;
   &.inverted {
-    background: #2f3338;
+    background: #41464d;
   }
-
   .ui.container {
     padding: 20px;
   }
@@ -32,27 +31,25 @@
   flex: 0 0 230px;
   display: flex;
   flex-direction: row;
-
   .ui.vertical.sidebar.menu {
     &.left {
       z-index: 103;
     }
-
     &.inverted {
-      background: #1a2129 !important;
+      background: #272f37 !important;
     }
-
     &:not(.inverted) {
-      background-color: #e4e7ea;
+      background-color: #d6d6d6;
     }
-
     box-shadow: none;
     width: 230px;
     position: absolute;
     flex: 1;
     margin-bottom: auto;
+    .item {
+      padding: 10px;
+    }
   }
-
   #bottom-attached-item {
     position: absolute;
     width: 230px;
@@ -62,10 +59,8 @@
     border-top: 1px solid grey;
     text-align: center;
   }
-
   #sidebar-menu {
     border-right: 1px solid #c9c9c9;
-
     &.inverted {
       border-right: 1px solid #2f2f2f;
     }

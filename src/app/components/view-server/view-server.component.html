@@ -72,7 +72,7 @@
 <div id="sidebar-container" *ngIf="currentServer">
   <div class="ui visible right vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-    <div class="item">
+    <div class="item user-list-header">
       <h4>Members</h4>
     </div>
     <app-channel-user-list [currentServer]="(currentServerObs | async)"></app-channel-user-list>
