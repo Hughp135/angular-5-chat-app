@@ -2,7 +2,7 @@
   <div class="ui padded raised segment" id="server-list-container">
     <h1>Joined Servers</h1>
 
-    <div class="ui six doubling cards">
+    <div class="ui eight doubling cards">
 
       <a class="ui raised card" *ngFor="let server of serverList"
         [routerLink]="['channels', server._id]">
