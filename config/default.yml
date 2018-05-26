@@ -1,16 +1,13 @@
 api:
   port: 7205
-
 mongodb:
-  url: mongodb://mongo:27017/chat-app
-
+  url: 'mongodb://mongo:27017/chat-app'
 JWT_SECRET: oijsdfogij02349sdpok
-TEST_SOCKET_SECRET: d0934i2*@!*%j4fehg0[]sdf,af2
-
+TEST_SOCKET_SECRET: 'd0934i2*@!*%j4fehg0[]sdf,af2'
 https:
   enable: false
-  cert:
-  key:
-
+  cert: null
+  key: null
 auth:
   token_expires_in: 120
+default_server_id: ''
