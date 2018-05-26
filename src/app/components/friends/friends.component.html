@@ -22,8 +22,8 @@
     <h4 class="ui header" [class.inverted]="settingsService.invertedTheme"
       align="">
       Inverted Theme &nbsp;&nbsp;
-      <sui-checkbox name="invertedTheme"
-        ngDefaultControl [(ngModel)]="settingsService.invertedTheme"
+      <sui-checkbox name="invertedTheme" ngDefaultControl
+        [(ngModel)]="settingsService.invertedTheme"
         class="toggle" style="float:right">
       </sui-checkbox>
     </h4>
@@ -46,8 +46,8 @@
     [class.inverted]="settingsService.invertedTheme">
     <div class="item">
       <h4>Friends List</h4>
-    </div>    
-    <app-user-list [currentServer]="(currentServer | async)"></app-user-list>
+    </div>
+    <app-channel-user-list [currentServer]="(currentServer | async)"></app-channel-user-list>
   </div>
 </div>
 <!-- /RIGHT SIDEBAR -->

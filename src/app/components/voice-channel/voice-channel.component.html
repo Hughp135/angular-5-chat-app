@@ -1,0 +1,38 @@
+<h4>
+  <i class="phone volume icon"></i>
+  {{ currentVoiceChannel.name }}
+</h4>
+<div class="ui list" [class.inverted]="settingsService.invertedTheme">
+  <a class="item" *ngFor="let user of currentVoiceChannel.users">
+    <img class="ui avatar image" src="https://semantic-ui.com/images/avatar/small/elliot.jpg">
+    <div class="content">
+      <div class="header">
+        {{ user.username }}
+      </div>
+      <!-- <div class="description">
+        In the channel
+      </div> -->
+      <audio *ngIf="user._id !== me._id" class="rtc-audio-element"
+        id="userAudio-{{user.socket_id}}">
+      </audio>
+    </div>
+  </a>
+</div>
+
+<div id="voice-channel-actions" class="ui grid">
+  <div class="column">
+    <button class="ui small basic circular icon button"
+      [class.red]="settingsService.invertedTheme">
+      <i class="large phone link icon" [class.white]="settingsService.invertedTheme"
+        [class.red]="!settingsService.invertedTheme"
+        (click)="leaveChannel()"></i>
+    </button>
+    <button class="ui small basic circular icon button"
+      [class.grey]="settingsService.invertedTheme">
+      <i class="large microphone slash icon" [class.white]="!settingsService.invertedTheme"
+        [class.inverted]="settingsService.invertedTheme"
+        [class.red]="webRtcService.micMuted"
+        (click)="toggleMuteMicrophone()"></i>
+    </button>
+  </div>
+</div>

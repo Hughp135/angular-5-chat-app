@@ -16,7 +16,7 @@ describe('AuthGuardService', () => {
     url: undefined,
   };
 
-  beforeEach (() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       providers: [

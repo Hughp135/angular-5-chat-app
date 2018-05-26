@@ -104,7 +104,7 @@ describe('ChatChannelResolverService', () => {
   it('resolves with a dm channel', async () => {
     route.paramMap = {
       get: () => 'dmchannel',
-    },
+    };
     store.dispatch({
       type: SET_CURRENT_SERVER,
       payload: { ...server, channelList: channelList },

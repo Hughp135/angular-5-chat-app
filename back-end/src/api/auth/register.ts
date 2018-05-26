@@ -2,6 +2,7 @@ import * as Joi from 'joi';
 import User from '../../models/user.model';
 import * as winston from 'winston';
 import { returnJWTTokenAsCookie } from './login';
+import * as config from 'config';
 
 const schema = Joi.object().keys({
   username: Joi.string().min(3).max(30).required(),
@@ -21,9 +22,12 @@ export default async function (req, res) {
     return res.status(400).json({ error: result.error.details[0].message });
   }
   try {
+    const defaultServerId = config.get('default_server_id');
+
     const user = await User.create({
       username: req.body.username,
       password: req.body.password,
+      joined_servers: defaultServerId ? [defaultServerId] : [],
     });
     returnJWTTokenAsCookie(user, res);
   } catch (e) {

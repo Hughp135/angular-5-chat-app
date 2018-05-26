@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../reducers/app.states';
+import ChatServer from 'shared-interfaces/server.interface';
 
 @Component({
   selector: 'app-home',
@@ -6,8 +9,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  public serverList: ChatServer[];
 
-  constructor() { }
+  constructor(
+    store: Store<AppState>,
+  ) {
+    store.select('serverList').subscribe(serverList => {
+      this.serverList = serverList;
+    });
+  }
 
   ngOnInit() {
   }

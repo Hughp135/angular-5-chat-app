@@ -34,8 +34,13 @@
     <div class="item" *ngIf="currentServer">
       <app-channels-list [currentServer]="(currentServerObs | async)"
         [currentChatChannel]="(currentChatChannel | async)"
+        [currentVoiceChannel]="(currentVoiceChannel | async)"
         [me]="me">
       </app-channels-list>
+    </div>
+    <div class="item" *ngIf="(currentVoiceChannel | async)">
+      <app-voice-channel [currentVoiceChannel]="(currentVoiceChannel | async)">
+      </app-voice-channel>
     </div>
   </div>
 
@@ -67,10 +72,10 @@
 <div id="sidebar-container" *ngIf="currentServer">
   <div class="ui visible right vertical sidebar menu"
     [class.inverted]="settingsService.invertedTheme">
-    <div class="item">
+    <div class="item user-list-header">
       <h4>Members</h4>
     </div>
-    <app-user-list [currentServer]="(currentServerObs | async)"></app-user-list>
+    <app-channel-user-list [currentServer]="(currentServerObs | async)"></app-channel-user-list>
   </div>
 </div>
 <!-- /RIGHT SIDEBAR -->

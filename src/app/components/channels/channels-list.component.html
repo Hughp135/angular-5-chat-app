@@ -39,4 +39,24 @@
       </div>
     </form>
   </div>
+
+  <div class="header">
+    <h5>Voice Channels</h5>
+  </div>
+
+  <div class="" *ngIf="!channelList">
+    <div class="ui active centered inline loader"></div>
+  </div>
+
+  <div *ngIf="channelList" id="chat-channel-list">
+    <div *ngIf="channelList.voiceChannels.length < 1"
+      class="item">
+      No channels added yet.
+    </div>
+    <a class="item channel" *ngFor="let channel of channelList.voiceChannels"
+      [class.inverted]="settingsService.invertedTheme"
+      (click)="joinVoiceChannel(channel)">
+      # {{ channel.name }}
+    </a>
+  </div>
 </div>

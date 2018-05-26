@@ -18,28 +18,25 @@ input.ng-invalid.ng-dirty.ng-touched {
 }
 
 .ui.button {
-  border-radius: 8px !important;
-
+  &:not(.circular) {
+    border-radius: 4px !important;
+  }
   &.tertiary {
     background: none !important;
     &:not(:hover) {
       box-shadow: none !important;
     }
-
     &:hover {
       border: none;
       box-shadow: 0px 0px 1px grey;
     }
-
     &.basic {
       color: rgba(0, 0, 0, 0.8) !important;
     }
   }
-
   &.small {
     padding: 1.25em 1.25em 1em !important;
   }
-
   &.basic {
     box-shadow: 0 0 0 1px rgba(34, 36, 38, 0.27) !important;
   }
@@ -79,42 +76,33 @@ input.ng-invalid.ng-dirty.ng-touched {
 
 .sh-menu-item {
   transition: none !important;
-
   .remove-user.icons {
     margin-left: -3px !important;
     margin-right: 3px !important;
-
     .user {
       margin-left: 3px !important;
     }
-
     span {
       margin-left: 5px;
     }
   }
-
   .add-user.icons {
     .add {
       font-size: 0.5em !important;
     }
   }
-
   div {
     color: #dcdcdc !important;
   }
-
   &:hover {
     background: #1e1f21 !important;
-
     &.sh-menu-disabled {
       cursor: auto !important;
       background: initial !important;
-
       div {
         color: #dcdcdc !important;
       }
     }
-
     div {
       color: #fff !important;
     }
@@ -129,7 +117,6 @@ input.ng-invalid.ng-dirty.ng-touched {
   h5 {
     color: rgba(34, 34, 34, 0.75);
   }
-
   &.inverted {
     h5 {
       color: rgba(175, 175, 175, 0.75) !important;
@@ -139,8 +126,11 @@ input.ng-invalid.ng-dirty.ng-touched {
 
 .ui.header {
   color: rgba(0, 0, 0, 0.726);
-
   &.inverted {
     color: rgba(255, 255, 255, 0.8) !important;
   }
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.4);
 }

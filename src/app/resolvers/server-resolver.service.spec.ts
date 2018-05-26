@@ -97,6 +97,7 @@ describe('ServerResolver.Service.TsService', () => {
       channels: [
         { name: 'chan1', _id: 'sdf9', server_id: serverList[0]._id, last_message: new Date() },
       ],
+      voiceChannels: [],
     };
 
     service.resolve(<any>route, null);
@@ -115,6 +116,7 @@ describe('ServerResolver.Service.TsService', () => {
     const channelList: ChannelList = {
       server_id: serverList[0]._id,
       channels: [],
+      voiceChannels: [],
     };
 
     service.resolve(<any>route, null);

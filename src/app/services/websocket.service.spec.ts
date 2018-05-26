@@ -11,6 +11,8 @@ import {
   SERVER_USERLIST_HANDLER,
   SERVER_UPDATE_USERLIST_HANDLER,
   SET_FRIEND_REQUESTS_HANDLER,
+  VOICE_CHANNEL_USERS,
+  JOINED_VOICE_CHANNEL_HANDLER,
 } from './websocket-events/websocket-events';
 
 import { StoreModule, Store } from '@ngrx/store';
@@ -22,12 +24,15 @@ import {
   SERVER_UPDATE_USER_LIST, SET_CHANNEL_LAST_MESSAGE_DATE,
 } from '../reducers/current-server.reducer';
 import { NEW_CHAT_MESSAGE, JOIN_CHANNEL, CHAT_HISTORY } from '../reducers/current-chat-channel.reducer';
-import { ChatChannel } from '../../../shared-interfaces/channel.interface';
+import { ChatChannel, ChannelList } from '../../../shared-interfaces/channel.interface';
 import { ChatMessage } from '../../../shared-interfaces/message.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { SET_FRIEND_REQUESTS } from '../reducers/friends-reducer';
 import { AppStateService } from './app-state.service';
+import { SET_VOICE_CHANNEL_USERS, JOIN_VOICE_CHANNEL } from '../reducers/current-voice-channel-reducer';
+import { VoiceChannel } from '../../../shared-interfaces/voice-channel.interface';
+import { Observable } from 'rxjs/Observable';
 
 describe('WebsocketService', () => {
   let injector: TestBed;
@@ -46,6 +51,11 @@ describe('WebsocketService', () => {
     _id: '345',
     name: 'channel',
     server_id: '123',
+  };
+  const currentVoiceChannel: VoiceChannel = {
+    _id: 'voice123',
+    name: 'voicechan1',
+    users: [],
   };
 
   beforeEach(() => {
@@ -255,12 +265,12 @@ describe('WebsocketService', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const fakeSocket = {
+    service.socket = {
       on: (msg: string, callback: any) => {
         callback(message);
       },
     };
-    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    handlers[CHAT_MESSAGE_HANDLER](service);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: NEW_CHAT_MESSAGE,
       payload: message,
@@ -276,12 +286,12 @@ describe('WebsocketService', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const fakeSocket = {
+    service.socket = {
       on: (msg: string, callback: any) => {
         callback(message);
       },
     };
-    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    handlers[CHAT_MESSAGE_HANDLER](service);
     expect(store.dispatch).not.toHaveBeenCalledWith({
       type: NEW_CHAT_MESSAGE,
       payload: message,
@@ -297,12 +307,12 @@ describe('WebsocketService', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const fakeSocket = {
+    service.socket = {
       on: (msg: string, callback: any) => {
         callback(message);
       },
     };
-    handlers[CHAT_MESSAGE_HANDLER](fakeSocket, store);
+    handlers[CHAT_MESSAGE_HANDLER](service);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_CHANNEL_LAST_MESSAGE_DATE,
       payload: {
@@ -310,25 +320,121 @@ describe('WebsocketService', () => {
       },
     });
   });
-  it('channel-list', () => {
-    const fakeSocket = {
+  it('channel-list doesnt dispatch if no current server', async () => {
+    service.socket = {
       on: (msg: string, callback: any) => {
-        callback('boo');
+        callback({ server_id: 'lolz', channels: [] });
       },
     };
-    handlers[CHANNEL_LIST_HANDLER](fakeSocket, store);
+    handlers[CHANNEL_LIST_HANDLER](service);
+    await new Promise(resolve => setTimeout(resolve, 5));
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+  it('channel-list doesnt dispatch if currentServer id doesnt match list', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: {
+        _id: 'someServerIdHere',
+      },
+    });
+    (<jasmine.Spy>store.dispatch).calls.reset();
+    service.socket = {
+      on: (msg: string, callback: any) => {
+        callback({ server_id: 'wrong', channels: [] });
+      },
+    };
+    handlers[CHANNEL_LIST_HANDLER](service);
+    await new Promise(resolve => setTimeout(resolve, 5));
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+  it('channel-list dispatches SET_CHANNEL_LIST if server id matches list', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: {
+        _id: 'correct-id',
+      },
+    });
+    (<jasmine.Spy>(store.dispatch)).calls.reset();
+    service.socket = {
+      on: (msg: string, callback: any) => {
+        callback({ server_id: 'correct-id', channels: [] });
+      },
+    };
+
+    handlers[CHANNEL_LIST_HANDLER](service);
+    await new Promise(resolve => setTimeout(resolve, 5));
+
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_CHANNEL_LIST,
-      payload: 'boo',
+      payload: { server_id: 'correct-id', channels: [] },
     });
   });
+  it('channel-list navigates to server if current channel was deleted', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: {
+        _id: 'correct-id',
+      },
+    });
+    (<jasmine.Spy>(store.dispatch)).calls.reset();
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: {
+        _id: 'someChannelId',
+      },
+    });
+    service.socket = {
+      on: (msg: string, callback: any) => {
+        callback({ server_id: 'correct-id', channels: [] });
+      },
+    };
+    spyOn(router, 'navigate');
+    spyOn(errorService.errorMessage, 'next');
+    handlers[CHANNEL_LIST_HANDLER](service);
+    await new Promise(resolve => setTimeout(resolve, 5));
+
+    expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
+    expect(router.navigate).toHaveBeenCalledTimes(1);
+    expect(router.navigate).toHaveBeenCalledWith([`/channels/correct-id`]);
+  });
+  it('channel-list navigates to 1st channel if available if currentChannel deleted', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: {
+        _id: 'correct-id',
+      },
+    });
+    (<jasmine.Spy>(store.dispatch)).calls.reset();
+    store.dispatch({
+      type: JOIN_CHANNEL,
+      payload: {
+        _id: 'someChannelId',
+      },
+    });
+    service.socket = {
+      on: (msg: string, callback: any) => {
+        callback({
+          server_id: 'correct-id',
+          channels: [{ _id: 'anotherChannel' }],
+        });
+      },
+    };
+    spyOn(router, 'navigate');
+    spyOn(errorService.errorMessage, 'next');
+    handlers[CHANNEL_LIST_HANDLER](service);
+    await new Promise(resolve => setTimeout(resolve, 5));
+
+    expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
+    expect(router.navigate).toHaveBeenCalledTimes(1);
+    expect(router.navigate).toHaveBeenCalledWith([`/channels/correct-id/anotherChannel`]);
+  });
   it('joined-channel', () => {
-    const fakeSocket = {
+    service.socket = {
       on: (msg: string, callback: any) => {
         callback({ 'messages': [] });
       },
     };
-    handlers[JOINED_CHANNEL_HANDLER](fakeSocket, store);
+    handlers[JOINED_CHANNEL_HANDLER](service);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: CHAT_HISTORY,
       payload: { 'messages': [] },
@@ -343,12 +449,12 @@ describe('WebsocketService', () => {
       type: JOIN_CHANNEL,
       payload: currentChannel,
     });
-    const fakeSocket = {
+    service.socket = {
       on: (msg: string, callback: any) => {
         callback('hi');
       },
     };
-    handlers[SERVER_USERLIST_HANDLER](fakeSocket, store);
+    handlers[SERVER_USERLIST_HANDLER](service);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SERVER_SET_USER_LIST,
       payload: 'hi',
@@ -363,24 +469,24 @@ describe('WebsocketService', () => {
       type: JOIN_CHANNEL,
       payload: currentChannel,
     });
-    const fakeSocket = {
+    service.socket = {
       on: (msg: string, callback: any) => {
         callback('hi');
       },
     };
-    handlers[SERVER_UPDATE_USERLIST_HANDLER](fakeSocket, store);
+    handlers[SERVER_UPDATE_USERLIST_HANDLER](service);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SERVER_UPDATE_USER_LIST,
       payload: 'hi',
     });
   });
   it('friend-requests handler', () => {
-    const fakeSocket = {
+    service.socket = {
       on: (msg: string, callback: any) => {
         callback('hi');
       },
     };
-    handlers[SET_FRIEND_REQUESTS_HANDLER](fakeSocket, store);
+    handlers[SET_FRIEND_REQUESTS_HANDLER](service);
     expect(store.dispatch).toHaveBeenCalledWith({
       type: SET_FRIEND_REQUESTS,
       payload: 'hi',
@@ -406,5 +512,82 @@ describe('WebsocketService', () => {
     } catch (e) {
       expect(e.message).toEqual('Request timed out');
     }
+  });
+  it('JOINED_VOICE_CHANNEL handler if channel not found', async () => {
+    service.socket = {
+      on: async (msg: string, callback: any) => {
+        await callback({ channelId: 'not-found_id', users: 'hi' })
+          .catch(e => { if (e.message !== 'fake timeout') { throw (e); } });
+      },
+    };
+    (store.dispatch as jasmine.Spy).calls.reset();
+    spyOn(store, 'select').and.callFake(() => {
+      return Observable.throw(new Error('test observable error'));
+    });
+    handlers[JOINED_VOICE_CHANNEL_HANDLER](service);
+    await new Promise(res => setTimeout(res, 5));
+    expect(store.select).toHaveBeenCalled();
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+  it('joinedVoiceChannel dispatches JOIN_VOICE_CHANNEL when channel is found', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: currentServer,
+    });
+    const channels: ChannelList = {
+      server_id: currentServer._id,
+      channels: [],
+      voiceChannels: [
+        currentVoiceChannel,
+      ],
+    };
+    store.dispatch({
+      type: SET_CHANNEL_LIST,
+      payload: channels,
+    });
+    service.socket = {
+      on: async (msg: string, callback: any) => {
+        await callback({ channelId: currentVoiceChannel._id, users: 'hi' });
+      },
+    };
+    (store.dispatch as jasmine.Spy).calls.reset();
+    handlers[JOINED_VOICE_CHANNEL_HANDLER](service);
+    await new Promise(res => setTimeout(res, 5));
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: JOIN_VOICE_CHANNEL,
+      payload: { ...currentVoiceChannel, users: 'hi' },
+    });
+  });
+  it('VOICE_CHANNEL_USERS handler if channel not found', async () => {
+    spyOn(store, 'select').and.callFake(() => {
+      return Observable.throw(new Error('test observable error'));
+    });
+    service.socket = {
+      on: (msg: string, callback: any) => {
+        callback({ channelId: 'not-found_id', users: 'hi' });
+      },
+    };
+    handlers[VOICE_CHANNEL_USERS](service);
+    await new Promise(res => setTimeout(res, 5));
+    expect(store.select).toHaveBeenCalled();
+    expect(store.dispatch).not.toHaveBeenCalled();
+  });
+  it('VOICE_CHANNEL_USERS handler sets voice channel users', async () => {
+    service.socket = {
+      on: async (msg: string, callback: any) => {
+        await callback({ channelId: 'voice123', users: 'hi' });
+      },
+    };
+    store.dispatch({
+      type: JOIN_VOICE_CHANNEL,
+      payload: currentVoiceChannel,
+    });
+    (<jasmine.Spy>store.dispatch).calls.reset();
+    handlers[VOICE_CHANNEL_USERS](service);
+    await new Promise(res => setTimeout(res, 5));
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: SET_VOICE_CHANNEL_USERS,
+      payload: 'hi',
+    });
   });
 });

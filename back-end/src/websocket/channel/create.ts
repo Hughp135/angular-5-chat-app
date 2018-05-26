@@ -1,7 +1,8 @@
 import Server from '../../models/server.model';
-import Channel, { channelsToChannelListItems } from '../../models/channel.model';
-import { CreateChannelRequest, ChannelList } from 'shared-interfaces/channel.interface';
+import Channel from '../../models/channel.model';
+import { CreateChannelRequest } from 'shared-interfaces/channel.interface';
 import { log } from 'winston';
+import { getChannelList } from '../server/join';
 
 /* istanbul ignore next */
 export function createChannel(io: any) {
@@ -29,26 +30,20 @@ export async function handler(io, socket, channelData) {
     return;
   }
 
-  await Channel.create({
-    server_id: server._id,
-    name: channelData.name,
-  });
-  const channels: any = await Channel.find({
-    server_id: server._id,
-  }, {
-      _id: 1,
-      name: 1,
-      server_id: 1,
-      last_message: 1,
-    }).lean();
+  try {
+    await Channel.create({
+      server_id: server._id,
+      name: channelData.name,
+    });
 
-  const channelsFormatted = channelsToChannelListItems(channels);
+    const channelList = await getChannelList(server._id);
 
-  const channelList: ChannelList = {
-    server_id: server._id,
-    channels: channelsFormatted,
-  };
-
-  io.in(`server-${server._id}`).emit('channel-list', channelList);
+    io.in(`server-${server._id}`).emit('channel-list', channelList);
+  } catch (err) {
+    if (err.message && err.message.startsWith('Channel/server must be unique')) {
+      socket.emit('soft-error', 'Channel name must be unique.');
+    } else {
+      throw (err);
+    }
+  }
 }
-

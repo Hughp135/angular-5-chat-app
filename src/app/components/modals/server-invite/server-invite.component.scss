@@ -5,4 +5,11 @@
 
 .action.input {
   width: 350px;
+  ::selection {
+    background: white;
+  }
+  input {
+    background: #2eadc8;
+    color: white;
+  }
 }

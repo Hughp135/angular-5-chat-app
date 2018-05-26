@@ -5,14 +5,12 @@ import * as mongoose from 'mongoose';
 import { createChannel, handler as createChannelHandler } from './create';
 import Channel from '../../models/channel.model';
 import Server from '../../models/server.model';
-import createFakeSocketEvent from '../test_helpers/fake-socket';
 
 const expect = chai.expect;
 chai.use(sinonChai);
 
-const result = sinon.spy();
-
 describe('websocket channel/create', () => {
+  const result = sinon.spy();
   let serverId;
   const sandbox = sinon.createSandbox();
   let io, socket;
@@ -71,6 +69,7 @@ describe('websocket channel/create', () => {
           server_id: serverId.toString(),
           last_message: undefined,
         }],
+        voiceChannels: [],
       });
   });
   it('channel/create fails if no server_id given', async () => {
@@ -91,5 +90,38 @@ describe('websocket channel/create', () => {
 
     expect(socket.emit).to.have.been
       .calledWith('soft-error', 'You do not have permission to add a channel.');
+  });
+  it('does not allow two channels to be created with same name', async () => {
+    const channel: any = await Channel.create({
+      name: 'channel-name',
+      server_id: serverId,
+    });
+
+    const emit = sandbox.spy();
+    await createChannelHandler(io, socket, {
+      name: 'channel-name',
+      server_id: serverId,
+    });
+
+    expect(socket.emit).to.have.been
+      .calledWith('soft-error', 'Channel name must be unique.');
+  });
+  it('emits soft error if channel create fails', async () => {
+    sandbox.stub(Channel, 'create').callsFake(() => {
+      return Promise.reject(new Error('test err'));
+    });
+
+    const emit = sandbox.spy();
+
+    try {
+      await createChannelHandler(io, socket, {
+        name: 'channel-name',
+        server_id: serverId,
+      });
+      throw new Error('expected createChannel call to fail');
+    } catch (e) {
+      // tslint:disable-next-line:no-unused-expression
+      expect(socket.emit).not.to.have.been.called;
+    }
   });
 });

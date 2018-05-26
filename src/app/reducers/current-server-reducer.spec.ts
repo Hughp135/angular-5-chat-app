@@ -33,6 +33,7 @@ describe('reducers/current-server', () => {
       payload: {
         server_id: 'ga0dgj2',
         channels: [],
+        voiceChannels: [],
       },
     };
     const state = currentServerReducer(initialState, action);
@@ -48,6 +49,7 @@ describe('reducers/current-server', () => {
       payload: {
         server_id: 'fsdg34g',
         channels: [],
+        voiceChannels: [],
       },
     };
     const state = currentServerReducer(initialState, action);
@@ -154,6 +156,7 @@ describe('reducers/current-server', () => {
         channels: [
           { _id: '123', name: 'chan1', last_message: oldDate },
         ],
+        voiceChannels: [],
       },
     };
     const newDate = new Date();
@@ -166,6 +169,7 @@ describe('reducers/current-server', () => {
           channels: [
             { _id: '123', name: 'chan1', last_message: newDate },
           ],
+          voiceChannels: [],
         },
       });
   });
@@ -186,6 +190,7 @@ describe('reducers/current-server', () => {
         channels: [
           { _id: '123', name: 'chan1', last_message: oldDate },
         ],
+        voiceChannels: [],
       },
     };
     expect(currentServerReducer(state, action))

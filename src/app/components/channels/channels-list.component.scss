@@ -26,17 +26,17 @@ h5 {
 #chat-channel-list {
   a.item.channel {
     font-size: 0.94em;
-    padding: .5em 0.7em;
+    padding: .6em 0.7em;
+    border-radius: 3px !important;
+    margin: 1px 0;
     &.inverted {
       color: rgba(255, 255, 255, 0.5);
     }
-    border-radius: 3px !important;
-    margin: 1px 0;
     i {
       float: right;
       display: none;
       &:hover {
-        color: red;        
+        color: red;
       }
     }
     &:hover {
@@ -52,12 +52,17 @@ h5 {
       color: rgba(255, 255, 255, 0.85) !important;
     }
   }
-  a.item:hover,
+  a.item:hover {
+    background: #cacaca !important;
+    &.inverted {
+      background: #384149 !important;
+    }
+  }
   a.item.active {
     font-weight: 400 !important;
-    background: #d6d6d6 !important;
+    background: #c3c2c2 !important;
     &.inverted {
-      background: #666 !important;
+      background: #404d5a !important;
       color: rgba(255, 255, 255, 0.85) !important;
     }
   }
