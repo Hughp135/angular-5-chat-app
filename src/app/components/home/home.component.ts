@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers/app.states';
-import { Observable } from 'rxjs/Observable';
 import ChatServer from 'shared-interfaces/server.interface';
 
 @Component({

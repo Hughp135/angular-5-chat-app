@@ -3,6 +3,7 @@ import { StoreModule, Store } from '@ngrx/store';
 import { reducers } from '../../reducers/reducers';
 import { AppState } from '../../reducers/app.states';
 import { HomeComponent } from './home.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -14,6 +15,7 @@ describe('HomeComponent', () => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
       imports: [
+        RouterTestingModule,
         StoreModule.forRoot(reducers),
       ],
     })
