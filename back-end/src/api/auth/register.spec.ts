@@ -6,11 +6,13 @@ import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import * as winston from 'winston';
 import * as setCookie from 'set-cookie-parser';
+import * as config from 'config';
 
 import { app } from '../../api-server';
 
 import User from '../../models/user.model';
 import { verifyJWT } from './jwt';
+import { ObjectId } from 'bson';
 
 // Disable winston logging during test as it's annoying.
 winston.configure({ transports: [] });
@@ -22,9 +24,12 @@ chai.use(sinonChai);
 
 describe('api/auth/register', () => {
   const sandbox = sinon.sandbox.create();
+  const defaultServerId = new ObjectId().toHexString();
 
   before(async () => {
     await mongoose.connect('mongodb://localhost/myapp-test');
+  });
+  beforeEach(() => {
   });
   after(async () => {
     mongoose.connection.close();
@@ -142,5 +147,36 @@ describe('api/auth/register', () => {
     bcrypt.compare('123456', user.password, function (err, res) {
       expect(res).to.equal(true);
     });
+  });
+  it('should add default server to user joined_servers', async () => {
+    sandbox.stub(config, 'get').withArgs('default_server_id')
+      .returns(defaultServerId);
+    const result = await supertest(app.listen(null))
+      .post('/api/register')
+      .send({
+        username: '123',
+        password: '123456',
+        password_confirm: '123456',
+      })
+      .expect(204);
+
+    const user: any = await User.findOne().lean();
+    expect(user).to.exist;
+    expect(user.joined_servers).to.deep.equal([defaultServerId]);
+  });
+  it('should not add default server if not defined in config', async () => {
+    sandbox.stub(config, 'get').withArgs('default_server_id');
+    const result = await supertest(app.listen(null))
+      .post('/api/register')
+      .send({
+        username: '123',
+        password: '123456',
+        password_confirm: '123456',
+      })
+      .expect(204);
+
+    const user: any = await User.findOne().lean();
+    expect(user).to.exist;
+    expect(user.joined_servers).to.deep.equal([]);
   });
 });

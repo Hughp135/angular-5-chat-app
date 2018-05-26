@@ -122,6 +122,7 @@ export class WebRTCService {
     });
     const self = this;
     this.peers[socket_id] = p;
+    /* istanbul ignore next */
     p.on('error', function (err) {
       console.warn('error', err, p);
     });
@@ -144,9 +145,11 @@ export class WebRTCService {
       console.warn('CONNECTED TO USER', socket_id);
       p.send('whatever' + Math.random());
     });
+    /* istanbul ignore next */
     p.on('disconnect', function () {
       console.warn('Peer disconnected', socket_id);
     });
+    /* istanbul ignore next */
     p.on('destroy', function () {
       console.warn('Peer destroyed', socket_id);
     });
