@@ -117,7 +117,8 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
   }
 
   /* istanbul ignore next */
-  showDeleteChannelConfirm(channel, isVoice?: boolean) {
+  showDeleteChannelConfirm(event, channel, isVoice?: boolean) {
+    event.stopPropagation();
     this.modalService
       .open(new ConfirmModal(
         'Delete Channel',

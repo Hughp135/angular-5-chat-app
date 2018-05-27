@@ -20,7 +20,7 @@
       [class.has-unread-messages]="channelHasUnreadMessages(channel)"
       (click)="joinChannel(channel)">
       <i class="hashtag icon"></i> {{ channel.name }}
-      <i class="trash link icon" (click)="showDeleteChannelConfirm(channel)"></i>
+      <i class="trash link icon" (click)="showDeleteChannelConfirm($event, channel)"></i>
     </a>
     <!-- <a class="item channel"
       [class.inverted]="settingsService.invertedTheme"
@@ -59,7 +59,7 @@
       [class.inverted]="settingsService.invertedTheme"
       (click)="joinVoiceChannel(channel)">
       <i class="volume up icon"></i> {{ channel.name }}
-      <i class="trash link icon" (click)="showDeleteChannelConfirm(channel, true)"></i>
+      <i class="trash link icon" (click)="showDeleteChannelConfirm($event, channel, true)"></i>
     </a>
   </div>
 
