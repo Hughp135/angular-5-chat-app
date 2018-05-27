@@ -9,7 +9,7 @@
     "start:server:dev-old": "nodemon --watch back-end -e ts --exec \"npm run compile:server\"",
     "db:seed": "tsc -p back-end/tsconfig.json && node back-end/dist/tools/db-seeder.js",
     "start:server": "tsc -p back-end/tsconfig.json && node back-end/dist/index.js",
-    "build": "ng build --prod",
+    "build": "ng build --prod -aot -vc -ec",
     "test": "npm run test:server && npm run test:app",
     "test:app:dev": "ng test --browsers --code-coverage",
     "test:server:dev": "mocha --exit  -t 10000 -r ts-node/register \"back-end/src/**/*.spec.ts\"",
@@ -98,12 +98,13 @@
     "shared-interfaces": "file:shared-interfaces",
     "shortid": "^2.2.8",
     "simple-peer": "^9.1.0",
-    "socket.io": "^2.0.4",
+    "socket.io": "^2.1.1",
     "socket.io-client": "^2.0.4",
     "typescript": "2.6.2",
     "uglifyjs-webpack-plugin": "^1.2.0",
     "winston": "^2.4.0",
-    "zone.js": "^0.8.20"
+    "zone.js": "^0.8.20",
+    "@types/socket.io": "^1.4.33"
   },
   "devDependencies": {
     "@angular/language-service": "5.2.9",
@@ -113,7 +114,6 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/sinon": "^4.1.2",
     "@types/sinon-chai": "^2.7.29",
-    "@types/socket.io": "^1.4.33",
     "@types/supertest": "^2.0.4",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
