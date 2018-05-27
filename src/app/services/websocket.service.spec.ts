@@ -30,7 +30,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { SET_FRIEND_REQUESTS } from '../reducers/friends-reducer';
 import { AppStateService } from './app-state.service';
-import { SET_VOICE_CHANNEL_USERS, JOIN_VOICE_CHANNEL } from '../reducers/current-voice-channel-reducer';
+import { SET_VOICE_CHANNEL_USERS, JOIN_VOICE_CHANNEL, LEAVE_VOICE_CHANNEL } from '../reducers/current-voice-channel-reducer';
 import { VoiceChannel } from '../../../shared-interfaces/voice-channel.interface';
 import { Observable } from 'rxjs/Observable';
 
@@ -411,6 +411,7 @@ describe('WebsocketService', () => {
         _id: 'someChannelId',
       },
     });
+    // Return an empty channels list
     service.socket = {
       on: (msg: string, callback: any) => {
         callback({
@@ -427,6 +428,35 @@ describe('WebsocketService', () => {
     expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
     expect(router.navigate).toHaveBeenCalledTimes(1);
     expect(router.navigate).toHaveBeenCalledWith([`/channels/correct-id/anotherChannel`]);
+  });
+  it('if voice channel is deleted, dispatch LEAVE_VOICE_CHANNEL', async () => {
+    store.dispatch({
+      type: SET_CURRENT_SERVER,
+      payload: {
+        _id: 'correct-id',
+      },
+    });
+    (<jasmine.Spy>(store.dispatch)).calls.reset();
+    store.dispatch({
+      type: JOIN_VOICE_CHANNEL,
+      payload: {
+        _id: 'someChannelId',
+      },
+    });
+    // Return an empty voiceChannels list
+    service.socket = {
+      on: (msg: string, callback: any) => {
+        callback({ server_id: 'correct-id', voiceChannels: [] });
+      },
+    };
+    spyOn(errorService.errorMessage, 'next');
+    handlers[CHANNEL_LIST_HANDLER](service);
+    await new Promise(resolve => setTimeout(resolve, 5));
+
+    expect(errorService.errorMessage.next).toHaveBeenCalledTimes(1);
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: LEAVE_VOICE_CHANNEL,
+    });
   });
   it('joined-channel', () => {
     service.socket = {

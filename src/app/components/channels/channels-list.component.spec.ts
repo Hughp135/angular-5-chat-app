@@ -120,6 +120,17 @@ describe('ChannelsListComponent', () => {
         name: 'channel-name',
       });
   });
+  it('creates a new voice channel', () => {
+    component.voiceChannelName = 'channel-name';
+    component.createVoiceChannel();
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledTimes(1);
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('create-voice-channel', {
+        server_id: '123',
+        name: 'channel-name',
+      });
+  });
   it('should join a channel channel', () => {
     const chan = {
       name: 'name',
