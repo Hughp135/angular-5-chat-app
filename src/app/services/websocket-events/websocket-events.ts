@@ -9,7 +9,7 @@ import 'rxjs/add/operator/take';
 import { ServerUserList, UserListUpdate } from '../../../../shared-interfaces/server.interface';
 import { User } from '../../../../shared-interfaces/user.interface';
 import { SET_FRIEND_REQUESTS } from '../../reducers/friends-reducer';
-import { JOIN_VOICE_CHANNEL, SET_VOICE_CHANNEL_USERS } from '../../reducers/current-voice-channel-reducer';
+import { JOIN_VOICE_CHANNEL, SET_VOICE_CHANNEL_USERS, LEAVE_VOICE_CHANNEL } from '../../reducers/current-voice-channel-reducer';
 import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interface';
 import { WebsocketService } from '../websocket.service';
 import { ErrorNotification } from '../error.service';
@@ -75,20 +75,34 @@ function channelList(wsService: WebsocketService) {
       payload: list,
     });
 
-    const channel = await wsService.store
+    const currentChannel = await wsService.store
       .select('currentChatChannel')
       .take(1)
       .toPromise();
 
-    if (channel && !list.channels.some(chan => chan._id === channel._id)) {
+    const currentVoiceChannel = await wsService.store
+      .select('currentVoiceChannel')
+      .take(1)
+      .toPromise();
+
+    if (currentChannel && !list.channels.some(chan => chan._id === currentChannel._id)) {
       wsService.errorService.errorMessage.next(
-        new ErrorNotification('The channel you were in has been deleted.', 2500),
+        new ErrorNotification('The channel you were in has been deleted.', 5000),
       );
       if (list.channels.length) {
         wsService.router.navigate([`/channels/${list.server_id}/${list.channels[0]._id}`]);
       } else {
         wsService.router.navigate([`/channels/${list.server_id}`]);
       }
+    }
+
+    if (currentVoiceChannel && !list.voiceChannels.some(chan => chan._id === currentVoiceChannel._id)) {
+      wsService.errorService.errorMessage.next(
+        new ErrorNotification('The voice channel you were in has been deleted.', 5000),
+      );
+      wsService.store.dispatch({
+        type: LEAVE_VOICE_CHANNEL,
+      });
     }
   });
 }

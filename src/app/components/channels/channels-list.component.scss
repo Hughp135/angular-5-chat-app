@@ -32,15 +32,21 @@ h5 {
     &.inverted {
       color: rgba(255, 255, 255, 0.5);
     }
-    i {
+    i:not(.trash) {
+      float: none;
+      margin: 0;
+      margin-right: 2px;
+    }
+    i.trash {
       float: right;
       display: none;
       &:hover {
         color: red;
+        display: block;
       }
     }
     &:hover {
-      i {
+      i.trash {
         display: block;
       }
     }

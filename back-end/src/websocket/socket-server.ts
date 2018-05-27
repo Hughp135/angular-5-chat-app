@@ -17,6 +17,8 @@ import { signal } from './webrtc/signal';
 import { joinVoiceChannel } from './voice-channel/join';
 import { deleteChannel } from './channel/delete';
 import { leaveVoiceChannel } from './voice-channel/leave';
+import { createVoiceChannel } from './voice-channel/create';
+import { deleteVoiceChannel } from './voice-channel/delete';
 
 let ioServer = null;
 
@@ -32,21 +34,34 @@ export async function startWs(server) {
   });
   (<any>io).setMaxListeners(50);
   // Add event handlers
+
+  // Server
   joinServer(io);
-  createChannel(io);
-  deleteChannel(io);
-  joinChannel(io);
-  joinVoiceChannel(io);
-  leaveVoiceChannel(io);
-  sendMessage(io);
   getUserList(io);
   getDmChannels(io);
   joinDmChannel(io);
+
+  // Text Channels
+  createChannel(io);
+  deleteChannel(io);
+  joinChannel(io);
+  sendMessage(io);
   getChatMessages(io);
+
+  // Voice Channels
+  joinVoiceChannel(io);
+  leaveVoiceChannel(io);
+  createVoiceChannel(io);
+  deleteVoiceChannel(io);
+
+
+  // Friends
   sendFriendRequest(io);
   getFriendRequests(io);
   rejectFriendRequest(io);
   removeFriend(io);
+
+  // WebRTC
   signal(io);
 
   ioServer = io;

@@ -19,7 +19,7 @@
       [class.active]="currentChatChannel && currentChatChannel._id === channel._id"
       [class.has-unread-messages]="channelHasUnreadMessages(channel)"
       (click)="joinChannel(channel)">
-      # {{ channel.name }}
+      <i class="hashtag icon"></i> {{ channel.name }}
       <i class="trash link icon" (click)="showDeleteChannelConfirm(channel)"></i>
     </a>
     <!-- <a class="item channel"
@@ -42,6 +42,8 @@
 
   <div class="header">
     <h5>Voice Channels</h5>
+    <i class="plus link icon" *ngIf="isOwner"
+      (click)="showCreateVoiceChannel()"></i>
   </div>
 
   <div class="" *ngIf="!channelList">
@@ -56,7 +58,20 @@
     <a class="item channel" *ngFor="let channel of channelList.voiceChannels"
       [class.inverted]="settingsService.invertedTheme"
       (click)="joinVoiceChannel(channel)">
-      # {{ channel.name }}
+      <i class="volume up icon"></i> {{ channel.name }}
+      <i class="trash link icon" (click)="showDeleteChannelConfirm(channel, true)"></i>
     </a>
   </div>
+
+  <form *ngIf="showVoiceChannelInput" action=""
+    (submit)="createVoiceChannel()">
+    <div class="ui small icon input">
+      <input type="text" #voiceChannelInput name="voiceChannelName"
+        autocomplete="off" placeholder="Add New Voice Channel"
+        (keydown)="voiceChannelInputKeypress($event)"
+        [(ngModel)]="voiceChannelName">
+      <i class="green circular plus link icon"
+        (click)="createVoiceChannel()"></i>
+    </div>
+  </form>
 </div>

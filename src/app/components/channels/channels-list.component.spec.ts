@@ -196,6 +196,11 @@ describe('ChannelsListComponent', () => {
     expect(fakeWebSocketService.socket.emit)
       .toHaveBeenCalledWith('delete-channel', '123');
   });
+  it('delete voice channel emits delete-voice-channel', () => {
+    component.deleteVoiceChannel('123');
+    expect(fakeWebSocketService.socket.emit)
+      .toHaveBeenCalledWith('delete-voice-channel', '123');
+  });
   it('deletes channel shows permission error if 401', async (done) => {
     component.deleteChannel('401');
     await new Promise(res => setTimeout(res, 5));
@@ -224,6 +229,18 @@ describe('ChannelsListComponent', () => {
     expect(component.textChannelInput.nativeElement.focus).toHaveBeenCalled();
     done();
   });
+  it('toggles show create voice channel and focuses input', async (done) => {
+    component.voiceChannelInput = {
+      nativeElement: {
+        focus: jasmine.createSpy(),
+      },
+    };
+    component.showCreateVoiceChannel();
+    expect(component.showVoiceChannelInput).toEqual(true);
+    await new Promise(res => setTimeout(res, 51));
+    expect(component.voiceChannelInput.nativeElement.focus).toHaveBeenCalled();
+    done();
+  });
   it('pressing escape key on input resets input and hides', () => {
     component.showNewChannelInput = true;
     component.newChannelName = 'testname';
@@ -241,6 +258,24 @@ describe('ChannelsListComponent', () => {
     });
     expect(component.showNewChannelInput).toEqual(true);
     expect(component.newChannelName).toEqual('testname');
+  });
+  it('pressing escape key on voice input resets input and hides', () => {
+    component.showVoiceChannelInput = true;
+    component.voiceChannelName = 'testname';
+    component.voiceChannelInputKeypress({
+      key: 'Escape',
+    });
+    expect(component.showVoiceChannelInput).toEqual(false);
+    expect(component.voiceChannelName).toEqual('');
+  });
+  it('pressing any other key on voice input does nothing', () => {
+    component.showVoiceChannelInput = true;
+    component.voiceChannelName = 'testname';
+    component.voiceChannelInputKeypress({
+      key: 'something',
+    });
+    expect(component.showVoiceChannelInput).toEqual(true);
+    expect(component.voiceChannelName).toEqual('testname');
   });
   it('joining voice channel emits join-voice-channel', () => {
     component.joinVoiceChannel({ _id: '123', name: 'chan1', users: [] });

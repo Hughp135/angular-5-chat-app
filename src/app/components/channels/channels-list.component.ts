@@ -23,8 +23,10 @@ import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interf
 })
 export class ChannelsListComponent implements OnInit, OnDestroy {
   public newChannelName: string;
+  public voiceChannelName: string;
   private subscriptions: Subscription[] = [];
   public showNewChannelInput = false;
+  public showVoiceChannelInput = false;
 
   @Input() currentChatChannel: ChatChannel;
   @Input() currentVoiceChannel: VoiceChannel;
@@ -32,6 +34,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
   @Input() me: Me;
 
   @ViewChild('textChannelInput') public textChannelInput: ElementRef;
+  @ViewChild('voiceChannelInput') public voiceChannelInput: ElementRef;
 
   constructor(
     private wsService: WebsocketService,
@@ -86,6 +89,13 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     }, 50);
   }
 
+  showCreateVoiceChannel() {
+    this.showVoiceChannelInput = true;
+    setTimeout(() => {
+      this.voiceChannelInput.nativeElement.focus();
+    }, 50);
+  }
+
   createChannel() {
     const channel: CreateChannelRequest = {
       server_id: this.currentServer._id,
@@ -96,8 +106,18 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     this.newChannelName = '';
   }
 
+  createVoiceChannel() {
+    const channel: CreateChannelRequest = {
+      server_id: this.currentServer._id,
+      name: this.voiceChannelName,
+    };
+    this.wsService.socket.emit('create-voice-channel', channel);
+    this.showVoiceChannelInput = false;
+    this.voiceChannelName = '';
+  }
+
   /* istanbul ignore next */
-  showDeleteChannelConfirm(channel) {
+  showDeleteChannelConfirm(channel, isVoice?: boolean) {
     this.modalService
       .open(new ConfirmModal(
         'Delete Channel',
@@ -105,7 +125,13 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
         'red',
         'Delete Channel',
       ))
-      .onApprove(() => this.deleteChannel(channel._id))
+      .onApprove(() => {
+        if (isVoice) {
+          this.deleteVoiceChannel(channel._id);
+        } else {
+          this.deleteChannel(channel._id);
+        }
+      })
       .onDeny(() => { });
   }
 
@@ -113,10 +139,21 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     this.wsService.socket.emit('delete-channel', id);
   }
 
+  deleteVoiceChannel(id) {
+    this.wsService.socket.emit('delete-voice-channel', id);
+  }
+
   newChannelInputKeypress(event) {
     if (event.key === 'Escape') {
       this.showNewChannelInput = false;
       this.newChannelName = '';
+    }
+  }
+
+  voiceChannelInputKeypress(event) {
+    if (event.key === 'Escape') {
+      this.showVoiceChannelInput = false;
+      this.voiceChannelName = '';
     }
   }
 
