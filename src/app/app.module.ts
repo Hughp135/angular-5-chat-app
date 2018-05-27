@@ -52,6 +52,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { VoiceChannelComponent } from './components/voice-channel/voice-channel.component';
 import { WebRTCService } from './services/webrtc.service';
 import { AudioDeviceService } from './services/audio-device.service';
+import { SettingsComponent } from './components/modals/settings/settings.component';
 
 
 const optionalImports = environment.production ? [] : [
@@ -86,12 +87,14 @@ const optionalImports = environment.production ? [] : [
     ServerInviteComponent,
     Error404Component,
     VoiceChannelComponent,
+    SettingsComponent,
   ],
   entryComponents: [
     CreateServerComponent,
     AddFriendComponent,
     ConfirmModalComponent,
     ServerInviteComponent,
+    SettingsComponent,
   ],
   imports: [
     SuiModule,

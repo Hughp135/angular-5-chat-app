@@ -94,7 +94,6 @@ export class CreateServerComponent implements OnInit {
 export class CreateServerModal extends ComponentModalConfig<void, void, void> {
   constructor() {
     super(CreateServerComponent);
-    this.mustScroll = true;
     this.size = ModalSize.Small;
     this.isClosable = false;
   }
