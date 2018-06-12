@@ -18,17 +18,19 @@
 
           <div suiTabContent="1">
             <div class="ui inverted form">
-              <div class="field">
-                <label for="">Theme:</label>
-                <p>
-                  Switch between the Light and Dark theme.
-                </p>
-              </div>
-              <div class="field">
-                <sui-checkbox name="invertedTheme" ngDefaultControl
-                  [(ngModel)]="settingsService.invertedTheme"
-                  class="toggle" style="float:right">
-                </sui-checkbox>
+              <div class="fields">
+                <div class="twelve wide field">
+                  <label for="">Dark Theme:</label>
+                  <p>
+                    Switch between the Light and Dark theme.
+                  </p>
+                </div>
+                <div class="four wide field">
+                  <sui-checkbox name="invertedTheme" ngDefaultControl
+                    [(ngModel)]="settingsService.invertedTheme"
+                    class="toggle" style="float:right">
+                  </sui-checkbox>
+                </div>
               </div>
             </div>
           </div>

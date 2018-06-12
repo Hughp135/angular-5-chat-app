@@ -2,7 +2,35 @@
   background: none;
 }
 
-.ui.vertical.tabular.menu .active.item {
-  border: none !important;
-  background: none !important;
+.ui.vertical.tabular.menu {
+  border-right: none !important;
+
+  .item {
+    border: none !important;
+    margin: 0 !important;
+  }
+
+  .active.item {
+    border: none !important;
+    background: none !important;
+    border-right: 2px solid grey !important;
+  }
+}
+
+.column {
+  .ui.segment {
+    padding: 0;
+  }
+}
+
+.tab {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}
+
+.ui.checkbox {
+  margin-top: 15px;
 }
