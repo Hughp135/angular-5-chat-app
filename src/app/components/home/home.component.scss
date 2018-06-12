@@ -10,13 +10,22 @@
   background-position: center;
 }
 
-#server-list-container {
+.segment#server-list-container {
   margin: 50px;
+  background: none;
 }
 
-.card {
+h1 {
+  margin-bottom: 40px;
+}
+
+.ui.raised.card {
+  box-shadow: 0 0 0 1px #2b476287, 0 2px 4px 0 rgba(34, 36, 38, .12), 0 2px 10px 0 rgba(34, 36, 38, .15);
   .image {
     flex: 0 1 100%;
+  }
+  .description {
+    font-weight: 700;
   }
 }
 
@@ -24,8 +33,14 @@
   width: 100% !important;
   height: 100% !important;
   &.text {
-    background: #cddce2;
+    border-top-left-radius: .28571429rem;
+    border-top-right-radius: .28571429rem;
+    background: #2e404f;
     padding-top: 40%;
     text-align: center;
+    font-size: 18px;
+    p {
+      color: rgba(255, 255, 255, 0.829);
+    }
   }
 }

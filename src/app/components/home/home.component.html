@@ -1,6 +1,7 @@
 <div id="home-background">
-  <div class="ui padded raised segment" id="server-list-container">
-    <h1>Joined Servers</h1>
+  <div class="ui basic padded inverted segment"
+    id="server-list-container">
+    <h1>Your Servers</h1>
 
     <div class="ui eight doubling cards">
 
@@ -11,12 +12,12 @@
             alt="">
           <div class="server-content text" *ngIf="!server.image_url">
             <p>
-              {{ server.name.substring(0,15) | uppercase}}
+              {{ server.name.substring(0,3) | uppercase}}
             </p>
           </div>
         </div>
         <div class="content">
-          <a class="description">{{server.name}}</a>
+          <p class="description">{{server.name}}</p>
         </div>
       </a>
 

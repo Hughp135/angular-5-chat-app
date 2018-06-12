@@ -8,7 +8,7 @@ import { getChannelList } from '../server/join';
 export function createVoiceChannel(io: any) {
 
   io.on('connection', socket => {
-    socket.on('create-channel', async (channelData: CreateVoiceChannelRequest) => {
+    socket.on('create-voice-channel', async (channelData: CreateVoiceChannelRequest) => {
       await handler(io, socket, channelData);
     });
   });
@@ -22,7 +22,7 @@ export async function handler(io, socket, channelData) {
 
   if (server.owner_id.toString() !== socket.claim.user_id) {
     socket.emit('soft-error', 'You do not have permission to add a channel.');
-    log('Error creating server:', `socket.claim.user_id ${socket.claim.user_id} does not match server.owner_id ${server.owner_id}`);
+    log('Error creating voice channel:', `socket.claim.user_id ${socket.claim.user_id} does not match server.owner_id ${server.owner_id}`);
     return;
   }
 
