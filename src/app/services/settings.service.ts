@@ -18,8 +18,9 @@ export class SettingsService {
       return;
     }
 
-    if (settings.invertedTheme === true) {
-      this.invertedTheme = true;
+    /* istanbul ignore else */
+    if (typeof settings.invertedTheme === 'boolean') {
+      this.invertedTheme = settings.invertedTheme;
     }
   }
 
