@@ -16,6 +16,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
   }
+
 }
 
 /* istanbul ignore next */

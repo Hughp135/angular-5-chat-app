@@ -13,7 +13,6 @@ import { SuiModalService } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../modals/confirm-modal/confirm-modal.component';
 import { ServerInviteModal } from '../modals/server-invite/server-invite.component';
 import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interface';
-import { SettingsModal } from '../modals/settings/settings.component';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -125,11 +124,6 @@ export class ViewServerComponent implements OnInit, OnDestroy {
       this.currentServer.name,
       this.currentServer.invite_id,
     ));
-  }
-
-  /* istanbul ignore next */
-  openSettingsModal() {
-    this.modalService.open(new SettingsModal());
   }
 
   get isOwner() {

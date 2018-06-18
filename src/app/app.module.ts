@@ -53,6 +53,7 @@ import { VoiceChannelComponent } from './components/voice-channel/voice-channel.
 import { WebRTCService } from './services/webrtc.service';
 import { AudioDeviceService } from './services/audio-device.service';
 import { SettingsComponent } from './components/modals/settings/settings.component';
+import { StatusBarComponent } from './components/status-bar/status-bar.component';
 
 
 const optionalImports = environment.production ? [] : [
@@ -88,6 +89,7 @@ const optionalImports = environment.production ? [] : [
     Error404Component,
     VoiceChannelComponent,
     SettingsComponent,
+    StatusBarComponent,
   ],
   entryComponents: [
     CreateServerComponent,
