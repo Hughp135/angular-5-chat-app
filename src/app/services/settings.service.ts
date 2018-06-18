@@ -15,7 +15,6 @@ export class SettingsService {
   loadSettings() {
     const settings = this.getExistingSettings();
     if (!settings) {
-      console.log('no settings');
       return;
     }
 
