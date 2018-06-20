@@ -158,6 +158,17 @@ input.ng-invalid.ng-dirty.ng-touched {
       padding-left: 40px !important;
     }
   }
+  .actions {
+    button.button.tertiary.basic {
+      color: rgba(255, 255, 255, 0.9) !important;
+      &:hover {
+        color: rgba(34, 34, 34, 0.9) !important;
+      }
+    }
+  }
+  h5 {
+    color: rgba(255, 255, 255, 0.9);
+  }
 }
 
 .right-floated {
