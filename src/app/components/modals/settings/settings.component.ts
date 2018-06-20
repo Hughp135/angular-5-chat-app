@@ -19,8 +19,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     public settingsService: SettingsService,
     audioDeviceService: AudioDeviceService,
   ) {
-    audioDeviceService.outputDevices.subscribe(d => this.outputDevices = d);
-    audioDeviceService.inputDevices.subscribe(d => this.inputDevices = d);
+    this.subscriptions.push(
+      audioDeviceService.outputDevices.subscribe(d => this.outputDevices = d),
+      audioDeviceService.inputDevices.subscribe(d => this.inputDevices = d),
+    );
   }
 
   ngOnInit() {
