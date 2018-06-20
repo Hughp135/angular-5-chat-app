@@ -44,15 +44,9 @@
     </div>
   </div>
 
-  <div class="item" id="bottom-attached-item">
-    <h4 class="ui header" [class.inverted]="settingsService.invertedTheme"
-      align="">
-      Inverted Theme &nbsp;&nbsp;
-      <sui-checkbox name="invertedTheme" ngDefaultControl
-        [(ngModel)]="settingsService.invertedTheme"
-        class="toggle" style="float:right">
-      </sui-checkbox>
-    </h4>
+  <div class="item" id="bottom-attached-item"
+    [class.inverted]="settingsService.invertedTheme">
+    <app-status-bar></app-status-bar>
   </div>
 
 </div>

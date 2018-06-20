@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+}
+
+div {
+  flex: 1;
+}
+
+p {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+  margin-left: 10px;
+  &.inverted {
+    color: #e7e7e7;
+  }
+}

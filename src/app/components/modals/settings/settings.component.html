@@ -1,0 +1,85 @@
+<div class="header">
+  Settings
+</div>
+
+<div class="content">
+  <sui-tabset>
+    <div class="ui inverted grid">
+      <div class="three wide column">
+        <div class="ui vertical fluid inverted tabular menu">
+          <a class="item" suiTabHeader="1">Appearance
+          </a>
+          <a class="item" suiTabHeader="2">Audio
+          </a>
+        </div>
+      </div>
+      <div class="thirteen wide stretched column">
+        <div class="ui inverted segment">
+
+          <div suiTabContent="1">
+            <div class="ui inverted form">
+              <div class="fields">
+                <div class="twelve wide field">
+                  <label for="">Dark Theme:</label>
+                  <p>
+                    Switch between the Light and Dark theme.
+                  </p>
+                </div>
+                <div class="four wide field">
+                  <sui-checkbox name="invertedTheme" ngDefaultControl
+                    [(ngModel)]="settingsService.invertedTheme"
+                    class="toggle" style="float:right">
+                  </sui-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div suiTabContent="2">
+            <div class="ui inverted form">
+              <div class="field">
+                <label for="">Input Device:</label>
+                <p *ngIf="!inputDevices">Changing input device is
+                  not supported by your browser.</p>
+                <select *ngIf="inputDevices">
+                  <option *ngFor="let device of inputDevices"
+                    [value]="device.deviceId">
+                    {{ device.label }}
+                  </option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="">Output Device:</label>
+                <p *ngIf="!outputDevices">Changing output device is
+                  not supported by your browser.</p>
+                <select *ngIf="outputDevices">
+                  <option *ngFor="let device of outputDevices"
+                    [value]="device.deviceId">
+                    {{ device.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </sui-tabset>
+
+
+
+
+</div>
+
+<div class="actions">
+  <button class="ui tiny inverted button" (click)="modal.deny(undefined)">
+    Close
+  </button>
+  <!-- <button class="ui tiny inverted green button"
+    (click)="modal.approve()"
+    autofocus>
+    Save
+  </button> -->
+</div>

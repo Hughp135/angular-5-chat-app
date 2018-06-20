@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { Observable } from 'rxjs/Observable';
@@ -13,6 +13,7 @@ import { SuiModalService } from 'ng2-semantic-ui';
 import { ConfirmModal } from '../modals/confirm-modal/confirm-modal.component';
 import { ServerInviteModal } from '../modals/server-invite/server-invite.component';
 import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interface';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-view-server',
@@ -20,13 +21,14 @@ import { VoiceChannel } from '../../../../shared-interfaces/voice-channel.interf
   styleUrls: ['./view-server.component.scss', '../../styles/layout.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewServerComponent implements OnInit {
+export class ViewServerComponent implements OnInit, OnDestroy {
   public currentServerObs: Observable<ChatServer>;
   public currentServer: ChatServer;
   public currentChatChannel: Observable<ChatChannel>;
   public currentVoiceChannel: Observable<VoiceChannel>;
   public me: Me;
   public serverDropdownOpen = false;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     public settingsService: SettingsService,
@@ -36,6 +38,7 @@ export class ViewServerComponent implements OnInit {
     private router: Router,
     private mainResolver: MainResolver,
     private modalService: SuiModalService,
+    private ref: ChangeDetectorRef,
   ) {
     this.route.data
       .subscribe((data) => {
@@ -48,6 +51,15 @@ export class ViewServerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.subscriptions.push(
+      this.settingsService.invertedThemeSubj.subscribe(val => {
+        this.ref.detectChanges();
+      }),
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   public onRightClickServerTitle(event) {
@@ -111,11 +123,7 @@ export class ViewServerComponent implements OnInit {
     this.modalService.open(new ServerInviteModal(
       this.currentServer.name,
       this.currentServer.invite_id,
-    ))
-      .onApprove(() => {
-      })
-      .onDeny(() => {
-      });
+    ));
   }
 
   get isOwner() {

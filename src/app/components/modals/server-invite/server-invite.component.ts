@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SuiModal, ComponentModalConfig, ModalSize } from 'ng2-semantic-ui';
 import { environment } from '../../../../environments/environment';
-export interface IConfirmModalContext {
+export interface IServerInviteModalContext {
   inviteId: string;
   serverName: string;
 }
@@ -15,7 +15,7 @@ export class ServerInviteComponent implements OnInit {
   public inviteLink: string;
 
   constructor(
-    public modal: SuiModal<IConfirmModalContext, void, void>,
+    public modal: SuiModal<IServerInviteModalContext, void, void>,
   ) {
     this.inviteLink = `${environment.root_url}/${modal.context.inviteId}`;
   }
@@ -26,7 +26,7 @@ export class ServerInviteComponent implements OnInit {
 }
 
 /* istanbul ignore next */
-export class ServerInviteModal extends ComponentModalConfig<IConfirmModalContext, void, void> {
+export class ServerInviteModal extends ComponentModalConfig<IServerInviteModalContext, void, void> {
   constructor(
     serverName: string,
     inviteId: string,

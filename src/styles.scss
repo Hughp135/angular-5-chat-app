@@ -139,4 +139,42 @@ input.ng-invalid.ng-dirty.ng-touched {
   margin-top: 20vh !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  color: rgba(255, 255, 255, 0.9);
+  background: #272727 !important;
+  .header {
+    padding-top: 2rem !important;
+  }
+  .content {
+    overflow: hidden;
+  }
+  .header,
+  .content,
+  .actions {
+    color: rgba(255, 255, 255, 0.9) !important;
+    border-top: none !important;
+    background: #272727 !important;
+    @media (min-width: 550px) {
+      padding-right: 40px !important;
+      padding-left: 40px !important;
+    }
+  }
+  .actions {
+    button.button.tertiary.basic {
+      color: rgba(255, 255, 255, 0.9) !important;
+      &:hover {
+        color: rgba(34, 34, 34, 0.9) !important;
+      }
+    }
+  }
+  h5 {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.right-floated {
+  float: right;
+}
+
+.icon.white {
+  color: rgba(255, 255, 255, 0.8);
 }

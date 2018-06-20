@@ -1,0 +1,63 @@
+.ui.modal {
+  color: rgba(255, 255, 255, 0.9);
+  background: #272727 !important;
+  .header {
+    padding-top: 2rem !important;
+  }
+  .content {
+    overflow: hidden;
+  }
+  .header,
+  .content,
+  .actions {
+    color: rgba(255, 255, 255, 0.9) !important;
+    border-top: none !important;
+    background: #272727 !important;
+    @media (min-width: 550px) {
+      padding-right: 40px !important;
+      padding-left: 40px !important;
+    }
+  }
+  .actions {
+    button.button.tertiary.basic {
+      color: rgba(255, 255, 255, 0.9) !important;
+      &:hover {
+        color: rgba(34, 34, 34, 0.9) !important;
+      }
+    }
+  }
+}
+
+.inverted.segment {
+  background: none;
+}
+
+.ui.vertical.tabular.menu {
+  border-right: none !important;
+  .item {
+    border: none !important;
+    margin: 0 !important;
+  }
+  .active.item {
+    border: none !important;
+    background: none !important;
+    border-right: 2px solid grey !important;
+  }
+}
+
+.column {
+  .ui.segment {
+    padding: 0;
+  }
+}
+
+.tab {
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+
+.ui.checkbox {
+  margin-top: 15px;
+}
