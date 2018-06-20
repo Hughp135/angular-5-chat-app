@@ -4,6 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SettingsComponent } from './settings.component';
 import { SuiModal } from 'ng2-semantic-ui';
 import { SettingsService } from '../../../services/settings.service';
+import { AudioDeviceService } from '../../../services/audio-device.service';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -20,6 +21,7 @@ describe('SettingsComponent', () => {
       providers: [
         { provide: SuiModal, useValue: fakeModalService },
         SettingsService,
+        AudioDeviceService,
       ],
       schemas: [
         CUSTOM_ELEMENTS_SCHEMA,

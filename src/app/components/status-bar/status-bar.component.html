@@ -1,5 +1,11 @@
-<i class="large right-floated cog link icon"
-  [class.white]="settingsService.invertedTheme"
-  (click)="openSettingsModal()" suiPopup popupText="Settings"
-  popupInverted>
-</i>
+<p [class.inverted]="settingsService.invertedTheme">
+  <i class="green circle icon"></i>
+  <b>{{ me.username }}</b>
+</p>
+<div>
+  <i class="large right-floated cog link icon"
+    [class.white]="settingsService.invertedTheme"
+    (click)="openSettingsModal()" suiPopup
+    popupText="Settings" popupInverted>
+  </i>
+</div>

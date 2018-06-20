@@ -39,12 +39,25 @@
             <div class="ui inverted form">
               <div class="field">
                 <label for="">Input Device:</label>
-
+                <p *ngIf="!inputDevices">Changing input device is
+                  not supported by your browser.</p>
+                <select *ngIf="inputDevices">
+                  <option *ngFor="let device of inputDevices"
+                    [value]="device.deviceId">
+                    {{ device.label }}
+                  </option>
+                </select>
               </div>
               <div class="field">
                 <label for="">Output Device:</label>
                 <p *ngIf="!outputDevices">Changing output device is
                   not supported by your browser.</p>
+                <select *ngIf="outputDevices">
+                  <option *ngFor="let device of outputDevices"
+                    [value]="device.deviceId">
+                    {{ device.label }}
+                  </option>
+                </select>
               </div>
             </div>
           </div>
