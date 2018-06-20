@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:9
 
 # ADD https://api.github.com/repos/hughp135/angular-5-chat-app/git/refs/heads/docker version.json
 
