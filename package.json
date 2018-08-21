@@ -131,6 +131,7 @@
     "less-plugin-clean-css": "^1.5.1",
     "mocha": "^4.0.1",
     "mock-socket": "^7.1.0",
+    "nodemon": "^1.18.3",
     "nyc": "^11.5.0",
     "protractor": "^5.3.2",
     "semantic-ui-less": "^2.3.0",
