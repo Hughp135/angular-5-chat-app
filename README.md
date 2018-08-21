@@ -1,8 +1,10 @@
 [![Build Status](https://travis-ci.org/Hughp135/angular-5-chat-app.svg?branch=master)](https://travis-ci.org/Hughp135/angular-5-chat-app) [![Coverage Status](https://coveralls.io/repos/github/Hughp135/angular-5-chat-app/badge.svg?branch=master)](https://coveralls.io/github/Hughp135/angular-5-chat-app?branch=master)
 
-## Starting the project
+## Setting up local project
 
+Make sure you have a MongoDB server running locally on port 2017 (or change the mongodb.url in config/default.yml)
 `npm install`
+`npm run db:seed` optional: generates sample data (servers + users + channels)
 `npm start`
 `npm start:server:dev`
 
@@ -25,8 +27,10 @@ Run `npm test` to execute the unit tests (front & back-end)
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 ## Project To-Do list
+
 Trello board at [https://trello.com/b/b5DeyaVi/chat-app](https://trello.com/b/b5DeyaVi/chat-app)
 
 ## Deploying
+
 Run `docker-compose pull` to pull latest image (currently image is private)
 Run `docker-compose up` to launch the app in production
