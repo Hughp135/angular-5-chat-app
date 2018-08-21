@@ -2,10 +2,16 @@
 
 ## Setting up local project
 
-Make sure you have a MongoDB server running locally on port 2017 (or change the mongodb.url in config/default.yml)
+Make sure you have a MongoDB server running locally on port 2017 (or change the mongodb.url in config/default.yml).
+
+Type the following commands:
+
 `npm install`
+
 `npm run db:seed` optional: generates sample data (servers + users + channels)
+
 `npm start`
+
 `npm start:server:dev`
 
 ## Code scaffolding
