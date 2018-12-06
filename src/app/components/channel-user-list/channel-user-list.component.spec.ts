@@ -74,7 +74,6 @@ describe('ChannelUserListComponent', () => {
     expect(component.offlineUsers).toEqual([
       { username: 'someusr2', _id: '2aad', online: false },
     ]);
-    expect(component.subscriptions.length).toEqual(2);
     expect(component.menuItems).toBeDefined();
   });
   it('user lists are reset if new server joined', () => {
