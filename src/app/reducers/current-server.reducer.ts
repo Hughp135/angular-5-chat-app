@@ -44,7 +44,6 @@ export function currentServerReducer(state: ChatServer, action) {
       }
       return state;
     case SERVER_SET_VOICE_USERS:
-      console.log('payload', action.payload);
       return {
         ...state,
         voiceChannelsUsers: action.payload,

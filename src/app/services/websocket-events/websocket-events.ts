@@ -218,7 +218,6 @@ function setFriendRequests(wsService: WebsocketService) {
 
 function serverVoiceUsers(wsService: WebsocketService) {
   wsService.socket.on(SERVER_VOICE_CHANNELS_USERS, voiceChannelsUsers => {
-    console.log('got stuff');
     wsService.store.dispatch({
       type: SERVER_SET_VOICE_USERS,
       payload: voiceChannelsUsers,

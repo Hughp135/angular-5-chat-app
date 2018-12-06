@@ -55,7 +55,6 @@ export function getVoiceUsers(io: any) {
         return all;
       }, {});
 
-      console.log('emitting', voiceChannelsUsers);
       socket.emit('server-voice-users', voiceChannelsUsers);
     });
   });
