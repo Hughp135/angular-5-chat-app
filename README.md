@@ -10,9 +10,9 @@ Type the following commands:
 
 `npm run db:seed` optional: generates sample data (servers + users + channels)
 
-`npm start` (starst the front-end app)
+`npm start` (starts the front-end app)
 
-`npm start:server:dev` (In a seperate terminal. Must be running alongside the frontend)
+`npm start:server:dev` (Must be running alongside the frontend)
 
 ## Code scaffolding
 
