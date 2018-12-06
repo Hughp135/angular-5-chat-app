@@ -11,7 +11,8 @@ const channelSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  });
+  },
+);
 
 export const SERVER_CHANNEL = 'server-channel';
 export const DM_CHANNEL = 'dm-channel';
@@ -24,18 +25,17 @@ export interface IChannelModel extends mongoose.Document {
   last_message?: Date;
 }
 
-channelSchema.pre('save', async function (next) {
+channelSchema.pre('save', async function(next) {
+  const _this = <any>this;
   /* istanbul ignore next */
-  if (!this.isNew || !this.server_id) {
+  if (!this.isNew || !_this.server_id) {
     // Only check newly created server channels
     return next();
   }
-  const channel = this;
-  const otherChannel = await this.constructor.findOne({
-    server_id: channel.server_id,
-    name: channel.name,
-  }).lean();
 
+  const otherChannel = await _this.constructor
+    .findOne({ server_id: _this.server_id, name: _this.name })
+    .lean();
 
   if (otherChannel) {
     const error = new Error('Channel/server must be unique');
@@ -44,7 +44,7 @@ channelSchema.pre('save', async function (next) {
   next();
 });
 
-channelSchema.methods.getChannelType = function (): ChannelType {
+channelSchema.methods.getChannelType = function(): ChannelType {
   if (this.server_id) {
     return SERVER_CHANNEL;
   } else {
@@ -52,13 +52,16 @@ channelSchema.methods.getChannelType = function (): ChannelType {
   }
 };
 
-const Channel: mongoose.Model<IChannelModel> = mongoose.model<IChannelModel>('Channel', channelSchema);
+const Channel: mongoose.Model<IChannelModel> = mongoose.model<IChannelModel>(
+  'Channel',
+  channelSchema,
+);
 
 export default Channel;
 
 export function channelsToChannelListItems(channels: any): ChannelListItem[] {
-  return channels
-    .map((chan): ChannelListItem => {
+  return channels.map(
+    (chan): ChannelListItem => {
       if (chan.server_id) {
         // SERVER CHANNEL
         return {
@@ -76,5 +79,6 @@ export function channelsToChannelListItems(channels: any): ChannelListItem[] {
           last_message: chan.last_message,
         };
       }
-    });
+    },
+  );
 }

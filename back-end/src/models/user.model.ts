@@ -2,7 +2,6 @@ import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User } from 'shared-interfaces/user.interface';
 
-
 export interface IUserModel extends mongoose.Document, User {
   // private properties only
   password: string;
@@ -22,29 +21,30 @@ const UserSchema = new mongoose.Schema({
         type: { type: String, enum: ['outgoing', 'incoming'], required: true },
         user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
       },
-    ], default: [],
+    ],
+    default: [],
   },
 });
 
 UserSchema.index({ username_lowercase: 'text' });
 
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function(next) {
   if (!this.isNew) {
     // Only hash password for newly created users
     return next();
   }
-  const user = this;
-  const existingUser = await this.constructor.findOne({
-    username_lowercase: user.username.toLowerCase(),
-  }).lean();
+  const _this = <any>this;
+  const existingUser = await _this.constructor
+    .findOne({ username_lowercase: _this.username.toLowerCase() })
+    .lean();
 
   if (existingUser) {
     const error = new Error('duplicate username');
     return next(error);
   }
 
-  user.username_lowercase = user.username.toLowerCase();
-  user.password = await hashPassword(user.password);
+  _this.username_lowercase = _this.username.toLowerCase();
+  _this.password = await hashPassword(_this.password);
   next();
 });
 
@@ -52,7 +52,6 @@ async function hashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, 10);
 }
 
-const User: mongoose.Model<IUserModel>
-  = mongoose.model<IUserModel>('User', UserSchema);
+const User: mongoose.Model<IUserModel> = mongoose.model<IUserModel>('User', UserSchema);
 
 export default User;
