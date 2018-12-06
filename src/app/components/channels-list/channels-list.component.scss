@@ -26,7 +26,8 @@ h5 {
   }
 }
 
-#chat-channel-list {
+#channel-list,
+#voice-channel-list {
   a.item.channel {
     font-size: 0.94em;
     padding: .6em 0.7em;
@@ -35,12 +36,6 @@ h5 {
 
     &.inverted {
       color: rgba(255, 255, 255, 0.5);
-    }
-
-    i:not(.trash) {
-      float: none;
-      margin: 0;
-      margin-right: 2px;
     }
 
     i.trash {
@@ -58,6 +53,12 @@ h5 {
         display: block;
       }
     }
+  }
+
+  i:not(.trash) {
+    float: none;
+    margin: 0;
+    margin-right: 2px;
   }
 
   .has-unread-messages {

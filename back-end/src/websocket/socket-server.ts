@@ -19,6 +19,7 @@ import { deleteChannel } from './channel/delete';
 import { leaveVoiceChannel } from './voice-channel/leave';
 import { createVoiceChannel } from './voice-channel/create';
 import { deleteVoiceChannel } from './voice-channel/delete';
+import { getVoiceUsers } from './server/get-voice-channel-users';
 
 let ioServer = null;
 
@@ -30,7 +31,10 @@ export async function startWs(server) {
   const io = socketIo(server);
   io.use(logInAuth(io));
   io.on('connection', async (socket: SocketCustom) => {
-    log('info', `User connected: ${socket.id}, ${socket.claim.username} ${socket.claim.user_id}`);
+    log(
+      'info',
+      `User connected: ${socket.id}, ${socket.claim.username} ${socket.claim.user_id}`,
+    );
   });
   (<any>io).setMaxListeners(50);
   // Add event handlers
@@ -40,6 +44,7 @@ export async function startWs(server) {
   getUserList(io);
   getDmChannels(io);
   joinDmChannel(io);
+  getVoiceUsers(io);
 
   // Text Channels
   createChannel(io);
@@ -54,7 +59,6 @@ export async function startWs(server) {
   createVoiceChannel(io);
   deleteVoiceChannel(io);
 
-
   // Friends
   sendFriendRequest(io);
   getFriendRequests(io);
@@ -67,5 +71,4 @@ export async function startWs(server) {
   ioServer = io;
 }
 
-setInterval(() => {
-}, 50); // Socket IO fix hack
+setInterval(() => {}, 50); // Socket IO fix hack

@@ -75,3 +75,11 @@
     cursor: pointer;
   }
 }
+
+.item.current-voice-channel {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #c3c4c4 !important;
+}

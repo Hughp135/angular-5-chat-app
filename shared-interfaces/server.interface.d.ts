@@ -1,4 +1,4 @@
-import { ChannelList } from "./channel.interface";
+import { ChannelList } from './channel.interface';
 
 export default interface ChatServer {
   name: string;
@@ -7,7 +7,8 @@ export default interface ChatServer {
   owner_id?: string;
   channelList?: ChannelList;
   userList?: UserListUser[];
-  invite_id? : string;
+  invite_id?: string;
+  voiceChannelsUsers?: { [key: string]: { _id: string; username: string }[] }; // array of connected users for each voice channel
 }
 
 export interface UserListUser {
@@ -17,7 +18,7 @@ export interface UserListUser {
 }
 export interface ServerUserList {
   server_id: string;
-  users: UserListUser[]
+  users: UserListUser[];
 }
 
 export interface UserListUpdate {

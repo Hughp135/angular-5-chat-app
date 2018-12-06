@@ -37,7 +37,7 @@
         [me]="me">
       </app-channels-list>
     </div>
-    <div class="item" *ngIf="(currentVoiceChannel | async)">
+    <div class="item current-voice-channel" *ngIf="(currentVoiceChannel | async)">
       <app-voice-channel [currentVoiceChannel]="(currentVoiceChannel | async)">
       </app-voice-channel>
     </div>

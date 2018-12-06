@@ -8,7 +8,7 @@
     <div class="ui active centered inline loader"></div>
   </div>
 
-  <div *ngIf="channelList" id="chat-channel-list">
+  <div *ngIf="channelList" id="channel-list">
     <div *ngIf="channelList.channels.length < 1" class="item">
       No channels added yet.
     </div>
@@ -40,15 +40,23 @@
     <div class="ui active centered inline loader"></div>
   </div>
 
-  <div *ngIf="channelList" id="chat-channel-list">
+  <div *ngIf="channelList" id="voice-channel-list">
     <div *ngIf="channelList.voiceChannels.length < 1" class="item">
       No channels added yet.
     </div>
-    <a class="item channel" *ngFor="let channel of channelList.voiceChannels"
-      [class.inverted]="settingsService.invertedTheme" (click)="joinVoiceChannel(channel)">
-      <i class="small volume up icon"></i> {{ channel.name }}
-      <i class="trash link icon" (click)="showDeleteChannelConfirm($event, channel, true)"></i>
-    </a>
+    <div *ngFor="let channel of channelList.voiceChannels">
+      <a class="item channel" [class.inverted]="settingsService.invertedTheme"
+        (click)="joinVoiceChannel(channel)">
+        <i class="small volume up icon"></i> {{ channel.name }}
+        <i class="trash link icon" (click)="showDeleteChannelConfirm($event, channel, true)"></i>
+      </a>
+      <div class="menu" [class.inverted]="settingsService.invertedTheme">
+        <div class="item" *ngFor="let user of voiceChannelUsers(channel._id)">
+          <i class="small green circle icon"></i>
+          {{ user.username }}
+        </div>
+      </div>
+    </div>
   </div>
 
   <form *ngIf="showVoiceChannelInput" action="" (submit)="createVoiceChannel()">

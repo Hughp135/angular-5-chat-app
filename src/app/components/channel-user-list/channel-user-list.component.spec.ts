@@ -16,7 +16,7 @@ const fakeSocketService = {
   socket: fakeSocket,
 };
 
-describe('ChannelUserListComponent', () => {
+fdescribe('ChannelUserListComponent', () => {
   let component: ChannelUserListComponent;
   let fixture: ComponentFixture<ChannelUserListComponent>;
   const fakeDmService = {
@@ -30,17 +30,14 @@ describe('ChannelUserListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ChannelUserListComponent],
-      imports: [
-        ShContextMenuModule,
-      ],
+      imports: [ShContextMenuModule],
       providers: [
         SettingsService,
         { provide: WebsocketService, useValue: fakeSocketService },
         { provide: DirectMessageService, useValue: fakeDmService },
         { provide: FriendRequestService, useValue: fakeFriendsService },
       ],
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -71,8 +68,12 @@ describe('ChannelUserListComponent', () => {
       { username: 'someusr', _id: '1aad', online: true },
       { username: 'someusr2', _id: '2aad', online: false },
     ]);
-    expect(component.onlineUsers).toEqual([{ username: 'someusr', _id: '1aad', online: true }]);
-    expect(component.offlineUsers).toEqual([{ username: 'someusr2', _id: '2aad', online: false }]);
+    expect(component.onlineUsers).toEqual([
+      { username: 'someusr', _id: '1aad', online: true },
+    ]);
+    expect(component.offlineUsers).toEqual([
+      { username: 'someusr2', _id: '2aad', online: false },
+    ]);
     expect(component.subscriptions.length).toEqual(2);
     expect(component.menuItems).toBeDefined();
   });

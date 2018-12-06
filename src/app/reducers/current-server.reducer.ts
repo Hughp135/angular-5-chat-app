@@ -5,6 +5,7 @@ export const SET_CHANNEL_LIST = 'SET_CHANNEL_LIST';
 export const SERVER_SET_USER_LIST = 'SERVER_SET_USER_LIST';
 export const SERVER_UPDATE_USER_LIST = 'SERVER_UPDATE_USER_LIST';
 export const SET_CHANNEL_LAST_MESSAGE_DATE = 'SET_CHANNEL_LAST_MESSAGE_DATE';
+export const SERVER_SET_VOICE_USERS = 'SERVER_SET_VOICE_USERS';
 
 export function currentServerReducer(state: ChatServer, action) {
   switch (action.type) {
@@ -18,28 +19,36 @@ export function currentServerReducer(state: ChatServer, action) {
         return state;
       }
     case SET_CHANNEL_LAST_MESSAGE_DATE:
-    if (state && state.channelList) {
-      const channel = state.channelList.channels.find(chan => chan._id === action.payload.id);
+      if (state && state.channelList) {
+        const channel = state.channelList.channels.find(
+          chan => chan._id === action.payload.id,
+        );
 
-      if (channel) {
-        channel.last_message = new Date();
-        const newChannels = [
-          ...state.channelList.channels.filter(chan => chan._id !== channel._id),
-          channel,
-        ];
-        const newState: ChatServer = {
-          ...state,
-          channelList: {
-            ...state.channelList,
-            channels: newChannels,
-          },
-        };
+        if (channel) {
+          channel.last_message = new Date();
+          const newChannels = [
+            ...state.channelList.channels.filter(chan => chan._id !== channel._id),
+            channel,
+          ];
+          const newState: ChatServer = {
+            ...state,
+            channelList: {
+              ...state.channelList,
+              channels: newChannels,
+            },
+          };
 
-        return newState;
-      } else {
+          return newState;
+        } else {
+        }
       }
-    }
-    return state;
+      return state;
+    case SERVER_SET_VOICE_USERS:
+      console.log('payload', action.payload);
+      return {
+        ...state,
+        voiceChannelsUsers: action.payload,
+      };
     // case SET_CHANNEL_HAS_UNREAD_MESSAGES:
     //   if (state && state.channelList) {
     //     const channel = state.channelList.channels.find(chan => chan._id === action.payload.id);
@@ -74,13 +83,12 @@ export function currentServerReducer(state: ChatServer, action) {
     case SERVER_UPDATE_USER_LIST:
       if (state.userList && state._id === action.payload.server_id) {
         const userToUpdate: UserListUser = action.payload.user;
-        const newUserList: UserListUser[] = state.userList
-          .map((usr: UserListUser) => {
-            if (usr._id === userToUpdate._id) {
-              return userToUpdate; // replace relevant user in list
-            }
-            return usr;
-          });
+        const newUserList: UserListUser[] = state.userList.map((usr: UserListUser) => {
+          if (usr._id === userToUpdate._id) {
+            return userToUpdate; // replace relevant user in list
+          }
+          return usr;
+        });
         return {
           ...state,
           userList: <UserListUser[]>newUserList,
