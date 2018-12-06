@@ -34,10 +34,12 @@ export class ChannelUserListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit() {
-    setInterval(() => {
-      this.fetchVoiceChannelUsers();
-    }, 5000);
     this.subscriptions.push(
+      Observable.interval(5000).subscribe(() => {
+        /* istanbul ignore next */
+        // Poll the voice channels' connected users
+        this.fetchVoiceChannelUsers();
+      }),
       Observable.interval(60000).subscribe(() => {
         /* istanbul ignore next */
         // Long poll the user list

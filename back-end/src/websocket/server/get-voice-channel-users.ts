@@ -29,18 +29,20 @@ export function getVoiceUsers(io: any) {
         return all;
       }, {});
 
-      const allVoiceSockets = [];
       const voiceChannelsSockets = Object.entries(io.of('/').adapter.rooms)
         .filter(([key]) => voiceChannelsLookup[key])
-        .reduce((all, [key, value]) => {
-          const sockets = Object.keys(value.sockets);
-          all[key] = sockets;
-          allVoiceSockets.push(...sockets);
-          return all;
-        }, {}); // { key: roomName, value: socketId[] }
+        .reduce(
+          (acc, [key, value]) => {
+            const sockets = Object.keys(value.sockets);
+            acc[key] = sockets;
+            acc._all.push(...sockets);
+            return acc;
+          },
+          { _all: [] },
+        ); // return format: { [key]: roomName, value: socketId[], _all: sockets[] }
 
       const users = await User.find(
-        { socket_id: allVoiceSockets },
+        { socket_id: voiceChannelsSockets._all },
         { _id: 1, username: 1, socket_id: 1 },
       ).lean();
 
