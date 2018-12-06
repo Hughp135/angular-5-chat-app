@@ -17,7 +17,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { RegisterComponent } from './components/register/register.component';
 import { WebsocketService } from './services/websocket.service';
 import { ServerListComponent } from './components/server-list/server-list.component';
-import { ChannelsListComponent } from './components/channels/channels-list.component';
+import { ChannelsListComponent } from './components/channels-list/channels-list.component';
 import { AppStateService } from './services/app-state.service';
 import { ErrorNotificationComponent } from './components/error-notification/error-notification.component';
 import { ErrorService } from './services/error.service';
@@ -55,12 +55,13 @@ import { AudioDeviceService } from './services/audio-device.service';
 import { SettingsComponent } from './components/modals/settings/settings.component';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 
-
-const optionalImports = environment.production ? [] : [
-  StoreDevtoolsModule.instrument({
-    maxAge: 10,
-  }),
-];
+const optionalImports = environment.production
+  ? []
+  : [
+      StoreDevtoolsModule.instrument({
+        maxAge: 10,
+      }),
+    ];
 
 @NgModule({
   declarations: [
@@ -131,4 +132,4 @@ const optionalImports = environment.production ? [] : [
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

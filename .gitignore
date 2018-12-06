@@ -25,7 +25,6 @@ config/privkey.pem
 *.launch
 .settings/
 *.sublime-workspace
-.vscode*
 
 # IDE - VSCode
 .vscode/*

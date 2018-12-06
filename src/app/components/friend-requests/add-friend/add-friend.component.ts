@@ -18,10 +18,7 @@ export class AddFriendComponent implements OnInit {
     username: new FormControl(),
   });
 
-  constructor(
-    public modal: SuiModal<void, string>,
-    private apiService: ApiService,
-  ) { }
+  constructor(public modal: SuiModal<void, string>, private apiService: ApiService) {}
 
   confirmAddFriend() {
     this.modal.approve(this.userToAdd._id);
@@ -60,8 +57,7 @@ export class AddFriendComponent implements OnInit {
   onSearchComplete(err?) {
     if (err) {
       if (err.status === 404) {
-        this.error =
-          'No user was found with that username. Sure it\'s spelled right? :P';
+        this.error = 'No user was found with that username. Sure it\'s spelled right? :P';
       } else if (err.status === 401) {
         this.error = 'You are not logged in. Please try re-logging in.';
       } else {
@@ -76,7 +72,6 @@ export class AddFriendComponent implements OnInit {
 export class AddFriendModal extends ComponentModalConfig<void, void, void> {
   constructor() {
     super(AddFriendComponent);
-    this.mustScroll = true;
     this.size = ModalSize.Tiny;
   }
 }
