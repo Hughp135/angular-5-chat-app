@@ -16,7 +16,7 @@ const fakeSocketService = {
   socket: fakeSocket,
 };
 
-fdescribe('ChannelUserListComponent', () => {
+describe('ChannelUserListComponent', () => {
   let component: ChannelUserListComponent;
   let fixture: ComponentFixture<ChannelUserListComponent>;
   const fakeDmService = {
