@@ -67,11 +67,13 @@
     "@types/express": "^4.11.0",
     "@types/joi": "^13.0.5",
     "@types/jsonwebtoken": "^7.2.5",
+    "@types/linkifyjs": "^2.1.0",
     "@types/mocha": "^2.2.48",
     "@types/mongoose": "^5.0.2",
     "@types/node": "~6.0.60",
     "@types/shortid": "0.0.29",
     "@types/simple-peer": "^6.1.4",
+    "@types/socket.io": "^1.4.33",
     "@types/socket.io-client": "^1.4.32",
     "@types/winston": "^2.3.8",
     "bcrypt": "^2.0.1",
@@ -87,6 +89,7 @@
     "joi": "^13.1.2",
     "js-yaml": "^3.11.0",
     "jsonwebtoken": "^8.2.1",
+    "linkifyjs": "^2.1.7",
     "mongodb": "^3.0.2",
     "mongoose": "^5.0.14",
     "mongoose-delete": "^0.4.0",
@@ -103,8 +106,7 @@
     "typescript": "2.6.2",
     "uglifyjs-webpack-plugin": "^1.2.0",
     "winston": "^2.4.0",
-    "zone.js": "^0.8.20",
-    "@types/socket.io": "^1.4.33"
+    "zone.js": "^0.8.20"
   },
   "devDependencies": {
     "@angular/language-service": "5.2.9",
