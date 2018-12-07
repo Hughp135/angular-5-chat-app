@@ -24,16 +24,20 @@ export async function joinChannel(io: any) {
         return;
       }
 
-      const messages: ChatMessage[] = <ChatMessage[]>await ChatMessageModel
-        .find({ channel_id: channelId })
+      const messages: ChatMessage[] = <ChatMessage[]>await ChatMessageModel.find({
+        channel_id: channelId,
+      })
         .sort({ createdAt: -1 })
         .limit(50)
         .lean();
 
       // NORMAL SERVER CHANNEL
       if (channel.getChannelType() === SERVER_CHANNEL) {
-        if (!await canJoinServer(user, channel.server_id)) {
-          return socket.emit('soft-error', 'You don\'t have permission to join this server.');
+        if (!(await canJoinServer(user, channel.server_id))) {
+          return socket.emit(
+            'soft-error',
+            'You don\'t have permission to join this server.',
+          );
         }
         await leaveOtherChannels(socket);
         socket.join(`channel-${channel._id}`);

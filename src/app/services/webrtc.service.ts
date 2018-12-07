@@ -35,19 +35,21 @@ export class WebRTCService {
       this.onChannelJoined(prevChannel);
     });
     // Audio device changes
-    audioDeviceService.selectedInputDevice.filter(device => !!device)
+    audioDeviceService.selectedInputDevice
+      .filter(device => !!device)
       .subscribe(async device => {
         this.selectedInputDevice = device;
         await this.addMediaStream();
         this.reconnectToAllPeers();
       });
-    audioDeviceService.selectedOutputDevice.filter(device => !!device)
+    audioDeviceService.selectedOutputDevice
+      .filter(device => !!device)
       .subscribe(async device => {
         await this.onOutputDeviceChanged(device);
       });
 
     // Subscribe to signal data
-    wsService.socket.on('signal', (signal) => {
+    wsService.socket.on('signal', signal => {
       console.warn('got signal');
       if (signal && this.peers && this.peers[signal.socketId]) {
         const peer = this.peers[signal.socketId];
@@ -70,18 +72,21 @@ export class WebRTCService {
       }
     }
 
-    const usersJoined = currentUsers.filter((curUser) =>
-      curUser._id !== this.me._id &&
-      // None of previous state users are in current state
-      !previousUsers.some(prevUser => prevUser.socket_id === curUser.socket_id),
+    const usersJoined = currentUsers.filter(
+      curUser =>
+        curUser._id !== this.me._id &&
+        // None of previous state users are in current state
+        !previousUsers.some(prevUser => prevUser.socket_id === curUser.socket_id),
     );
-    const usersLeft = previousUsers.filter((prevUser) =>
-      prevUser._id !== this.me._id &&
-      // None of the current users were in previous state
-      !currentUsers.some(currUser => currUser.socket_id === prevUser.socket_id),
+    const usersLeft = previousUsers.filter(
+      prevUser =>
+        prevUser._id !== this.me._id &&
+        // None of the current users were in previous state
+        !currentUsers.some(currUser => currUser.socket_id === prevUser.socket_id),
     );
-    const isNewChannel = !prevChannel
-      || (this.currentChannel && this.currentChannel._id !== prevChannel._id);
+    const isNewChannel =
+      !prevChannel ||
+      (this.currentChannel && this.currentChannel._id !== prevChannel._id);
 
     usersLeft.forEach(usr => this.disconnectFromUser(usr.socket_id));
     usersJoined.forEach(usr => this.connectToUser(usr.socket_id, !isNewChannel));
@@ -89,26 +94,31 @@ export class WebRTCService {
 
   async addMediaStream() {
     try {
-      const stream = await navigator.mediaDevices
-        .getUserMedia({
-          video: false,
-          audio: {
-            deviceId: this.selectedInputDevice
-              ? { exact: this.selectedInputDevice }
-              : undefined,
-          },
-        });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: false,
+        audio: {
+          deviceId: this.selectedInputDevice
+            ? { exact: this.selectedInputDevice }
+            : undefined,
+        },
+      });
       this.noMicDetected = false;
       this.stream = stream;
       this.micMuted = false;
     } catch (err) {
       this.noMicDetected = true;
-      throw (err);
+      throw err;
     }
   }
 
   connectToUser(socket_id: string, isInitiator: boolean) {
-    console.warn('Connecting to user ' + socket_id, 'intiator?', isInitiator, 'stream:', this.stream);
+    console.warn(
+      'Connecting to user ' + socket_id,
+      'intiator?',
+      isInitiator,
+      'stream:',
+      this.stream,
+    );
     // TODO: idea to trickle - collect all signal events, emit once per second.
     const p = new SimplePeer({
       initiator: isInitiator,
@@ -123,16 +133,16 @@ export class WebRTCService {
     const self = this;
     this.peers[socket_id] = p;
     /* istanbul ignore next */
-    p.on('error', function (err) {
+    p.on('error', function(err) {
       console.warn('error', err, p);
     });
-    p.on('signal', function (data: any) {
+    p.on('signal', function(data: any) {
       self.wsService.socket.emit('signal', {
         socketId: socket_id,
         signalData: data,
       });
     });
-    p.on('data', function (data) {
+    p.on('data', function(data) {
       const msg = data.toString();
       if (msg === 'destroy-connection') {
         setTimeout(() => {
@@ -141,23 +151,21 @@ export class WebRTCService {
         self.disconnectFromUser(socket_id);
       }
     });
-    p.on('connect', function () {
+    p.on('connect', function() {
       console.warn('CONNECTED TO USER', socket_id);
       p.send('whatever' + Math.random());
     });
     /* istanbul ignore next */
-    p.on('disconnect', function () {
+    p.on('disconnect', function() {
       console.warn('Peer disconnected', socket_id);
     });
     /* istanbul ignore next */
-    p.on('destroy', function () {
+    p.on('destroy', function() {
       console.warn('Peer destroyed', socket_id);
     });
-    p.on('stream', function (stream: any) {
+    p.on('stream', function(stream: any) {
       console.warn('got peer stream', stream);
-      const element = <HTMLMediaElement>document.getElementById(
-        'userAudio-' + socket_id,
-      );
+      const element = <HTMLMediaElement>document.getElementById('userAudio-' + socket_id);
       element.srcObject = stream;
       if (self.selectedOutputDevice) {
         self.setSinkId(element, self.selectedOutputDevice);
@@ -192,9 +200,7 @@ export class WebRTCService {
 
   async onOutputDeviceChanged(device) {
     this.selectedOutputDevice = device;
-    const elements = <any>document.getElementsByClassName(
-      'rtc-audio-element',
-    );
+    const elements = <any>document.getElementsByClassName('rtc-audio-element');
     try {
       for (const element of elements) {
         await this.setSinkId(element, device);
@@ -217,10 +223,8 @@ export class WebRTCService {
     await element.setSinkId(id);
   }
 
-
   public toggleMuteMicrophone() {
     if (!this.stream) {
-      this.micMuted = true;
       return;
     }
     const track = this.stream.getAudioTracks()[0];

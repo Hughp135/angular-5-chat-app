@@ -22,15 +22,15 @@
 <div id="voice-channel-actions" class="ui grid">
   <div class="column">
     <button class="ui small basic circular icon button"
-      [class.red]="settingsService.invertedTheme">
+      [class.red]="settingsService.invertedTheme" (click)="leaveChannel()">
       <i class="large phone link icon" [class.white]="settingsService.invertedTheme"
-        [class.red]="!settingsService.invertedTheme" (click)="leaveChannel()"></i>
+        [class.red]="!settingsService.invertedTheme"></i>
     </button>
     <button class="ui small basic circular icon button"
-      [class.grey]="settingsService.invertedTheme">
+      [class.grey]="settingsService.invertedTheme" (click)="toggleMuteMicrophone()">
       <i class="large microphone slash icon" [class.white]="!settingsService.invertedTheme"
         [class.inverted]="settingsService.invertedTheme"
-        [class.red]="webRtcService.micMuted" (click)="toggleMuteMicrophone()"></i>
+        [class.red]="webRtcService.micMuted"></i>
     </button>
   </div>
 </div>
