@@ -1,6 +1,12 @@
 import {
-  Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy, ChangeDetectorRef,
-  ViewChild, ElementRef,
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { ChatChannel, ChannelListItem } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
@@ -43,8 +49,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
     private router: Router,
     private ref: ChangeDetectorRef,
     private modalService: SuiModalService,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.subscriptions.push(
@@ -60,6 +65,13 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
 
   get channelList() {
     return this.currentServer.channelList;
+  }
+
+  voiceChannelUsers(channelId) {
+    if (!this.currentServer.voiceChannelsUsers) {
+      return [];
+    }
+    return this.currentServer.voiceChannelsUsers[channelId] || [];
   }
 
   joinChannel(channel: ChannelListItem) {
@@ -84,6 +96,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
 
   showCreateTextChannel() {
     this.showNewChannelInput = true;
+    // lul wait for render cheat
     setTimeout(() => {
       this.textChannelInput.nativeElement.focus();
     }, 50);
@@ -91,6 +104,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
 
   showCreateVoiceChannel() {
     this.showVoiceChannelInput = true;
+    // lul wait for render cheat
     setTimeout(() => {
       this.voiceChannelInput.nativeElement.focus();
     }, 50);
@@ -120,12 +134,14 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
   showDeleteChannelConfirm(event, channel, isVoice?: boolean) {
     event.stopPropagation();
     this.modalService
-      .open(new ConfirmModal(
-        'Delete Channel',
-        `Are you sure you want to delete the channel ${channel.name}?`,
-        'red',
-        'Delete Channel',
-      ))
+      .open(
+        new ConfirmModal(
+          'Delete Channel',
+          `Are you sure you want to delete the channel ${channel.name}?`,
+          'red',
+          'Delete Channel',
+        ),
+      )
       .onApprove(() => {
         if (isVoice) {
           this.deleteVoiceChannel(channel._id);
@@ -133,7 +149,7 @@ export class ChannelsListComponent implements OnInit, OnDestroy {
           this.deleteChannel(channel._id);
         }
       })
-      .onDeny(() => { });
+      .onDeny(() => {});
   }
 
   deleteChannel(id) {

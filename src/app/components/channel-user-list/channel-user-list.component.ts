@@ -35,12 +35,16 @@ export class ChannelUserListComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngAfterViewInit() {
     this.subscriptions.push(
-      Observable.interval(60000)
-        .subscribe(() => {
-          /* istanbul ignore next */
-          // Long poll the user list
-          this.fetchUserList();
-        }),
+      Observable.interval(5000).subscribe(() => {
+        /* istanbul ignore next */
+        // Poll the voice channels' connected users
+        this.fetchVoiceChannelUsers();
+      }),
+      Observable.interval(60000).subscribe(() => {
+        /* istanbul ignore next */
+        // Long poll the user list
+        this.fetchUserList();
+      }),
       this.settingsService.invertedThemeSubj.subscribe(() => {
         this.ref.detectChanges();
       }),
@@ -52,19 +56,23 @@ export class ChannelUserListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   get onlineUsers() {
-    return this.userList &&
+    return (
+      this.userList &&
       this.userList
         .filter(usr => usr.online)
         .sort(sortAlphabetically)
-        .slice(0, 100);
+        .slice(0, 100)
+    );
   }
 
   get offlineUsers() {
-    return this.userList &&
+    return (
+      this.userList &&
       this.userList
         .filter(usr => !usr.online)
         .sort(sortAlphabetically)
-        .slice(0, 100);
+        .slice(0, 100)
+    );
   }
 
   fetchUserList() {
@@ -73,8 +81,16 @@ export class ChannelUserListComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  ngOnInit() {
+  fetchVoiceChannelUsers() {
+    if (this.currentServer && this.wsService.socket.connected) {
+      this.wsService.socket.emit(
+        'get-server-voice-channel-users',
+        this.currentServer._id,
+      );
+    }
   }
+
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
@@ -88,26 +104,26 @@ export class ChannelUserListComponent implements OnInit, OnDestroy, AfterViewIni
     /* istanbul ignore next */
     this.menuItems = [
       {
-        label: (ctx) => ctx.username,
-        disabled: (ctx) => true,
+        label: ctx => ctx.username,
+        disabled: ctx => true,
       },
       {
         label: '<i class="icons"><i class="comment alternate icon"></i></i> Send Message',
-        onClick: (ctx) => this.sendUserMessage(ctx.dataContext._id),
+        onClick: ctx => this.sendUserMessage(ctx.dataContext._id),
       },
       {
         label: `<i class="icons add-user">
                   <i class="user icon"></i>
                   <i class="inverted corner green add icon"></i>
                 </i> &nbsp;Add Friend`,
-        onClick: (ctx) => this.addFriend(ctx.dataContext._id),
+        onClick: ctx => this.addFriend(ctx.dataContext._id),
       },
       {
         label: `<i class="icons remove-user">
                   <i class= "user icon"></i><i class= "large red dont icon"></i>
                 </i>
                 <span class="text-danger">Remove Friend</span>`,
-        onClick: (ctx) => this.removeFriend(ctx.dataContext._id),
+        onClick: ctx => this.removeFriend(ctx.dataContext._id),
       },
     ];
   }
@@ -131,7 +147,5 @@ export class ChannelUserListComponent implements OnInit, OnDestroy, AfterViewIni
 
 /* istanbul ignore next */
 function sortAlphabetically(a: UserListUser, b: UserListUser) {
-  return a.username > b.username ? -1
-    : a.username < b.username ? 1
-      : 0;
+  return a.username > b.username ? -1 : a.username < b.username ? 1 : 0;
 }

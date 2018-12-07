@@ -1,21 +1,25 @@
 import User from '../../../models/user.model';
 import { ServerUserList, UserListUser } from 'shared-interfaces/server.interface';
 
+/**
+ * Returns all online users that are members of the server
+ */
 export async function sendUserList(io: any, socket: any, server_id: string) {
-
   const connectedSockets = io.of('/').connected;
 
-  const connectedUsers = Object.values(connectedSockets)
-    .map((sock: any) => {
-      return sock.claim.user_id.toString();
-    });
+  const connectedUsers = Object.values(connectedSockets).map((sock: any) => {
+    return sock.claim.user_id.toString();
+  });
 
-  const allServerUsers: any = await User.find({
-    joined_servers: server_id.toString(),
-  }, {
+  const allServerUsers: any = await User.find(
+    {
+      joined_servers: server_id.toString(),
+    },
+    {
       _id: 1,
       username: 1,
-    }).lean();
+    },
+  ).lean();
 
   const serverUsers = allServerUsers.map(usr => {
     return <UserListUser>{

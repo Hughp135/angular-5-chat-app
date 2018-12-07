@@ -1,8 +1,6 @@
+import { LEAVE_VOICE_CHANNEL } from './../reducers/current-voice-channel-reducer';
 import { Injectable } from '@angular/core';
-import {
-  Resolve, RouterStateSnapshot,
-  ActivatedRouteSnapshot,
-} from '@angular/router';
+import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers/app.states';
 import { WebsocketService } from '../services/websocket.service';
@@ -16,15 +14,17 @@ import { ErrorService } from '../services/error.service';
 
 @Injectable()
 export class ServerResolver implements Resolve<ChatServer> {
-
   constructor(
     private store: Store<AppState>,
     private wsService: WebsocketService,
     private router: Router,
     private errorService: ErrorService,
-  ) { }
+  ) {}
 
-  async resolve(route: ActivatedRouteSnapshot, routerState: RouterStateSnapshot): Promise<any> {
+  async resolve(
+    route: ActivatedRouteSnapshot,
+    routerState: RouterStateSnapshot,
+  ): Promise<any> {
     const id = route.paramMap.get('id');
     const currentServerStore = this.store.select('currentServer');
     try {
@@ -37,12 +37,13 @@ export class ServerResolver implements Resolve<ChatServer> {
           .toPromise();
         setTimeout(() => {
           if (server.channelList.channels.length > 0) {
-            this.router.navigate([`/channels/${server._id}/${server.channelList.channels[0]._id}`]);
+            this.router.navigate([
+              `/channels/${server._id}/${server.channelList.channels[0]._id}`,
+            ]);
           } else {
             this.router.navigate([`/channels/${server._id}`]);
           }
         }, 1);
-
       }
     } catch (e) {
       this.errorService.errorMessage.next({
@@ -76,11 +77,11 @@ export class ServerResolver implements Resolve<ChatServer> {
       type: LEAVE_CHANNEL,
       payload: null,
     });
+    this.store.dispatch({ type: LEAVE_VOICE_CHANNEL, payload: null });
     this.store.dispatch({
       type: SET_CURRENT_SERVER,
       payload: server,
     });
     this.wsService.socket.emit('join-server', id);
   }
-
 }

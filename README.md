@@ -10,9 +10,9 @@ Type the following commands:
 
 `npm run db:seed` optional: generates sample data (servers + users + channels)
 
-`npm start`
+`npm start` (starts the front-end app)
 
-`npm start:server:dev`
+`npm start:server:dev` (Must be running alongside the frontend)
 
 ## Code scaffolding
 
@@ -39,4 +39,4 @@ Trello board at [https://trello.com/b/b5DeyaVi/chat-app](https://trello.com/b/b5
 ## Deploying
 
 Run `docker-compose pull` to pull latest image (currently image is private)
-Run `docker-compose up` to launch the app in production
+Run `docker-compose up` to launch the app in production (only I can do this)

@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import ChatServer from 'shared-interfaces/server.interface';
 import { Observable } from 'rxjs/Observable';
@@ -19,7 +25,7 @@ import { Subscription } from 'rxjs/Subscription';
   selector: 'app-view-server',
   templateUrl: './view-server.component.html',
   styleUrls: ['./view-server.component.scss', '../../styles/layout.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ViewServerComponent implements OnInit, OnDestroy {
   public currentServerObs: Observable<ChatServer>;
@@ -40,14 +46,15 @@ export class ViewServerComponent implements OnInit, OnDestroy {
     private modalService: SuiModalService,
     private ref: ChangeDetectorRef,
   ) {
-    this.route.data
-      .subscribe((data) => {
-        this.currentServerObs = data.state.server;
-        this.currentChatChannel = data.state.channel;
-        this.currentVoiceChannel = data.state.voiceChannel;
-        data.state.server.subscribe(server => { this.currentServer = server; });
-        data.state.me.subscribe(me => this.me = me);
+    this.route.data.subscribe(data => {
+      this.currentServerObs = data.state.server;
+      this.currentChatChannel = data.state.channel;
+      this.currentVoiceChannel = data.state.voiceChannel;
+      data.state.server.subscribe(server => {
+        this.currentServer = server;
       });
+      data.state.me.subscribe(me => (this.me = me));
+    });
   }
 
   ngOnInit() {
@@ -70,60 +77,67 @@ export class ViewServerComponent implements OnInit, OnDestroy {
   /* istanbul ignore next */
   showLeaveServerConfirm() {
     this.modalService
-      .open(new ConfirmModal(
-        'Leave Server',
-        'Are you sure you want to leave this server?',
-        'red',
-        'Leave Server',
-      ))
+      .open(
+        new ConfirmModal(
+          'Leave Server',
+          'Are you sure you want to leave this server?',
+          'red',
+          'Leave Server',
+        ),
+      )
       .onApprove(() => this.leaveServer())
-      .onDeny(() => { });
+      .onDeny(() => {});
   }
 
   leaveServer() {
-    this.apiService.post(`leave-server/${this.currentServer._id}`, {})
-      .subscribe((data) => {
+    this.apiService.post(`leave-server/${this.currentServer._id}`, {}).subscribe(
+      data => {
         this.router.navigate(['/']);
         this.mainResolver.resolve(this.route.snapshot);
-      }, response => {
+      },
+      response => {
         const error = response.error ? response.error.error : 'Unable to leave server.';
-        this.errorService.errorMessage
-          .next(new ErrorNotification(error, 5000));
-      });
+        this.errorService.errorMessage.next(new ErrorNotification(error, 5000));
+      },
+    );
   }
 
   /* istanbul ignore next */
   showDeleteServerConfirm() {
     this.modalService
-      .open(new ConfirmModal(
-        'Delete Server',
-        'Are you sure you want to delete this server? This is permanent.',
-        'red',
-        'Delete Server',
-      ))
+      .open(
+        new ConfirmModal(
+          'Delete Server',
+          'Are you sure you want to delete this server? This is permanent.',
+          'red',
+          'Delete Server',
+        ),
+      )
       .onApprove(() => this.deleteServer())
-      .onDeny(() => { });
+      .onDeny(() => {});
   }
 
   deleteServer() {
-    this.apiService.delete(`delete-server/${this.currentServer._id}`, {})
-      .subscribe((data) => {
+    this.apiService.delete(`delete-server/${this.currentServer._id}`, {}).subscribe(
+      data => {
         this.router.navigate(['/']);
         this.mainResolver.resolve(this.route.snapshot);
-      }, response => {
-        const error = response.error && response.error.error ? response.error.error
-          : 'Failed to delete server.';
-        this.errorService.errorMessage
-          .next(new ErrorNotification(error, 5000));
-      });
+      },
+      response => {
+        const error =
+          response.error && response.error.error
+            ? response.error.error
+            : 'Failed to delete server.';
+        this.errorService.errorMessage.next(new ErrorNotification(error, 5000));
+      },
+    );
   }
 
   /* istanbul ignore next */
   openServerInviteModal() {
-    this.modalService.open(new ServerInviteModal(
-      this.currentServer.name,
-      this.currentServer.invite_id,
-    ));
+    this.modalService.open(
+      new ServerInviteModal(this.currentServer.name, this.currentServer.invite_id),
+    );
   }
 
   get isOwner() {

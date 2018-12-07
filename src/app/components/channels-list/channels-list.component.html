@@ -1,17 +1,15 @@
 <div class="menu">
   <div class="header">
     <h5>Text Channels</h5>
-    <i class="plus link icon" *ngIf="isOwner"
-      (click)="showCreateTextChannel()"></i>
+    <i class="plus link icon" *ngIf="isOwner" (click)="showCreateTextChannel()"></i>
   </div>
 
   <div class="" *ngIf="!channelList">
     <div class="ui active centered inline loader"></div>
   </div>
 
-  <div *ngIf="channelList" id="chat-channel-list">
-    <div *ngIf="channelList.channels.length < 1"
-      class="item">
+  <div *ngIf="channelList" id="channel-list">
+    <div *ngIf="channelList.channels.length < 1" class="item">
       No channels added yet.
     </div>
     <a class="item channel" *ngFor="let channel of channelList.channels"
@@ -19,59 +17,55 @@
       [class.active]="currentChatChannel && currentChatChannel._id === channel._id"
       [class.has-unread-messages]="channelHasUnreadMessages(channel)"
       (click)="joinChannel(channel)">
-      <i class="hashtag icon"></i> {{ channel.name }}
+      <i class="small envelope icon"></i> {{ channel.name }}
       <i class="trash link icon" (click)="showDeleteChannelConfirm($event, channel)"></i>
     </a>
-    <!-- <a class="item channel"
-      [class.inverted]="settingsService.invertedTheme"
-      (click)="joinChannel({server_id: currentChatChannel.server_id, _id: '123456781234567812345678'})">
-      # MISSING_CHANNEL
-    </a> -->
-    <form *ngIf="showNewChannelInput" action=""
-      (submit)="createChannel()">
+    <form *ngIf="showNewChannelInput" action="" (submit)="createChannel()">
       <div class="ui small icon input">
         <input type="text" #textChannelInput name="channelName"
           autocomplete="off" placeholder="Add New Channel"
           (keydown)="newChannelInputKeypress($event)"
           [(ngModel)]="newChannelName">
-        <i class="green circular plus link icon"
-          (click)="createChannel()"></i>
+        <i class="green circular plus link icon" (click)="createChannel()"></i>
       </div>
     </form>
   </div>
 
   <div class="header">
     <h5>Voice Channels</h5>
-    <i class="plus link icon" *ngIf="isOwner"
-      (click)="showCreateVoiceChannel()"></i>
+    <i class="plus link icon" *ngIf="isOwner" (click)="showCreateVoiceChannel()"></i>
   </div>
 
   <div class="" *ngIf="!channelList">
     <div class="ui active centered inline loader"></div>
   </div>
 
-  <div *ngIf="channelList" id="chat-channel-list">
-    <div *ngIf="channelList.voiceChannels.length < 1"
-      class="item">
+  <div *ngIf="channelList" id="voice-channel-list">
+    <div *ngIf="channelList.voiceChannels.length < 1" class="item">
       No channels added yet.
     </div>
-    <a class="item channel" *ngFor="let channel of channelList.voiceChannels"
-      [class.inverted]="settingsService.invertedTheme"
-      (click)="joinVoiceChannel(channel)">
-      <i class="volume up icon"></i> {{ channel.name }}
-      <i class="trash link icon" (click)="showDeleteChannelConfirm($event, channel, true)"></i>
-    </a>
+    <div *ngFor="let channel of channelList.voiceChannels">
+      <a class="item channel" [class.inverted]="settingsService.invertedTheme"
+        (click)="joinVoiceChannel(channel)">
+        <i class="small volume up icon"></i> {{ channel.name }}
+        <i class="trash link icon" (click)="showDeleteChannelConfirm($event, channel, true)"></i>
+      </a>
+      <div class="menu" [class.inverted]="settingsService.invertedTheme">
+        <div class="item" *ngFor="let user of voiceChannelUsers(channel._id)">
+          <i class="small green circle icon"></i>
+          {{ user.username }}
+        </div>
+      </div>
+    </div>
   </div>
 
-  <form *ngIf="showVoiceChannelInput" action=""
-    (submit)="createVoiceChannel()">
+  <form *ngIf="showVoiceChannelInput" action="" (submit)="createVoiceChannel()">
     <div class="ui small icon input">
       <input type="text" #voiceChannelInput name="voiceChannelName"
         autocomplete="off" placeholder="Add New Voice Channel"
         (keydown)="voiceChannelInputKeypress($event)"
         [(ngModel)]="voiceChannelName">
-      <i class="green circular plus link icon"
-        (click)="createVoiceChannel()"></i>
+      <i class="green circular plus link icon" (click)="createVoiceChannel()"></i>
     </div>
   </form>
 </div>

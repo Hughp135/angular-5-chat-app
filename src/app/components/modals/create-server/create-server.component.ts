@@ -30,8 +30,7 @@ export class CreateServerComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onFileChange(event) {
     const reader = new FileReader();
@@ -61,9 +60,9 @@ export class CreateServerComponent implements OnInit {
     this.error = undefined;
     this.loading = true;
     try {
-      const { server }: { server: ChatServer } = <any>await this.apiService
-        .post('servers', this.form.value)
-        .toPromise();
+      const { server }: { server: ChatServer } = <any>(
+        await this.apiService.post('servers', this.form.value).toPromise()
+      );
       this.modal.approve(undefined);
       this.loading = false;
       this.store.dispatch({
@@ -76,7 +75,6 @@ export class CreateServerComponent implements OnInit {
         this.error = e.error.error;
       } else {
         this.error = 'A server error occured.';
-
       }
     }
   }
@@ -87,7 +85,6 @@ export class CreateServerComponent implements OnInit {
       this.modal.deny(undefined);
     }
   }
-
 }
 
 /* istanbul ignore next */
@@ -95,6 +92,5 @@ export class CreateServerModal extends ComponentModalConfig<void, void, void> {
   constructor() {
     super(CreateServerComponent);
     this.size = ModalSize.Small;
-    this.isClosable = false;
   }
 }

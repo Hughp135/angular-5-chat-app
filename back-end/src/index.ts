@@ -20,7 +20,7 @@ winston.log('info', 'MongoDB url: ' + MONGODB_URL);
 async function launch() {
   makePublicDirectory();
 
-  await mongoose.connect(MONGODB_URL);
+  await mongoose.connect(MONGODB_URL, {useNewUrlParser: true});
 
   createServer(<string>config.get('https.enable'));
 }
