@@ -26,8 +26,8 @@
                   </p>
                 </div>
                 <div class="four wide field">
-                  <sui-checkbox name="invertedTheme" ngDefaultControl
-                    [(ngModel)]="settingsService.invertedTheme"
+                  <sui-checkbox name="invertedTheme"
+                    ngDefaultControl [(ngModel)]="settingsService.invertedTheme"
                     class="toggle" style="float:right">
                   </sui-checkbox>
                 </div>
@@ -39,9 +39,10 @@
             <div class="ui inverted form">
               <div class="field">
                 <label for="">Input Device:</label>
-                <p *ngIf="!inputDevices">Changing input device is
+                <p *ngIf="!inputDevices">Changing input device
+                  is
                   not supported by your browser.</p>
-                <select *ngIf="inputDevices">
+                <select *ngIf="inputDevices" (change)="changeInputDevice($event)">
                   <option *ngFor="let device of inputDevices"
                     [value]="device.deviceId">
                     {{ device.label }}
@@ -50,9 +51,10 @@
               </div>
               <div class="field">
                 <label for="">Output Device:</label>
-                <p *ngIf="!outputDevices">Changing output device is
+                <p *ngIf="!outputDevices">Changing output device
+                  is
                   not supported by your browser.</p>
-                <select *ngIf="outputDevices">
+                <select *ngIf="outputDevices" (change)="changeOutputDevice($event)">
                   <option *ngFor="let device of outputDevices"
                     [value]="device.deviceId">
                     {{ device.label }}

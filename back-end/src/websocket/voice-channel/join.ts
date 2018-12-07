@@ -18,20 +18,26 @@ export async function handler(
   channelId: string,
 ) {
   const user = await userModel
+    .findOne(
+      {
+        _id: socket.claim.user_id,
+      },
+      {
+        joined_servers: 1,
+      },
+    )
+    .lean();
+  const channel: any = await voiceChannelModel
     .findOne({
-      _id: socket.claim.user_id,
-    }, {
-      joined_servers: 1,
-    }).lean();
-  const channel: any = await voiceChannelModel.findOne({
-    _id: channelId,
-  }).lean();
+      _id: channelId,
+    })
+    .lean();
 
   if (!channel) {
     return socket.emit('soft-error', 'This voice channel no longer exists');
   }
 
-  if (!await canJoinServer(user, channel.server_id)) {
+  if (!(await canJoinServer(user, channel.server_id))) {
     return socket.emit('soft-error', 'You don\'t have permission to join this server.');
   }
 
@@ -47,7 +53,8 @@ export async function handler(
   });
 
   // Emit user list to all sockets except requester
-  sockets.filter(sock => sock.id !== socket.id)
+  sockets
+    .filter(sock => sock.id !== socket.id)
     .forEach(sock => {
       sock.emit('voice-channel-users', {
         channelId,
@@ -62,18 +69,23 @@ export async function handler(
   });
 }
 
-export function getSocketsInRoom(io: SocketIO.Server, room: string): Promise<SocketCustom[]> {
+export function getSocketsInRoom(
+  io: SocketIO.Server,
+  room: string,
+): Promise<SocketCustom[]> {
   return new Promise((resolve, reject) => {
-    io.of('/').in(room).clients((error, clients) => {
-      /* istanbul ignore next */
-      if (error) {
-        reject(error);
-      }
-      const connected = io.of('/').connected;
-      const sockets = clients
-        .map(client => connected[client])
-        .filter(socket => !!socket);
-      resolve(sockets);
-    });
+    io.of('/')
+      .in(room)
+      .clients((error, clients) => {
+        /* istanbul ignore next */
+        if (error) {
+          reject(error);
+        }
+        const connected = io.of('/').connected;
+        const sockets = clients
+          .map(client => connected[client])
+          .filter(socket => !!socket);
+        resolve(sockets);
+      });
   });
 }

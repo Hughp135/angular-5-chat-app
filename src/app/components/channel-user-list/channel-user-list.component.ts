@@ -82,7 +82,11 @@ export class ChannelUserListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   fetchVoiceChannelUsers() {
-    if (this.currentServer && this.wsService.socket.connected) {
+    if (
+      this.currentServer &&
+      this.wsService.socket.connected &&
+      this.currentServer._id !== 'friends'
+    ) {
       this.wsService.socket.emit(
         'get-server-voice-channel-users',
         this.currentServer._id,

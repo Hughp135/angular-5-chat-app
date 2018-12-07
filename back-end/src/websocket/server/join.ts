@@ -8,9 +8,7 @@ import { sendUserList } from './user-list/user-list';
 import voiceChannelModel from '../../models/voice-channel.model';
 
 export function joinServer(io: any) {
-
   io.on('connection', async socket => {
-
     socket.on('join-server', async serverId => {
       if (!mongoose.Types.ObjectId.isValid(serverId)) {
         socket.emit('soft-error', 'Invalid server ID');
@@ -29,7 +27,7 @@ export function joinServer(io: any) {
         return;
       }
 
-      if (!await canJoinServer(user, server._id)) {
+      if (!(await canJoinServer(user, server._id))) {
         socket.emit('soft-error', 'You don\'t have permission to join this server.');
         return;
       }
@@ -47,22 +45,30 @@ export function joinServer(io: any) {
 }
 
 export async function getChannelList(serverId) {
-  const channels: any = await ChannelModel.find({
-    server_id: serverId,
-  }, {
+  const channels: any = await ChannelModel.find(
+    {
+      server_id: serverId,
+    },
+    {
       _id: 1,
       name: 1,
       server_id: 1,
       last_message: 1,
-    }).lean();
+    },
+  ).lean();
 
   const channelsFormatted = channelsToChannelListItems(channels);
-  const voiceChannels: any = await voiceChannelModel.find({
-    server_id: serverId,
-  }, {
-      _id: 1,
-      name: 1,
-    }).lean();
+  const voiceChannels: any = await voiceChannelModel
+    .find(
+      {
+        server_id: serverId,
+      },
+      {
+        _id: 1,
+        name: 1,
+      },
+    )
+    .lean();
 
   const list: ChannelList = {
     server_id: serverId,

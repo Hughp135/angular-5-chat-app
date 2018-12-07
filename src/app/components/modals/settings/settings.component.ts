@@ -17,19 +17,30 @@ export class SettingsComponent implements OnInit, OnDestroy {
   constructor(
     public modal: SuiModal<void, void, void>,
     public settingsService: SettingsService,
-    audioDeviceService: AudioDeviceService,
+    private audioDeviceService: AudioDeviceService,
   ) {
     this.subscriptions.push(
-      audioDeviceService.outputDevices.subscribe(d => this.outputDevices = d),
-      audioDeviceService.inputDevices.subscribe(d => this.inputDevices = d),
+      audioDeviceService.outputDevices.subscribe(d => (this.outputDevices = d)),
+      audioDeviceService.inputDevices.subscribe(d => (this.inputDevices = d)),
     );
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  changeInputDevice(event) {
+    const id = event.target.value;
+    this.audioDeviceService.selectedInputDevice.next(id);
+    localStorage.setItem('inputDevice', id);
+  }
+
+  changeOutputDevice(event) {
+    const id = event.target.value;
+    this.audioDeviceService.selectedOutputDevice.next(id);
+    localStorage.setItem('outputDevice', id);
   }
 }
 
