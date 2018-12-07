@@ -3,8 +3,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as linkifyString from 'linkifyjs/string';
 
-@Pipe({ name: 'linkify' })
-export class LinkifyPipe implements PipeTransform {
+@Pipe({ name: 'chatmessage' })
+export class ChatMessagePipe implements PipeTransform {
   constructor(private _domSanitizer: DomSanitizer) {}
 
   transform(value: any, args?: any): any {
