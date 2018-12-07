@@ -7,7 +7,10 @@ import { AppState } from '../reducers/app.states';
 import { reducers } from '../reducers/reducers';
 import { AudioDeviceService } from './audio-device.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { JOIN_VOICE_CHANNEL, LEAVE_VOICE_CHANNEL } from '../reducers/current-voice-channel-reducer';
+import {
+  JOIN_VOICE_CHANNEL,
+  LEAVE_VOICE_CHANNEL,
+} from '../reducers/current-voice-channel-reducer';
 import { VoiceChannel } from 'shared-interfaces/voice-channel.interface';
 import { SET_ME } from '../reducers/me-reducer';
 import { ErrorService } from './error.service';
@@ -31,8 +34,7 @@ describe('WebRTCService', () => {
       emit: jasmine.createSpy(),
       on: (name, callback) => {
         if (name === 'signal') {
-          signalData.filter(data => !!data)
-            .subscribe(data => callback(data));
+          signalData.filter(data => !!data).subscribe(data => callback(data));
         }
       },
     },
@@ -41,9 +43,7 @@ describe('WebRTCService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        StoreModule.forRoot(reducers),
-      ],
+      imports: [StoreModule.forRoot(reducers)],
       providers: [
         WebRTCService,
         { provide: WebsocketService, useValue: fakeWsService },
@@ -195,7 +195,8 @@ describe('WebRTCService', () => {
   });
   it('when joining a new channel, user peer is not iniator', async () => {
     const channel: VoiceChannel = {
-      _id: '123', name: 'chan1',
+      _id: '123',
+      name: 'chan1',
       users: [{ _id: 'user1id', socket_id: 'socketId1', username: 'user1' }],
     };
     store.dispatch({ type: JOIN_VOICE_CHANNEL, payload: channel });
@@ -207,7 +208,8 @@ describe('WebRTCService', () => {
   });
   it('on peer message destroy-connection, destroys the peer', async () => {
     const channel: VoiceChannel = {
-      _id: '123', name: 'chan1',
+      _id: '123',
+      name: 'chan1',
       users: [{ _id: 'user1id', socket_id: 'socketId1', username: 'user1' }],
     };
     store.dispatch({ type: JOIN_VOICE_CHANNEL, payload: channel });
@@ -219,9 +221,11 @@ describe('WebRTCService', () => {
     expect((peer1 as any).initiator).toEqual(false);
 
     const peer2 = new SimplePeer({ initiator: true });
-    peer1.on('signal', (data) => peer2.signal(data));
-    peer2.on('signal', (data) => peer1.signal(data));
-    await awaitPeerConnection(peer1).catch((e) => { throw (e); }); // Wait for peers to connect
+    peer1.on('signal', data => peer2.signal(data));
+    peer2.on('signal', data => peer1.signal(data));
+    await awaitPeerConnection(peer1).catch(e => {
+      throw e;
+    }); // Wait for peers to connect
     expect(peer1.connected).toEqual(true, 'assert1');
 
     await peer2.send('destroy-connection');
@@ -238,9 +242,11 @@ describe('WebRTCService', () => {
 
     // Create a test peer to connect to
     const testPeer = new SimplePeer({ initiator: true });
-    peer.on('signal', (data) => testPeer.signal(data));
-    testPeer.on('signal', (data) => peer.signal(data));
-    await awaitPeerConnection(peer).catch((e) => { throw new Error('peerconnect1'); });
+    peer.on('signal', data => testPeer.signal(data));
+    testPeer.on('signal', data => peer.signal(data));
+    await awaitPeerConnection(peer).catch(e => {
+      throw new Error('peerconnect1');
+    });
 
     // Reconnect. Service will create a new peer as initiator
     service.reconnectToAllPeers();
@@ -251,9 +257,11 @@ describe('WebRTCService', () => {
 
     // Create a 2nd test peer to reconnect to
     const testPeer2 = new SimplePeer({ initiator: false });
-    peerNew.on('signal', (data) => testPeer2.signal(data));
-    testPeer2.on('signal', (data) => peerNew.signal(data));
-    await awaitPeerConnection(peerNew).catch((e) => { throw new Error('peerconnect2'); });
+    peerNew.on('signal', data => testPeer2.signal(data));
+    testPeer2.on('signal', data => peerNew.signal(data));
+    await awaitPeerConnection(peerNew).catch(e => {
+      throw new Error('peerconnect2');
+    });
     expect(peerNew.connected).toEqual(true);
   });
   it('on receiving peer stream, sets objectSrc of audio element and plays', async () => {
@@ -272,12 +280,15 @@ describe('WebRTCService', () => {
 
     // Create a test peer to connect to
     const testPeer = new SimplePeer({
-      initiator: true, stream: stream,
+      initiator: true,
+      stream: stream,
       constraints: { OfferToReceiveAudio: true, OfferToReceiveVideo: false },
     });
-    peer.on('signal', (data) => testPeer.signal(data));
-    testPeer.on('signal', (data) => peer.signal(data));
-    await awaitPeerConnection(peer).catch((e) => { throw new Error('peerconnect1'); });
+    peer.on('signal', data => testPeer.signal(data));
+    testPeer.on('signal', data => peer.signal(data));
+    await awaitPeerConnection(peer).catch(e => {
+      throw new Error('peerconnect1');
+    });
 
     expect((fakeElement as any).srcObject).toBeDefined();
     expect(fakeElement.play).toHaveBeenCalled();
@@ -302,12 +313,15 @@ describe('WebRTCService', () => {
 
     // Create a test peer to connect to
     const testPeer = new SimplePeer({
-      initiator: true, stream: stream,
+      initiator: true,
+      stream: stream,
       constraints: { OfferToReceiveAudio: true, OfferToReceiveVideo: false },
     });
-    peer.on('signal', (data) => testPeer.signal(data));
-    testPeer.on('signal', (data) => peer.signal(data));
-    await awaitPeerConnection(peer).catch((e) => { throw new Error('peerconnect1'); });
+    peer.on('signal', data => testPeer.signal(data));
+    testPeer.on('signal', data => peer.signal(data));
+    await awaitPeerConnection(peer).catch(e => {
+      throw new Error('peerconnect1');
+    });
 
     expect(fakeElement.setSinkId).toHaveBeenCalledWith('testDevice');
     expect(fakeElement.play).toHaveBeenCalled();
@@ -364,19 +378,15 @@ describe('WebRTCService', () => {
     audio1.className = 'rtc-audio-element';
     const audio2 = document.createElement('audio');
     audio2.className = 'rtc-audio-element';
-    spyOn((<any>HTMLMediaElement.prototype), 'setSinkId');
-    spyOn(document, 'getElementsByClassName').and.returnValue([
-      audio1, audio2,
-    ]);
+    spyOn(<any>HTMLMediaElement.prototype, 'setSinkId');
+    spyOn(document, 'getElementsByClassName').and.returnValue([audio1, audio2]);
     service.audioDeviceService.selectedOutputDevice.next('deviceId');
     expect((audio1 as any).setSinkId).toHaveBeenCalled();
     expect((audio2 as any).setSinkId).toHaveBeenCalled();
     expect(fakeErrorService.errorMessage.next).not.toHaveBeenCalled();
   });
   it('changing output device shows errorMessage if setSinkId throws', async () => {
-    spyOn(document, 'getElementsByClassName').and.returnValue([
-      {},
-    ]);
+    spyOn(document, 'getElementsByClassName').and.returnValue([{}]);
     await service.onOutputDeviceChanged('badid');
     expect(fakeErrorService.errorMessage.next).toHaveBeenCalledTimes(1);
   });
@@ -400,7 +410,6 @@ describe('WebRTCService', () => {
   });
   it('toggleMuteMicrophone does not cause error if no track exists', () => {
     service.toggleMuteMicrophone();
-    expect(service.micMuted).toEqual(true);
   });
 });
 
@@ -419,7 +428,8 @@ function awaitPeerConnection(peer) {
 }
 
 function getMediaStream() {
-  const audioContext = new ((<any>window).AudioContext || (<any>window).webkitAudioContext)();
+  const audioContext = new ((<any>window).AudioContext ||
+    (<any>window).webkitAudioContext)();
   const oscillator = audioContext.createOscillator();
   const dst = audioContext.createMediaStreamDestination();
   oscillator.connect(dst);
