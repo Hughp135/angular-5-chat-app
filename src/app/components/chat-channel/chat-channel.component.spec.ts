@@ -13,6 +13,7 @@ import { Store } from '@ngrx/store';
 import { ChannelSettingsService } from '../../services/channel-settings.service';
 import { ErrorService } from '../../services/error.service';
 import { APPEND_CHAT_MESSAGES } from '../../reducers/current-chat-channel.reducer';
+import { ChatMessagePipe } from '../../pipes/chatmessage.pipe';
 
 describe('ChatChannelComponent', () => {
   let component: ChatChannelComponent;
@@ -37,11 +38,10 @@ describe('ChatChannelComponent', () => {
 
   const route = {
     data: Observable.of({
-      state:
-        {
-          channel: Observable.of(channel),
-          server: Observable.of(server),
-        },
+      state: {
+        channel: Observable.of(channel),
+        server: Observable.of(server),
+      },
     }),
   };
 
@@ -65,20 +65,20 @@ describe('ChatChannelComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ChatChannelComponent],
-      imports: [
-        FormsModule,
-      ],
+      declarations: [ChatChannelComponent, ChatMessagePipe],
+      imports: [FormsModule],
       providers: [
         { provide: ActivatedRoute, useValue: route },
         SettingsService,
         { provide: WebsocketService, useValue: fakeWsService },
         { provide: Store, useValue: fakeStore },
-        { provide: ChannelSettingsService, useValue: { updateVisitedChannels: () => { } } },
+        {
+          provide: ChannelSettingsService,
+          useValue: { updateVisitedChannels: () => {} },
+        },
         { provide: ErrorService, useValue: fakeErrorService },
       ],
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -140,7 +140,7 @@ describe('ChatChannelComponent', () => {
     const result = component.getFriendChannelName();
     expect(result).toEqual('user123, user456');
   });
-  it('should focus chat input on keypress', (done) => {
+  it('should focus chat input on keypress', done => {
     expect(document.activeElement.tagName).toEqual('BODY');
     pressKey('a');
     setTimeout(() => {
@@ -148,7 +148,7 @@ describe('ChatChannelComponent', () => {
       done();
     }, 3);
   });
-  it('should not focus chat input on ignored keycode', (done) => {
+  it('should not focus chat input on ignored keycode', done => {
     expect(document.activeElement.tagName).toEqual('BODY');
     pressKey('Enter');
     setTimeout(() => {
@@ -205,15 +205,20 @@ describe('ChatChannelComponent', () => {
   it('getMoreMessages does not send request if already over 300 msgs in component', async () => {
     const newMessages = [
       {
-        _id: 'sdf2342', username: 'test', message: 'new', channel_id: '123', user_id: 'asd123',
-        createdAt: new Date(), updatedAt: new Date(),
+        _id: 'sdf2342',
+        username: 'test',
+        message: 'new',
+        channel_id: '123',
+        user_id: 'asd123',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ];
-    fakeWsService.awaitNextEvent.and
-      .callFake(async (): Promise<ChatMessage[]> => newMessages);
+    fakeWsService.awaitNextEvent.and.callFake(
+      async (): Promise<ChatMessage[]> => newMessages,
+    );
     const beforeMessages = [...component.currentChannel.messages];
-    const afterMessages = new Array(301).fill(null)
-      .map(item => beforeMessages[0]);
+    const afterMessages = new Array(301).fill(null).map(item => beforeMessages[0]);
     component.currentChannel.messages = afterMessages;
     await component.getMoreMessages();
     expect(fakeWsService.awaitNextEvent).not.toHaveBeenCalled();
@@ -222,7 +227,9 @@ describe('ChatChannelComponent', () => {
     component.currentChannel.messages = beforeMessages;
   });
   it('getMoreMessages shows error if wsService throws', async () => {
-    fakeWsService.awaitNextEvent.and.callFake(async () => { throw new Error('hi'); });
+    fakeWsService.awaitNextEvent.and.callFake(async () => {
+      throw new Error('hi');
+    });
     const beforeMessages = [...component.currentChannel.messages];
     await component.getMoreMessages();
     expect(fakeWsService.awaitNextEvent).toHaveBeenCalled();
@@ -231,12 +238,19 @@ describe('ChatChannelComponent', () => {
     expect(fakeErrorService.errorMessage.next).toHaveBeenCalled();
   });
   it('getMoreMessages does not append msgs messages channel id doesnt match channel id', async () => {
-    fakeWsService.awaitNextEvent.and.callFake(async (): Promise<ChatMessage[]> => [
-      {
-        _id: '234', username: 'test', message: 'new', channel_id: '456', user_id: 'asd123',
-        createdAt: new Date(), updatedAt: new Date(),
-      },
-    ]);
+    fakeWsService.awaitNextEvent.and.callFake(
+      async (): Promise<ChatMessage[]> => [
+        {
+          _id: '234',
+          username: 'test',
+          message: 'new',
+          channel_id: '456',
+          user_id: 'asd123',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+    );
     const beforeMessages = [...component.currentChannel.messages];
     await component.getMoreMessages();
     expect(fakeWsService.awaitNextEvent).toHaveBeenCalled();
@@ -244,12 +258,19 @@ describe('ChatChannelComponent', () => {
     expect(fakeStore.dispatch).not.toHaveBeenCalled();
   });
   it('getMoreMessages does not append msgsif msg with same id exists', async () => {
-    fakeWsService.awaitNextEvent.and.callFake(async (): Promise<ChatMessage[]> => [
-      {
-        _id: '123', username: 'test', message: 'new', channel_id: '123', user_id: 'asd123',
-        createdAt: new Date(), updatedAt: new Date(),
-      },
-    ]);
+    fakeWsService.awaitNextEvent.and.callFake(
+      async (): Promise<ChatMessage[]> => [
+        {
+          _id: '123',
+          username: 'test',
+          message: 'new',
+          channel_id: '123',
+          user_id: 'asd123',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+    );
     const beforeMessages = [...component.currentChannel.messages];
     await component.getMoreMessages();
     expect(fakeWsService.awaitNextEvent).toHaveBeenCalled();
@@ -259,12 +280,18 @@ describe('ChatChannelComponent', () => {
   it('getMoreMessages dispatches APPEND_CHAT_MESSAGES', async () => {
     const newMessages = [
       {
-        _id: 'sdf2342', username: 'test', message: 'new', channel_id: '123', user_id: 'asd123',
-        createdAt: new Date(), updatedAt: new Date(),
+        _id: 'sdf2342',
+        username: 'test',
+        message: 'new',
+        channel_id: '123',
+        user_id: 'asd123',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ];
-    fakeWsService.awaitNextEvent.and
-      .callFake(async (): Promise<ChatMessage[]> => newMessages);
+    fakeWsService.awaitNextEvent.and.callFake(
+      async (): Promise<ChatMessage[]> => newMessages,
+    );
     await component.getMoreMessages();
     expect(fakeStore.dispatch).toHaveBeenCalledTimes(1);
     expect(fakeStore.dispatch).toHaveBeenCalledWith({
