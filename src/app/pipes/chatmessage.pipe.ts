@@ -7,7 +7,7 @@ import * as linkifyString from 'linkifyjs/string';
 export class ChatMessagePipe implements PipeTransform {
   constructor(private _domSanitizer: DomSanitizer) {}
 
-  transform(value: any, args?: any): any {
+  transform(value: any): any {
     return this.stylize(value);
   }
 
