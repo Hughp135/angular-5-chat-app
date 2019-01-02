@@ -36,7 +36,7 @@
             Today at {{ msg.createdAt }}
           </span>
         </div>
-        <p>{{ msg.message }}</p>
+        <p class="chat-message" [innerHTML]="msg.message | chatmessage"></p>
       </div>
     </div>
     <div class="item" *ngIf="loadingMoreMessages">

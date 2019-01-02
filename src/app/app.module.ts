@@ -54,6 +54,7 @@ import { WebRTCService } from './services/webrtc.service';
 import { AudioDeviceService } from './services/audio-device.service';
 import { SettingsComponent } from './components/modals/settings/settings.component';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
+import { ChatMessagePipe } from './pipes/chatmessage.pipe';
 
 const optionalImports = environment.production
   ? []
@@ -91,6 +92,7 @@ const optionalImports = environment.production
     VoiceChannelComponent,
     SettingsComponent,
     StatusBarComponent,
+    ChatMessagePipe,
   ],
   entryComponents: [
     CreateServerComponent,
