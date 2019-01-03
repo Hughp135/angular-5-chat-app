@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { ChatChannel } from 'shared-interfaces/channel.interface';
 import { WebsocketService } from '../../services/websocket.service';
-import { SendMessageRequest, ChatMessage } from '../../../../shared-interfaces/message.interface';
+import {
+  SendMessageRequest,
+  ChatMessage,
+} from '../../../../shared-interfaces/message.interface';
 import { SettingsService } from '../../services/settings.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
@@ -40,6 +43,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentServer: ChatServer;
   private subscriptions: Subscription[] = [];
   public loadingMoreMessages = false;
+  public isShiftKeyPressed = false;
 
   @ViewChild('chatInput') private chatInput: ElementRef;
   @ViewChild('messageContainer') private messageContainer: ElementRef;
@@ -56,7 +60,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
       this.subscriptions.push(
         data.state.channel
           .filter(chan => !!chan)
-          .subscribe((chan) => {
+          .subscribe(chan => {
             this.currentChannel = chan;
             channelSettings.updateVisitedChannels();
           }),
@@ -67,7 +71,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe);
@@ -141,47 +145,73 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.chatInput.nativeElement.focus();
   }
 
+  get chatInputRows(): number {
+    const matches = this.chatMessage.match(/\n/g);
+    const rowCount = matches ? matches.length + 1 : 1;
+
+    return Math.min(5, rowCount);
+  }
+
+  onChatInputKeydown(event: any) {
+    if (event.key === 'Enter' && !this.isShiftKeyPressed) {
+      // Send the chat message
+      this.sendMessage(this.chatMessage);
+      event.preventDefault();
+    }
+  }
+
   onWindowKeydown(event: any) {
     if (
       event.target &&
-      event.target.tagName !== 'INPUT' &&
+      event.target.tagName !== 'TEXTAREA' &&
       !ignoredKeys.includes(event.key)
     ) {
       this.focusChatInput();
     }
+
+    if (event.key === 'Shift') {
+      this.isShiftKeyPressed = true;
+    }
+  }
+
+  onWindowKeyup(event: any) {
+    if (event.key === 'Shift') {
+      this.isShiftKeyPressed = false;
+    }
   }
 
   async onMessagesScroll(event) {
-    if (event.target.scrollTop < 130
-      && !this.loadingMoreMessages) {
+    if (event.target.scrollTop < 130 && !this.loadingMoreMessages) {
       this.getMoreMessages();
     }
   }
 
   async getMoreMessages() {
     const channel = this.currentChannel;
-    if (!channel || !channel.messages || !channel.messages.length
-      || channel.messages.length >= 300) {
+    if (
+      !channel ||
+      !channel.messages ||
+      !channel.messages.length ||
+      channel.messages.length >= 300
+    ) {
       this.loadingMoreMessages = false;
       return;
     }
 
-    const oldestMessage = channel
-      .messages[channel.messages.length - 1];
+    const oldestMessage = channel.messages[channel.messages.length - 1];
 
     this.wsService.socket.emit('get-chat-messages', {
       channel_id: channel._id,
       before: oldestMessage.createdAt,
     });
 
-    const messages: ChatMessage[] = <ChatMessage[]>await this.wsService
-      .awaitNextEvent('got-chat-messages', 2500)
-      .catch(err => {
-        this.errorService.errorMessage.next(new ErrorNotification(
-          'Failed to load chat messages',
-          2500,
-        ));
-      });
+    const messages: ChatMessage[] = <ChatMessage[]>(
+      await this.wsService.awaitNextEvent('got-chat-messages', 2500).catch(err => {
+        this.errorService.errorMessage.next(
+          new ErrorNotification('Failed to load chat messages', 2500),
+        );
+      })
+    );
 
     // Only add if there are new messages
     if (!messages || !messages.length) {
@@ -213,5 +243,4 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   scrollChatToBottom() {
     this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
   }
-
 }
