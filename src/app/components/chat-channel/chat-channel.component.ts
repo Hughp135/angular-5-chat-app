@@ -175,6 +175,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onWindowKeyup(event: any) {
+    /* istanbul ignore else */
     if (event.key === 'Shift') {
       this.isShiftKeyPressed = false;
     }
