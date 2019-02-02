@@ -13,8 +13,8 @@ services:
     restart: "no"
     build: .
     ports:
-      - "80:7205"
-      - "443:7443"
+      - "7205:7205"
+      - "7443:7443"
     links:
       - mongo
     environment:
