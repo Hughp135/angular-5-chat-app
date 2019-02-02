@@ -144,7 +144,7 @@ describe('ChatChannelComponent', () => {
     expect(document.activeElement.tagName).toEqual('BODY');
     pressKey('a');
     setTimeout(() => {
-      expect(document.activeElement.tagName).toEqual('INPUT');
+      expect(document.activeElement.tagName).toEqual('TEXTAREA');
       done();
     }, 3);
   });
@@ -299,14 +299,65 @@ describe('ChatChannelComponent', () => {
       payload: newMessages,
     });
   });
+  it('should detect when shift key is pressed down', async () => {
+    expect(component.isShiftKeyPressed).toEqual(false);
+    pressKey('Shift');
+    await fixture.whenStable();
+    expect(component.isShiftKeyPressed).toEqual(true);
+  });
+  it('should detect when shift key is pressed up', async () => {
+    expect(component.isShiftKeyPressed).toEqual(false);
+    pressKey('Shift');
+    await fixture.whenStable();
+    pressKey('Shift', undefined, true);
+    await fixture.whenStable();
+    expect(component.isShiftKeyPressed).toEqual(false);
+  });
+  it('should send a chat message when Enter key is pressed', async () => {
+    component.chatMessage = 'a message';
+    pressKey('Enter', 'textarea');
+    await fixture.whenStable();
+    expect(fakeWsService.socket.emit).toHaveBeenCalledTimes(1);
+  });
+  it('should send a chat message when Enter key is pressed if Shift is released', async () => {
+    component.chatMessage = 'a message';
+    pressKey('Shift', 'textarea');
+    await fixture.whenStable();
+    pressKey('Shift', 'textarea', true);
+    await fixture.whenStable();
+    pressKey('Enter', 'textarea');
+    expect(fakeWsService.socket.emit).toHaveBeenCalledTimes(1);
+  });
+  it('should not send a chat message when Shift+Enter is pressed', async () => {
+    pressKey('Shift', 'textarea');
+    await fixture.whenStable();
+    pressKey('Enter', 'textarea');
+    await fixture.whenStable();
+    expect(fakeWsService.socket.emit).not.toHaveBeenCalled();
+  });
+  it('should have 3 rows when chat message contains 3 lines', async () => {
+    component.chatMessage = `hellow
+    line 2
+    line 3`;
+    expect(component.chatInputRows).toEqual(3);
+  });
+  it('should have max of 5 rows when chat message contains 6 lines', async () => {
+    component.chatMessage = `hellow
+    line 2
+    line 3
+    line 4
+    line 5
+    line 6`;
+    expect(component.chatInputRows).toEqual(5);
+  });
 });
 
-function pressKey(keycode: number | string, target?: string) {
+function pressKey(keycode: number | string, target?: string, up?: boolean) {
   const event: any = document.createEvent('Event');
   event.key = keycode;
-  event.initEvent('keydown');
+  event.initEvent(up ? 'keyup' : 'keydown');
   if (target) {
-    const targetEl = document.body.getElementsByTagName('div')[0];
+    const targetEl = document.body.querySelector(target);
     targetEl.dispatchEvent(event);
   } else {
     window.dispatchEvent(event);

@@ -11,6 +11,9 @@ describe('Chatmessage Pipe', () => {
     pipe = new ChatMessagePipe(fakeSanitizer);
   });
 
+  it('empty message should be returned', () => {
+    expect(pipe.transform('')).toEqual('');
+  });
   it('transforms a message', () => {
     expect(pipe.transform('hello')).toEqual('sanitized bypassed hello');
   });
