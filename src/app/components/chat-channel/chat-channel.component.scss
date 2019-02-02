@@ -4,6 +4,10 @@
   height: 100vh;
 }
 
+.chat-message {
+  white-space: pre-wrap;
+}
+
 #header {
   height: 50px;
   padding: 17px 20px;
@@ -52,14 +56,16 @@
     margin: 0;
     width: 100%;
 
-    input {
+    textarea {
+      resize: none;
       border: 2px solid rgba(34, 36, 38, 0.29);
     }
 
     &.inverted {
-      input {
-        background: #3d3d3d;
-        color: #d9d9d9;
+      textarea {
+        background: #2d2f34;
+        color: #b9b9b9;
+        border: 2px solid transparent;
       }
     }
   }

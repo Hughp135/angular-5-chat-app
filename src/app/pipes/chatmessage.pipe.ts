@@ -13,9 +13,11 @@ export class ChatMessagePipe implements PipeTransform {
 
   // Modify this method according to your custom logic
   private stylize(str: string): string {
-    const result = str
-      ? this.combineFunctions(str, this.links, this.codePreformatted)
-      : str;
+    if (!str) {
+      return str;
+    }
+
+    const result = this.combineFunctions(str, this.links, this.codePreformatted);
 
     return this._domSanitizer.sanitize(
       SecurityContext.URL,

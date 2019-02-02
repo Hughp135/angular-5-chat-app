@@ -54,11 +54,13 @@
   <div id="chat-input">
     <form (submit)="sendMessage(chatMessage)" [class.inverted]="settingsService.invertedTheme"
       class="ui form">
-      <div class="ui fluid small input">
-        <input #chatInput type="text" autocomplete="off"
-          placeholder="Chat in #{{ currentChannel.name }}..."
+      <div class="ui fluid small textarea">
+        <textarea [rows]="chatInputRows" #chatInput type="text"
+          autocomplete="off" placeholder="Chat in #{{ currentChannel.name }}..."
           name="chatMessage" [(ngModel)]="chatMessage"
-          (window:keydown)="onWindowKeydown($event)">
+          (window:keydown)="onWindowKeydown($event)"
+          (window:keyup)="onWindowKeyup($event)" (keydown)="onChatInputKeydown($event)">
+        </textarea>
       </div>
     </form>
   </div>
